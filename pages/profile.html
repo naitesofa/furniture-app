@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        /* 主题颜色变量 - 与首页保持一致 */
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+            
+            /* 渐变色 */
+            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
+            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
+            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
+            
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
+            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
+            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--brand-dark);
+        }
+
+        .profile-header {
+            background: var(--brand-gradient-primary);
+            border-radius: 0 0 24px 24px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .menu-item {
+            border-bottom: 1px solid var(--brand-light-dark);
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover {
+            background-color: var(--brand-primary-transparent);
+        }
+
+        .order-status {
+            border-top: 1px solid var(--brand-light-dark);
+        }
+
+        /* 订单状态图标样式 */
+        .order-status i {
+            color: var(--brand-primary);
+            transition: transform 0.3s ease;
+        }
+
+        .order-status .bg-gray-100 {
+            background-color: var(--brand-primary-transparent);
+            transition: all 0.3s ease;
+        }
+
+        .order-status .bg-gray-100:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* 服务图标样式 */
+        .text-blue-500 { color: var(--brand-primary); }
+        .text-red-500 { color: var(--brand-error); }
+        .text-green-500 { color: var(--brand-success); }
+        .text-purple-500 { color: var(--brand-info); }
+        .text-orange-500 { color: var(--brand-warning); }
+        .text-teal-500 { color: var(--brand-primary-light); }
+        .text-yellow-500 { color: var(--brand-secondary); }
+
+        /* 服务项目背景 */
+        .bg-gray-100 {
+            background-color: var(--brand-primary-transparent);
+            transition: all 0.3s ease;
+        }
+
+        .bg-gray-100:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* 底部导航栏样式 */
+        .tab-bar {
+            background: linear-gradient(to bottom, white, var(--brand-light-dark));
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            z-index: 50;
+            border-radius: 24px 24px 0 0;
+            border-top: 1px solid rgba(42, 157, 143, 0.1);
+        }
+
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 20%;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .tab-icon {
+            font-size: 18px;
+            margin-bottom: 4px;
+            transition: transform 0.3s var(--cubic-bounce);
+        }
+
+        .tab-label {
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .tab-active {
+            color: var(--brand-primary);
+        }
+
+        .tab-inactive {
+            color: var(--brand-dark-light);
+        }
+
+        .btn-press {
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-press:active {
+            transform: scale(0.95);
+        }
+        
+        /* 购物车徽章样式 */
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--brand-error);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 0;
+            transform: scale(0);
+        }
+        
+        .cart-badge.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .cart-badge.pulse {
+            animation: cart-pulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        @keyframes cart-pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .position-relative {
+            position: relative;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar bg-transparent fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <div class="text-lg font-medium text-white">个人中心</div>
+            <div class="flex">
+                <a href="settings.html" class="text-white">
+                    <i class="fas fa-cog"></i>
+                </a>
+        
+            </div>
+        </div>
+    </div>
+    
+    <!-- 个人信息区域 -->
+    <div class="profile-header text-white pt-16 pb-6 px-4">
+        <div class="flex items-center">
+            <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-white">
+                <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="用户头像" class="w-full h-full object-cover">
+            </div>
+            <div class="ml-4 flex-1">
+                <div class="text-lg font-medium">李小明</div>
+                <div class="text-sm mt-1 opacity-80">普通会员</div>
+            </div>
+        </div>
+        
+        <!-- 用户数据概览 -->
+        <div class="flex justify-between mt-6">
+            <a href="favorites.html" class="text-center text-white">
+                <div class="text-lg font-medium" id="favorites-count">0</div>
+                <div class="text-xs opacity-80">收藏</div>
+            </a>
+            <div class="text-center">
+                <div class="text-lg font-medium">3650</div>
+                <div class="text-xs opacity-80">积分</div>
+            </div>
+            <a href="coupons.html" class="text-center text-white">
+                <div class="text-lg font-medium">8</div>
+                <div class="text-xs opacity-80">优惠券</div>
+            </a>
+            <div class="text-center">
+                <div class="text-lg font-medium">5</div>
+                <div class="text-xs opacity-80">足迹</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 我的订单 -->
+    <div class="px-4 py-5 bg-white rounded-lg mt-4" id="orders-section">
+        <div class="flex justify-between items-center mb-3">
+            <div class="font-medium">我的订单</div>
+            <a href="order-list.html" class="text-sm text-gray-500 flex items-center">
+                查看全部
+                <i class="fas fa-angle-right ml-1 text-xs"></i>
+            </a>
+        </div>
+        
+        <!-- 订单状态 -->
+        <div class="order-status grid grid-cols-4 pt-3">
+            <a href="order-list.html?status=unpaid" class="text-center relative">
+                <div class="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center mx-auto btn-press">
+                    <i class="fas fa-credit-card text-gray-600"></i>
+                </div>
+                <div class="text-xs mt-1">待付款</div>
+                <div class="absolute -top-1 -right-1 text-xs bg-red-500 text-white rounded-full h-5 w-5 flex items-center justify-center">2</div>
+            </a>
+            <a href="order-list.html?status=unshipped" class="text-center">
+                <div class="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center mx-auto btn-press">
+                    <i class="fas fa-box text-gray-600"></i>
+                </div>
+                <div class="text-xs mt-1">待发货</div>
+            </a>
+            <a href="order-list.html?status=unreceived" class="text-center relative">
+                <div class="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center mx-auto btn-press">
+                    <i class="fas fa-truck text-gray-600"></i>
+                </div>
+                <div class="text-xs mt-1">待收货</div>
+                <div class="absolute -top-1 -right-1 text-xs bg-red-500 text-white rounded-full h-5 w-5 flex items-center justify-center">1</div>
+            </a>
+            <a href="order-list.html?status=unreviewed" class="text-center">
+                <div class="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center mx-auto btn-press">
+                    <i class="fas fa-comment-dots text-gray-600"></i>
+                </div>
+                <div class="text-xs mt-1">待评价</div>
+            </a>
+        </div>
+    </div>
+    
+    <!-- 我的服务 -->
+    <div class="px-4 py-5 bg-white rounded-lg mt-4" id="services-section">
+        <div class="font-medium mb-3">我的服务</div>
+        
+        <div class="grid grid-cols-4 gap-3">
+            <div class="text-center">
+                <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center mx-auto">
+                    <i class="fas fa-map-marker-alt text-blue-500"></i>
+                </div>
+                <div class="text-xs mt-2">收货地址</div>
+            </div>
+            <a href="favorites.html" class="text-center">
+                <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center mx-auto">
+                    <i class="fas fa-heart text-red-500"></i>
+                </div>
+                <div class="text-xs mt-2">我的收藏</div>
+            </a>
+            <a href="coupons.html" class="text-center">
+                <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center mx-auto">
+                    <i class="fas fa-ticket-alt text-green-500"></i>
+                </div>
+                <div class="text-xs mt-2">优惠券</div>
+            </a>
+            <a href="customer-service.html" class="text-center">
+                <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center mx-auto">
+                    <i class="fas fa-headset text-purple-500"></i>
+                </div>
+                <div class="text-xs mt-2">客服中心</div>
+            </a>
+            <div class="text-center">
+                <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center mx-auto">
+                    <i class="fas fa-share-alt text-teal-500"></i>
+                </div>
+                <div class="text-xs mt-2">分享有礼</div>
+            </div>
+            <a href="after-sale-list.html" class="text-center">
+                <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center mx-auto">
+                    <i class="fas fa-undo-alt text-red-500"></i>
+                </div>
+                <div class="text-xs mt-2">售后服务</div>
+            </a>
+            <div class="text-center">
+                <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center mx-auto">
+                    <i class="fas fa-ellipsis-h text-gray-500"></i>
+                </div>
+                <div class="text-xs mt-2">更多服务</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 推荐内容 -->
+    <div class="px-4 py-5 bg-white rounded-lg mt-4 mb-20">
+        <div class="font-medium mb-3">为您推荐</div>
+        
+        <div class="grid grid-cols-2 gap-3">
+            <div class="bg-gray-50 rounded-lg p-3">
+                <div class="w-full h-36 bg-gray-200 rounded overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="北欧风格卧室" class="w-full h-full object-cover">
+                </div>
+                <div class="text-sm font-medium mt-2">北欧风格卧室全套家具</div>
+                <div class="text-red-500 text-sm mt-1">¥5,999起</div>
+            </div>
+            <div class="bg-gray-50 rounded-lg p-3">
+                <div class="w-full h-36 bg-gray-200 rounded overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="现代简约书房" class="w-full h-full object-cover">
+                </div>
+                <div class="text-sm font-medium mt-2">现代简约书房家具组合</div>
+                <div class="text-red-500 text-sm mt-1">¥4,299起</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部导航 -->
+    <div class="tab-bar">
+        <a href="home.html" class="tab-item btn-press">
+            <div class="tab-icon tab-inactive"><i class="fas fa-home"></i></div>
+            <div class="tab-label tab-inactive">首页</div>
+        </a>
+        <a href="category.html" class="tab-item btn-press">
+            <div class="tab-icon tab-inactive"><i class="fas fa-store"></i></div>
+            <div class="tab-label tab-inactive">展厅</div>
+        </a>
+        <a href="#" class="tab-item btn-press">
+            <div class="tab-icon tab-inactive"><i class="fas fa-magic"></i></div>
+            <div class="tab-label tab-inactive">定制</div>
+        </a>
+        <a href="cart.html" class="tab-item btn-press">
+            <div class="tab-icon tab-inactive position-relative">
+                <i class="fas fa-shopping-cart"></i>
+                <span id="cart-badge" class="cart-badge">0</span>
+            </div>
+            <div class="tab-label tab-inactive">购物车</div>
+        </a>
+        <a href="profile.html" class="tab-item btn-press">
+            <div class="tab-icon tab-active"><i class="fas fa-user"></i></div>
+            <div class="tab-label tab-active">我的</div>
+        </a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置登录状态到 localStorage
+            localStorage.setItem('isLoggedIn', 'true');
+            
+            // 始终将页面显示为已登录状态
+            const isLoggedIn = true; // 强制设置为已登录状态
+            
+            // 只有在未登录状态下才会执行以下代码，现在已设置为始终登录状态，所以不会执行
+            if (!isLoggedIn) {
+                // 未登录状态的代码不会执行
+                // ... existing code ...
+            }
+            
+            // 更新收藏数量
+            const favoritesCount = document.getElementById('favorites-count');
+            if (favoritesCount) {
+                const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+                favoritesCount.textContent = favorites.length;
+            }
+            
+            // 确保订单和服务区域显示
+            const ordersSection = document.getElementById('orders-section');
+            const servicesSection = document.getElementById('services-section');
+            if (ordersSection) ordersSection.style.display = 'block';
+            if (servicesSection) servicesSection.style.display = 'block';
+            
+            // 更新购物车徽章
+            const cartBadge = document.getElementById('cart-badge');
+            if (cartBadge) {
+                const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                if (cart.length > 0) {
+                    cartBadge.textContent = cart.length;
+                    cartBadge.classList.add('show');
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

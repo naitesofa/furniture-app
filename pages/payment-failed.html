@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>支付失败 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        /* 主题颜色变量 - 与首页保持一致 */
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+            
+            /* 渐变色 */
+            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
+            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
+            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
+            --brand-gradient-error: linear-gradient(135deg, #EF4444, #FD6B68);
+            
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
+            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
+            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+            --shadow-error: 0 5px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--brand-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 导航栏样式 */
+        .nav-bar {
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-bar i {
+            color: var(--brand-dark-light);
+            transition: color 0.3s ease;
+        }
+
+        .nav-bar i:hover {
+            color: var(--brand-primary);
+        }
+
+        /* 卡片样式 */
+        .section {
+            background-color: white;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* 失败图标样式 */
+        .failed-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--brand-gradient-error);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            box-shadow: var(--shadow-error);
+        }
+
+        .failed-icon i {
+            font-size: 40px;
+            color: white;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            transition: all 0.3s ease;
+            border-radius: 24px;
+        }
+
+        .btn-primary {
+            background: var(--brand-gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-highlight);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--brand-dark-light);
+            color: var(--brand-dark);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--brand-light-dark);
+            transform: translateY(-2px);
+        }
+
+        /* 订单信息样式 */
+        .divider {
+            height: 1px;
+            background-color: var(--brand-light-dark);
+            margin: 12px 0;
+        }
+
+        /* 动画效果 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <div class="flex items-center">
+                <a href="home.html" class="text-gray-500 mr-3">
+                    <i class="fas fa-home"></i>
+                </a>
+                <div class="text-lg font-medium">支付结果</div>
+            </div>
+            <div class="flex items-center">
+                <a href="#" class="text-gray-500 ml-3">
+                    <i class="fas fa-headset"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主要内容区 -->
+    <div class="flex-1 pt-14 pb-8 px-4 flex flex-col">
+        <!-- 支付结果 -->
+        <div class="section p-6 text-center animate-fadeInUp">
+            <div class="failed-icon mb-4">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="text-xl font-bold text-brand-error mb-2">支付失败</div>
+            <div class="text-sm text-gray-500 mb-4" id="failureReason">支付处理过程中出现问题，请重新尝试支付</div>
+            <div class="text-2xl font-bold text-brand-primary mb-6">¥2,499.00</div>
+            
+            <div class="flex justify-center space-x-4">
+                <a href="#" class="btn btn-primary px-6 py-2 text-sm" id="retryPayment">
+                    重新支付
+                </a>
+                <a href="order-list.html" class="btn btn-outline px-6 py-2 text-sm">
+                    查看订单
+                </a>
+            </div>
+        </div>
+        
+        <!-- 订单信息 -->
+        <div class="section p-4 mt-4 animate-fadeInUp delay-1">
+            <div class="text-base font-medium mb-3">订单信息</div>
+            
+            <div class="text-sm flex mb-2">
+                <div class="text-gray-500 w-20">订单编号：</div>
+                <div class="flex-1" id="orderNumber">2023112309876</div>
+                <div class="text-brand-primary text-xs" id="copyOrderBtn">复制</div>
+            </div>
+            
+            <div class="text-sm flex mb-2">
+                <div class="text-gray-500 w-20">支付方式：</div>
+                <div class="flex-1" id="paymentMethod">微信支付</div>
+            </div>
+            
+            <div class="text-sm flex mb-2">
+                <div class="text-gray-500 w-20">失败时间：</div>
+                <div id="failureTime">2023-11-23 15:35:22</div>
+            </div>
+            
+            <div class="text-sm flex">
+                <div class="text-gray-500 w-20">失败原因：</div>
+                <div class="flex-1 text-brand-error" id="detailedReason">余额不足或银行系统繁忙</div>
+            </div>
+        </div>
+        
+        <!-- 常见问题 -->
+        <div class="section p-4 mt-4 animate-fadeInUp delay-2">
+            <div class="text-base font-medium mb-3">常见问题</div>
+            
+            <div class="text-sm mb-3">
+                <div class="font-medium mb-1">1. 为什么我的支付失败了？</div>
+                <div class="text-gray-600">
+                    支付失败可能是由于余额不足、网络问题、银行系统维护或支付信息有误等原因导致。
+                </div>
+            </div>
+            
+            <div class="text-sm mb-3">
+                <div class="font-medium mb-1">2. 我的账户已被扣款，但显示支付失败？</div>
+                <div class="text-gray-600">
+                    如果您的账户已被扣款但显示支付失败，款项通常会在1-3个工作日内自动退回您的账户。
+                </div>
+            </div>
+            
+            <div class="text-sm">
+                <div class="font-medium mb-1">3. 我该如何解决这个问题？</div>
+                <div class="text-gray-600">
+                    您可以尝试更换支付方式或稍后再试。如果问题持续存在，请联系客服寻求帮助。
+                </div>
+            </div>
+        </div>
+        
+        <!-- 联系客服 -->
+        <div class="section p-4 mt-4 animate-fadeInUp delay-3">
+            <div class="text-sm text-center">
+                <a href="#" class="text-brand-primary flex items-center justify-center">
+                    <i class="fas fa-headset mr-2"></i>
+                    <span>联系客服解决支付问题</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取URL参数
+            function getUrlParam(name) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(name);
+            }
+            
+            // 根据URL参数更新页面内容
+            const orderId = getUrlParam('id');
+            const reason = getUrlParam('reason') || '支付处理过程中出现问题';
+            const method = getUrlParam('method') || 'wechat';
+            
+            // 设置订单号
+            const orderNumberEl = document.getElementById('orderNumber');
+            if (orderNumberEl && orderId) {
+                orderNumberEl.textContent = orderId;
+            }
+            
+            // 设置支付方式
+            const paymentMethodEl = document.getElementById('paymentMethod');
+            if (paymentMethodEl) {
+                if (method === 'wechat') {
+                    paymentMethodEl.textContent = '微信支付';
+                } else if (method === 'alipay') {
+                    paymentMethodEl.textContent = '支付宝';
+                } else if (method === 'bank') {
+                    paymentMethodEl.textContent = '银行卡支付';
+                }
+            }
+            
+            // 设置失败原因
+            const failureReasonEl = document.getElementById('failureReason');
+            const detailedReasonEl = document.getElementById('detailedReason');
+            if (failureReasonEl && detailedReasonEl) {
+                // 根据reason代码显示对应错误信息
+                let reasonText = '';
+                let detailedText = '';
+                
+                switch(reason) {
+                    case 'insufficient_balance':
+                        reasonText = '支付失败：余额不足';
+                        detailedText = '您的账户余额不足，请更换支付方式或充值后再试';
+                        break;
+                    case 'bank_error':
+                        reasonText = '支付失败：银行处理错误';
+                        detailedText = '银行系统处理请求时出错，请稍后再试';
+                        break;
+                    case 'network_error':
+                        reasonText = '支付失败：网络连接中断';
+                        detailedText = '支付过程中网络连接中断，请检查网络后重试';
+                        break;
+                    case 'timeout':
+                        reasonText = '支付失败：支付超时';
+                        detailedText = '支付处理时间过长导致超时，建议稍后重试';
+                        break;
+                    default:
+                        reasonText = '支付处理过程中出现问题，请重新尝试支付';
+                        detailedText = '未知错误，请联系客服获取帮助';
+                }
+                
+                failureReasonEl.textContent = reasonText;
+                detailedReasonEl.textContent = detailedText;
+            }
+            
+            // 设置当前时间为失败时间
+            const failureTimeEl = document.getElementById('failureTime');
+            if (failureTimeEl) {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = (now.getMonth() + 1).toString().padStart(2, '0');
+                const day = now.getDate().toString().padStart(2, '0');
+                const hour = now.getHours().toString().padStart(2, '0');
+                const minute = now.getMinutes().toString().padStart(2, '0');
+                const second = now.getSeconds().toString().padStart(2, '0');
+                
+                failureTimeEl.textContent = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+            }
+            
+            // 复制订单号功能
+            const copyOrderBtn = document.getElementById('copyOrderBtn');
+            if (copyOrderBtn) {
+                copyOrderBtn.addEventListener('click', function() {
+                    const orderNumber = document.getElementById('orderNumber').textContent;
+                    navigator.clipboard.writeText(orderNumber).then(function() {
+                        alert('订单号已复制到剪贴板');
+                    }, function() {
+                        alert('复制失败，请手动复制');
+                    });
+                });
+            }
+            
+            // 重新支付按钮点击事件
+            const retryPaymentBtn = document.getElementById('retryPayment');
+            if (retryPaymentBtn && orderId) {
+                retryPaymentBtn.href = `payment.html?id=${orderId}`;
+            }
+        });
+    </script>
+</body>
+</html> 

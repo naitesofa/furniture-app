@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家逸生活 - 启动页</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4A6572;
+            --secondary-color: #F9AA33;
+            --accent-color: #344955;
+            --text-color: #333333;
+            --light-bg: #F5F5F5;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+            height: 100vh;
+            overflow: hidden;
+            color: white;
+        }
+        
+        .splash-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            width: 120px;
+            height: 120px;
+            background-color: white;
+            border-radius: 24px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 24px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .logo-inner {
+            width: 90px;
+            height: 90px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+            color: var(--primary-color);
+            animation: pulse 2s infinite;
+        }
+        
+        .app-name {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+        
+        .tagline {
+            font-size: 16px;
+            margin-bottom: 48px;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .loading-bar {
+            width: 80%;
+            max-width: 280px;
+            height: 6px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 16px;
+            position: relative;
+        }
+        
+        .loading-progress {
+            height: 100%;
+            width: 0%;
+            background-color: var(--secondary-color);
+            border-radius: 3px;
+            transition: width 0.2s ease;
+        }
+        
+        .loading-text {
+            font-size: 14px;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 40px;
+        }
+        
+        .version-text {
+            position: absolute;
+            bottom: 24px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        .skip-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        
+        .network-error {
+            background-color: rgba(255,0,0,0.1);
+            padding: 10px 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .retry-button {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            margin-top: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="splash-container">
+        <button class="skip-button" id="skipButton">跳过</button>
+        
+        <div class="logo">
+            <div class="logo-inner">
+                <i class="fas fa-couch"></i>
+            </div>
+        </div>
+        
+        <h1 class="app-name">家逸生活</h1>
+        <p class="tagline">专业沙发定制，让家更温馨</p>
+        
+        <div class="loading-bar">
+            <div class="loading-progress" id="loadingProgress"></div>
+        </div>
+        
+        <p class="loading-text" id="loadingText">正在准备资源...</p>
+        
+        <div class="network-error" id="networkError">
+            <p>网络连接异常，请检查您的网络设置</p>
+            <button class="retry-button" id="retryButton">重试</button>
+        </div>
+        
+        <p class="version-text">版本 1.0.0</p>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingProgress = document.getElementById('loadingProgress');
+            const loadingText = document.getElementById('loadingText');
+            const networkError = document.getElementById('networkError');
+            const retryButton = document.getElementById('retryButton');
+            const skipButton = document.getElementById('skipButton');
+            
+            let progress = 0;
+            let loadingTexts = [
+                "正在准备资源...",
+                "加载产品数据...",
+                "初始化用户配置...",
+                "应用即将启动..."
+            ];
+            let currentTextIndex = 0;
+            
+            // 模拟加载过程
+            function simulateLoading() {
+                let loadingInterval = setInterval(() => {
+                    progress += Math.random() * 3;
+                    
+                    // 更新进度条
+                    if (progress <= 100) {
+                        loadingProgress.style.width = progress + '%';
+                        
+                        // 更新加载文字
+                        if (progress > 25 && currentTextIndex < 1) {
+                            currentTextIndex = 1;
+                            loadingText.textContent = loadingTexts[currentTextIndex];
+                        } else if (progress > 50 && currentTextIndex < 2) {
+                            currentTextIndex = 2;
+                            loadingText.textContent = loadingTexts[currentTextIndex];
+                        } else if (progress > 75 && currentTextIndex < 3) {
+                            currentTextIndex = 3;
+                            loadingText.textContent = loadingTexts[currentTextIndex];
+                        }
+                    } else {
+                        clearInterval(loadingInterval);
+                        
+                        // 加载完成，跳转到首页
+                        setTimeout(() => {
+                            redirectToHome();
+                        }, 500);
+                    }
+                    
+                    // 模拟网络错误（概率很低）
+                    if (Math.random() < 0.001 && progress < 90) {
+                        clearInterval(loadingInterval);
+                        showNetworkError();
+                    }
+                }, 100);
+            }
+            
+            // 显示网络错误
+            function showNetworkError() {
+                networkError.style.display = 'block';
+                loadingText.style.display = 'none';
+            }
+            
+            // 重试加载
+            retryButton.addEventListener('click', function() {
+                networkError.style.display = 'none';
+                loadingText.style.display = 'block';
+                simulateLoading();
+            });
+            
+            // 跳过按钮
+            skipButton.addEventListener('click', function() {
+                redirectToHome();
+            });
+            
+            // 跳转到首页
+            function redirectToHome() {
+                window.location.href = 'home.html';
+            }
+            
+            // 开始模拟加载
+            simulateLoading();
+        });
+    </script>
+</body>
+</html> 

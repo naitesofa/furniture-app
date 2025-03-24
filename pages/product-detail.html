@@ -1,0 +1,3275 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品详情 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        /* 主题颜色变量 - 与首页保持一致 */
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+            
+            /* 渐变色 */
+            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
+            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
+            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
+            
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
+            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
+            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+        }
+
+        /* 核心信息区域样式 */
+        .product-gallery {
+            height: 100vw; /* 使用视窗宽度确保正方形展示 */
+            max-height: 500px; /* 限制最大高度 */
+            background: #fafafa;
+            border-radius: 0 0 24px 24px; /* 底部圆角提升精致感 */
+            position: relative;
+            overflow: hidden;
+            touch-action: none; /* 防止移动端滑动冲突 */
+        }
+        .gallery-indicator {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            background: rgba(0,0,0,0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+        }
+        .gallery-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            transition: all 0.3s ease;
+        }
+        .gallery-dot.active {
+            width: 20px;
+            border-radius: 4px;
+            background: white;
+        }
+        
+        /* 价格区域样式 */
+        .price-section {
+            background: linear-gradient(135deg, #fff5f5, #fff);
+            margin: 0 0 16px;
+            padding: 16px;
+            border-radius: 12px;
+        }
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+        }
+        .current-price {
+            color: var(--brand-primary);
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .price-tag {
+            background: var(--brand-primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        /* 规格选择样式 - 优化多列排列与垂直空间 */
+        .spec-section {
+            margin: 12px 0;
+        }
+        .spec-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .spec-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 8px;
+        }
+        .spec-option {
+            position: relative;
+            padding: 8px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            background: var(--brand-light);
+            border: 1px solid var(--brand-light-dark);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .spec-option .size-info {
+            position: absolute;
+            right: 8px;
+            font-size: 11px;
+            color: var(--brand-dark-light);
+        }
+        .spec-option.active {
+            background: var(--brand-primary-transparent);
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-highlight);
+        }
+        
+        /* 商品信息选项卡样式 */
+        .info-tabs {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .tab-item {
+            padding: 12px 24px;
+            font-size: 14px;
+            color: #666;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .tab-item.active {
+            color: var(--brand-primary);
+            font-weight: 500;
+        }
+        .tab-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background: var(--brand-primary);
+            border-radius: 1.5px;
+        }
+        
+        /* 底部操作栏样式 */
+        .action-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 101; /* 确保高于快速导航 */
+        }
+        .action-button {
+            flex: 1;
+            padding: 10px;
+            border-radius: 24px;
+            text-align: center;
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .add-cart {
+            background: var(--brand-primary-transparent);
+            color: var(--brand-primary);
+            margin-right: 8px;
+        }
+        .buy-now {
+            background: var(--brand-gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-highlight);
+        }
+        
+        /* 服务标签样式 */
+        .service-tags {
+            display: flex;
+            gap: 16px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .service-tag {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: #666;
+        }
+        .service-tag i {
+            color: var(--brand-primary);
+            margin-right: 4px;
+            font-size: 14px;
+        }
+        
+        /* 快速导航栏样式 - 重新设计 */
+        .quick-nav {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 60px;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            padding: 8px 0;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.05);
+            border-top: 1px solid rgba(0, 0, 0, 0.03);
+        }
+        .quick-nav-item {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: #666;
+            background: white;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .quick-nav-item i {
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+        .quick-nav-item:hover {
+            background: #fff5f5;
+            color: #ff4d4d;
+            transform: translateY(-2px);
+        }
+        .quick-nav-item.active {
+            background: #ff4d4d;
+            color: white;
+        }
+        /* 去掉原来的tooltip样式，使用底部标签 */
+        .quick-nav-label {
+            font-size: 10px;
+            white-space: nowrap;
+        }
+        
+        /* 内容区域锚点样式 */
+        .section-anchor {
+            scroll-margin-top: 60px;
+        }
+        
+        /* 规格对比弹窗样式美化 - 修复显示问题 */
+        .spec-compare-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .spec-compare-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        .spec-compare-content {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-height: 85vh;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .spec-compare-modal.active .spec-compare-content {
+            transform: translateY(0);
+        }
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed; /* 固定表格布局 */
+        }
+        .compare-table th, .compare-table td {
+            word-break: break-word; /* 允许在单词内换行 */
+            hyphens: auto; /* 自动连字符 */
+        }
+        .compare-table th {
+            background: #f8f9fa;
+            padding: 14px 10px;
+            text-align: left;
+            font-weight: 500;
+            color: #333;
+            position: sticky;
+            top: 0;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+            font-size: 13px;
+        }
+        .compare-table td {
+            padding: 14px 10px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 13px;
+        }
+        .compare-table tr:last-child td {
+            border-bottom: none;
+        }
+        .compare-table tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+        .compare-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            background: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .compare-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--brand-dark);
+        }
+        .compare-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            color: #666;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .compare-close:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        .compare-body {
+            padding: 0;
+            max-height: calc(85vh - 70px);
+            overflow-y: auto;
+            overflow-x: hidden; /* 防止水平滚动 */
+            -webkit-overflow-scrolling: touch; /* 优化移动端滚动 */
+        }
+        .highlight-col {
+            background-color: var(--brand-primary-transparent) !important;
+            color: var(--brand-primary);
+            font-weight: 500;
+        }
+        
+        /* 3D预览样式 */
+        .size-preview {
+            position: relative;
+            height: 200px;
+            background: #f8f8f8;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 12px 0;
+            display: none;
+        }
+        .size-preview.active {
+            display: block;
+        }
+        .size-preview canvas {
+            width: 100%;
+            height: 100%;
+        }
+        .preview-controls {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            display: flex;
+            gap: 8px;
+        }
+        .preview-control {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .dimension-tags {
+            position: absolute;
+            pointer-events: none;
+        }
+        .dimension-tag {
+            position: absolute;
+            background: var(--brand-primary-transparent);
+            border: 1px solid var(--brand-primary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--brand-primary);
+        }
+        
+        /* 规格选择增强 */
+        .spec-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .spec-actions {
+            display: flex;
+            gap: 12px;
+        }
+        .spec-action {
+            font-size: 12px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .spec-action i {
+            font-size: 14px;
+        }
+        
+        /* 360度展示相关样式 */
+        .gallery-container {
+            position: relative;
+            height: 100%;
+            user-select: none;
+        }
+        .gallery-wrapper {
+            position: relative;
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+        .product-image {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .product-image.active {
+            opacity: 1;
+        }
+        .rotate-hint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            pointer-events: none;
+            opacity: 0;
+            animation: fadeInOut 3s ease-in-out;
+        }
+        .rotate-hint i {
+            animation: rotate 2s linear infinite;
+        }
+        .gallery-controls {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            gap: 8px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2), transparent);
+            padding: 16px;
+            width: 100%;
+            justify-content: space-between; /* 控制按钮分散两端 */
+        }
+        .gallery-control {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .gallery-control:hover {
+            background: white;
+            color: #ff4d4d;
+        }
+        .gallery-control.active {
+            background: #ff4d4d;
+            color: white;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* 回到顶部按钮样式 */
+        .back-to-top {
+            position: fixed;
+            right: 16px;
+            bottom: 80px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .back-to-top:hover {
+            background: var(--brand-primary);
+            color: white;
+        }
+
+        /* 关键信息悬浮样式 */
+        .floating-info {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 8px 16px;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+            z-index: 99;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .floating-info.visible {
+            transform: translateY(48px);
+        }
+        .floating-info-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .floating-info-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .floating-info-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+        .floating-info-price {
+            color: var(--brand-primary);
+            font-weight: 600;
+        }
+
+        /* 咨询功能样式 */
+        .consult-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .consult-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        .consult-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 16px 16px 0 0;
+            padding: 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        .consult-modal.active .consult-content {
+            transform: translateY(0);
+        }
+        .consult-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .consult-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .consult-option {
+            background: #f8f8f8;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+        .consult-option:hover {
+            background: #fff5f5;
+            color: #ff4d4d;
+        }
+        .consult-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brand-primary);
+            font-size: 20px;
+        }
+        .consult-info h4 {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        .consult-info p {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* 核心信息布局优化 */
+        .info-section {
+            margin: -24px 16px 0;
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 1;
+        }
+
+        .product-title {
+            font-size: 20px;
+            line-height: 1.4;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        /* 内容卡片样式 */
+        .content-card {
+            background: white;
+            border-radius: 16px;
+            margin: 12px 16px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        /* 标题样式统一 */
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 16px;
+            background: var(--brand-primary);
+            border-radius: 2px;
+        }
+
+        /* 按钮交互优化 */
+        .action-button {
+            transform: translateY(0);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .action-button:active {
+            transform: translateY(2px);
+        }
+
+        .buy-now {
+            background: var(--brand-gradient-primary);
+            box-shadow: var(--shadow-highlight);
+        }
+
+        /* 点击波纹效果 */
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.2);
+            opacity: 0;
+            transform: scale(2);
+            transition: opacity 0.4s, transform 0.6s;
+        }
+
+        .ripple:active::after {
+            opacity: 1;
+            transform: scale(0);
+            transition: 0s;
+        }
+
+        /* 加载状态动画 */
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            from { background-position: 200% 0; }
+            to { background-position: -200% 0; }
+        }
+
+        /* 页面切换动画 */
+        .page-transition {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 响应式优化 */
+        @media (min-width: 768px) {
+            .product-gallery {
+                height: 60vh;
+                border-radius: 0 0 32px 32px;
+            }
+            
+            .info-section {
+                max-width: 800px;
+                margin: -32px auto 0;
+                padding: 32px;
+            }
+            
+            .spec-options {
+                gap: 16px;
+            }
+        }
+
+        /* 选项卡导航样式优化 */
+        .tab-nav {
+            display: flex;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+            padding: 0 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .tab-item {
+            padding: 16px 24px;
+            font-size: 15px;
+            color: #666;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tab-item.active {
+            color: var(--brand-primary);
+            font-weight: 500;
+        }
+
+        .tab-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background: var(--brand-primary);
+            border-radius: 1.5px;
+        }
+
+        /* 内容区域样式 */
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* 商品详情样式 */
+        .detail-section {
+            padding: 16px;
+        }
+
+        .feature-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .feature-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            background: #fff5f5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff4d4d;
+        }
+
+        /* 规格参数样式 */
+        .specs-section {
+            padding: 16px;
+        }
+
+        .specs-group {
+            margin-bottom: 24px;
+        }
+
+        .specs-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        .specs-table {
+            background: #f8f8f8;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .specs-row {
+            display: flex;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .specs-row:last-child {
+            border-bottom: none;
+        }
+
+        .specs-label {
+            width: 100px;
+            padding: 12px 16px;
+            background: #f4f4f4;
+            color: #666;
+        }
+
+        .specs-value {
+            flex: 1;
+            padding: 12px 16px;
+            color: #333;
+        }
+
+        /* 购买须知样式 */
+        .guide-section {
+            padding: 16px;
+        }
+
+        .guide-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .guide-icon {
+            width: 40px;
+            height: 40px;
+            background: #fff5f5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff4d4d;
+            font-size: 20px;
+        }
+
+        .guide-content h3 {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .guide-list {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .guide-list li {
+            position: relative;
+            padding-left: 12px;
+            margin-bottom: 8px;
+        }
+
+        .guide-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 4px;
+            height: 4px;
+            background: #ff4d4d;
+            border-radius: 50%;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 尺寸规格样式优化 */
+        .size-specs {
+            margin: 24px 0;
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .size-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .size-card {
+            background: var(--brand-light);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            gap: 32px;
+            border: 1px solid var(--brand-light-dark);
+            transition: all 0.3s ease;
+        }
+
+        .size-visual {
+            width: 140px;
+            text-align: center;
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sofa-icon {
+            width: 100%;
+            height: 80px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .seat-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .seat-dots span {
+            width: 8px;
+            height: 8px;
+            background: var(--brand-primary);
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+
+        .size-label {
+            font-size: 15px;
+            color: var(--brand-dark);
+            font-weight: 500;
+            padding: 6px 16px;
+            background: var(--brand-light);
+            border-radius: 20px;
+        }
+
+        .size-info {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            align-content: start;
+        }
+
+        .dimension-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--brand-dark-light);
+            background: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .dimension-item i {
+            color: var(--brand-primary);
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .extra-info {
+            grid-column: 1 / -1;
+            color: var(--brand-primary);
+            font-size: 14px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            background: var(--brand-primary-transparent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .extra-info::before {
+            content: '\f058';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+        }
+
+        /* 响应式优化 */
+        @media (max-width: 480px) {
+            .size-card {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                padding: 16px;
+            }
+
+            .size-info {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 动画效果 */
+        .size-card {
+            cursor: pointer;
+        }
+
+        .size-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        }
+
+        .seat-dots span {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        /* 收藏按钮动画 */
+        .favorite-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        .favorite-btn i {
+            transition: all 0.3s ease;
+        }
+        .favorite-btn.active i {
+            color: #ff4d4d;
+            transform: scale(1.2);
+        }
+        .favorite-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 77, 77, 0.15);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+        }
+        .favorite-btn.active::after {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        /* 购物车相关样式 */
+        .cart-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 18px;
+            height: 18px;
+            background: #ff4d4d;
+            color: white;
+            font-size: 10px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translate(30%, -30%);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        .cart-count.visible {
+            opacity: 1;
+        }
+        
+        /* 加入购物车动画 */
+        .cart-animation {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            background-image: url(../images/sofa_360_1.jpg);
+            background-size: cover;
+            border-radius: 50%;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            pointer-events: none;
+        }
+        
+        /* 购物车按钮样式 */
+        .cart-button {
+            position: relative;
+        }
+        
+        /* 数量选择器样式 */
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .quantity-title {
+            font-size: 14px;
+            color: #666;
+        }
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            border: 1px solid #e5e5e5;
+            border-radius: 24px;
+            overflow: hidden;
+        }
+        .quantity-btn {
+            width: 36px;
+            height: 36px;
+            background: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .quantity-btn:hover {
+            background: #f5f5f5;
+        }
+        .quantity-btn:disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+        .quantity-input {
+            width: 40px;
+            height: 36px;
+            border: none;
+            text-align: center;
+            font-size: 14px;
+            background: transparent;
+            -moz-appearance: textfield;
+        }
+        .quantity-input::-webkit-outer-spin-button,
+        .quantity-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        /* 加入购物车成功弹窗 */
+        .cart-success-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 320px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 300;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+        }
+        .cart-success-modal.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background: #f0f9f8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            color: var(--brand-primary);
+            font-size: 24px;
+        }
+        .cart-success-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .cart-success-desc {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .cart-success-actions {
+            display: flex;
+            gap: 12px;
+        }
+        .cart-success-actions button {
+            flex: 1;
+            height: 44px;
+            border-radius: 22px;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .continue-btn {
+            background: #f5f5f5;
+            color: #666;
+        }
+        .continue-btn:hover {
+            background: #ebebeb;
+        }
+        .view-cart-btn {
+            background: var(--brand-primary);
+            color: white;
+        }
+        .view-cart-btn:hover {
+            background: var(--brand-primary-dark);
+        }
+        
+        /* 遮罩层 */
+        .backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 199;  /* 确保z-index低于弹窗的z-index */
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            pointer-events: auto; /* 确保遮罩层可以接收点击事件 */
+        }
+        .backdrop.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* 底部按钮图标样式 */
+        .action-icon {
+            position: relative;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        
+        /* 购物车相关样式修复 */
+        .cart-button {
+            position: relative;
+        }
+
+        /* 规格选择弹窗样式 - 调整为品牌色系并移除阴影 */
+        .spec-select-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none; /* 弹窗本身不接收点击事件，传递给内容区域 */
+        }
+        .spec-select-modal.active {
+            display: flex;
+            opacity: 1;
+            pointer-events: auto; /* 当激活时允许点击 */
+        }
+        .spec-select-content {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-height: 90vh;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            box-shadow: none; /* 移除阴影 */
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            z-index: 201; /* 确保内容区域的z-index高于遮罩和模态框 */
+            pointer-events: auto; /* 确保内容区域可以接收点击事件 */
+        }
+        .spec-select-modal.active .spec-select-content {
+            transform: translateY(0);
+        }
+        .spec-select-header {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .spec-select-close {
+            position: absolute;
+            right: 16px;
+            top: 16px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            border: none;
+            z-index: 1;
+            cursor: pointer;
+        }
+        .spec-select-close:hover {
+            background: #e5e5e5;
+        }
+        .spec-product-info {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+        .spec-product-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid #f0f0f0;
+        }
+        .spec-product-price {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--brand-primary); /* 使用品牌色 */
+        }
+        .spec-product-title {
+            font-size: 16px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .spec-product-selected {
+            font-size: 13px;
+            color: #666;
+            margin-top: 4px;
+        }
+        .spec-select-body {
+            padding: 16px;
+            overflow-y: auto;
+            max-height: calc(90vh - 150px);
+        }
+        .spec-select-section {
+            margin-bottom: 20px;
+        }
+        .spec-select-section-title {
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+        /* 增强规格选项的可点击性 */
+        .spec-select-section .spec-option {
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            padding: 8px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            background: var(--brand-light);
+            border: 1px solid var(--brand-light-dark);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 202; /* 提高规格选项的z-index，确保在所有层级之上 */
+            pointer-events: auto; /* 确保选项可以接收点击事件 */
+        }
+        .spec-select-section .spec-option:hover {
+            background: var(--brand-light-dark);
+        }
+        .spec-select-section .spec-option.active {
+            background: var(--brand-primary-transparent);
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-highlight);
+        }
+        .spec-select-footer {
+            padding: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+        .spec-confirm-btn {
+            width: 100%;
+            height: 50px;
+            border-radius: 25px;
+            background: var(--brand-primary); /* 使用品牌色 */
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .spec-confirm-btn:hover {
+            background: var(--brand-primary-dark);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 pb-16">
+    <!-- 快速导航栏 -->
+    <div class="quick-nav">
+        <div class="quick-nav-item" onclick="scrollToSection('gallery')">
+            <i class="fas fa-image"></i>
+            <span class="quick-nav-label">图片</span>
+        </div>
+        <div class="quick-nav-item" onclick="scrollToSection('price')">
+            <i class="fas fa-tag"></i>
+            <span class="quick-nav-label">价格</span>
+        </div>
+        <div class="quick-nav-item" onclick="scrollToSection('specs')">
+            <i class="fas fa-list"></i>
+            <span class="quick-nav-label">规格</span>
+        </div>
+        <div class="quick-nav-item" onclick="scrollToSection('details')">
+            <i class="fas fa-info-circle"></i>
+            <span class="quick-nav-label">详情</span>
+        </div>
+        <div class="quick-nav-item" onclick="scrollToSection('service')">
+            <i class="fas fa-shield-alt"></i>
+            <span class="quick-nav-label">服务</span>
+        </div>
+    </div>
+
+    <!-- 顶部导航 -->
+    <div class="nav-bar bg-white fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <button onclick="history.back()" class="text-gray-600">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="text-lg font-medium">商品详情</div>
+            <button class="text-gray-600">
+                <i class="fas fa-share-alt"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 主要内容区 -->
+    <div class="main-content mt-12">
+        <!-- 商品图片轮播 -->
+        <div id="gallery" class="product-gallery section-anchor">
+            <div class="gallery-container">
+                <div class="gallery-wrapper">
+                    <!-- 360度展示图片 -->
+                    <img src="../images/sofa_360_1.jpg" class="product-image active" alt="北欧简约风真皮沙发-视角1" data-index="1">
+                    <img src="../images/sofa_360_2.jpg" class="product-image" alt="北欧简约风真皮沙发-视角2" data-index="2">
+                    <img src="../images/sofa_360_3.jpg" class="product-image" alt="北欧简约风真皮沙发-视角3" data-index="3">
+                    <img src="../images/sofa_360_4.jpg" class="product-image" alt="北欧简约风真皮沙发-视角4" data-index="4">
+                    <img src="../images/sofa_360_5.jpg" class="product-image" alt="北欧简约风真皮沙发-视角5" data-index="5">
+                    <img src="../images/sofa_360_6.jpg" class="product-image" alt="北欧简约风真皮沙发-视角6" data-index="6">
+                    <img src="../images/sofa_360_7.jpg" class="product-image" alt="北欧简约风真皮沙发-视角7" data-index="7">
+                    <img src="../images/sofa_360_8.jpg" class="product-image" alt="北欧简约风真皮沙发-视角8" data-index="8">
+                </div>
+                <div class="rotate-hint">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>左右拖动可360°旋转查看</span>
+                </div>
+            </div>
+            <div class="gallery-controls">
+                <button class="gallery-control" onclick="toggleViewMode('normal')">
+                    <i class="fas fa-images"></i>
+                </button>
+                <button class="gallery-control" onclick="toggleViewMode('360')" title="360度查看">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+            <div class="gallery-indicator">
+                <div class="gallery-dot active"></div>
+                <div class="gallery-dot"></div>
+                <div class="gallery-dot"></div>
+                <div class="gallery-dot"></div>
+            </div>
+        </div>
+
+        <!-- 核心信息区域 -->
+        <div class="p-4 bg-white">
+            <!-- 价格区域 -->
+            <div id="price" class="price-section section-anchor">
+                <div class="flex items-baseline gap-2">
+                    <span class="current-price">¥3,899</span>
+                    <span class="original-price">¥4,599</span>
+                    <span class="price-tag">限时优惠</span>
+                </div>
+                <div class="text-xs text-gray-400 mt-2">
+                    <span class="mr-4">月销 1263</span>
+                    <span>收藏 2.1万</span>
+                </div>
+            </div>
+
+            <!-- 商品标题 -->
+            <div class="text-lg font-medium leading-tight">
+                北欧简约风真皮沙发 三人座 可拆洗
+            </div>
+            
+            <!-- 服务标签 -->
+            <div id="service" class="service-tags section-anchor">
+                <div class="service-tag">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>正品保证</span>
+                </div>
+                <div class="service-tag">
+                    <i class="fas fa-truck"></i>
+                    <span>免费配送</span>
+                </div>
+                <div class="service-tag">
+                    <i class="fas fa-undo"></i>
+                    <span>7天退换</span>
+                </div>
+            </div>
+
+            <!-- 规格选择区域 -->
+            <div id="specs" class="spec-section section-anchor">
+                <div class="spec-header">
+                    <div class="spec-title">颜色</div>
+                    <div class="spec-actions">
+                        <a class="spec-action" onclick="toggleSpecCompare()">
+                            <i class="fas fa-table"></i>
+                            规格对比
+                        </a>
+                    </div>
+                </div>
+                <div class="spec-options">
+                    <div class="spec-option active" data-color="浅灰色">浅灰色</div>
+                    <div class="spec-option" data-color="深灰色">深灰色</div>
+                    <div class="spec-option" data-color="米白色">米白色</div>
+                </div>
+            </div>
+
+            <div class="spec-section">
+                <div class="spec-header">
+                    <div class="spec-title">尺寸</div>
+                </div>
+                <div class="spec-options">
+                    <div class="spec-option active" data-size="三人座" data-price="3899">三人座<span class="size-info">220cm</span></div>
+                    <div class="spec-option" data-size="双人座" data-price="2899">双人座<span class="size-info">180cm</span></div>
+                    <div class="spec-option" data-size="单人座" data-price="1899">单人座<span class="size-info">90cm</span></div>
+                </div>
+            </div>
+
+            <div class="spec-section">
+                <div class="spec-header">
+                    <div class="spec-title">材质</div>
+                </div>
+                <div class="spec-options">
+                    <div class="spec-option active" data-material="头层牛皮">头层牛皮</div>
+                    <div class="spec-option" data-material="二层牛皮">二层牛皮</div>
+                    <div class="spec-option" data-material="仿皮">仿皮</div>
+                </div>
+            </div>
+
+            <!-- 数量选择器 -->
+            <div class="spec-section">
+                <div class="spec-header">
+                    <div class="spec-title">数量</div>
+                </div>
+                <div class="quantity-selector">
+                    <div class="quantity-controls">
+                        <button class="quantity-btn minus-btn" onclick="updateQuantity(-1)" disabled>
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <input type="number" class="quantity-input" id="product-quantity" value="1" min="1" max="10" onchange="validateQuantity()">
+                        <button class="quantity-btn plus-btn" onclick="updateQuantity(1)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 规格对比弹窗 -->
+            <div class="spec-compare-modal" id="specCompareModal">
+                <div class="spec-compare-content">
+                    <div class="compare-header">
+                        <h3 class="compare-title">规格对比</h3>
+                        <button onclick="toggleSpecCompare()" class="compare-close">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="compare-body">
+                        <table class="compare-table">
+                            <tr>
+                                <th width="25%">规格</th>
+                                <th class="highlight-col">三人座</th>
+                                <th>双人座</th>
+                                <th>单人座</th>
+                            </tr>
+                            <tr>
+                                <td>尺寸</td>
+                                <td class="highlight-col">220×90×85cm</td>
+                                <td>180×90×85cm</td>
+                                <td>90×90×85cm</td>
+                            </tr>
+                            <tr>
+                                <td>承重</td>
+                                <td class="highlight-col">300kg</td>
+                                <td>200kg</td>
+                                <td>100kg</td>
+                            </tr>
+                            <tr>
+                                <td>价格</td>
+                                <td class="highlight-col">¥3,899</td>
+                                <td>¥2,899</td>
+                                <td>¥1,899</td>
+                            </tr>
+                            <tr>
+                                <td>适用人数</td>
+                                <td class="highlight-col">3-4人</td>
+                                <td>2-3人</td>
+                                <td>1人</td>
+                            </tr>
+                            <tr>
+                                <td>坐垫厚度</td>
+                                <td class="highlight-col">18cm</td>
+                                <td>18cm</td>
+                                <td>18cm</td>
+                            </tr>
+                            <tr>
+                                <td>靠背高度</td>
+                                <td class="highlight-col">85cm</td>
+                                <td>85cm</td>
+                                <td>85cm</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 商品信息选项卡 -->
+        <div id="details" class="info-tabs mt-3 bg-white section-anchor">
+            <div class="tab-nav">
+                <div class="tab-item active" data-tab="detail">商品详情</div>
+                <div class="tab-item" data-tab="specs">规格参数</div>
+                <div class="tab-item" data-tab="guide">购买须知</div>
+            </div>
+        </div>
+
+        <!-- 详细信息区域 -->
+        <div class="tab-content bg-white">
+            <!-- 商品详情内容 -->
+            <div id="detail" class="tab-pane active">
+                <div class="detail-banner">
+                    <img src="../images/968.jpg" alt="产品场景图" class="w-full">
+                </div>
+                <div class="detail-section">
+                    <div class="feature-card">
+                        <div class="feature-title">
+                            <i class="fas fa-star text-primary"></i>
+                            <span>产品特点</span>
+                        </div>
+                        <div class="feature-list">
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="feature-info">
+                                    <h4>头层牛皮</h4>
+                                    <p>优选意大利进口头层牛皮，触感细腻，质地柔软耐用</p>
+                                </div>
+                            </div>
+                            <div class="feature-item">
+                                <div class="feature-icon">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="feature-info">
+                                    <h4>橡胶木框架</h4>
+                                    <p>进口橡胶木框架，稳固耐用，承重力强，使用寿命长</p>
+                                </div>
+                            </div>
+                            <!-- 其他特点项 -->
+                        </div>
+                    </div>
+                    
+                    <div class="detail-gallery">
+                        <img src="../images/detail_1.jpg" alt="细节图1" class="detail-image">
+                        <div class="detail-caption">细腻的皮革纹理</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 规格参数内容 -->
+            <div id="specs" class="tab-pane">
+                <div class="specs-section">
+                    <div class="specs-group">
+                        <h3 class="specs-title">基本信息</h3>
+                        <div class="specs-table">
+                            <div class="specs-row">
+                                <div class="specs-label">品牌</div>
+                                <div class="specs-value">家逸生活</div>
+                            </div>
+                            <div class="specs-row">
+                                <div class="specs-label">产地</div>
+                                <div class="specs-value">浙江省</div>
+                            </div>
+                            <div class="specs-row">
+                                <div class="specs-label">材质</div>
+                                <div class="specs-value">头层牛皮</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="specs-group size-specs">
+                        <h3 class="specs-title">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span>尺寸规格</span>
+                        </h3>
+                        
+                        <div class="size-cards">
+                            <!-- 三人座 -->
+                            <div class="size-card active">
+                                <div class="size-visual">
+                                    <div class="sofa-icon">
+                                        <img src="../images/sofa-3.svg" alt="三人座示意图">
+                                        <div class="seat-dots">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                    <div class="size-label">三人座</div>
+                                </div>
+                                <div class="size-info">
+                                    <div class="dimension-item">
+                                        <i class="fas fa-arrows-alt-h"></i>
+                                        <span>长度：220cm</span>
+                                    </div>
+                                    <div class="dimension-item">
+                                        <i class="fas fa-arrows-alt"></i>
+                                        <span>宽度：90cm</span>
+                                    </div>
+                                    <div class="dimension-item">
+                                        <i class="fas fa-arrows-alt-v"></i>
+                                        <span>高度：85cm</span>
+                                    </div>
+                                    <div class="extra-info">适合3-4人使用</div>
+                                </div>
+                            </div>
+
+                            <!-- 双人座 -->
+                            <div class="size-card">
+                                <div class="size-visual">
+                                    <div class="sofa-icon">
+                                        <img src="../images/sofa-2.svg" alt="双人座示意图">
+                                        <div class="seat-dots">
+                                            <span></span>
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                    <div class="size-label">双人座</div>
+                                </div>
+                                <div class="size-info">
+                                    <div class="dimension-item">
+                                        <i class="fas fa-arrows-alt-h"></i>
+                                        <span>长度：180cm</span>
+                                    </div>
+                                    <div class="dimension-item">
+                                        <i class="fas fa-arrows-alt"></i>
+                                        <span>宽度：90cm</span>
+                                    </div>
+                                    <div class="dimension-item">
+                                        <i class="fas fa-arrows-alt-v"></i>
+                                        <span>高度：85cm</span>
+                                    </div>
+                                    <div class="extra-info">适合2-3人使用</div>
+                                </div>
+                            </div>
+
+                            <!-- 单人座 -->
+                            <div class="size-card">
+                                <div class="size-visual">
+                                    <div class="sofa-icon">
+                                        <img src="../images/sofa-1.svg" alt="单人座示意图">
+                                        <div class="seat-dots">
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                    <div class="size-label">单人座</div>
+                                </div>
+                                <div class="size-info">
+                                    <div class="dimension-item">
+                                        <i class="fas fa-arrows-alt-h"></i>
+                                        <span>长度：90cm</span>
+                                    </div>
+                                    <div class="dimension-item">
+                                        <i class="fas fa-arrows-alt"></i>
+                                        <span>宽度：90cm</span>
+                                    </div>
+                                    <div class="dimension-item">
+                                        <i class="fas fa-arrows-alt-v"></i>
+                                        <span>高度：85cm</span>
+                                    </div>
+                                    <div class="extra-info">适合1人使用</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 购买须知内容 -->
+            <div id="guide" class="tab-pane">
+                <div class="guide-section">
+                    <div class="guide-card">
+                        <div class="guide-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="guide-content">
+                            <h3>配送服务</h3>
+                            <ul class="guide-list">
+                                <li>全国配送范围：支持全国大部分地区配送</li>
+                                <li>配送时效：下单后3-7天送达</li>
+                                <li>安装服务：提供免费安装</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="guide-card">
+                        <div class="guide-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="guide-content">
+                            <h3>售后保障</h3>
+                            <ul class="guide-list">
+                                <li>7天无理由退换</li>
+                                <li>365天质量保修</li>
+                                <li>终身维护服务</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 回到顶部按钮 -->
+    <div class="back-to-top" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- 关键信息悬浮 -->
+    <div class="floating-info">
+        <div class="floating-info-content">
+            <div class="floating-info-left">
+                <img src="../images/sofa_360_1.jpg" class="floating-info-image" alt="商品缩略图">
+                <div>
+                    <div class="floating-info-price">¥3,899</div>
+                    <div class="text-xs text-gray-400">已售 1263</div>
+                </div>
+            </div>
+            <button class="action-button buy-now py-2 px-6" style="flex: none;">立即购买</button>
+        </div>
+    </div>
+
+    <!-- 咨询功能弹窗 -->
+    <div class="consult-modal" id="consultModal">
+        <div class="consult-content">
+            <div class="consult-header">
+                <h3 class="text-lg font-medium">在线咨询</h3>
+                <button onclick="toggleConsult()" class="text-gray-400">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="consult-options">
+                <div class="consult-option" onclick="startAIChat()">
+                    <div class="consult-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="consult-info">
+                        <h4>智能客服</h4>
+                        <p>24小时在线解答</p>
+                    </div>
+                </div>
+                <div class="consult-option" onclick="consultDesigner()">
+                    <div class="consult-icon">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <div class="consult-info">
+                        <h4>设计师咨询</h4>
+                        <p>专业家居搭配建议</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部操作栏 -->
+    <div class="action-bar">
+        <div class="flex items-center">
+            <button class="action-icon favorite-btn" onclick="toggleFavorite(this)">
+                <i class="far fa-heart"></i>
+            </button>
+            <button class="action-icon cart-button" onclick="viewCart()">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cart-count"></span>
+            </button>
+            <button class="action-icon" onclick="toggleConsult()">
+                <i class="far fa-comment"></i>
+            </button>
+        </div>
+        <div class="flex flex-1">
+            <button class="action-button add-cart ripple" onclick="addToCart()">加入购物车</button>
+            <button class="action-button buy-now ripple" onclick="buyNow()">立即购买</button>
+        </div>
+    </div>
+
+    <!-- 加入购物车成功弹窗 -->
+    <div class="cart-success-modal" id="cartSuccessModal">
+        <div class="success-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        <div class="cart-success-title">已成功加入购物车</div>
+        <div class="cart-success-desc">您的商品已加入购物车，可前往购物车结算</div>
+        <div class="cart-success-actions">
+            <button class="continue-btn" onclick="closeCartSuccess()">继续购物</button>
+            <button class="view-cart-btn" onclick="viewCart()">查看购物车</button>
+        </div>
+    </div>
+
+    <!-- 遮罩层 -->
+    <div class="backdrop" id="backdrop" onclick="closeAllModals()"></div>
+
+    <!-- 规格选择弹窗 -->
+    <div class="spec-select-modal" id="specSelectModal">
+        <div class="spec-select-content">
+            <div class="spec-select-header">
+                <button class="spec-select-close" onclick="closeSpecSelect()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="spec-product-info">
+                    <img src="../images/sofa_360_1.jpg" class="spec-product-image" alt="商品图片" id="specProductImage">
+                    <div>
+                        <div class="spec-product-price" id="specProductPrice">¥3,899</div>
+                        <div class="spec-product-title">北欧简约风真皮沙发</div>
+                        <div class="spec-product-selected" id="specProductSelected">已选：浅灰色、三人座、头层牛皮、1件</div>
+                    </div>
+                </div>
+            </div>
+            <div class="spec-select-body">
+                <!-- 颜色选择 -->
+                <div class="spec-select-section">
+                    <div class="spec-select-section-title">颜色</div>
+                    <div class="spec-options">
+                        <div class="spec-option active" data-color="浅灰色" onclick="selectSpec(this, 'color')">浅灰色</div>
+                        <div class="spec-option" data-color="深灰色" onclick="selectSpec(this, 'color')">深灰色</div>
+                        <div class="spec-option" data-color="米白色" onclick="selectSpec(this, 'color')">米白色</div>
+                    </div>
+                </div>
+                
+                <!-- 尺寸选择 -->
+                <div class="spec-select-section">
+                    <div class="spec-select-section-title">尺寸</div>
+                    <div class="spec-options">
+                        <div class="spec-option active" data-size="三人座" data-price="3899" onclick="selectSpec(this, 'size')">三人座<span class="size-info">220cm</span></div>
+                        <div class="spec-option" data-size="双人座" data-price="2899" onclick="selectSpec(this, 'size')">双人座<span class="size-info">180cm</span></div>
+                        <div class="spec-option" data-size="单人座" data-price="1899" onclick="selectSpec(this, 'size')">单人座<span class="size-info">90cm</span></div>
+                    </div>
+                </div>
+                
+                <!-- 材质选择 -->
+                <div class="spec-select-section">
+                    <div class="spec-select-section-title">材质</div>
+                    <div class="spec-options">
+                        <div class="spec-option active" data-material="头层牛皮" onclick="selectSpec(this, 'material')">头层牛皮</div>
+                        <div class="spec-option" data-material="二层牛皮" onclick="selectSpec(this, 'material')">二层牛皮</div>
+                        <div class="spec-option" data-material="仿皮" onclick="selectSpec(this, 'material')">仿皮</div>
+                    </div>
+                </div>
+                
+                <!-- 数量选择 -->
+                <div class="spec-select-section">
+                    <div class="spec-select-section-title">数量</div>
+                    <div class="quantity-selector">
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus-btn" onclick="updateSpecQuantity(-1)" disabled>
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="number" class="quantity-input" id="spec-quantity" value="1" min="1" max="10" onchange="validateSpecQuantity()">
+                            <button class="quantity-btn plus-btn" onclick="updateSpecQuantity(1)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="spec-select-footer">
+                <button class="spec-confirm-btn" onclick="confirmAddToCart()">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 图片轮播
+        let currentSlide = 0;
+        const dots = document.querySelectorAll('.gallery-dot');
+        
+        function updateSlide(index) {
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[index].classList.add('active');
+            currentSlide = index;
+        }
+        
+        // 规格选择
+        document.querySelectorAll('.spec-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const parent = this.parentElement;
+                parent.querySelector('.active').classList.remove('active');
+                this.classList.add('active');
+                
+                // 如果选择的是尺寸，更新价格显示
+                if (this.hasAttribute('data-price')) {
+                    updateProductPrice(this.getAttribute('data-price'));
+                }
+            });
+        });
+        
+        // 页面滚动处理
+        window.addEventListener('scroll', function() {
+            const tabs = document.querySelector('.info-tabs');
+            if (window.scrollY > 400) {
+                tabs.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+            } else {
+                tabs.style.boxShadow = 'none';
+            }
+        });
+
+        // 快速导航功能
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const navItems = document.querySelectorAll('.quick-nav-item');
+            
+            // 滚动到指定区域
+            section.scrollIntoView({ behavior: 'smooth' });
+            
+            // 更新导航项状态
+            navItems.forEach(item => item.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+        
+        // 监听页面滚动，更新导航状态
+        window.addEventListener('scroll', function() {
+            const sections = ['gallery', 'price', 'specs', 'details', 'service'];
+            const navItems = document.querySelectorAll('.quick-nav-item');
+            
+            // 获取当前滚动位置
+            const scrollPosition = window.scrollY + 100;
+            
+            // 查找当前可见的区域
+            sections.forEach((sectionId, index) => {
+                const section = document.getElementById(sectionId);
+                const sectionTop = section.offsetTop;
+                const sectionBottom = sectionTop + section.offsetHeight;
+                
+                if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                    navItems.forEach(item => item.classList.remove('active'));
+                    navItems[index].classList.add('active');
+                }
+            });
+        });
+
+        // 规格对比功能 - 保持高亮列与当前选中规格同步
+        function toggleSpecCompare() {
+            const modal = document.getElementById('specCompareModal');
+            modal.classList.toggle('active');
+            
+            // 禁止背景滚动
+            document.body.style.overflow = modal.classList.contains('active') ? 'hidden' : '';
+            
+            if (modal.classList.contains('active')) {
+                // 获取当前选中的尺寸
+                const activeSize = document.querySelector('.spec-section:nth-of-type(2) .spec-option.active').textContent.trim().split(/\s+/)[0];
+                
+                // 更新高亮列
+                updateHighlightColumn(activeSize);
+            }
+        }
+        
+        // 更新对比表格高亮列
+        function updateHighlightColumn(size) {
+            const table = document.querySelector('.compare-table');
+            const headerRow = table.querySelector('tr');
+            const headerCells = headerRow.querySelectorAll('th');
+            
+            // 移除所有高亮
+            table.querySelectorAll('.highlight-col').forEach(cell => {
+                cell.classList.remove('highlight-col');
+            });
+            
+            // 找到对应的列索引
+            let colIndex = -1;
+            headerCells.forEach((cell, index) => {
+                if (cell.textContent.includes(size)) {
+                    colIndex = index;
+                }
+            });
+            
+            // 如果找到了，添加高亮
+            if (colIndex > 0) { // 跳过第一列
+                // 高亮表头
+                headerCells[colIndex].classList.add('highlight-col');
+                
+                // 高亮数据列
+                const rows = table.querySelectorAll('tr');
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td, th');
+                    if (cells.length > colIndex) {
+                        cells[colIndex].classList.add('highlight-col');
+                    }
+                });
+            }
+        }
+        
+        // 规格选择时更新对比表格
+        document.addEventListener('DOMContentLoaded', function() {
+            // 尺寸选择更新
+            const sizeOptions = document.querySelectorAll('.spec-section:nth-of-type(2) .spec-option');
+            sizeOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const size = this.textContent.trim().split(/\s+/)[0];
+                    // 如果对比表格可见，更新高亮列
+                    if (document.getElementById('specCompareModal').classList.contains('active')) {
+                        updateHighlightColumn(size);
+                    }
+                });
+            });
+        });
+
+        // 回到顶部功能
+        const backToTop = document.querySelector('.back-to-top');
+        const floatingInfo = document.querySelector('.floating-info');
+        
+        window.addEventListener('scroll', function() {
+            // 回到顶部按钮显示控制
+            if (window.scrollY > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+            
+            // 关键信息悬浮显示控制
+            if (window.scrollY > 400) {
+                floatingInfo.classList.add('visible');
+            } else {
+                floatingInfo.classList.remove('visible');
+            }
+        });
+        
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // 咨询功能
+        function toggleConsult() {
+            const modal = document.getElementById('consultModal');
+            modal.classList.toggle('active');
+            document.body.style.overflow = modal.classList.contains('active') ? 'hidden' : '';
+        }
+        
+        function startAIChat() {
+            // 这里可以接入智能客服系统
+            alert('正在接入智能客服...');
+        }
+        
+        function consultDesigner() {
+            // 这里可以接入设计师咨询系统
+            alert('正在为您转接设计师...');
+        }
+
+        // 选项卡切换功能
+        document.querySelectorAll('.tab-item').forEach(tab => {
+            tab.addEventListener('click', function() {
+                // 移除所有活动状态
+                document.querySelectorAll('.tab-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelectorAll('.tab-pane').forEach(pane => {
+                    pane.classList.remove('active');
+                });
+                
+                // 添加新的活动状态
+                this.classList.add('active');
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+                
+                // 滚动到内容区域
+                document.getElementById(tabId).scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // 监听滚动，更新选项卡状态
+        const tabs = document.querySelectorAll('.tab-pane');
+        window.addEventListener('scroll', function() {
+            const scrollPosition = window.scrollY + 100;
+            
+            tabs.forEach(tab => {
+                const tabTop = tab.offsetTop;
+                const tabBottom = tabTop + tab.offsetHeight;
+                
+                if (scrollPosition >= tabTop && scrollPosition < tabBottom) {
+                    const tabId = tab.id;
+                    document.querySelectorAll('.tab-item').forEach(item => {
+                        item.classList.remove('active');
+                        if (item.getAttribute('data-tab') === tabId) {
+                            item.classList.add('active');
+                        }
+                    });
+                }
+            });
+        });
+
+        // 尺寸卡片切换
+        document.querySelectorAll('.size-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // 移除其他卡片的激活状态
+                document.querySelectorAll('.size-card').forEach(c => {
+                    c.classList.remove('active');
+                });
+                // 激活当前卡片
+                this.classList.add('active');
+            });
+        });
+
+        // 收藏功能
+        function toggleFavorite(el) {
+            el.classList.toggle('active');
+            
+            if (el.classList.contains('active')) {
+                // 切换为实心心形
+                el.querySelector('i').classList.remove('far');
+                el.querySelector('i').classList.add('fas');
+                
+                // 显示收藏成功提示
+                const toast = document.createElement('div');
+                toast.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-70 text-white px-4 py-2 rounded-full text-sm z-50';
+                toast.textContent = '收藏成功';
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transition = 'opacity 0.3s ease';
+                    setTimeout(() => toast.remove(), 300);
+                }, 1500);
+            } else {
+                // 切换回空心心形
+                el.querySelector('i').classList.remove('fas');
+                el.querySelector('i').classList.add('far');
+            }
+        }
+
+        // 更新商品价格
+        function updateProductPrice(price) {
+            const priceElement = document.querySelector('.current-price');
+            priceElement.textContent = `¥${price}`;
+            
+            // 同时更新悬浮价格（如果存在）
+            const floatingPrice = document.querySelector('.floating-info-price');
+            if (floatingPrice) {
+                floatingPrice.textContent = `¥${price}`;
+            }
+        }
+        
+        // 数量选择器功能
+        function updateQuantity(change) {
+            const input = document.getElementById('product-quantity');
+            let value = parseInt(input.value) + change;
+            
+            // 验证范围
+            if (value < 1) value = 1;
+            if (value > 10) value = 10;
+            
+            input.value = value;
+            validateQuantity();
+        }
+        
+        function validateQuantity() {
+            const input = document.getElementById('product-quantity');
+            const value = parseInt(input.value);
+            
+            // 限制范围
+            if (isNaN(value) || value < 1) input.value = 1;
+            if (value > 10) input.value = 10;
+            
+            // 启用/禁用加减按钮
+            document.querySelector('.minus-btn').disabled = input.value <= 1;
+            document.querySelector('.plus-btn').disabled = input.value >= 10;
+        }
+        
+        // 加入购物车功能
+        function addToCart() {
+            try {
+                // 显示弹窗之前确保所有弹窗都已关闭
+                closeAllModals();
+                
+                // 从主页面同步当前选中的规格到弹窗
+                const modal = document.getElementById('specSelectModal');
+                if (!modal) {
+                    console.error("找不到规格选择弹窗");
+                    return;
+                }
+                
+                // 修改确认按钮为加入购物车行为
+                const confirmBtn = modal.querySelector('.spec-confirm-btn');
+                if (confirmBtn) {
+                    // 确保使用正确的onclick
+                    confirmBtn.setAttribute("onclick", "confirmAddToCart()");
+                    confirmBtn.textContent = '确定';
+                    confirmBtn.style.background = 'var(--brand-primary)';
+                }
+                
+                // 延迟一帧再同步规格，确保DOM已更新
+                setTimeout(() => {
+                    try {
+                        syncSpecsToModal();
+                        
+                        // 显示弹窗
+                        modal.classList.add('active');
+                        const backdrop = document.getElementById('backdrop');
+                        if (backdrop) backdrop.classList.add('visible');
+                        document.body.style.overflow = 'hidden';
+
+                        // 确保规格选项在弹窗打开后是可点击的
+                        console.log("弹窗已打开，确保选项可点击");
+                    } catch (innerError) {
+                        console.error("显示规格选择弹窗出错:", innerError);
+                    }
+                }, 50);
+            } catch (error) {
+                console.error("打开规格选择弹窗出错:", error);
+                alert("打开规格选择弹窗时出错，请刷新页面后重试");
+            }
+        }
+        
+        // 同步主页面规格到弹窗
+        function syncSpecsToModal() {
+            try {
+                console.log("开始同步规格到弹窗");
+                
+                // 直接获取主页面元素
+                const mainColorOption = document.querySelector('.spec-section:nth-of-type(1) .spec-option.active');
+                const mainSizeOption = document.querySelector('.spec-section:nth-of-type(2) .spec-option.active');
+                const mainMaterialOption = document.querySelector('.spec-section:nth-of-type(3) .spec-option.active');
+                const quantityInput = document.getElementById('product-quantity');
+                
+                if (!mainColorOption || !mainSizeOption || !mainMaterialOption) {
+                    console.error("无法找到主页面选中的规格选项");
+                    console.log("颜色选项:", mainColorOption);
+                    console.log("尺寸选项:", mainSizeOption);
+                    console.log("材质选项:", mainMaterialOption);
+                    return;
+                }
+                
+                const selectedColor = mainColorOption.getAttribute('data-color');
+                const selectedSize = mainSizeOption.getAttribute('data-size');
+                const selectedPrice = mainSizeOption.getAttribute('data-price');
+                const selectedMaterial = mainMaterialOption.getAttribute('data-material');
+                const quantity = quantityInput ? quantityInput.value : "1";
+                
+                console.log("获取到主页面规格:", {
+                    color: selectedColor,
+                    size: selectedSize,
+                    price: selectedPrice,
+                    material: selectedMaterial,
+                    quantity: quantity
+                });
+                
+                // 更新弹窗中的信息
+                const modal = document.getElementById('specSelectModal');
+                if (!modal) {
+                    console.error("找不到规格选择弹窗");
+                    return;
+                }
+                
+                // 使用直接的querySelector而不是嵌套选择器
+                const priceElement = modal.querySelector('#specProductPrice');
+                const selectedInfoElement = modal.querySelector('#specProductSelected');
+                const modalQuantityInput = modal.querySelector('#spec-quantity');
+                
+                if (priceElement) priceElement.textContent = `¥${selectedPrice}`;
+                if (selectedInfoElement) selectedInfoElement.textContent = `已选：${selectedColor}、${selectedSize}、${selectedMaterial}、${quantity}件`;
+                if (modalQuantityInput) modalQuantityInput.value = quantity;
+                
+                // 查找弹窗中的所有规格选项并重置选中状态
+                const colorOptions = modal.querySelectorAll('.spec-select-section:nth-of-type(1) .spec-option');
+                const sizeOptions = modal.querySelectorAll('.spec-select-section:nth-of-type(2) .spec-option');
+                const materialOptions = modal.querySelectorAll('.spec-select-section:nth-of-type(3) .spec-option');
+                
+                console.log("弹窗规格选项数量:", {
+                    color: colorOptions.length,
+                    size: sizeOptions.length,
+                    material: materialOptions.length
+                });
+                
+                // 设置选中状态
+                colorOptions.forEach(option => {
+                    const optionColor = option.getAttribute('data-color');
+                    if (optionColor === selectedColor) {
+                        option.classList.add('active');
+                    } else {
+                        option.classList.remove('active');
+                    }
+                });
+                
+                sizeOptions.forEach(option => {
+                    const optionSize = option.getAttribute('data-size');
+                    if (optionSize === selectedSize) {
+                        option.classList.add('active');
+                    } else {
+                        option.classList.remove('active');
+                    }
+                });
+                
+                materialOptions.forEach(option => {
+                    const optionMaterial = option.getAttribute('data-material');
+                    if (optionMaterial === selectedMaterial) {
+                        option.classList.add('active');
+                    } else {
+                        option.classList.remove('active');
+                    }
+                });
+                
+                // 验证数量按钮状态
+                const minusBtn = modal.querySelector('.spec-select-section .minus-btn');
+                const plusBtn = modal.querySelector('.spec-select-section .plus-btn');
+                
+                if (minusBtn) minusBtn.disabled = Number(quantity) <= 1;
+                if (plusBtn) plusBtn.disabled = Number(quantity) >= 10;
+                
+                console.log("规格同步到弹窗完成");
+            } catch (error) {
+                console.error("同步规格到弹窗出错:", error);
+                // 出错时使用默认值
+                try {
+                    const defaultInfo = "已选：浅灰色、三人座、头层牛皮、1件";
+                    const selectedInfoElement = document.querySelector('#specProductSelected');
+                    if (selectedInfoElement) selectedInfoElement.textContent = defaultInfo;
+                } catch (e) {
+                    console.error("设置默认值出错:", e);
+                }
+            }
+        }
+        
+        // 在弹窗中选择规格 - 直接绑定事件处理程序
+        function selectSpec(element, type) {
+            try {
+                if (!element) {
+                    console.error("选择规格时元素为空");
+                    return;
+                }
+                
+                console.log("选择规格:", type, element.getAttribute(`data-${type}`));
+                
+                // 移除同类中的活动状态
+                const modal = document.getElementById('specSelectModal');
+                if(!modal) {
+                    console.error("找不到规格选择弹窗");
+                    return;
+                }
+                
+                // 根据类型找到对应的规格选项容器
+                let specOptionsContainer;
+                switch(type) {
+                    case 'color':
+                        specOptionsContainer = modal.querySelector('.spec-select-section:nth-of-type(1) .spec-options');
+                        break;
+                    case 'size':
+                        specOptionsContainer = modal.querySelector('.spec-select-section:nth-of-type(2) .spec-options');
+                        break;
+                    case 'material':
+                        specOptionsContainer = modal.querySelector('.spec-select-section:nth-of-type(3) .spec-options');
+                        break;
+                    default:
+                        console.error("未知的规格类型:", type);
+                        return;
+                }
+                
+                if (!specOptionsContainer) {
+                    console.error(`找不到规格类型 ${type} 的容器`);
+                    return;
+                }
+                
+                // 移除该容器中所有选项的活动状态
+                specOptionsContainer.querySelectorAll('.spec-option').forEach(opt => {
+                    opt.classList.remove('active');
+                });
+                
+                // 激活当前选中项
+                element.classList.add('active');
+                
+                // 如果是尺寸，更新价格
+                if (type === 'size' && element.hasAttribute('data-price')) {
+                    const price = element.getAttribute('data-price');
+                    const priceElement = document.getElementById('specProductPrice');
+                    if (priceElement) priceElement.textContent = `¥${price}`;
+                }
+                
+                // 更新已选信息
+                updateSelectedInfo();
+            } catch (error) {
+                console.error("选择规格出错:", error);
+            }
+        }
+        
+        // 更新已选信息文本 - 简化选择器
+        function updateSelectedInfo() {
+            try {
+                // 获取当前模态框
+                const modal = document.getElementById('specSelectModal');
+                if (!modal) {
+                    console.error("找不到规格选择弹窗");
+                    return;
+                }
+                
+                // 直接在模态框内查找活动的规格选项
+                const colorOption = modal.querySelector('.spec-select-section:nth-of-type(1) .spec-option.active');
+                const sizeOption = modal.querySelector('.spec-select-section:nth-of-type(2) .spec-option.active');
+                const materialOption = modal.querySelector('.spec-select-section:nth-of-type(3) .spec-option.active');
+                const quantityInput = modal.querySelector('#spec-quantity');
+                
+                if (!colorOption || !sizeOption || !materialOption) {
+                    console.error("无法找到选中的规格选项");
+                    console.log("颜色选项:", colorOption);
+                    console.log("尺寸选项:", sizeOption);
+                    console.log("材质选项:", materialOption);
+                    return;
+                }
+                
+                const selectedColor = colorOption.getAttribute('data-color');
+                const selectedSize = sizeOption.getAttribute('data-size');
+                const selectedMaterial = materialOption.getAttribute('data-material');
+                const quantity = quantityInput ? quantityInput.value : "1";
+                
+                // 更新已选信息
+                const selectedInfoElement = modal.querySelector('#specProductSelected');
+                if (selectedInfoElement) {
+                    selectedInfoElement.textContent = `已选：${selectedColor}、${selectedSize}、${selectedMaterial}、${quantity}件`;
+                }
+            } catch (error) {
+                console.error("更新已选信息出错:", error);
+            }
+        }
+        
+        // 关闭规格选择弹窗并清理遮罩
+        function closeSpecSelect() {
+            try {
+                console.log("关闭规格选择弹窗");
+                const modal = document.getElementById('specSelectModal');
+                const backdrop = document.getElementById('backdrop');
+                
+                if (modal) modal.classList.remove('active');
+                if (backdrop) backdrop.classList.remove('visible');
+                
+                document.body.style.overflow = '';
+            } catch (error) {
+                console.error("关闭规格选择弹窗出错:", error);
+            }
+        }
+        
+        // 确认添加到购物车 - 直接访问模态框元素
+        function confirmAddToCart() {
+            try {
+                console.log("确认添加到购物车");
+                // 获取当前弹窗
+                const modal = document.getElementById('specSelectModal');
+                if (!modal) {
+                    console.error("找不到规格选择弹窗");
+                    return;
+                }
+                
+                // 直接在模态框内查找选中的规格
+                const colorOption = modal.querySelector('.spec-select-section:nth-of-type(1) .spec-option.active');
+                const sizeOption = modal.querySelector('.spec-select-section:nth-of-type(2) .spec-option.active');
+                const materialOption = modal.querySelector('.spec-select-section:nth-of-type(3) .spec-option.active');
+                const quantityInput = modal.querySelector('#spec-quantity');
+                
+                if (!colorOption || !sizeOption || !materialOption) {
+                    console.error("无法找到选中的规格选项");
+                    console.log("颜色选项:", colorOption);
+                    console.log("尺寸选项:", sizeOption);
+                    console.log("材质选项:", materialOption);
+                    alert("请选择完整的商品规格");
+                    return;
+                }
+                
+                const selectedColor = colorOption.getAttribute('data-color');
+                const selectedSize = sizeOption.getAttribute('data-size');
+                const selectedPrice = sizeOption.getAttribute('data-price');
+                const selectedMaterial = materialOption.getAttribute('data-material');
+                const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
+                
+                console.log("确认规格信息:", {
+                    color: selectedColor,
+                    size: selectedSize,
+                    price: selectedPrice,
+                    material: selectedMaterial,
+                    quantity: quantity
+                });
+                
+                // 创建商品对象
+                const product = {
+                    id: 'sofa-' + Date.now(),
+                    name: '北欧简约风真皮沙发',
+                    color: selectedColor,
+                    size: selectedSize,
+                    material: selectedMaterial,
+                    price: selectedPrice,
+                    quantity: quantity,
+                    image: '../images/sofa_360_1.jpg'
+                };
+                
+                // 从localStorage获取购物车
+                let cart = [];
+                try {
+                    const cartData = localStorage.getItem('furniture_cart');
+                    cart = cartData ? JSON.parse(cartData) : [];
+                } catch (e) {
+                    console.error("读取购物车数据出错:", e);
+                    cart = [];
+                }
+                
+                // 检查是否已存在相同规格商品
+                const existingProductIndex = cart.findIndex(item => 
+                    item.name === product.name && 
+                    item.color === product.color && 
+                    item.size === product.size && 
+                    item.material === product.material
+                );
+                
+                if (existingProductIndex > -1) {
+                    // 如果已存在，增加数量
+                    cart[existingProductIndex].quantity += quantity;
+                } else {
+                    // 如果不存在，添加新商品
+                    cart.push(product);
+                }
+                
+                // 保存回localStorage
+                localStorage.setItem('furniture_cart', JSON.stringify(cart));
+                
+                // 更新购物车计数
+                updateCartCount();
+                
+                // 先关闭规格选择弹窗
+                modal.classList.remove('active');
+                // 确保遮罩暂时保持，因为还要显示成功弹窗
+                
+                // 显示成功提示
+                const toast = document.createElement('div');
+                toast.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-70 text-white px-4 py-2 rounded-full text-sm z-50';
+                toast.textContent = '已加入购物车';
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transition = 'opacity 0.3s ease';
+                    setTimeout(() => toast.remove(), 300);
+                }, 1500);
+                
+                // 显示成功弹窗
+                const successModal = document.getElementById('cartSuccessModal');
+                const backdrop = document.getElementById('backdrop');
+                if (successModal) successModal.classList.add('visible');
+                if (backdrop) backdrop.classList.add('visible');
+                
+                // 同步规格回主页面
+                syncSpecsFromModal();
+                
+                console.log("购物车添加成功");
+            } catch (error) {
+                console.error("确认添加到购物车出错:", error);
+                alert("添加到购物车时出错，请重试");
+                // 确保关闭所有模态框
+                closeAllModals();
+            }
+        }
+        
+        // 关闭所有模态框 - 更安全的实现
+        function closeAllModals() {
+            try {
+                console.log("关闭所有模态框");
+                
+                // 找到所有可能的模态框
+                const modals = [
+                    document.getElementById('cartSuccessModal'),
+                    document.getElementById('specCompareModal'),
+                    document.getElementById('consultModal'),
+                    document.getElementById('specSelectModal')
+                ];
+                
+                const backdrop = document.getElementById('backdrop');
+                
+                // 移除所有模态框的活动状态
+                modals.forEach(modal => {
+                    if (modal) {
+                        modal.classList.remove('active');
+                        modal.classList.remove('visible');
+                    }
+                });
+                
+                // 隐藏遮罩
+                if (backdrop) backdrop.classList.remove('visible');
+                
+                // 恢复确认按钮的原始功能
+                const specModal = document.getElementById('specSelectModal');
+                if (specModal) {
+                    const confirmBtn = specModal.querySelector('.spec-confirm-btn');
+                    if (confirmBtn) {
+                        confirmBtn.setAttribute("onclick", "confirmAddToCart()");
+                        confirmBtn.textContent = '确定';
+                        confirmBtn.style.background = 'var(--brand-primary)';
+                    }
+                }
+                
+                // 恢复页面滚动
+                document.body.style.overflow = '';
+                
+                console.log("所有模态框已关闭");
+            } catch (error) {
+                console.error("关闭所有模态框出错:", error);
+            }
+        }
+        
+        // 修复closeCartSuccess函数缺失的问题
+        function closeCartSuccess() {
+            try {
+                console.log("关闭购物车成功弹窗");
+                const modal = document.getElementById('cartSuccessModal');
+                const backdrop = document.getElementById('backdrop');
+                
+                if (modal) modal.classList.remove('visible');
+                if (backdrop) backdrop.classList.remove('visible');
+                
+                document.body.style.overflow = '';
+            } catch (error) {
+                console.error("关闭购物车成功弹窗出错:", error);
+            }
+        }
+        
+        // 初始化事件监听
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                console.log("初始化事件监听");
+                
+                // 初始化购物车计数
+                updateCartCount();
+                validateQuantity();
+                
+                // 为弹窗添加点击事件，阻止冒泡
+                document.querySelectorAll('.spec-select-content, .spec-compare-content, .consult-content').forEach(element => {
+                    if (element) {
+                        element.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                        });
+                    }
+                });
+                
+                // 为背景添加点击事件，关闭所有弹窗
+                document.querySelectorAll('.spec-select-modal, .spec-compare-modal, .consult-modal, #backdrop').forEach(element => {
+                    if (element) {
+                        element.addEventListener('click', function(e) {
+                            // 判断点击的是否为弹窗本身，不是弹窗内容
+                            if (e.target === this) {
+                                closeAllModals();
+                            }
+                        });
+                    }
+                });
+                
+                // 确保规格选项可点击 - 增强现有onclick事件而不替换它们
+                const modal = document.getElementById('specSelectModal');
+                if (modal) {
+                    // 为规格选项添加额外的事件监听，增强现有行为
+                    modal.querySelectorAll('.spec-option').forEach(option => {
+                        option.addEventListener('click', function(e) {
+                            e.stopPropagation();
+                        });
+                    });
+                    
+                    // 确保数量选择按钮能够阻止事件冒泡
+                    const minusBtn = modal.querySelector('.minus-btn');
+                    const plusBtn = modal.querySelector('.plus-btn');
+                    const quantityInput = modal.querySelector('#spec-quantity');
+                    
+                    if (minusBtn) {
+                        minusBtn.removeAttribute('onclick');
+                        minusBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            updateSpecQuantity(-1);
+                        });
+                    }
+                    
+                    if (plusBtn) {
+                        plusBtn.removeAttribute('onclick');
+                        plusBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            updateSpecQuantity(1);
+                        });
+                    }
+                    
+                    if (quantityInput) {
+                        quantityInput.removeAttribute('onchange');
+                        quantityInput.addEventListener('change', function(e) {
+                            e.stopPropagation();
+                            validateSpecQuantity();
+                        });
+                    }
+                }
+                
+                console.log("初始化事件监听完成");
+            } catch (error) {
+                console.error("初始化事件监听出错:", error);
+            }
+        });
+
+        // 修改立即购买功能以使用规格选择弹窗
+        function buyNow() {
+            try {
+                openBuyNowModal();
+            } catch (error) {
+                console.error("立即购买出错:", error);
+                alert("处理订单时出错，请重试");
+            }
+        }
+        
+        // 打开立即购买的规格选择
+        function openBuyNowModal() {
+            try {
+                // 同步规格到弹窗
+                syncSpecsToModal();
+                
+                // 修改确认按钮行为
+                const confirmBtn = document.querySelector('.spec-confirm-btn');
+                if (confirmBtn) {
+                    // 使用setAttribute设置onclick
+                    confirmBtn.setAttribute("onclick", "confirmBuyNow()");
+                    confirmBtn.textContent = '立即购买';
+                    confirmBtn.style.background = 'var(--brand-primary)';
+                }
+                
+                // 显示弹窗
+                document.getElementById('specSelectModal').classList.add('active');
+                document.getElementById('backdrop').classList.add('visible');
+                document.body.style.overflow = 'hidden';
+                
+                console.log("立即购买弹窗已打开");
+            } catch (error) {
+                console.error("打开立即购买弹窗出错:", error);
+                proceedToCheckout(); // 出错时尝试直接跳转
+            }
+        }
+        
+        // 直接进入结算流程
+        function proceedToCheckout() {
+            try {
+                // 获取主页面当前选中的规格
+                const colorOption = document.querySelector('.spec-section:nth-of-type(1) .spec-option.active');
+                const sizeOption = document.querySelector('.spec-section:nth-of-type(2) .spec-option.active');
+                const materialOption = document.querySelector('.spec-section:nth-of-type(3) .spec-option.active');
+                
+                if (!colorOption || !sizeOption || !materialOption) {
+                    console.error("无法找到选中的规格选项");
+                    alert("请选择商品规格");
+                    return;
+                }
+                
+                const selectedColor = colorOption.getAttribute('data-color');
+                const selectedSize = sizeOption.getAttribute('data-size');
+                const selectedPrice = sizeOption.getAttribute('data-price');
+                const selectedMaterial = materialOption.getAttribute('data-material');
+                
+                const quantityInput = document.getElementById('product-quantity');
+                const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
+                
+                // 创建订单对象
+                const order = {
+                    products: [{
+                        id: 'sofa-direct-' + Date.now(),
+                        name: '北欧简约风真皮沙发',
+                        color: selectedColor,
+                        size: selectedSize,
+                        material: selectedMaterial,
+                        price: selectedPrice,
+                        quantity: quantity,
+                        image: '../images/sofa_360_1.jpg'
+                    }],
+                    totalPrice: selectedPrice * quantity
+                };
+                
+                // 保存到localStorage，供订单确认页使用
+                localStorage.setItem('temp_order', JSON.stringify(order));
+                
+                // 显示确认弹窗
+                const toast = document.createElement('div');
+                toast.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-70 text-white px-4 py-2 rounded-full text-sm z-50';
+                toast.textContent = '即将前往结算页面...';
+                document.body.appendChild(toast);
+                
+                // 延迟跳转
+                setTimeout(() => {
+                    window.location.href = 'checkout.html'; // 修改为checkout.html
+                }, 800);
+            } catch (error) {
+                console.error("结算流程出错:", error);
+                alert("处理订单时出错，请重试");
+            }
+        }
+        
+        // 确认立即购买
+        function confirmBuyNow() {
+            try {
+                // 获取弹窗中选择的规格
+                const colorOption = document.querySelector('.spec-select-section:nth-of-type(1) .spec-option.active');
+                const sizeOption = document.querySelector('.spec-select-section:nth-of-type(2) .spec-option.active');
+                const materialOption = document.querySelector('.spec-select-section:nth-of-type(3) .spec-option.active');
+                
+                if (!colorOption || !sizeOption || !materialOption) {
+                    console.error("无法找到选中的规格选项");
+                    alert("请选择完整的商品规格");
+                    return;
+                }
+                
+                const selectedColor = colorOption.getAttribute('data-color');
+                const selectedSize = sizeOption.getAttribute('data-size');
+                const selectedPrice = sizeOption.getAttribute('data-price');
+                const selectedMaterial = materialOption.getAttribute('data-material');
+                
+                const quantityInput = document.getElementById('spec-quantity');
+                const quantity = quantityInput ? parseInt(quantityInput.value) : 1;
+                
+                console.log("确认立即购买:", selectedColor, selectedSize, selectedMaterial, quantity);
+                
+                // 创建订单对象
+                const order = {
+                    products: [{
+                        id: 'sofa-direct-' + Date.now(),
+                        name: '北欧简约风真皮沙发',
+                        color: selectedColor,
+                        size: selectedSize,
+                        material: selectedMaterial,
+                        price: selectedPrice,
+                        quantity: quantity,
+                        image: '../images/sofa_360_1.jpg'
+                    }],
+                    totalPrice: selectedPrice * quantity
+                };
+                
+                // 保存到localStorage，供订单确认页使用
+                localStorage.setItem('temp_order', JSON.stringify(order));
+                
+                // 关闭规格选择弹窗
+                closeSpecSelect();
+                
+                // 恢复确认按钮的原始功能
+                const confirmBtn = document.querySelector('.spec-confirm-btn');
+                if (confirmBtn) {
+                    confirmBtn.setAttribute('onclick', confirmBtn.getAttribute('data-original-onclick') || 'confirmAddToCart()');
+                    confirmBtn.textContent = '确定';
+                    confirmBtn.style.background = 'var(--brand-primary)';
+                }
+                
+                // 显示确认弹窗
+                const toast = document.createElement('div');
+                toast.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-70 text-white px-4 py-2 rounded-full text-sm z-50';
+                toast.textContent = '即将前往结算页面...';
+                document.body.appendChild(toast);
+                
+                // 同步规格回主页面
+                syncSpecsFromModal();
+                
+                // 延迟跳转
+                setTimeout(() => {
+                    window.location.href = 'checkout.html'; // 修改为checkout.html
+                }, 800);
+            } catch (error) {
+                console.error("确认立即购买出错:", error);
+                alert("处理订单时出错，请重试");
+            }
+        }
+
+        // 更新弹窗中的数量
+        function updateSpecQuantity(change) {
+            try {
+                const input = document.getElementById('spec-quantity');
+                if (!input) return;
+                
+                let value = parseInt(input.value) + change;
+                
+                // 验证范围
+                if (value < 1) value = 1;
+                if (value > 10) value = 10;
+                
+                input.value = value;
+                validateSpecQuantity();
+                updateSelectedInfo();
+            } catch (error) {
+                console.error("更新数量出错:", error);
+            }
+        }
+        
+        // 验证弹窗中的数量输入
+        function validateSpecQuantity() {
+            try {
+                const input = document.getElementById('spec-quantity');
+                if (!input) return;
+                
+                const value = parseInt(input.value);
+                
+                // 限制范围
+                if (isNaN(value) || value < 1) input.value = 1;
+                if (value > 10) input.value = 10;
+                
+                // 启用/禁用加减按钮
+                const minusBtn = document.querySelector('.spec-select-section .minus-btn');
+                const plusBtn = document.querySelector('.spec-select-section .plus-btn');
+                
+                if (minusBtn) minusBtn.disabled = input.value <= 1;
+                if (plusBtn) plusBtn.disabled = input.value >= 10;
+                
+                updateSelectedInfo();
+            } catch (error) {
+                console.error("验证数量出错:", error);
+            }
+        }
+        
+        // 将弹窗中的规格同步回主页面
+        function syncSpecsFromModal() {
+            try {
+                // 获取弹窗中的规格选择
+                const colorOption = document.querySelector('.spec-select-section:nth-of-type(1) .spec-option.active');
+                const sizeOption = document.querySelector('.spec-select-section:nth-of-type(2) .spec-option.active');
+                const materialOption = document.querySelector('.spec-select-section:nth-of-type(3) .spec-option.active');
+                
+                if (!colorOption || !sizeOption || !materialOption) {
+                    console.error("无法找到选中的规格选项");
+                    return;
+                }
+                
+                const selectedColor = colorOption.getAttribute('data-color');
+                const selectedSize = sizeOption.getAttribute('data-size');
+                const selectedMaterial = materialOption.getAttribute('data-material');
+                
+                const quantityInput = document.getElementById('spec-quantity');
+                const quantity = quantityInput ? quantityInput.value : 1;
+                
+                // 同步到主页面
+                const mainColorOptions = document.querySelectorAll('.spec-section:nth-of-type(1) .spec-option');
+                const mainSizeOptions = document.querySelectorAll('.spec-section:nth-of-type(2) .spec-option');
+                const mainMaterialOptions = document.querySelectorAll('.spec-section:nth-of-type(3) .spec-option');
+                
+                mainColorOptions.forEach(option => {
+                    if (option.getAttribute('data-color') === selectedColor) {
+                        option.classList.add('active');
+                    } else {
+                        option.classList.remove('active');
+                    }
+                });
+                
+                mainSizeOptions.forEach(option => {
+                    if (option.getAttribute('data-size') === selectedSize) {
+                        option.classList.add('active');
+                    } else {
+                        option.classList.remove('active');
+                    }
+                });
+                
+                mainMaterialOptions.forEach(option => {
+                    if (option.getAttribute('data-material') === selectedMaterial) {
+                        option.classList.add('active');
+                    } else {
+                        option.classList.remove('active');
+                    }
+                });
+                
+                // 更新数量
+                const mainQuantityInput = document.getElementById('product-quantity');
+                if (mainQuantityInput) {
+                    mainQuantityInput.value = quantity;
+                    validateQuantity();
+                }
+                
+                // 同步价格显示
+                const priceElement = document.querySelector('.current-price');
+                if (priceElement && sizeOption && sizeOption.hasAttribute('data-price')) {
+                    priceElement.textContent = `¥${sizeOption.getAttribute('data-price')}`;
+                }
+                
+                // 更新浮动价格显示
+                const floatingPrice = document.querySelector('.floating-info-price');
+                if (floatingPrice && sizeOption && sizeOption.hasAttribute('data-price')) {
+                    floatingPrice.textContent = `¥${sizeOption.getAttribute('data-price')}`;
+                }
+            } catch (error) {
+                console.error("同步规格回主页面出错:", error);
+            }
+        }
+
+        // 前往购物车页面
+        function viewCart() {
+            try {
+                console.log("跳转到购物车页面");
+                window.location.href = "cart.html";
+            } catch (error) {
+                console.error("跳转购物车页面出错:", error);
+                alert("跳转购物车页面时出错，请重试");
+            }
+        }
+    </script>
+</body>
+</html> 

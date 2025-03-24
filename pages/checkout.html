@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>订单确认 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        /* 主题颜色变量 - 与首页保持一致 */
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+            
+            /* 渐变色 */
+            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
+            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
+            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
+            
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
+            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
+            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--brand-dark);
+        }
+
+        .section {
+            background-color: white;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .divider {
+            height: 1px;
+            background-color: var(--brand-light-dark);
+            margin: 12px 0;
+        }
+
+        /* 导航栏样式 */
+        .nav-bar {
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-bar i {
+            color: var(--brand-dark-light);
+            transition: color 0.3s ease;
+        }
+
+        .nav-bar i:hover {
+            color: var(--brand-primary);
+        }
+
+        /* 地址卡片样式 */
+        .section.address {
+            background: white;
+            transition: transform 0.3s ease;
+        }
+
+        .section.address:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* 商品信息样式 */
+        .product-image {
+            border: 1px solid var(--brand-light-dark);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .product-image:hover {
+            transform: scale(1.02);
+        }
+
+        /* 配送方式样式 */
+        .delivery-option {
+            transition: background-color 0.3s ease;
+        }
+
+        .delivery-option:hover {
+            background-color: var(--brand-primary-transparent);
+        }
+
+        /* 支付方式样式 */
+        .payment-method {
+            transition: all 0.3s ease;
+        }
+
+        .payment-method:hover {
+            background-color: var(--brand-primary-transparent);
+        }
+
+        input[type="radio"]:checked {
+            background-color: var(--brand-primary);
+            border-color: var(--brand-primary);
+        }
+
+        /* 底部结算栏样式 */
+        .bottom-bar {
+            background: white;
+            border-top: 1px solid var(--brand-light-dark);
+            box-shadow: var(--shadow-md);
+            z-index: 30; /* 提高z-index确保不被其他元素遮挡 */
+        }
+
+        .price {
+            color: var(--brand-primary);
+        }
+
+        .submit-btn {
+            background: var(--brand-gradient-primary);
+            color: white;
+            padding: 10px 32px;
+            border-radius: 24px;
+            font-weight: 500;
+            box-shadow: var(--shadow-highlight);
+            transition: all 0.3s ease;
+            border: none; /* 添加明确的边框设置 */
+            cursor: pointer; /* 添加鼠标指针样式 */
+            position: relative; /* 添加相对定位以确保可点击 */
+            outline: none; /* 移除outline */
+            overflow: visible; /* 确保不会被裁剪 */
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* 优惠券样式 */
+        .coupon-text {
+            color: var(--brand-primary);
+        }
+
+        /* 发票信息样式 */
+        .invoice-text {
+            color: var(--brand-dark-light);
+        }
+
+        .save-order-btn {
+            color: var(--brand-dark-light);
+            padding: 8px 12px;
+            border-radius: 24px;
+            transition: all 0.2s ease;
+            background: var(--brand-light);
+            border: 1px solid var(--brand-light-dark); /* 添加明确的边框设置 */
+            cursor: pointer; /* 添加鼠标指针样式 */
+            position: relative; /* 添加相对定位以确保可点击 */
+            outline: none; /* 移除outline */
+            overflow: visible; /* 确保不会被裁剪 */
+        }
+
+        .save-order-btn:hover {
+            background: var(--brand-primary-transparent);
+            color: var(--brand-primary);
+        }
+
+        .save-order-btn:hover i {
+            color: var(--brand-primary);
+        }
+
+        .delivery-time-option {
+            transition: background-color 0.3s ease;
+        }
+
+        .delivery-time-option:hover {
+            background-color: var(--brand-primary-transparent);
+        }
+
+        /* 模态框样式优化 */
+        .modal-container {
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+        
+        .modal-container.modal-entering {
+            opacity: 1;
+        }
+        
+        .modal-content {
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        
+        .modal-entering .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        body.modal-open {
+            overflow: hidden;
+            touch-action: none;
+        }
+        
+        .modal-input:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px var(--brand-primary-transparent);
+        }
+        
+        .modal-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .modal-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.3s ease-out;
+        }
+        
+        .modal-btn:active::after {
+            transform: translate(-50%, -50%) scale(2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <div class="flex items-center">
+                <a href="cart.html" class="text-gray-500 mr-3">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="text-lg font-medium">确认订单</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主要内容区 -->
+    <div class="main-content pt-14 pb-24 px-4">
+        <!-- 收货地址 -->
+        <div class="section address p-4">
+            <div class="flex items-center justify-between">
+                <div class="flex-1">
+                    <div class="flex items-center">
+                        <div class="font-medium">李小明</div>
+                        <div class="text-sm text-gray-500 ml-4">13800138000</div>
+                    </div>
+                    <div class="text-sm text-gray-600 mt-1">
+                        广东省深圳市南山区科技园南区A栋1001室
+                    </div>
+                </div>
+                <div class="text-gray-400">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 商品信息 -->
+        <div class="section p-4">
+            <div class="flex mt-3">
+                <div class="product-image w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="设计师台灯" class="w-full h-full object-cover">
+                </div>
+                <div class="ml-3 flex-1">
+                    <div class="text-sm font-medium">北欧设计师台灯</div>
+                    <div class="text-xs text-gray-500 mt-1">黑色</div>
+                    <div class="flex justify-between mt-2">
+                        <div class="text-sm price font-medium">¥599</div>
+                        <div class="text-sm text-gray-500">x2</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 配送方式 -->
+            <div class="divider"></div>
+            <div class="delivery-option flex items-center justify-between p-2 rounded-lg">
+                <div class="text-sm">配送方式</div>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-600">快递免邮</span>
+                    <i class="fas fa-chevron-right text-gray-400 text-xs ml-2"></i>
+                </div>
+            </div>
+            
+            <!-- 预计送达时间 -->
+            <div class="delivery-time-option flex items-center justify-between p-2 rounded-lg">
+                <div class="text-sm">预计送达</div>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-600" id="estimatedDelivery">5月20日（周一）09:00-18:00</span>
+                    <i class="fas fa-chevron-right text-gray-400 text-xs ml-2"></i>
+                </div>
+            </div>
+            
+            <!-- 订单备注 -->
+            <div class="divider"></div>
+            <div class="flex items-center justify-between">
+                <div class="text-sm">订单备注</div>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-400">选填，建议备注相关特殊需求</span>
+                    <i class="fas fa-chevron-right text-gray-400 text-xs ml-2"></i>
+                </div>
+            </div>
+            
+            <!-- 小计 -->
+            <div class="divider"></div>
+            <div class="flex justify-between text-sm">
+                <div>商品金额</div>
+                <div class="price">¥5,097</div>
+            </div>
+            <div class="flex justify-between text-sm mt-2">
+                <div>运费</div>
+                <div>¥0.00</div>
+            </div>
+            <div class="flex justify-between text-sm mt-2" id="couponDiscount" style="display: none;">
+                <div>优惠券折扣</div>
+                <div class="coupon-discount-value price">-¥0.00</div>
+            </div>
+        </div>
+        
+        <!-- 优惠券 -->
+        <div class="section p-4 flex items-center justify-between" id="couponSection">
+            <div class="text-sm">优惠券</div>
+            <div class="flex items-center">
+                <a href="coupons.html?from=checkout" class="coupon-selector">
+                    <span class="text-sm coupon-text" id="couponText">3张可用</span>
+                    <i class="fas fa-chevron-right text-gray-400 text-xs ml-2"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 支付方式 -->
+        <div class="section p-4">
+            <div class="text-sm font-medium mb-3">支付方式</div>
+            
+            <div class="payment-method flex items-center justify-between py-2">
+                <div class="flex items-center">
+                    <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                        <i class="fab fa-weixin text-white text-sm"></i>
+                    </div>
+                    <div class="text-sm ml-3">微信支付</div>
+                </div>
+                <input type="radio" name="payment" class="w-5 h-5" checked>
+            </div>
+            
+            <div class="payment-method flex items-center justify-between py-2 border-t border-gray-100">
+                <div class="flex items-center">
+                    <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                        <i class="fas fa-credit-card text-white text-sm"></i>
+                    </div>
+                    <div class="text-sm ml-3">支付宝</div>
+                </div>
+                <input type="radio" name="payment" class="w-5 h-5">
+            </div>
+        </div>
+        
+        <!-- 发票信息 -->
+        <div class="section p-4 flex items-center justify-between">
+            <div class="text-sm">发票信息</div>
+            <div class="flex items-center">
+                <span class="text-sm invoice-text">不开发票</span>
+                <i class="fas fa-chevron-right text-gray-400 text-xs ml-2"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部结算栏 -->
+    <div class="bottom-bar fixed bottom-0 left-0 right-0 h-16 flex items-center justify-between px-4">
+        <div class="text-sm">
+            合计：<span class="text-lg font-medium price total-price">¥5,097</span>
+        </div>
+        <div class="flex items-center space-x-3">
+            <button type="button" class="save-order-btn text-sm flex items-center" id="saveOrderBtn" onclick="document.getElementById('saveOrderModal').classList.remove('hidden'); showModal(document.getElementById('saveOrderModal'));">
+                <i class="far fa-star text-gray-400 mr-2"></i>
+                <span>保存常用</span>
+            </button>
+            <button type="button" class="submit-btn" id="submitOrderBtn" onclick="handleSubmitOrder()">
+                提交订单
+            </button>
+        </div>
+    </div>
+
+    <!-- 发票模态框 -->
+    <div id="invoiceModal" class="modal-container fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="modal-content bg-white rounded-xl w-11/12 max-w-md max-h-90vh overflow-y-auto">
+            <div class="p-4 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="font-medium">发票信息</h3>
+                <button id="closeInvoiceModal" class="text-gray-400">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-4">
+                <div class="mb-4">
+                    <div class="text-sm text-gray-500 mb-2">发票类型</div>
+                    <div class="flex space-x-4">
+                        <label class="flex items-center">
+                            <input type="radio" name="invoiceType" value="electronic" checked class="mr-2">
+                            <span>电子发票</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="invoiceType" value="paper" class="mr-2">
+                            <span>纸质发票</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="text-sm text-gray-500 mb-2">发票抬头</div>
+                    <div class="flex space-x-4 mb-3">
+                        <label class="flex items-center">
+                            <input type="radio" name="invoiceTitle" value="personal" checked class="mr-2" id="personalTitle">
+                            <span>个人</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="invoiceTitle" value="company" class="mr-2" id="companyTitle">
+                            <span>单位</span>
+                        </label>
+                    </div>
+                    
+                    <div id="companyInfo" class="hidden">
+                        <input type="text" placeholder="单位名称" class="w-full border border-gray-200 rounded-lg p-2 mb-2">
+                        <input type="text" placeholder="纳税人识别号" class="w-full border border-gray-200 rounded-lg p-2">
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="text-sm text-gray-500 mb-2">发票内容</div>
+                    <select class="w-full border border-gray-200 rounded-lg p-2">
+                        <option value="detail">商品明细</option>
+                        <option value="office">办公用品</option>
+                        <option value="furniture">家具用品</option>
+                        <option value="electronic">电子产品</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" checked class="mr-2">
+                        <span class="text-sm">保存发票信息</span>
+                    </label>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-100">
+                <button id="confirmInvoice" class="modal-btn w-full bg-gradient-to-r from-green-500 to-teal-500 text-white py-2 rounded-lg">
+                    确认
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 保存常用订单模态框 -->
+    <div id="saveOrderModal" class="modal-container fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="modal-content bg-white rounded-xl w-11/12 max-w-md">
+            <div class="p-4 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="font-medium">保存为常用订单</h3>
+                <button id="closeSaveOrderModal" class="text-gray-400">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-4">
+                <div class="mb-4">
+                    <input type="text" id="orderName" placeholder="输入常用订单名称" class="modal-input w-full border border-gray-200 rounded-lg p-2">
+                </div>
+                <div class="text-sm text-gray-500 mb-4">
+                    保存后可在"我的-常用订单"中查看和使用
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-100">
+                <button id="confirmSaveOrder" class="modal-btn w-full bg-gradient-to-r from-green-500 to-teal-500 text-white py-2 rounded-lg">
+                    保存
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 定义全局函数，这样内联onclick事件可以直接调用
+        function handleSubmitOrder() {
+            const submitOrderBtn = document.getElementById('submitOrderBtn');
+            if (submitOrderBtn) {
+                // 显示loading效果
+                submitOrderBtn.classList.add('opacity-70');
+                submitOrderBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>处理中...';
+                submitOrderBtn.disabled = true;
+                
+                // 生成唯一订单号：年月日时分秒+4位随机数
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = (now.getMonth() + 1).toString().padStart(2, '0');
+                const day = now.getDate().toString().padStart(2, '0');
+                const hour = now.getHours().toString().padStart(2, '0');
+                const minute = now.getMinutes().toString().padStart(2, '0');
+                const second = now.getSeconds().toString().padStart(2, '0');
+                const random = Math.floor(1000 + Math.random() * 9000); // 4位随机数
+                
+                const orderId = `${year}${month}${day}${hour}${minute}${second}${random}`;
+                
+                // 模拟网络请求延迟
+                setTimeout(function() {
+                    // 保存订单信息到本地存储供其他页面使用
+                    const totalPrice = document.querySelector('.total-price');
+                    const estimatedDelivery = document.getElementById('estimatedDelivery');
+                    
+                    const orderData = {
+                        id: orderId,
+                        status: 'unpaid', // 未支付状态
+                        amount: totalPrice.textContent.replace('¥', ''),
+                        products: [
+                            {
+                                name: '北欧设计师台灯',
+                                variant: '黑色',
+                                price: 599,
+                                quantity: 2
+                            }
+                        ],
+                        address: {
+                            name: '李小明',
+                            phone: '13800138000',
+                            detail: '广东省深圳市南山区科技园南区A栋1001室'
+                        },
+                        estimatedDelivery: estimatedDelivery.textContent,
+                        createTime: `${year}-${month}-${day} ${hour}:${minute}:${second}`
+                    };
+                    
+                    // 存储订单数据
+                    localStorage.setItem(`order_${orderId}`, JSON.stringify(orderData));
+                    
+                    // 跳转到支付页面
+                    window.location.href = `payment.html?id=${orderId}`;
+                }, 800); // 添加800ms延迟模拟网络请求
+            }
+        }
+        
+        // 全局函数用于显示模态框
+        function showModal(modal) {
+            // 禁止背景滚动
+            document.body.classList.add('modal-open');
+            
+            modal.classList.remove('hidden');
+            modal.setAttribute('aria-hidden', 'false');
+            
+            // 添加一个微小延迟，以确保过渡效果正常运行
+            setTimeout(() => {
+                modal.classList.add('modal-entering');
+                
+                // 自动聚焦模态框内的第一个输入框
+                const firstInput = modal.querySelector('input:not([type="radio"]):not([type="checkbox"])');
+                if (firstInput) {
+                    firstInput.focus();
+                }
+            }, 10);
+            
+            // 添加ESC键关闭功能
+            document.addEventListener('keydown', handleEscKey);
+        }
+        
+        // 全局函数用于隐藏模态框
+        function hideModal(modal) {
+            modal.classList.remove('modal-entering');
+            
+            // 等待过渡效果完成后再隐藏元素
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.setAttribute('aria-hidden', 'true');
+                
+                // 恢复背景滚动
+                if (!document.querySelector('.modal-container:not(.hidden)')) {
+                    document.body.classList.remove('modal-open');
+                }
+            }, 300);
+            
+            // 移除ESC键事件监听
+            document.removeEventListener('keydown', handleEscKey);
+        }
+        
+        // 全局ESC键函数
+        function handleEscKey(e) {
+            if (e.key === 'Escape') {
+                const visibleModal = document.querySelector('.modal-container:not(.hidden)');
+                if (visibleModal) {
+                    hideModal(visibleModal);
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("页面已加载，开始执行脚本");
+            
+            // 确保所有模态框在页面加载时是隐藏的
+            const allModals = document.querySelectorAll('#invoiceModal, #saveOrderModal');
+            allModals.forEach(modal => {
+                modal.classList.add('hidden');
+                modal.setAttribute('aria-hidden', 'true');
+            });
+            
+            // 获取优惠券信息
+            const selectedCoupon = localStorage.getItem('selectedCoupon');
+            const couponText = document.getElementById('couponText');
+            const couponDiscount = document.getElementById('couponDiscount');
+            const couponDiscountValue = document.querySelector('.coupon-discount-value');
+            const totalPrice = document.querySelector('.total-price');
+            let subtotal = 5097; // 商品总价
+            
+            // 如果有选择的优惠券，则显示优惠券信息
+            if (selectedCoupon) {
+                const couponData = JSON.parse(selectedCoupon);
+                couponText.textContent = couponData.amount + ' ' + couponData.condition;
+                
+                // 计算优惠券折扣
+                let discount = 0;
+                if (couponData.amount.includes('¥')) {
+                    // 满减券
+                    const amount = parseInt(couponData.amount.replace('¥', ''));
+                    const condition = couponData.condition.match(/\d+/);
+                    if (condition && subtotal >= parseInt(condition[0])) {
+                        discount = amount;
+                    } else {
+                        couponText.innerHTML = `<span class="text-sm text-gray-400">${couponData.amount} ${couponData.condition}(不满足条件)</span>`;
+                    }
+                } else if (couponData.amount.includes('折')) {
+                    // 折扣券
+                    const discountRate = parseFloat(couponData.amount.replace('折', '')) / 10;
+                    discount = Math.round(subtotal * (1 - discountRate));
+                } else if (couponData.amount.includes('免运费')) {
+                    // 运费券
+                    // 这里假设运费为0，所以没有额外折扣
+                    discount = 0;
+                }
+                
+                // 显示折扣金额
+                if (discount > 0) {
+                    couponDiscount.style.display = 'flex';
+                    couponDiscountValue.textContent = `-¥${discount.toFixed(2)}`;
+                    
+                    // 更新总价
+                    const newTotal = subtotal - discount;
+                    totalPrice.textContent = `¥${newTotal.toFixed(2)}`;
+                }
+            }
+            
+            // 处理来自优惠券页面的返回
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('coupon') === 'applied') {
+                // 刷新页面以更新优惠券信息
+                location.reload();
+            }
+            
+            // 生成预计送达时间
+            const generateDeliveryTime = () => {
+                const now = new Date();
+                const deliveryDate = new Date(now.setDate(now.getDate() + 3)); // 假设3天后送达
+                
+                const month = deliveryDate.getMonth() + 1;
+                const date = deliveryDate.getDate();
+                
+                // 获取周几
+                const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+                const weekday = weekdays[deliveryDate.getDay()];
+                
+                return `${month}月${date}日（周${weekday}）09:00-18:00`;
+            };
+            
+            // 设置送达时间
+            const estimatedDelivery = document.getElementById('estimatedDelivery');
+            if (estimatedDelivery) {
+                estimatedDelivery.textContent = generateDeliveryTime();
+            }
+            
+            // 发票模态框相关
+            const invoiceSection = document.querySelector('.section.p-4.flex.items-center.justify-between:last-of-type');
+            const invoiceModal = document.getElementById('invoiceModal');
+            const closeInvoiceModal = document.getElementById('closeInvoiceModal');
+            const confirmInvoice = document.getElementById('confirmInvoice');
+            const invoiceText = document.querySelector('.invoice-text');
+            const personalTitle = document.getElementById('personalTitle');
+            const companyTitle = document.getElementById('companyTitle');
+            const companyInfo = document.getElementById('companyInfo');
+            
+            if (invoiceSection && invoiceModal) {
+                invoiceSection.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showModal(invoiceModal);
+                    console.log("打开发票模态框");
+                });
+                
+                // 添加点击背景关闭模态框
+                invoiceModal.addEventListener('click', function(e) {
+                    if (e.target === invoiceModal) {
+                        hideModal(invoiceModal);
+                    }
+                });
+            }
+            
+            if (closeInvoiceModal) {
+                closeInvoiceModal.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    hideModal(invoiceModal);
+                });
+            }
+            
+            if (confirmInvoice) {
+                confirmInvoice.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // 获取发票类型
+                    const invoiceType = document.querySelector('input[name="invoiceType"]:checked').value;
+                    const invoiceTitle = document.querySelector('input[name="invoiceTitle"]:checked').value;
+                    
+                    // 更新发票文本
+                    if (invoiceTitle === 'personal') {
+                        invoiceText.textContent = invoiceType === 'electronic' ? '电子发票 - 个人' : '纸质发票 - 个人';
+                    } else {
+                        invoiceText.textContent = invoiceType === 'electronic' ? '电子发票 - 单位' : '纸质发票 - 单位';
+                    }
+                    
+                    hideModal(invoiceModal);
+                });
+            }
+            
+            // 切换发票抬头
+            if (personalTitle && companyTitle && companyInfo) {
+                personalTitle.addEventListener('change', function() {
+                    if (this.checked) {
+                        companyInfo.classList.add('hidden');
+                    }
+                });
+                
+                companyTitle.addEventListener('change', function() {
+                    if (this.checked) {
+                        companyInfo.classList.remove('hidden');
+                    }
+                });
+            }
+            
+            // 保存常用订单模态框相关
+            const saveOrderBtn = document.getElementById('saveOrderBtn');
+            const saveOrderModal = document.getElementById('saveOrderModal');
+            const closeSaveOrderModal = document.getElementById('closeSaveOrderModal');
+            const confirmSaveOrder = document.getElementById('confirmSaveOrder');
+            
+            if (saveOrderBtn && saveOrderModal) {
+                saveOrderBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log("保存常用订单按钮被点击");
+                    showModal(saveOrderModal);
+                });
+                
+                // 添加点击背景关闭模态框
+                saveOrderModal.addEventListener('click', function(e) {
+                    if (e.target === saveOrderModal) {
+                        hideModal(saveOrderModal);
+                    }
+                });
+            }
+            
+            if (closeSaveOrderModal) {
+                closeSaveOrderModal.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    hideModal(saveOrderModal);
+                });
+            }
+            
+            if (confirmSaveOrder) {
+                confirmSaveOrder.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const orderName = document.getElementById('orderName').value.trim();
+                    if (!orderName) {
+                        alert('请输入常用订单名称');
+                        return;
+                    }
+                    
+                    // 构建常用订单数据
+                    const orderData = {
+                        name: orderName,
+                        products: [
+                            {
+                                name: '北欧设计师台灯',
+                                variant: '黑色',
+                                price: 599,
+                                quantity: 2
+                            }
+                        ],
+                        address: {
+                            name: '李小明',
+                            phone: '13800138000',
+                            detail: '广东省深圳市南山区科技园南区A栋1001室'
+                        },
+                        totalPrice: totalPrice.textContent.replace('¥', ''),
+                        createdAt: new Date().toISOString()
+                    };
+                    
+                    // 保存到本地存储
+                    let savedOrders = JSON.parse(localStorage.getItem('savedOrders') || '[]');
+                    savedOrders.push(orderData);
+                    localStorage.setItem('savedOrders', JSON.stringify(savedOrders));
+                    
+                    // 关闭模态框并提示
+                    hideModal(saveOrderModal);
+                    
+                    // 显示成功提示
+                    const successToast = document.createElement('div');
+                    successToast.className = 'fixed top-16 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+                    successToast.textContent = '已成功保存为常用订单';
+                    document.body.appendChild(successToast);
+                    
+                    // 3秒后移除提示
+                    setTimeout(() => {
+                        successToast.remove();
+                    }, 3000);
+                });
+            }
+            
+            // 确保所有的可点击元素都有正确的鼠标样式
+            const clickableElements = document.querySelectorAll('button, .section.address, .delivery-option, .delivery-time-option, .payment-method, #couponSection');
+            clickableElements.forEach(element => {
+                element.style.cursor = 'pointer';
+            });
+            
+            console.log("页面初始化完成");
+        });
+    </script>
+</body>
+</html> 

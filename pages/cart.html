@@ -1,0 +1,2609 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>购物车 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        /* 主题颜色变量 - 与首页保持一致 */
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            /* 新增: 降低饱和度的高级色调 */
+            --brand-primary-muted: #3A9B92;
+            --brand-primary-desaturated: #4A8C85;
+            --brand-primary-soft: #6BA8A2;
+            
+            /* 新增: 高级灰色系统 */
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            /* 调整价格显示相关颜色 */
+            --price-color: #E05D5D;
+            --price-color-muted: #CF5252;
+            --discount-color: #5BA17F;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+            
+            /* 渐变色 */
+            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary-muted), var(--brand-success));
+            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
+            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
+            
+            /* 新增: 高级灰渐变 */
+            --brand-gradient-gray: linear-gradient(135deg, var(--gray-100), var(--gray-200));
+            
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
+            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
+            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+            
+            /* 新增: 高级阴影效果 */
+            --shadow-layered: 0 1px 1px rgba(38, 70, 83, 0.02),
+                             0 2px 2px rgba(38, 70, 83, 0.03),
+                             0 4px 4px rgba(38, 70, 83, 0.05),
+                             0 8px 8px rgba(38, 70, 83, 0.06);
+            --shadow-soft: 0 10px 30px rgba(38, 70, 83, 0.05);
+            --shadow-inner: inset 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-focus: 0 0 0 3px rgba(42, 157, 143, 0.15);
+        }
+
+        /* 新增: 价格显示优化样式 */
+        .price-display {
+            display: inline-flex;
+            align-items: flex-start;
+            line-height: 1;
+        }
+        
+        .price-currency {
+            font-size: 1.2em;
+            font-weight: 500;
+            margin-top: -0.1em;
+            margin-right: 0.2em;
+            color: var(--price-color);
+            position: relative;
+            top: -0.1em;
+        }
+        
+        .price-integer {
+            font-weight: 600;
+        }
+        
+        .price-decimal {
+            font-size: 0.85em;
+            font-weight: 500;
+            color: var(--gray-600);
+        }
+        
+        /* 商品价格样式 */
+        .cart-item .text-red-500 {
+            color: var(--price-color);
+            display: inline-flex;
+            align-items: flex-start;
+        }
+        
+        /* 购物车优惠价格样式 */
+        .text-green-500 {
+            color: var(--discount-color);
+        }
+        
+        /* 商品卡片增强样式 - 添加阴影和过渡效果 */
+        .cart-item {
+            border-bottom: 1px dashed rgba(38, 70, 83, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            margin: 0.5rem 0;
+            padding: 1.25rem 1rem;
+            overflow: hidden;
+            background: var(--gray-50);
+            transform: translateX(0);
+        }
+        
+        .cart-item:hover {
+            box-shadow: var(--shadow-soft);
+            background: linear-gradient(to right, #fff, rgba(42, 157, 143, 0.02), #fff);
+            transform: translateY(-1px);
+        }
+        
+        /* 数量控制样式优化 - 全新滑动式设计 */
+        .quantity-control {
+            border: 1px solid var(--gray-200);
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            box-shadow: var(--shadow-inner);
+            overflow: hidden;
+            background: linear-gradient(to bottom, #fff, var(--gray-50));
+            position: relative;
+            height: 32px;
+            min-width: 110px;
+            padding: 0 2px;
+        }
+        
+        .quantity-control button {
+            width: 32px;
+            height: 24px;
+            background: transparent;
+            color: var(--gray-500);
+            transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            z-index: 2;
+            flex-shrink: 0;
+        }
+        
+        .quantity-control button:active {
+            transform: scale(0.92);
+        }
+        
+        .quantity-control button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--brand-primary-transparent);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            border-radius: 8px;
+        }
+        
+        .quantity-control button:hover::before {
+            opacity: 1;
+        }
+        
+        .quantity-control button:hover {
+            color: var(--brand-primary-muted);
+        }
+        
+        .quantity-control input {
+            width: 40px;
+            text-align: center;
+            border: none;
+            color: var(--gray-700);
+            font-weight: 500;
+            background: transparent;
+            position: relative;
+            z-index: 2;
+            font-size: 14px;
+        }
+        
+        .quantity-control input:focus {
+            outline: none;
+        }
+        
+        .quantity-control .quantity-bg {
+            position: absolute;
+            top: 4px;
+            bottom: 4px;
+            left: 50%;
+            width: 40px;
+            transform: translateX(-50%);
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+            z-index: 1;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .quantity-control:hover .quantity-bg {
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* 全选按钮现代开关式设计 */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 38px;
+            height: 20px;
+            margin-right: 8px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--gray-200);
+            transition: .3s;
+            border-radius: 20px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-radius: 50%;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--brand-primary-muted);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(18px);
+        }
+        
+        .toggle-slider .toggle-icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 8px;
+            transition: .3s;
+        }
+        
+        .toggle-slider .toggle-icon.check {
+            right: 5px;
+            opacity: 0;
+        }
+        
+        .toggle-slider .toggle-icon.times {
+            left: 5px;
+            opacity: 1;
+        }
+        
+        input:checked + .toggle-slider .toggle-icon.check {
+            opacity: 1;
+        }
+        
+        input:checked + .toggle-slider .toggle-icon.times {
+            opacity: 0;
+        }
+        
+        /* 价格变化动效 */
+        @keyframes priceUpdate {
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.08); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .price-update {
+            animation: priceUpdate 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translate3d(0, 8px, 0);
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+        
+        @keyframes fadeOutDown {
+            from {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+            to {
+                opacity: 0;
+                transform: translate3d(0, 8px, 0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.3s forwards;
+        }
+        
+        .fade-out-down {
+            animation: fadeOutDown 0.3s forwards;
+        }
+        
+        /* 点按反馈 */
+        .btn-press {
+            transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        
+        .btn-press:active {
+            transform: scale(0.95);
+        }
+        
+        /* 价格区域增强样式 */
+        .price-summary {
+            box-shadow: var(--shadow-layered);
+            border-radius: 12px;
+            background: linear-gradient(145deg, #ffffff, var(--gray-50));
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .price-summary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(to right, var(--brand-primary-soft), var(--brand-primary-muted), var(--brand-primary-desaturated));
+            opacity: 0.8;
+        }
+        
+        /* 实付金额区域特殊强调 */
+        .price-summary .flex.justify-between:last-of-type {
+            position: relative;
+            padding: 0.75rem 0.5rem;
+            margin: 0 -0.5rem;
+            border-radius: 8px;
+            background: linear-gradient(to right, rgba(74, 140, 133, 0.05), rgba(74, 140, 133, 0.08), rgba(74, 140, 133, 0.05));
+            box-shadow: var(--shadow-inner);
+        }
+        
+        /* 底部结算栏增强样式 */
+        .checkout-bar {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 -3px 12px rgba(38, 70, 83, 0.06);
+            border-top: 1px solid var(--gray-200);
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            bottom: 60px;
+            left: 0;
+            right: 0;
+            height: auto;
+            z-index: 49;
+        }
+        
+        .checkout-bar button {
+            background: var(--brand-gradient-primary);
+            color: white;
+            padding: 8px 22px;
+            border-radius: 24px;
+            font-weight: 500;
+            box-shadow: var(--shadow-highlight);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: none;
+            outline: none;
+            cursor: pointer;
+        }
+        
+        .checkout-bar button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 7px 14px rgba(42, 157, 143, 0.25);
+        }
+        
+        .checkout-bar button:active {
+            transform: translateY(1px);
+        }
+        
+        /* 底部导航栏样式增强 */
+        .tab-bar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 -5px 20px rgba(38, 70, 83, 0.08);
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            border-radius: 20px 20px 0 0;
+            border-top: 1px solid var(--gray-200);
+            padding-bottom: env(safe-area-inset-bottom, 0);
+        }
+        
+        .tab-active {
+            color: var(--brand-primary-muted);
+        }
+        
+        .tab-inactive {
+            color: var(--gray-500);
+        }
+        
+        /* 进度指示器样式 */
+        .checkout-progress {
+            padding: 12px 20px;
+            background: white;
+            position: relative;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            flex: 1;
+        }
+        
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--gray-100);
+            color: var(--gray-500);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            margin-bottom: 4px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .step-label {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+        
+        .progress-step.active .step-number {
+            background: var(--brand-primary-muted);
+            color: white;
+        }
+        
+        .progress-step.active .step-label {
+            color: var(--brand-primary-muted);
+            font-weight: 500;
+        }
+        
+        .progress-line {
+            position: absolute;
+            top: 24px;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: var(--gray-200);
+            z-index: 0;
+        }
+        
+        .progress-line-active {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: var(--brand-primary-muted);
+            transition: width 0.6s ease;
+        }
+        
+        /* 配送方式样式 */
+        .delivery-options {
+            margin-top: 12px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow-soft);
+        }
+        
+        .delivery-option {
+            padding: 12px 16px;
+            border-bottom: 1px dashed var(--gray-200);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .delivery-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brand-primary-muted);
+            background: rgba(74, 140, 133, 0.1);
+            border-radius: 50%;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+        
+        /* 商品图片增强 */
+        .cart-item .w-24 {
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            transform: perspective(800px) rotateY(0deg);
+        }
+        
+        .cart-item:hover .w-24 {
+            box-shadow: var(--shadow-md);
+            transform: perspective(800px) rotateY(5deg);
+        }
+        
+        /* 猜你喜欢增强样式 */
+        .grid.grid-cols-2 > div {
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            transform: translateY(0);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .grid.grid-cols-2 > div:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-4px);
+        }
+        
+        /* 左滑收藏功能 */
+        .cart-item-actions {
+            position: absolute;
+            top: 0;
+            right: -200px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .cart-item-actions button {
+            height: 100%;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            transition: all 0.2s ease;
+        }
+        
+        .cart-item-actions button i {
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+        
+        .cart-item-actions button span {
+            font-size: 12px;
+        }
+        
+        .cart-item-actions .action-favorite {
+            background: var(--brand-secondary-light);
+        }
+        
+        .cart-item-actions .action-delete {
+            background: var(--brand-error);
+        }
+        
+        .cart-item.swiped {
+            transform: translateX(-200px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        /* 分组功能样式 */
+        .cart-group-header {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background: linear-gradient(to right, var(--gray-100), var(--gray-50));
+            border-radius: 8px 8px 0 0;
+            margin-top: 12px;
+            position: relative;
+        }
+        
+        .cart-group-header .group-title {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        
+        .cart-group-header .group-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--brand-primary-transparent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 8px;
+            color: var(--brand-primary-muted);
+        }
+        
+        .cart-group-toggle {
+            margin-left: auto;
+            color: var(--gray-500);
+            transition: all 0.3s ease;
+        }
+        
+        .cart-group-toggle.collapsed {
+            transform: rotate(-90deg);
+        }
+        
+        .cart-group-items {
+            transition: all 0.3s ease;
+            max-height: 1000px;
+            overflow: hidden;
+        }
+        
+        .cart-group-items.collapsed {
+            max-height: 0;
+        }
+        
+        /* 商品评分标识 */
+        .product-rating {
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 3px 8px;
+            font-size: 10px;
+            font-weight: 500;
+            border-radius: 0 0 8px 0;
+            background: linear-gradient(135deg, var(--brand-primary-muted), var(--brand-success));
+            color: white;
+            box-shadow: var(--shadow-sm);
+            opacity: 0.9;
+            z-index: 5;
+            transform: translateY(-1px);
+        }
+        
+        /* 清空和恢复操作区域 */
+        .cart-actions {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background: white;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .cart-actions-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .cart-action-btn {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            background: var(--gray-100);
+            color: var(--gray-700);
+            transition: all 0.3s ease;
+        }
+        
+        .cart-action-btn i {
+            margin-right: 4px;
+            font-size: 11px;
+        }
+        
+        .cart-action-btn:hover {
+            background: var(--gray-200);
+            transform: translateY(-1px);
+        }
+        
+        .cart-action-btn.danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--brand-error);
+        }
+        
+        .cart-action-btn.danger:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+        
+        .cart-action-btn.success {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--brand-info);
+        }
+        
+        .cart-action-btn.success:hover {
+            background: rgba(59, 130, 246, 0.2);
+        }
+        
+        /* 恢复托盘 */
+        .restore-tray {
+            position: fixed;
+            bottom: 80px;
+            left: 10px;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            padding: 12px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            transform: translateY(150%);
+            transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            z-index: 1000;
+            max-height: 30vh;
+            overflow-y: auto;
+        }
+        
+        .restore-tray.visible {
+            transform: translateY(0);
+        }
+        
+        .restore-tray-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        .restore-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            background: var(--gray-50);
+            animation: fadeIn 0.3s forwards;
+        }
+        
+        .restore-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+        
+        .restore-item-info {
+            flex: 1;
+        }
+        
+        .restore-item-title {
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .restore-item-price {
+            font-size: 11px;
+            color: var(--price-color);
+        }
+        
+        .restore-item button {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            background: var(--brand-primary-transparent);
+            color: var(--brand-primary-muted);
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 分组选择弹窗 */
+        .group-selector {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+        
+        .group-selector.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .group-selector-content {
+            background: white;
+            width: 85%;
+            max-width: 360px;
+            border-radius: 12px;
+            padding: 20px;
+            transform: scale(0.9);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .group-selector.visible .group-selector-content {
+            transform: scale(1);
+        }
+        
+        .group-selector-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .group-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .group-option:hover {
+            background: var(--gray-100);
+        }
+        
+        .group-option-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--brand-primary-transparent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: var(--brand-primary-muted);
+        }
+        
+        .group-option-info {
+            flex: 1;
+        }
+        
+        .group-option-title {
+            font-weight: 500;
+        }
+        
+        .group-option-desc {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+        
+        .group-selector-buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 15px;
+            gap: 10px;
+        }
+        
+        .group-selector-buttons button {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .group-selector-buttons .cancel {
+            background: var(--gray-100);
+        }
+        
+        .group-selector-buttons .confirm {
+            background: var(--brand-primary-muted);
+            color: white;
+        }
+
+        /* 未分组商品样式 */
+        .ungrouped-label {
+            display: inline-block;
+            background: var(--gray-200);
+            color: var(--gray-600);
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 10px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        /* 调整内容区域边距，避免被底部元素遮挡 */
+        .main-content {
+            padding-top: 0.5rem;
+            margin-top: 45px;
+            padding-bottom: 130px;
+        }
+
+        /* 优化价格显示在结算栏中的布局 */
+        .checkout-bar .price-display {
+            display: inline-flex;
+            align-items: baseline;
+        }
+
+        .checkout-bar .price-integer {
+            font-size: 18px;
+        }
+
+        /* 增加内容展示区域 */
+        @media (min-height: 700px) {
+            .main-content {
+                padding-bottom: 140px;
+            }
+        }
+
+        @media (min-height: 800px) {
+            .main-content {
+                padding-bottom: 150px;
+            }
+        }
+
+        /* 顶部导航栏修复 */
+        .nav-bar {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 2px 8px rgba(38, 70, 83, 0.06);
+            height: 48px;
+            display: flex;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            backdrop-filter: blur(5px);
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .nav-bar .flex {
+            height: 100%;
+            width: 100%;
+            align-items: center;
+        }
+
+        /* 点击区域扩大 */
+        .quantity-control button,
+        .toggle-switch,
+        .edit-switch,
+        .cart-item button.text-gray-400 {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .quantity-control button::after,
+        .edit-switch::after,
+        .cart-item button.text-gray-400::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            z-index: 1;
+        }
+
+        .toggle-switch input {
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        /* 删除按钮增强 */
+        .cart-item button.text-gray-400 {
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+
+        .cart-item button.text-gray-400:hover {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--brand-error);
+        }
+
+        @media (max-width: 380px) {
+            .quantity-control {
+                min-width: 100px;
+            }
+        }
+
+        /* 购物车标题动效 */
+        .nav-bar .text-lg {
+            position: relative;
+            display: inline-block;
+            font-weight: 600;
+            background: linear-gradient(to right, var(--brand-primary-muted), var(--brand-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-bar .text-lg::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, var(--brand-primary-muted), transparent);
+            border-radius: 2px;
+        }
+
+        /* 编辑按钮美化 */
+        .edit-switch {
+            display: none;
+        }
+
+        /* 自选物流下拉框样式 */
+        .logistics-select {
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            width: 100%;
+            z-index: 5;
+        }
+
+        .logistics-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 230px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
+            padding: 8px 0;
+            margin-top: 8px;
+            z-index: 20;
+            display: none;
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
+        }
+
+        .logistics-dropdown.show {
+            display: block;
+            animation: fadeInUp 0.3s forwards;
+        }
+
+        .logistics-option {
+            padding: 8px 16px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .logistics-option:hover {
+            background: var(--gray-100);
+        }
+
+        .logistics-option img {
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
+            object-fit: contain;
+        }
+
+        /* 自定义物流输入框样式 */
+        .custom-logistics {
+            padding: 8px 16px;
+            border-top: 1px solid var(--gray-200);
+            margin-top: 8px;
+        }
+
+        .custom-logistics-header {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .custom-logistics-header i {
+            margin-right: 8px;
+            color: var(--brand-primary-muted);
+        }
+
+        .custom-logistics-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .custom-logistics-field {
+            display: flex;
+            border: 1px solid var(--gray-200);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .custom-logistics-field input {
+            flex: 1;
+            padding: 6px 8px;
+            border: none;
+            outline: none;
+            font-size: 12px;
+        }
+
+        .custom-logistics-field .prefix {
+            background: var(--gray-100);
+            padding: 6px 8px;
+            color: var(--gray-500);
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+        }
+
+        .custom-logistics-button {
+            background: var(--brand-primary-muted);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin-top: 8px;
+            font-size: 12px;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .custom-logistics-button:hover {
+            background: var(--brand-primary);
+        }
+
+        /* 设置复选框使用品牌色 */
+        .cart-item input[type="checkbox"] {
+            accent-color: var(--brand-primary);
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar">
+        <div class="flex items-center justify-center px-4 h-full">
+            <div class="text-lg font-medium">购物车</div>
+        </div>
+    </div>
+    
+    <!-- 主要内容区 -->
+    <div class="main-content pt-4 pb-24 mt-12">
+        <!-- 购物车列表 -->
+        <div class="bg-white rounded-lg mt-2 mb-3">
+            <!-- 全选区域 -->
+            <div class="flex items-center p-4 border-b border-gray-100">
+                <div class="flex items-center">
+                    <label class="toggle-switch">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider">
+                            <i class="fas fa-check toggle-icon check"></i>
+                            <i class="fas fa-times toggle-icon times"></i>
+                        </span>
+                    </label>
+                    <span class="text-sm">全选</span>
+                </div>
+            </div>
+            
+            <!-- 购物车项目 -->
+            <div class="cart-item flex p-4" data-product-id="1">
+                <div class="flex items-center">
+                    <input type="checkbox" class="rounded-full border-gray-300" checked>
+                </div>
+                <div class="ml-3 flex-1">
+                    <div class="flex">
+                        <div class="w-24 h-24 bg-gray-100 rounded-md overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1567538096621-38d2284b23ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="北欧风格沙发" class="w-full h-full object-cover">
+                            <div class="product-rating">
+                                <i class="fas fa-thumbs-up text-xs mr-1"></i>98%
+                            </div>
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <div class="text-sm font-medium">北欧简约风真皮沙发</div>
+                            <div class="text-xs text-gray-500 mt-1">浅灰色 / 三人座</div>
+                            <div class="text-base font-medium mt-2 price-display">
+                                <span class="price-currency">¥</span>
+                                <span class="price-integer">3,899</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-3">
+                                <div class="quantity-control">
+                                    <button class="flex items-center justify-center text-gray-500 btn-press">
+                                        <i class="fas fa-minus text-xs"></i>
+                                    </button>
+                                    <input type="text" value="1" class="text-center">
+                                    <button class="flex items-center justify-center text-gray-500 btn-press">
+                                        <i class="fas fa-plus text-xs"></i>
+                                    </button>
+                                    <div class="quantity-bg"></div>
+                                </div>
+                                <button class="text-gray-400 btn-press">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 左滑区域 -->
+                <div class="cart-item-actions">
+                    <button class="action-favorite">
+                        <i class="fas fa-heart"></i>
+                        <span>收藏</span>
+                    </button>
+                    <button class="action-delete">
+                        <i class="fas fa-trash"></i>
+                        <span>删除</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="cart-item flex p-4" data-product-id="2">
+                <div class="flex items-center">
+                    <input type="checkbox" class="rounded-full border-gray-300" checked>
+                </div>
+                <div class="ml-3 flex-1">
+                    <div class="flex">
+                        <div class="w-24 h-24 bg-gray-100 rounded-md overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1530018607912-eff2daa1bac4?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="实木餐桌" class="w-full h-full object-cover">
+                            <div class="product-rating">
+                                <i class="fas fa-thumbs-up text-xs mr-1"></i>95%
+                            </div>
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <div class="text-sm font-medium">原木实木餐桌</div>
+                            <div class="text-xs text-gray-500 mt-1">原木色 / 1.5米</div>
+                            <div class="text-base font-medium mt-2 price-display">
+                                <span class="price-currency">¥</span>
+                                <span class="price-integer">2,199</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-3">
+                                <div class="quantity-control">
+                                    <button class="flex items-center justify-center text-gray-500 btn-press">
+                                        <i class="fas fa-minus text-xs"></i>
+                                    </button>
+                                    <input type="text" value="1" class="text-center">
+                                    <button class="flex items-center justify-center text-gray-500 btn-press">
+                                        <i class="fas fa-plus text-xs"></i>
+                                    </button>
+                                    <div class="quantity-bg"></div>
+                                </div>
+                                <button class="text-gray-400 btn-press">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 左滑区域 -->
+                <div class="cart-item-actions">
+                    <button class="action-favorite">
+                        <i class="fas fa-heart"></i>
+                        <span>收藏</span>
+                    </button>
+                    <button class="action-delete">
+                        <i class="fas fa-trash"></i>
+                        <span>删除</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="cart-item flex p-4" data-product-id="3">
+                <div class="flex items-center">
+                    <input type="checkbox" class="rounded-full border-gray-300" checked>
+                </div>
+                <div class="ml-3 flex-1">
+                    <div class="flex">
+                        <div class="w-24 h-24 bg-gray-100 rounded-md overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="设计师台灯" class="w-full h-full object-cover">
+                            <div class="product-rating">
+                                <i class="fas fa-thumbs-up text-xs mr-1"></i>92%
+                            </div>
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <div class="text-sm font-medium">北欧设计师台灯</div>
+                            <div class="text-xs text-gray-500 mt-1">黑色</div>
+                            <div class="text-base font-medium mt-2 price-display">
+                                <span class="price-currency">¥</span>
+                                <span class="price-integer">599</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-3">
+                                <div class="quantity-control">
+                                    <button class="flex items-center justify-center text-gray-500 btn-press">
+                                        <i class="fas fa-minus text-xs"></i>
+                                    </button>
+                                    <input type="text" value="2" class="text-center">
+                                    <button class="flex items-center justify-center text-gray-500 btn-press">
+                                        <i class="fas fa-plus text-xs"></i>
+                                    </button>
+                                    <div class="quantity-bg"></div>
+                                </div>
+                                <button class="text-gray-400 btn-press">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 左滑区域 -->
+                <div class="cart-item-actions">
+                    <button class="action-favorite">
+                        <i class="fas fa-heart"></i>
+                        <span>收藏</span>
+                    </button>
+                    <button class="action-delete">
+                        <i class="fas fa-trash"></i>
+                        <span>删除</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 配送方式 -->
+        <div class="delivery-options mt-3">
+            <div class="text-base font-medium px-4 py-3 border-b border-gray-100">配送方式</div>
+            <div class="delivery-option">
+                <div class="delivery-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="delivery-info">
+                    <div class="font-medium">标准配送</div>
+                    <div class="delivery-time">预计3-5天送达</div>
+                </div>
+                <div class="delivery-fee">¥0.00</div>
+            </div>
+            <div class="delivery-option logistics-select">
+                <div class="delivery-icon">
+                    <i class="fas fa-shipping-fast"></i>
+                </div>
+                <div class="delivery-info">
+                    <div class="font-medium">自选物流</div>
+                    <div class="delivery-time">预计1-3天送达</div>
+                </div>
+                <div class="delivery-fee flex items-center">
+                    <span>¥15.00</span>
+                    <i class="fas fa-chevron-down ml-2 text-xs text-gray-400"></i>
+                </div>
+                
+                <!-- 物流下拉选择框 -->
+                <div class="logistics-dropdown">
+                    <div class="logistics-option" data-value="sf">
+                        <img src="https://cdn.jsdelivr.net/gh/ionic-team/ionicons@5.5.1/src/svg/rocket-outline.svg" alt="顺丰">
+                        <span>顺丰速运 (¥20.00)</span>
+                    </div>
+                    <div class="logistics-option" data-value="zt">
+                        <img src="https://cdn.jsdelivr.net/gh/ionic-team/ionicons@5.5.1/src/svg/paper-plane-outline.svg" alt="中通">
+                        <span>中通快递 (¥12.00)</span>
+                    </div>
+                    <div class="logistics-option" data-value="yd">
+                        <img src="https://cdn.jsdelivr.net/gh/ionic-team/ionicons@5.5.1/src/svg/bicycle-outline.svg" alt="韵达">
+                        <span>韵达快递 (¥12.00)</span>
+                    </div>
+                    <div class="logistics-option" data-value="yt">
+                        <img src="https://cdn.jsdelivr.net/gh/ionic-team/ionicons@5.5.1/src/svg/car-outline.svg" alt="圆通">
+                        <span>圆通速递 (¥12.00)</span>
+                    </div>
+                    <div class="logistics-option" data-value="jd">
+                        <img src="https://cdn.jsdelivr.net/gh/ionic-team/ionicons@5.5.1/src/svg/cube-outline.svg" alt="京东">
+                        <span>京东物流 (¥15.00)</span>
+                    </div>
+                    
+                    <!-- 自定义物流输入区域 -->
+                    <div class="custom-logistics">
+                        <div class="custom-logistics-header">
+                            <i class="fas fa-plus-circle"></i>
+                            <span>自定义物流</span>
+                        </div>
+                        <div class="custom-logistics-inputs">
+                            <div class="custom-logistics-field">
+                                <input type="text" id="custom-logistics-name" placeholder="输入物流公司名称">
+                            </div>
+                            <div class="custom-logistics-field">
+                                <input type="number" id="custom-logistics-price" placeholder="输入物流价格">
+                                <div class="prefix">¥</div>
+                            </div>
+                            <button class="custom-logistics-button" id="custom-logistics-submit">确认</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 总价统计 -->
+        <div class="price-summary bg-white rounded-lg mt-3 p-4">
+            <div class="text-base font-medium mb-3">价格明细</div>
+            <div class="space-y-3">
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-500">商品总价</span>
+                    <div class="price-display">
+                        <span class="price-currency">¥</span>
+                        <span class="price-integer">7,296</span>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-500">运费</span>
+                    <div class="price-display">
+                        <span class="price-currency">¥</span>
+                        <span class="price-integer">0</span>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <div class="flex items-center">
+                        <span class="text-gray-500">优惠</span>
+                        <i class="fas fa-question-circle text-gray-400 ml-1 text-xs"></i>
+                    </div>
+                    <div class="price-display text-green-500">
+                        <span class="price-currency">-¥</span>
+                        <span class="price-integer">699</span>
+                    </div>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-500">会员折扣</span>
+                    <div class="price-display text-green-500">
+                        <span class="price-currency">-¥</span>
+                        <span class="price-integer">200</span>
+                    </div>
+                </div>
+                <div class="h-px bg-gray-100 my-3"></div>
+                <div class="flex justify-between items-center">
+                    <span class="text-base font-medium">实付金额</span>
+                    <div class="price-display">
+                        <span class="price-currency text-red-500" style="margin-top: 0.3rem;">¥</span>
+                        <span class="price-integer text-xl font-bold text-red-500">6,397</span>
+                    </div>
+                </div>
+                <div class="text-xs text-gray-400 mt-2">
+                    <i class="fas fa-tag text-red-500"></i>
+                    <span class="ml-1">已优惠¥899，再买¥103即可享受满7500减1000</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 猜你喜欢 -->
+        <div class="mt-4 p-4 bg-white rounded-lg">
+            <div class="text-base font-medium mb-3">猜你喜欢</div>
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-gray-50 rounded-lg p-2">
+                    <div class="w-full h-32 rounded overflow-hidden mb-2">
+                        <img src="https://images.unsplash.com/photo-1551298370-9d3d53740c72?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover" alt="单人休闲椅">
+                    </div>
+                    <div class="text-sm">现代简约单人休闲椅</div>
+                    <div class="price-display mt-1">
+                        <span class="price-currency">¥</span>
+                        <span class="price-integer text-sm text-red-500">799</span>
+                    </div>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-2">
+                    <div class="w-full h-32 rounded overflow-hidden mb-2">
+                        <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" class="w-full h-full object-cover" alt="装饰画">
+                    </div>
+                    <div class="text-sm">北欧抽象装饰画</div>
+                    <div class="price-display mt-1">
+                        <span class="price-currency">¥</span>
+                        <span class="price-integer text-sm text-red-500">299</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部结算栏 -->
+    <div id="checkoutBar" class="checkout-bar">
+        <div class="flex items-center">
+            <label class="toggle-switch">
+                <input type="checkbox" checked>
+                <span class="toggle-slider">
+                    <i class="fas fa-check toggle-icon check"></i>
+                    <i class="fas fa-times toggle-icon times"></i>
+                </span>
+            </label>
+            <span class="text-sm">全选</span>
+        </div>
+        <div class="flex items-center">
+            <div class="mr-3">
+                <div class="text-xs text-gray-500">合计：
+                    <div class="price-display inline-flex">
+                        <span class="price-currency text-red-500">¥</span>
+                        <span class="text-red-500 text-lg font-medium price-integer">6,397</span>
+                    </div>
+                </div>
+                <div class="text-xs text-gray-400">已选3件商品，免运费</div>
+            </div>
+            <button class="bg-red-500 text-white px-6 py-2 rounded-full text-sm btn-press">完成选购</button>
+        </div>
+    </div>
+    
+    <!-- 底部导航 -->
+    <div class="tab-bar">
+        <a href="home.html" class="tab-item btn-press">
+            <div class="tab-icon tab-inactive"><i class="fas fa-home"></i></div>
+            <div class="tab-label tab-inactive">首页</div>
+        </a>
+        <a href="category.html" class="tab-item btn-press">
+            <div class="tab-icon tab-inactive"><i class="fas fa-th-large"></i></div>
+            <div class="tab-label tab-inactive">分类</div>
+        </a>
+        <a href="cart.html" class="tab-item btn-press">
+            <div class="tab-icon tab-active"><i class="fas fa-shopping-cart"></i></div>
+            <div class="tab-label tab-active">购物车</div>
+        </a>
+        <a href="profile.html" class="tab-item btn-press">
+            <div class="tab-icon tab-inactive"><i class="fas fa-user"></i></div>
+            <div class="tab-label tab-inactive">我的</div>
+        </a>
+    </div>
+
+    <script>
+        // 商品数据
+        const products = [
+            { id: 1, name: '北欧简约风真皮沙发', price: 3899, quantity: 1 },
+            { id: 2, name: '原木实木餐桌', price: 2199, quantity: 1 },
+            { id: 3, name: '北欧设计师台灯', price: 599, quantity: 2 }
+        ];
+
+        // 全局变量
+        let isInitialized = false;
+
+        // 确保初始化只执行一次
+        function ensureInitialized() {
+            if (!isInitialized) {
+                console.log('执行一次性初始化');
+                
+                // 初始化数量控制
+                initQuantityControls();
+                
+                // 初始化全选切换
+                initToggleSwitches();
+                
+                // 添加价格过渡动效
+                initPriceTransitions();
+                
+                // 初始化手势操作
+                initSwipeGestures();
+                
+                // 绑定删除按钮事件
+                bindDeleteButtons();
+                
+                // 标记为已初始化
+                isInitialized = true;
+            }
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM加载完成，初始化购物车功能');
+            ensureInitialized();
+        });
+
+        // 如果DOMContentLoaded已经触发过，立即初始化
+        if (document.readyState === 'interactive' || document.readyState === 'complete') {
+            console.log('页面已加载，立即初始化');
+            ensureInitialized();
+        }
+
+        // 初始化全选开关 - 确保直接绑定到元素上
+        function initToggleSwitches() {
+            console.log('初始化全选功能');
+            const toggleSwitches = document.querySelectorAll('.toggle-switch input');
+            
+            toggleSwitches.forEach(toggle => {
+                // 移除旧的事件监听器
+                toggle.removeEventListener('change', handleToggleChange);
+                // 添加新的事件监听器
+                toggle.addEventListener('change', handleToggleChange);
+            });
+        }
+
+        // 全选切换事件处理
+        function handleToggleChange() {
+            // 同步所有全选开关状态
+            const isChecked = this.checked;
+            console.log(`全选状态: ${isChecked ? '选中' : '未选中'}`);
+            
+            // 同步所有全选开关
+            document.querySelectorAll('.toggle-switch input').forEach(ts => {
+                ts.checked = isChecked;
+            });
+            
+            // 同步所有商品复选框状态
+            document.querySelectorAll('.cart-item input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = isChecked;
+            });
+            
+            // 如果是选中状态，添加选中动效
+            if (isChecked) {
+                document.querySelectorAll('.cart-item').forEach(item => {
+                    item.classList.add('fade-in-up');
+                    setTimeout(() => {
+                        item.classList.remove('fade-in-up');
+                    }, 300);
+                });
+            }
+            
+            // 更新总价
+            updateTotalPrice();
+        }
+
+        // 绑定删除按钮事件 - 使用事件委托
+        function bindDeleteButtons() {
+            console.log('绑定删除按钮');
+            
+            // 移除可能存在的旧事件监听器
+            document.querySelectorAll('.cart-item button.text-gray-400').forEach(btn => {
+                btn.removeEventListener('click', handleDeleteClick);
+                btn.addEventListener('click', handleDeleteClick);
+            });
+        }
+
+        // 删除按钮点击处理函数
+        function handleDeleteClick() {
+            const item = this.closest('.cart-item');
+            const productId = item.getAttribute('data-product-id');
+            console.log(`点击删除商品: ${productId}`);
+            removeFromCart(productId);
+        }
+
+        // 更新商品数量的增强版本
+        function updateQuantity(productId, change) {
+            console.log(`更新商品 ${productId} 数量，变化量: ${change}`);
+            const cartItem = document.querySelector(`[data-product-id="${productId}"]`);
+            if (!cartItem) {
+                console.error(`未找到商品ID: ${productId}`);
+                return;
+            }
+            
+            const input = cartItem.querySelector('.quantity-control input');
+            const currentValue = parseInt(input.value);
+            const newValue = Math.max(1, Math.min(99, currentValue + change));
+            
+            console.log(`商品 ${productId} 数量从 ${currentValue} 变为 ${newValue}`);
+            
+            if (currentValue !== newValue) {
+                // 添加输入框数值变化动效
+                input.classList.add('price-update');
+                setTimeout(() => input.classList.remove('price-update'), 500);
+                
+                input.value = newValue;
+                
+                // 更新按钮状态
+                const minusBtn = cartItem.querySelector('.quantity-control button:first-child');
+                const plusBtn = cartItem.querySelector('.quantity-control button:last-child');
+                
+                // 禁用减号按钮，如果数量为1
+                minusBtn.disabled = newValue <= 1;
+                minusBtn.style.opacity = newValue <= 1 ? '0.5' : '1';
+                
+                // 禁用加号按钮，如果数量为99
+                plusBtn.disabled = newValue >= 99;
+                plusBtn.style.opacity = newValue >= 99 ? '0.5' : '1';
+                
+                // 更新价格显示
+                const priceElement = cartItem.querySelector('.price-integer');
+                const productIndex = products.findIndex(p => p.id == productId);
+                if (productIndex === -1) {
+                    console.error(`未找到商品数据，ID: ${productId}`);
+                    return;
+                }
+                
+                const unitPrice = products[productIndex].price;
+                const newPrice = unitPrice * newValue;
+                
+                // 添加价格变化动画
+                priceElement.classList.add('price-update');
+                
+                // 更新显示的价格
+                priceElement.textContent = numberWithCommas(newPrice);
+                
+                // 延迟后移除动画类
+                setTimeout(() => {
+                    priceElement.classList.remove('price-update');
+                }, 500);
+                
+                // 更新商品数据
+                products[productIndex].quantity = newValue;
+                
+                // 更新总价
+                updateTotalPrice();
+            }
+        }
+
+        // 初始化数量控制
+        function initQuantityControls() {
+            document.querySelectorAll('.cart-item').forEach(item => {
+                const productId = item.getAttribute('data-product-id');
+                const minusBtn = item.querySelector('.quantity-control button:first-child');
+                const plusBtn = item.querySelector('.quantity-control button:last-child');
+                const input = item.querySelector('.quantity-control input');
+                
+                console.log(`初始化商品 ${productId} 的数量控制`);
+                
+                // 减少数量
+                minusBtn.addEventListener('click', function() {
+                    console.log(`商品 ${productId} 点击减少数量`);
+                    if (!this.disabled) {
+                        updateQuantity(productId, -1);
+                    }
+                });
+                
+                // 增加数量
+                plusBtn.addEventListener('click', function() {
+                    console.log(`商品 ${productId} 点击增加数量`);
+                    if (!this.disabled) {
+                        updateQuantity(productId, 1);
+                    }
+                });
+                
+                // 手动输入数量
+                input.addEventListener('change', function() {
+                    let value = parseInt(this.value) || 1;
+                    value = Math.max(1, Math.min(99, value));
+                    console.log(`商品 ${productId} 手动输入数量: ${value}`);
+                    
+                    // 查找商品信息
+                    const productIndex = products.findIndex(p => p.id == productId);
+                    if (productIndex !== -1) {
+                        const currentValue = products[productIndex].quantity;
+                        updateQuantity(productId, value - currentValue);
+                    }
+                });
+                
+                // 设置初始按钮状态
+                const currentValue = parseInt(input.value);
+                minusBtn.disabled = currentValue <= 1;
+                minusBtn.style.opacity = currentValue <= 1 ? '0.5' : '1';
+                plusBtn.disabled = currentValue >= 99;
+                plusBtn.style.opacity = currentValue >= 99 ? '0.5' : '1';
+            });
+        }
+        
+        // 格式化数字
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+
+        // 更新总价的增强版本
+        function updateTotalPrice() {
+            const totalPrice = products.reduce((sum, product) => sum + product.price * product.quantity, 0);
+            const totalElement = document.querySelector('.checkout-bar .price-integer');
+            const summaryTotalElement = document.querySelector('.price-summary .price-integer');
+            const finalPriceElement = document.querySelector('.price-summary .text-xl');
+            
+            // 计算优惠后价格
+            const shipping = 0;
+            const discount = 699;
+            const memberDiscount = 200;
+            const finalPrice = totalPrice + shipping - discount - memberDiscount;
+            
+            // 更新商品总价
+            summaryTotalElement.classList.add('price-update');
+            summaryTotalElement.textContent = numberWithCommas(totalPrice);
+            
+            // 更新实付金额
+            finalPriceElement.classList.add('price-update');
+            finalPriceElement.textContent = numberWithCommas(finalPrice);
+            
+            // 更新底部结算栏
+            totalElement.classList.add('price-update');
+            totalElement.textContent = numberWithCommas(finalPrice);
+            
+            // 更新商品数量
+            const totalItems = products.reduce((sum, product) => sum + product.quantity, 0);
+            document.querySelector('.text-xs.text-gray-400').textContent = 
+                `已选${totalItems}件商品，免运费`;
+
+            // 更新优惠提示
+            const nextDiscount = 7500;
+            const gap = nextDiscount - totalPrice;
+            const discountMsg = document.querySelector('.price-summary .text-xs.text-gray-400 span');
+            
+            // 为优惠信息添加动效
+            discountMsg.classList.add('fade-in-up');
+            
+            if (gap > 0) {
+                discountMsg.textContent = `已优惠¥${numberWithCommas(discount + memberDiscount)}，再买¥${numberWithCommas(gap)}即可享受满${numberWithCommas(nextDiscount)}减1000`;
+            } else {
+                discountMsg.textContent = `已优惠¥${numberWithCommas(discount + memberDiscount)}，已满足满${numberWithCommas(nextDiscount)}减1000条件`;
+            }
+
+            // 移除动画类
+            setTimeout(() => {
+                totalElement.classList.remove('price-update');
+                finalPriceElement.classList.remove('price-update');
+                summaryTotalElement.classList.remove('price-update');
+                discountMsg.classList.remove('fade-in-up');
+            }, 500);
+        }
+        
+        // 初始化手势操作
+        function initSwipeGestures() {
+            const cartItems = document.querySelectorAll('.cart-item');
+            
+            cartItems.forEach(item => {
+                let startX, moveX, initialTransform = 0;
+                let isSwiped = false;
+                
+                // 触摸开始
+                item.addEventListener('touchstart', function(e) {
+                    startX = e.touches[0].clientX;
+                    // 获取当前的transform值
+                    const transform = window.getComputedStyle(item).transform;
+                    if (transform !== 'none') {
+                        const matrix = new DOMMatrix(transform);
+                        initialTransform = matrix.m41; // 获取X轴的平移值
+                    } else {
+                        initialTransform = 0;
+                    }
+                    
+                    // 重置过渡效果，使滑动更流畅
+                    item.style.transition = 'none';
+                });
+                
+                // 触摸移动
+                item.addEventListener('touchmove', function(e) {
+                    moveX = e.touches[0].clientX;
+                    const diff = moveX - startX;
+                    
+                    // 只允许向左滑动，或者如果已经滑出，则允许向右恢复
+                    if (diff < 0 || initialTransform < 0) {
+                        // 限制最大滑动距离为200px
+                        const newTransform = Math.max(-200, Math.min(0, initialTransform + diff));
+                        item.style.transform = `translateX(${newTransform}px)`;
+                    }
+                });
+                
+                // 触摸结束
+                item.addEventListener('touchend', function() {
+                    item.style.transition = 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                    
+                    // 获取当前位置
+                    const transform = window.getComputedStyle(item).transform;
+                    let currentTransform = 0;
+                    if (transform !== 'none') {
+                        const matrix = new DOMMatrix(transform);
+                        currentTransform = matrix.m41;
+                    }
+                    
+                    // 如果拖动超过一半，则自动完成滑动
+                    if (currentTransform < -100) {
+                        item.style.transform = 'translateX(-200px)';
+                        isSwiped = true;
+                    } else {
+                        item.style.transform = 'translateX(0)';
+                        isSwiped = false;
+                    }
+                });
+                
+                // 点击收藏按钮
+                const favoriteBtn = item.querySelector('.action-favorite');
+                if (favoriteBtn) {
+                    favoriteBtn.addEventListener('click', function() {
+                        const productId = item.getAttribute('data-product-id');
+                        addToFavorite(productId);
+                        // 重置位置
+                        item.style.transform = 'translateX(0)';
+                    });
+                }
+                
+                // 点击删除按钮
+                const deleteBtn = item.querySelector('.action-delete');
+                if (deleteBtn) {
+                    deleteBtn.addEventListener('click', function() {
+                        const productId = item.getAttribute('data-product-id');
+                        removeFromCart(productId);
+                    });
+                }
+            });
+        }
+        
+        // 添加到收藏
+        function addToFavorite(productId) {
+            const item = document.querySelector(`[data-product-id="${productId}"]`);
+            const productName = item.querySelector('.text-sm.font-medium').textContent;
+            
+            // 创建收藏成功的消息提示
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-1/4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-70 text-white px-4 py-2 rounded-lg z-50';
+            toast.innerHTML = `<i class="fas fa-heart text-red-400 mr-2"></i> ${productName} 已添加到收藏`;
+            document.body.appendChild(toast);
+            
+            // 添加进入动画
+            setTimeout(() => {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translate(-50%, 0)';
+            }, 10);
+            
+            // 自动关闭提示
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 2000);
+            
+            console.log(`已将商品 ${productId} 添加到收藏`);
+        }
+        
+        // 从购物车移除
+        function removeFromCart(productId) {
+            const item = document.querySelector(`[data-product-id="${productId}"]`);
+            if (!item) return;
+            
+            // 获取商品数据
+            const productIndex = products.findIndex(p => p.id == productId);
+            if (productIndex === -1) return;
+            
+            // 添加删除动画
+            item.style.height = `${item.offsetHeight}px`;
+            item.style.overflow = 'hidden';
+            
+            // 使用CSS动画淡出
+            item.style.transition = 'all 0.3s ease';
+            item.style.opacity = '0';
+            item.style.height = '0';
+            item.style.margin = '0';
+            item.style.padding = '0';
+            
+            // 从数据中删除
+            products.splice(productIndex, 1);
+            
+            // 更新UI
+            setTimeout(() => {
+                if (item.parentNode) {
+                    item.parentNode.removeChild(item);
+                }
+                
+                // 更新总价
+                updateTotalPrice();
+                
+                // 显示删除成功的提示
+                const toast = document.createElement('div');
+                toast.className = 'fixed top-1/4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-70 text-white px-4 py-2 rounded-lg z-50';
+                toast.innerHTML = `<i class="fas fa-check-circle text-green-400 mr-2"></i> 商品已从购物车中移除`;
+                document.body.appendChild(toast);
+                
+                // 添加进入动画
+                setTimeout(() => {
+                    toast.style.opacity = '1';
+                    toast.style.transform = 'translate(-50%, 0)';
+                }, 10);
+                
+                // 自动关闭提示
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    setTimeout(() => {
+                        document.body.removeChild(toast);
+                    }, 300);
+                }, 2000);
+            }, 300);
+        }
+
+        // 初始化价格过渡动效
+        function initPriceTransitions() {
+            console.log('初始化价格动效');
+            const priceElements = document.querySelectorAll('.price-integer');
+            
+            priceElements.forEach(price => {
+                // 为每个价格元素添加初始动效类
+                price.classList.add('price-update');
+                
+                // 延迟后移除动效类，便于再次触发
+                setTimeout(() => {
+                    price.classList.remove('price-update');
+                }, 500);
+            });
+        }
+
+        // 为结算按钮添加点击事件
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkoutButton = document.querySelector('.checkout-bar button');
+            if (checkoutButton) {
+                checkoutButton.addEventListener('click', function() {
+                    console.log('点击了完成选购按钮');
+                    // 显示结算成功提示
+                    const toast = document.createElement('div');
+                    toast.className = 'fixed top-1/4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-70 text-white px-4 py-2 rounded-lg z-50';
+                    toast.innerHTML = `<i class="fas fa-check-circle text-green-400 mr-2"></i> 订单提交成功`;
+                    document.body.appendChild(toast);
+                    
+                    // 添加进入动画
+                    setTimeout(() => {
+                        toast.style.opacity = '1';
+                        toast.style.transform = 'translate(-50%, 0)';
+                    }, 10);
+                    
+                    // 自动关闭提示
+                    setTimeout(() => {
+                        toast.style.opacity = '0';
+                        setTimeout(() => {
+                            document.body.removeChild(toast);
+                        }, 300);
+                    }, 2000);
+                });
+            }
+        });
+
+        // 添加自选物流下拉框功能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM加载完成，初始化物流下拉框');
+            initLogisticsDropdown();
+        });
+
+        // 如果DOM已加载，立即执行初始化
+        if (document.readyState === 'interactive' || document.readyState === 'complete') {
+            console.log('页面已加载，立即初始化物流下拉框');
+            initLogisticsDropdown();
+        }
+
+        // 物流下拉框初始化函数
+        function initLogisticsDropdown() {
+            if (window.logisticsInitialized) {
+                console.log('物流下拉框已初始化，跳过');
+                return;
+            }
+            
+            const logisticsSelect = document.querySelector('.logistics-select');
+            const logisticsDropdown = document.querySelector('.logistics-dropdown');
+            
+            if (!logisticsSelect || !logisticsDropdown) {
+                console.error('找不到物流下拉框元素', logisticsSelect, logisticsDropdown);
+                return;
+            }
+            
+            console.log('初始化物流下拉框元素', logisticsSelect, logisticsDropdown);
+            
+            // 移除旧的事件监听器
+            const newLogisticsSelect = logisticsSelect.cloneNode(true);
+            logisticsSelect.parentNode.replaceChild(newLogisticsSelect, logisticsSelect);
+            
+            // 点击自选物流区域时展开/收起下拉框
+            newLogisticsSelect.addEventListener('click', function(e) {
+                console.log('点击物流选择区域');
+                e.stopPropagation();
+                logisticsDropdown.classList.toggle('show');
+                
+                if (logisticsDropdown.classList.contains('show')) {
+                    showToast('请选择物流公司', 'info');
+                }
+            });
+            
+            // 选择物流选项
+            const logisticsOptions = document.querySelectorAll('.logistics-option');
+            logisticsOptions.forEach(option => {
+                const newOption = option.cloneNode(true);
+                option.parentNode.replaceChild(newOption, option);
+                
+                newOption.addEventListener('click', function(e) {
+                    const value = this.getAttribute('data-value');
+                    console.log('选择物流选项:', value);
+                    e.stopPropagation();
+                    
+                    const name = this.querySelector('span').textContent.split(' ')[0];
+                    const price = this.querySelector('span').textContent.match(/¥([\d.]+)/)[1];
+                    
+                    // 更新显示的物流信息
+                    newLogisticsSelect.querySelector('.font-medium').textContent = name;
+                    newLogisticsSelect.querySelector('.delivery-fee span').textContent = `¥${price}`;
+                    
+                    // 关闭下拉框
+                    logisticsDropdown.classList.remove('show');
+                    
+                    // 显示选择成功提示
+                    showToast(`已选择${name}`);
+                    
+                    // 更新运费和总价
+                    updateShippingFee(parseFloat(price));
+                });
+            });
+            
+            // 自定义物流提交按钮点击事件
+            const customLogisticsSubmit = document.getElementById('custom-logistics-submit');
+            const customLogisticsName = document.getElementById('custom-logistics-name');
+            const customLogisticsPrice = document.getElementById('custom-logistics-price');
+            
+            if (customLogisticsSubmit) {
+                const newSubmit = customLogisticsSubmit.cloneNode(true);
+                customLogisticsSubmit.parentNode.replaceChild(newSubmit, customLogisticsSubmit);
+                
+                newSubmit.addEventListener('click', function(e) {
+                    console.log('点击自定义物流提交按钮');
+                    e.stopPropagation();
+                    
+                    const name = customLogisticsName.value.trim();
+                    let price = customLogisticsPrice.value.trim();
+                    
+                    if (!name) {
+                        showToast('请输入物流公司名称', 'warning');
+                        return;
+                    }
+                    
+                    if (!price || isNaN(parseFloat(price))) {
+                        showToast('请输入有效的价格', 'warning');
+                        return;
+                    }
+                    
+                    price = parseFloat(price).toFixed(2);
+                    
+                    // 更新显示的物流信息
+                    newLogisticsSelect.querySelector('.font-medium').textContent = name;
+                    newLogisticsSelect.querySelector('.delivery-fee span').textContent = `¥${price}`;
+                    
+                    // 关闭下拉框
+                    logisticsDropdown.classList.remove('show');
+                    
+                    // 清空输入框
+                    customLogisticsName.value = '';
+                    customLogisticsPrice.value = '';
+                    
+                    // 显示选择成功提示
+                    showToast(`已选择${name}`);
+                    
+                    // 更新运费和总价
+                    updateShippingFee(parseFloat(price));
+                });
+            }
+            
+            // 阻止在下拉框内点击事件冒泡
+            logisticsDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+            
+            // 点击页面其他区域关闭下拉框
+            document.addEventListener('click', function() {
+                if (logisticsDropdown.classList.contains('show')) {
+                    logisticsDropdown.classList.remove('show');
+                }
+            });
+            
+            // 阻止在输入框内点击事件冒泡
+            document.querySelectorAll('.custom-logistics-field input').forEach(input => {
+                input.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            });
+            
+            window.logisticsInitialized = true;
+            console.log('物流下拉框初始化完成');
+        }
+
+        // 更新运费和总价
+        function updateShippingFee(fee) {
+            // 找到运费显示元素
+            const shippingFeeElement = document.querySelector('.price-summary .flex.justify-between:nth-child(2) .price-integer');
+            if (shippingFeeElement) {
+                // 更新运费
+                shippingFeeElement.textContent = numberWithCommas(fee);
+                shippingFeeElement.classList.add('price-update');
+                
+                // 更新总价
+                const totalPrice = products.reduce((sum, product) => sum + product.price * product.quantity, 0);
+                const discount = 699;
+                const memberDiscount = 200;
+                const finalPrice = totalPrice + fee - discount - memberDiscount;
+                
+                // 更新实付金额
+                const finalPriceElement = document.querySelector('.price-summary .text-xl');
+                finalPriceElement.textContent = numberWithCommas(finalPrice);
+                finalPriceElement.classList.add('price-update');
+                
+                // 更新底部结算栏
+                const totalElement = document.querySelector('.checkout-bar .price-integer');
+                totalElement.textContent = numberWithCommas(finalPrice);
+                totalElement.classList.add('price-update');
+                
+                // 移除动画类
+                setTimeout(() => {
+                    shippingFeeElement.classList.remove('price-update');
+                    finalPriceElement.classList.remove('price-update');
+                    totalElement.classList.remove('price-update');
+                }, 500);
+            }
+        }
+
+        // 通用提示框函数增强
+        function showToast(message, type = 'success') {
+            // 移除可能存在的旧提示框
+            const existingToasts = document.querySelectorAll('.toast-message');
+            existingToasts.forEach(toast => {
+                document.body.removeChild(toast);
+            });
+            
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-1/4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-70 text-white px-4 py-2 rounded-lg z-50 toast-message';
+            
+            let icon = 'check-circle';
+            let iconColor = 'green-400';
+            
+            if (type === 'warning') {
+                icon = 'exclamation-circle';
+                iconColor = 'yellow-400';
+            } else if (type === 'error') {
+                icon = 'times-circle';
+                iconColor = 'red-400';
+            } else if (type === 'info') {
+                icon = 'info-circle';
+                iconColor = 'blue-400';
+            }
+            
+            toast.innerHTML = `<i class="fas fa-${icon} text-${iconColor} mr-2"></i> ${message}`;
+            document.body.appendChild(toast);
+            
+            // 添加进入动画
+            setTimeout(() => {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translate(-50%, 0)';
+            }, 10);
+            
+            // 自动关闭提示
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 300);
+            }, 2000);
+        }
+        
+        // 添加产品点击跳转和规格选择功能
+        document.addEventListener('DOMContentLoaded', function() {
+            initProductInteractions();
+        });
+        
+        // 如果DOM已加载，立即执行初始化
+        if (document.readyState === 'interactive' || document.readyState === 'complete') {
+            initProductInteractions();
+        }
+        
+        let currentProductId = null;
+        let currentProductSpecs = {};
+        
+        // 初始化产品交互功能
+        function initProductInteractions() {
+            if (window.productInteractionsInitialized) {
+                console.log('产品交互功能已初始化，跳过');
+                return;
+            }
+            
+            // 为产品图片和标题添加点击事件
+            document.querySelectorAll('.cart-item').forEach(item => {
+                const productId = item.getAttribute('data-product-id');
+                const productImage = item.querySelector('.w-24.h-24 img');
+                const productTitle = item.querySelector('.text-sm.font-medium');
+                const productSpec = item.querySelector('.text-xs.text-gray-500.mt-1');
+                
+                // 样式调整，使其看起来可点击
+                if (productImage) {
+                    productImage.style.cursor = 'pointer';
+                    productImage.addEventListener('click', function() {
+                        navigateToProductDetail(productId);
+                    });
+                }
+                
+                if (productTitle) {
+                    productTitle.style.cursor = 'pointer';
+                    productTitle.style.textDecoration = 'none';
+                    productTitle.addEventListener('mouseenter', function() {
+                        this.style.color = 'var(--brand-primary)';
+                    });
+                    productTitle.addEventListener('mouseleave', function() {
+                        this.style.color = '';
+                    });
+                    productTitle.addEventListener('click', function() {
+                        navigateToProductDetail(productId);
+                    });
+                }
+                
+                // 规格点击打开模态框
+                if (productSpec) {
+                    productSpec.style.cursor = 'pointer';
+                    productSpec.style.position = 'relative';
+                    // 添加小图标表示可编辑
+                    const editIcon = document.createElement('i');
+                    editIcon.className = 'fas fa-pencil-alt text-xs text-gray-400 ml-1';
+                    editIcon.style.fontSize = '10px';
+                    productSpec.appendChild(editIcon);
+                    
+                    productSpec.addEventListener('mouseenter', function() {
+                        this.style.color = 'var(--brand-primary-muted)';
+                        editIcon.style.color = 'var(--brand-primary-muted)';
+                    });
+                    productSpec.addEventListener('mouseleave', function() {
+                        this.style.color = '';
+                        editIcon.style.color = '';
+                    });
+                    productSpec.addEventListener('click', function() {
+                        openSpecModal(productId);
+                    });
+                }
+            });
+            
+            // 初始化规格模态框
+            initSpecModal();
+            
+            window.productInteractionsInitialized = true;
+            console.log('产品交互功能初始化完成');
+        }
+        
+        // 跳转到产品详情页
+        function navigateToProductDetail(productId) {
+            console.log(`跳转到产品 ${productId} 详情页`);
+            // 这里根据实际情况设置产品详情页URL
+            let productDetailUrl = `product-detail.html?id=${productId}`;
+            
+            // 使用产品数据获取产品名称
+            const productIndex = products.findIndex(p => p.id == productId);
+            if (productIndex !== -1) {
+                const productName = products[productIndex].name;
+                // 添加产品名称到URL，方便SEO
+                productDetailUrl += `&name=${encodeURIComponent(productName)}`;
+            }
+            
+            // 显示跳转提示
+            showToast('正在前往产品详情页...', 'info');
+            
+            // 延迟跳转，给提示显示的时间
+            setTimeout(() => {
+                window.location.href = productDetailUrl;
+            }, 500);
+        }
+        
+        // 初始化规格选择模态框
+        function initSpecModal() {
+            const specModal = document.getElementById('specModal');
+            const specModalContent = document.getElementById('specModalContent');
+            const closeSpecModal = document.getElementById('closeSpecModal');
+            const confirmSpecChange = document.getElementById('confirmSpecChange');
+            const colorOptions = document.querySelectorAll('.color-option');
+            const sizeOptions = document.querySelectorAll('.size-option');
+            
+            if (!specModal) return;
+            
+            // 确保模态框初始状态为隐藏
+            specModal.classList.add('hidden');
+            specModalContent.classList.remove('scale-100', 'opacity-100');
+            specModalContent.classList.add('scale-95', 'opacity-0');
+            
+            // 关闭模态框
+            closeSpecModal.addEventListener('click', function() {
+                closeModal();
+            });
+            
+            // 点击模态框外部关闭
+            specModal.addEventListener('click', function(e) {
+                if (e.target === specModal) {
+                    closeModal();
+                }
+            });
+            
+            // 规格选项点击事件
+            document.querySelectorAll('.spec-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除同类选项的选中状态
+                    const parentElement = this.parentElement;
+                    parentElement.querySelectorAll('.spec-option').forEach(opt => {
+                        opt.classList.remove('border-brand-primary-muted', 'text-brand-primary-muted', 'bg-brand-primary-transparent');
+                    });
+                    
+                    // 添加选中状态
+                    this.classList.add('border-brand-primary-muted', 'text-brand-primary-muted', 'bg-brand-primary-transparent');
+                    
+                    // 更新当前选择的规格
+                    if (this.classList.contains('color-option')) {
+                        currentProductSpecs.color = this.getAttribute('data-value');
+                    } else if (this.classList.contains('size-option')) {
+                        currentProductSpecs.size = this.getAttribute('data-value');
+                    }
+                });
+            });
+            
+            // 确认修改按钮
+            confirmSpecChange.addEventListener('click', function() {
+                if (!currentProductId || !currentProductSpecs.color || !currentProductSpecs.size) {
+                    showToast('请选择完整的规格', 'warning');
+                    return;
+                }
+                
+                // 更新购物车中的规格
+                updateProductSpec(currentProductId, currentProductSpecs);
+                closeModal();
+            });
+            
+            // 关闭模态框函数
+            function closeModal() {
+                specModal.classList.add('hidden');
+                specModalContent.classList.remove('scale-100', 'opacity-100');
+                specModalContent.classList.add('scale-95', 'opacity-0');
+            }
+        }
+        
+        // 打开规格选择模态框
+        function openSpecModal(productId) {
+            const specModal = document.getElementById('specModal');
+            const specModalContent = document.getElementById('specModalContent');
+            const specProductImage = document.getElementById('specProductImage');
+            const specProductName = document.getElementById('specProductName');
+            const specProductPrice = document.getElementById('specProductPrice');
+            
+            // 查找商品信息
+            const productIndex = products.findIndex(p => p.id == productId);
+            if (productIndex === -1) {
+                console.error(`未找到商品数据，ID: ${productId}`);
+                return;
+            }
+            
+            const product = products[productIndex];
+            currentProductId = productId;
+            
+            // 从购物车项中获取当前的规格
+            const cartItem = document.querySelector(`[data-product-id="${productId}"]`);
+            const specText = cartItem.querySelector('.text-xs.text-gray-500.mt-1').textContent;
+            
+            // 解析规格文本，例如 "浅灰色 / 三人座"
+            const specParts = specText.split(' / ');
+            currentProductSpecs = {
+                color: specParts[0],
+                size: specParts.length > 1 ? specParts[1] : ''
+            };
+            
+            // 更新模态框内容
+            specProductImage.src = cartItem.querySelector('img').src;
+            specProductName.textContent = product.name;
+            specProductPrice.innerHTML = `<span class="price-currency">¥</span>${numberWithCommas(product.price)}`;
+            
+            // 设置当前选中的规格
+            document.querySelectorAll('.color-option').forEach(option => {
+                const value = option.getAttribute('data-value');
+                if (value === currentProductSpecs.color) {
+                    option.classList.add('border-brand-primary-muted', 'text-brand-primary-muted', 'bg-brand-primary-transparent');
+                } else {
+                    option.classList.remove('border-brand-primary-muted', 'text-brand-primary-muted', 'bg-brand-primary-transparent');
+                }
+            });
+            
+            document.querySelectorAll('.size-option').forEach(option => {
+                const value = option.getAttribute('data-value');
+                if (value === currentProductSpecs.size) {
+                    option.classList.add('border-brand-primary-muted', 'text-brand-primary-muted', 'bg-brand-primary-transparent');
+                } else {
+                    option.classList.remove('border-brand-primary-muted', 'text-brand-primary-muted', 'bg-brand-primary-transparent');
+                }
+            });
+            
+            // 显示模态框
+            specModal.classList.remove('hidden');
+            setTimeout(() => {
+                specModalContent.classList.remove('scale-95', 'opacity-0');
+                specModalContent.classList.add('scale-100', 'opacity-100');
+            }, 50);
+        }
+        
+        // 更新商品规格
+        function updateProductSpec(productId, specs) {
+            const cartItem = document.querySelector(`[data-product-id="${productId}"]`);
+            if (!cartItem) return;
+            
+            const specElement = cartItem.querySelector('.text-xs.text-gray-500.mt-1');
+            if (!specElement) return;
+            
+            // 拼接规格文本
+            let specText = specs.color || '';
+            if (specs.size) {
+                specText += ` / ${specs.size}`;
+            }
+            
+            // 保留编辑图标
+            const editIcon = specElement.querySelector('i');
+            specElement.textContent = specText;
+            if (editIcon) {
+                specElement.appendChild(editIcon);
+            }
+            
+            // 显示更新成功提示
+            showToast('规格已更新');
+            
+            // 添加一个动效
+            specElement.classList.add('price-update');
+            setTimeout(() => {
+                specElement.classList.remove('price-update');
+            }, 500);
+        }
+    </script>
+    
+    <!-- 规格选择模态框 -->
+    <div id="specModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden" style="display: none !important;">
+        <div class="bg-white rounded-lg w-11/12 max-w-md transform transition-all duration-300 scale-95 opacity-0" id="specModalContent">
+            <div class="relative">
+                <div class="p-4 border-b border-gray-200">
+                    <h3 class="text-lg font-medium">规格选择</h3>
+                    <button class="absolute top-4 right-4 text-gray-400 hover:text-gray-500" id="closeSpecModal">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="p-4">
+                    <div class="flex mb-4">
+                        <div class="w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
+                            <img id="specProductImage" src="" alt="产品图片" class="w-full h-full object-cover">
+                        </div>
+                        <div class="ml-3">
+                            <div id="specProductName" class="text-base font-medium"></div>
+                            <div id="specProductPrice" class="text-red-500 font-medium mt-1"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 颜色选择 -->
+                    <div class="mb-4">
+                        <div class="text-sm font-medium mb-2">颜色</div>
+                        <div class="flex flex-wrap gap-2" id="colorOptions">
+                            <div class="px-3 py-1 border border-gray-200 rounded-full text-sm cursor-pointer spec-option color-option" data-value="浅灰色">浅灰色</div>
+                            <div class="px-3 py-1 border border-gray-200 rounded-full text-sm cursor-pointer spec-option color-option" data-value="深灰色">深灰色</div>
+                            <div class="px-3 py-1 border border-gray-200 rounded-full text-sm cursor-pointer spec-option color-option" data-value="米色">米色</div>
+                            <div class="px-3 py-1 border border-gray-200 rounded-full text-sm cursor-pointer spec-option color-option" data-value="黑色">黑色</div>
+                            <div class="px-3 py-1 border border-gray-200 rounded-full text-sm cursor-pointer spec-option color-option" data-value="原木色">原木色</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 尺寸选择 -->
+                    <div class="mb-4">
+                        <div class="text-sm font-medium mb-2">尺寸</div>
+                        <div class="flex flex-wrap gap-2" id="sizeOptions">
+                            <div class="px-3 py-1 border border-gray-200 rounded-full text-sm cursor-pointer spec-option size-option" data-value="单人座">单人座</div>
+                            <div class="px-3 py-1 border border-gray-200 rounded-full text-sm cursor-pointer spec-option size-option" data-value="双人座">双人座</div>
+                            <div class="px-3 py-1 border border-gray-200 rounded-full text-sm cursor-pointer spec-option size-option" data-value="三人座">三人座</div>
+                            <div class="px-3 py-1 border border-gray-200 rounded-full text-sm cursor-pointer spec-option size-option" data-value="1.2米">1.2米</div>
+                            <div class="px-3 py-1 border border-gray-200 rounded-full text-sm cursor-pointer spec-option size-option" data-value="1.5米">1.5米</div>
+                            <div class="px-3 py-1 border border-gray-200 rounded-full text-sm cursor-pointer spec-option size-option" data-value="1.8米">1.8米</div>
+                        </div>
+                    </div>
+                    
+                    <button id="confirmSpecChange" class="w-full py-2 bg-gradient-to-r from-brand-primary-muted to-brand-primary text-white rounded-full font-medium mt-4">
+                        确认修改
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

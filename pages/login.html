@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        /* 主题颜色变量 - 与首页保持一致 */
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+            
+            /* 渐变色 */
+            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
+            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
+            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
+            
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
+            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
+            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--brand-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 导航栏样式 */
+        .nav-bar {
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-bar i {
+            color: var(--brand-dark-light);
+            transition: color 0.3s ease;
+        }
+
+        .nav-bar i:hover {
+            color: var(--brand-primary);
+        }
+
+        /* 登录页面样式 */
+        .login-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+
+        .logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 60px;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: var(--brand-gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-highlight);
+        }
+
+        .logo i {
+            font-size: 40px;
+            color: white;
+        }
+
+        .app-name {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--brand-dark);
+        }
+
+        .app-slogan {
+            font-size: 14px;
+            color: var(--brand-dark-light);
+            margin-top: 4px;
+        }
+
+        /* 登录按钮样式 */
+        .login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 50px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .wechat-login {
+            background-color: #07C160;
+            color: white;
+            box-shadow: 0 4px 10px rgba(7, 193, 96, 0.3);
+        }
+
+        .wechat-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(7, 193, 96, 0.4);
+        }
+
+        .wechat-login:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 5px rgba(7, 193, 96, 0.3);
+        }
+
+        .other-login {
+            background-color: white;
+            color: var(--brand-dark);
+            border: 1px solid var(--brand-light-dark);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .other-login:hover {
+            background-color: var(--brand-light);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .other-login:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* 协议样式 */
+        .agreement {
+            font-size: 12px;
+            color: var(--brand-dark-light);
+            text-align: center;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .agreement a {
+            color: var(--brand-primary);
+            text-decoration: none;
+        }
+
+        .agreement a:hover {
+            text-decoration: underline;
+        }
+
+        /* 底部装饰 */
+        .bottom-decoration {
+            height: 120px;
+            background: var(--brand-gradient-primary);
+            opacity: 0.1;
+            border-top-left-radius: 50% 20px;
+            border-top-right-radius: 50% 20px;
+            margin: 0 -24px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <div class="flex items-center">
+                <a href="javascript:history.back()" class="text-gray-500 mr-3">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="text-lg font-medium">登录</div>
+            </div>
+            <div class="flex items-center">
+                <a href="home.html" class="text-gray-500 ml-3">
+                    <i class="fas fa-home"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主要内容区 -->
+    <div class="login-container pt-14">
+        <!-- Logo和应用名称 -->
+        <div class="logo-container">
+            <div class="logo">
+                <i class="fas fa-couch"></i>
+            </div>
+            <div class="app-name">家逸生活</div>
+            <div class="app-slogan">让家居生活更简单</div>
+        </div>
+        
+        <!-- 登录按钮区域 -->
+        <div class="login-buttons">
+            <a href="#" class="login-btn wechat-login flex items-center justify-center">
+                <i class="fab fa-weixin mr-2 text-xl"></i>
+                微信一键登录
+            </a>
+            
+            <a href="#" class="login-btn other-login flex items-center justify-center">
+                <i class="fas fa-mobile-alt mr-2"></i>
+                手机号登录
+            </a>
+            
+            <a href="#" class="login-btn other-login flex items-center justify-center">
+                <i class="fas fa-envelope mr-2"></i>
+                邮箱登录
+            </a>
+        </div>
+        
+        <!-- 用户协议和隐私政策 -->
+        <div class="agreement">
+            登录即表示您同意
+            <a href="agreement.html">《用户协议》</a>
+            和
+            <a href="privacy.html">《隐私政策》</a>
+            <br>
+            本应用由家逸生活提供
+        </div>
+        
+        <!-- 底部装饰 -->
+        <div class="bottom-decoration"></div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 微信登录按钮点击事件
+            const wechatLoginBtn = document.querySelector('.wechat-login');
+            if (wechatLoginBtn) {
+                wechatLoginBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // 这里模拟微信登录流程
+                    console.log('调用微信登录API');
+                    
+                    // 模拟登录成功后跳转
+                    setTimeout(function() {
+                        window.location.href = 'profile.html';
+                    }, 1000);
+                });
+            }
+            
+            // 其他登录按钮点击事件
+            const otherLoginBtns = document.querySelectorAll('.other-login');
+            otherLoginBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const loginType = this.textContent.trim();
+                    alert(`即将跳转到${loginType}页面`);
+                    // 实际应用中这里会跳转到对应的登录页面
+                });
+            });
+        });
+    </script>
+</body>
+</html> 

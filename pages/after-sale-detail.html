@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>售后详情 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+            
+            /* 渐变色 */
+            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
+            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
+            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
+            
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
+            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
+            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--brand-dark);
+        }
+
+        .section {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .status-tag {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .status-pending {
+            background-color: var(--brand-primary-transparent);
+            color: var(--brand-primary);
+        }
+
+        .status-approved {
+            background-color: rgba(56, 178, 172, 0.1);
+            color: var(--brand-success);
+        }
+
+        .status-processing {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--brand-warning);
+        }
+
+        .status-completed {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--brand-info);
+        }
+
+        .status-rejected {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--brand-error);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 6px;
+            width: 2px;
+            background-color: var(--brand-light-dark);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 20px;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -20px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: white;
+            border: 2px solid var(--brand-light-dark);
+            top: 0;
+        }
+
+        .timeline-item.active .timeline-dot {
+            background-color: var(--brand-primary);
+            border-color: var(--brand-primary);
+        }
+
+        .timeline-content {
+            padding-left: 10px;
+        }
+
+        .timeline-time {
+            font-size: 12px;
+            color: var(--brand-dark-light);
+            margin-top: 4px;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .image-item {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 12px;
+        }
+
+        .info-label {
+            width: 80px;
+            color: var(--brand-dark-light);
+            flex-shrink: 0;
+        }
+
+        .info-value {
+            flex-grow: 1;
+        }
+
+        /* 底部按钮 */
+        .bottom-btn {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            z-index: 10;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 25px;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--brand-gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-highlight);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--brand-dark-light);
+            color: var(--brand-dark);
+            background: white;
+        }
+
+        /* 查看大图 */
+        .image-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-viewer.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .image-viewer img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+
+        .close-viewer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <div class="flex items-center">
+                <a href="after-sale-list.html" class="text-gray-500 mr-3" id="backLink">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="text-lg font-medium">售后详情</div>
+            </div>
+            <div class="flex items-center">
+                <a href="customer-service.html" class="text-gray-500 ml-3">
+                    <i class="fas fa-headset"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="pt-14 pb-20 px-4">
+        <!-- 售后状态 -->
+        <div class="section p-4">
+            <div class="flex justify-between items-center mb-4">
+                <div class="text-lg font-medium" id="afterSaleId">AS2023112301</div>
+                <div class="status-tag status-pending" id="statusTag">待审核</div>
+            </div>
+            
+            <div class="text-sm text-gray-500">申请时间：<span id="applyTime">2023-11-23 14:30:45</span></div>
+        </div>
+        
+        <!-- 商品信息 -->
+        <div class="section p-4">
+            <div class="section-title">商品信息</div>
+            
+            <div class="flex">
+                <div class="w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="设计师台灯" class="w-full h-full object-cover" id="productImage">
+                </div>
+                <div class="ml-3 flex-1">
+                    <div class="text-sm font-medium" id="productName">北欧设计师台灯</div>
+                    <div class="text-xs text-gray-500 mt-1" id="productSpec">黑色</div>
+                    <div class="flex justify-between mt-2">
+                        <div class="text-sm font-medium" id="productPrice">¥599</div>
+                        <div class="text-sm text-gray-500" id="productQuantity">x1</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-3 pt-3 border-t border-gray-100">
+                <div class="text-sm">订单编号：<a href="order-detail.html?id=2023112395824" class="text-brand-primary" id="orderLink">2023112395824</a></div>
+            </div>
+        </div>
+        
+        <!-- 售后信息 -->
+        <div class="section p-4">
+            <div class="section-title">售后信息</div>
+            
+            <div class="info-row text-sm">
+                <div class="info-label">售后类型</div>
+                <div class="info-value" id="serviceType">退货退款</div>
+            </div>
+            
+            <div class="info-row text-sm">
+                <div class="info-label">售后原因</div>
+                <div class="info-value" id="serviceReason">商品质量问题</div>
+            </div>
+            
+            <div class="info-row text-sm">
+                <div class="info-label">问题描述</div>
+                <div class="info-value" id="problemDesc">收到商品后发现灯罩有轻微划痕，灯泡闪烁不稳定，希望能够退货或更换。</div>
+            </div>
+            
+            <div class="mt-3">
+                <div class="text-sm mb-2">问题图片</div>
+                <div class="image-grid" id="imageGrid">
+                    <div class="image-item">
+                        <img src="https://images.unsplash.com/photo-1573398643503-8e862ce192fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="问题图片1" data-index="0">
+                    </div>
+                    <div class="image-item">
+                        <img src="https://images.unsplash.com/photo-1562148200-b0a03d7e6192?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="问题图片2" data-index="1">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 处理进度 -->
+        <div class="section p-4">
+            <div class="section-title">处理进度</div>
+            
+            <div class="timeline">
+                <div class="timeline-item active">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="text-sm font-medium">提交售后申请</div>
+                        <div class="timeline-time">2023-11-23 14:30:45</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="text-sm font-medium">商家审核中</div>
+                        <div class="timeline-time">预计1-3个工作日</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="text-sm font-medium">等待填写退货物流</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="text-sm font-medium">商家收货确认</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="text-sm font-medium">退款处理</div>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="text-sm font-medium">售后完成</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 联系信息 -->
+        <div class="section p-4">
+            <div class="section-title">联系信息</div>
+            
+            <div class="info-row text-sm">
+                <div class="info-label">联系人</div>
+                <div class="info-value" id="contactName">张先生</div>
+            </div>
+            
+            <div class="info-row text-sm">
+                <div class="info-label">联系电话</div>
+                <div class="info-value" id="contactPhone">138****1234</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部按钮 -->
+    <div class="bottom-btn">
+        <a href="customer-service.html" class="btn btn-outline">
+            <i class="fas fa-headset mr-2"></i>联系客服
+        </a>
+        <button id="cancelBtn" class="btn btn-primary">取消申请</button>
+    </div>
+    
+    <!-- 图片查看器 -->
+    <div class="image-viewer" id="imageViewer">
+        <img src="" alt="查看大图" id="largeImage">
+        <div class="close-viewer" id="closeViewer">
+            <i class="fas fa-times"></i>
+        </div>
+    </div>
+    
+    <!-- 脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取URL参数
+            const urlParams = new URLSearchParams(window.location.search);
+            const afterSaleId = urlParams.get('id');
+            
+            // 返回链接处理
+            const backLink = document.getElementById('backLink');
+            backLink.href = "after-sale-list.html";
+            
+            // 模拟售后数据
+            const afterSaleData = {
+                id: 'AS2023112301',
+                orderId: '2023112395824',
+                type: '退货退款',
+                reason: '商品质量问题',
+                status: 'pending',
+                statusText: '待审核',
+                date: '2023-11-23 14:30:45',
+                description: '收到商品后发现灯罩有轻微划痕，灯泡闪烁不稳定，希望能够退货或更换。',
+                images: [
+                    'https://images.unsplash.com/photo-1573398643503-8e862ce192fa?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+                    'https://images.unsplash.com/photo-1562148200-b0a03d7e6192?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'
+                ],
+                product: {
+                    name: '北欧设计师台灯',
+                    image: 'https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+                    price: 599,
+                    quantity: 1,
+                    spec: '黑色'
+                },
+                contact: {
+                    name: '张先生',
+                    phone: '138****1234'
+                }
+            };
+            
+            // 加载售后详情
+            function loadAfterSaleDetail() {
+                // 这里应该从API获取数据，现在使用模拟数据
+                
+                // 显示基本信息
+                document.getElementById('afterSaleId').textContent = afterSaleData.id;
+                document.getElementById('applyTime').textContent = afterSaleData.date;
+                
+                // 设置状态标签
+                const statusTag = document.getElementById('statusTag');
+                statusTag.textContent = afterSaleData.statusText;
+                
+                // 根据状态设置样式
+                let statusClass = 'status-pending';
+                switch(afterSaleData.status) {
+                    case 'approved':
+                    case 'processing':
+                        statusClass = 'status-processing';
+                        break;
+                    case 'completed':
+                        statusClass = 'status-completed';
+                        break;
+                    case 'rejected':
+                        statusClass = 'status-rejected';
+                        break;
+                }
+                statusTag.className = `status-tag ${statusClass}`;
+                
+                // 显示商品信息
+                document.getElementById('productImage').src = afterSaleData.product.image;
+                document.getElementById('productName').textContent = afterSaleData.product.name;
+                document.getElementById('productSpec').textContent = afterSaleData.product.spec;
+                document.getElementById('productPrice').textContent = `¥${afterSaleData.product.price}`;
+                document.getElementById('productQuantity').textContent = `x${afterSaleData.product.quantity}`;
+                
+                // 设置订单链接
+                document.getElementById('orderLink').textContent = afterSaleData.orderId;
+                document.getElementById('orderLink').href = `order-detail.html?id=${afterSaleData.orderId}`;
+                
+                // 显示售后信息
+                document.getElementById('serviceType').textContent = afterSaleData.type;
+                document.getElementById('serviceReason').textContent = afterSaleData.reason;
+                document.getElementById('problemDesc').textContent = afterSaleData.description;
+                
+                // 显示图片
+                const imageGrid = document.getElementById('imageGrid');
+                imageGrid.innerHTML = '';
+                afterSaleData.images.forEach((image, index) => {
+                    const imageItem = document.createElement('div');
+                    imageItem.className = 'image-item';
+                    imageItem.innerHTML = `<img src="${image}" alt="问题图片${index + 1}" data-index="${index}">`;
+                    imageGrid.appendChild(imageItem);
+                    
+                    // 添加点击事件
+                    imageItem.querySelector('img').addEventListener('click', function() {
+                        openImageViewer(this.src);
+                    });
+                });
+                
+                // 显示联系信息
+                document.getElementById('contactName').textContent = afterSaleData.contact.name;
+                document.getElementById('contactPhone').textContent = afterSaleData.contact.phone;
+                
+                // 更新底部按钮
+                updateBottomButton();
+            }
+            
+            // 更新底部按钮
+            function updateBottomButton() {
+                const cancelBtn = document.getElementById('cancelBtn');
+                
+                // 根据售后状态显示不同的按钮
+                if (afterSaleData.status === 'pending') {
+                    // 待审核状态可以取消申请
+                    cancelBtn.style.display = 'block';
+                    cancelBtn.textContent = '取消申请';
+                } else if (afterSaleData.status === 'approved') {
+                    // 已通过状态填写退货物流
+                    cancelBtn.style.display = 'block';
+                    cancelBtn.textContent = '填写退货物流';
+                } else {
+                    // 其他状态不显示按钮
+                    cancelBtn.style.display = 'none';
+                }
+            }
+            
+            // 图片查看器
+            const imageViewer = document.getElementById('imageViewer');
+            const largeImage = document.getElementById('largeImage');
+            const closeViewer = document.getElementById('closeViewer');
+            
+            // 打开图片查看器
+            function openImageViewer(imageSrc) {
+                largeImage.src = imageSrc;
+                imageViewer.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            
+            // 关闭图片查看器
+            closeViewer.addEventListener('click', function() {
+                imageViewer.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+            
+            // 点击空白处也可关闭
+            imageViewer.addEventListener('click', function(e) {
+                if (e.target === imageViewer) {
+                    imageViewer.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+            
+            // 取消申请按钮点击事件
+            const cancelBtn = document.getElementById('cancelBtn');
+            cancelBtn.addEventListener('click', function() {
+                if (this.textContent === '取消申请') {
+                    if (confirm('确定要取消此售后申请吗？')) {
+                        // 发送取消请求到服务器，这里只是模拟
+                        alert('申请已取消');
+                        window.location.href = 'after-sale-list.html';
+                    }
+                } else if (this.textContent === '填写退货物流') {
+                    // 跳转到填写物流页面
+                    window.location.href = `after-sale-logistics.html?id=${afterSaleData.id}`;
+                }
+            });
+            
+            // 初始化页面
+            loadAfterSaleDetail();
+        });
+    </script>
+</body>
+</html> 

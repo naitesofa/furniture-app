@@ -1,0 +1,2647 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家逸生活 - 沙发列表</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        /* 主题颜色变量 - 与首页保持一致 */
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+            
+            /* 渐变色 */
+            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
+            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
+            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
+            
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
+            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
+            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+
+            --color-primary: #2A9D8F;
+            --color-primary-dark: #1E7C71; /* 添加深色变体 */
+            --color-primary-darker: #1E7C71; /* 添加深色变体 */
+            --color-primary-light: rgba(42, 157, 143, 0.1);
+            --color-primary-lighter: rgba(42, 157, 143, 0.1);
+            --color-primary-rgb: 42, 157, 143; /* 主色调RGB格式 */
+            --color-accent: #F4A261;
+            --color-accent-lighter: rgba(244, 162, 97, 0.1);
+            --color-text: #333;
+            --color-text-secondary: #666;
+            --color-text-tertiary: #999;
+            --color-border: #E0E0E0;
+            --shadow-small: 0 2px 5px rgba(0, 0, 0, 0.05);
+            --shadow-medium: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-wrapper {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: #fff;
+        }
+        .filter-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        .filter-tab {
+            padding: 15px 0;
+            flex: 1;
+            text-align: center;
+            font-size: 14px;
+            color: var(--gray-700);
+            position: relative;
+        }
+        .filter-tab.active {
+            color: var(--brand-primary);
+            font-weight: 500;
+        }
+        .filter-tab.active:after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 25%;
+            right: 25%;
+            height: 2px;
+            background-color: var(--brand-primary);
+        }
+
+        /* 筛选抽屉样式 */
+        .filter-drawer {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 20;
+            display: none;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            overflow: hidden; /* 确保抽屉本身不滚动 */
+        }
+        .filter-drawer.active {
+            display: block;
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .filter-panel {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 85%;
+            max-width: 400px;
+            background: white;
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: -2px 0 15px rgba(0, 0, 0, 0.2);
+            will-change: transform;
+            overflow: hidden; /* 确保面板本身不滚动 */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .filter-drawer.active .filter-panel {
+            transform: translateX(0);
+        }
+
+        /* 筛选头部样式 */
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            background-color: white;
+            z-index: 2;
+            flex-shrink: 0;
+        }
+
+        .filter-header h3 {
+            font-size: 17px;
+            margin: 0;
+            color: var(--color-text);
+            font-weight: 600;
+        }
+
+        .filter-close-btn {
+            background: none;
+            border: none;
+            color: var(--color-text-secondary);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .filter-close-btn:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        /* 筛选内容区样式 */
+        .filter-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 16px;
+            padding-bottom: 90px; /* 增加底部间距，确保有足够空间显示底部按钮 */
+            -webkit-overflow-scrolling: touch; /* 增强iOS上的滚动体验 */
+            scrollbar-width: thin; /* Firefox */
+            overscroll-behavior: contain; /* 防止滚动区域将滚动传递给父元素 */
+        }
+
+        .filter-content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .filter-content::-webkit-scrollbar-track {
+            background: #f5f5f5;
+        }
+
+        .filter-content::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border-radius: 4px;
+        }
+
+        .filter-section {
+            padding: 6px 0; /* 进一步减少垂直内边距 */
+            border-bottom: 1px solid #f5f5f5;
+            margin-bottom: 0;
+        }
+
+        .filter-section:last-child {
+            border-bottom: none;
+            margin-bottom: 40px; /* 增加最后一个筛选区域的底部间距 */
+        }
+
+        .filter-section-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin: 6px 0 8px; /* 减少标题下方空间 */
+            color: var(--color-text);
+        }
+
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px; /* 减小间距 */
+            margin-bottom: 6px; /* 减少底部边距 */
+        }
+
+        .filter-option label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 12px; /* 减小字体大小 */
+            padding: 6px 10px; /* 减小内边距 */
+            border-radius: 15px;
+            background-color: #f7f7f7;
+            transition: all 0.2s;
+        }
+
+        .filter-option input:checked + label {
+            background-color: var(--color-primary-lighter);
+            color: var(--color-primary);
+            font-weight: 500;
+        }
+
+        .filter-option input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        /* 已选条件样式 */
+        .selected-filters {
+            background-color: #f9f9f9;
+            border-radius: 0;
+            padding: 8px 16px; /* 减小内边距 */
+            margin: 0;
+            border-bottom: 1px solid #eee;
+            flex-shrink: 0;
+        }
+
+        .selected-filters-title {
+            font-size: 13px; /* 减小字体 */
+            font-weight: 500;
+            margin-bottom: 6px; /* 减小下边距 */
+            color: var(--color-text-secondary);
+        }
+
+        .selected-filters-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .selected-filter-tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 3px 8px; /* 减小内边距 */
+            background: rgba(42, 157, 143, 0.1);
+            border-radius: 14px;
+            font-size: 11px; /* 减小字体 */
+            color: var(--brand-primary);
+            margin-bottom: 4px; /* 添加下边距 */
+            margin-right: 4px; /* 添加右边距 */
+        }
+
+        .selected-filter-tag i {
+            margin-left: 4px;
+            font-size: 10px;
+        }
+
+        .selected-filters-empty {
+            font-size: 12px; /* 减小字体 */
+            color: #999;
+            font-style: italic;
+        }
+
+        /* 热门筛选组合样式 */
+        .hot-filter-title {
+            font-size: 15px;
+            font-weight: 600;
+            margin: 5px 0; /* 减少上下边距 */
+            color: var(--color-text);
+        }
+
+        .hot-filter-items {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px; /* 减少间距 */
+            margin-bottom: 6px; /* 减少底部边距 */
+        }
+
+        .hot-filter-item {
+            display: flex;
+            align-items: center;
+            background-color: #f2f2f2; /* 默认更淡色 */
+            border-radius: 8px;
+            padding: 8px 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .hot-filter-item i {
+            font-size: 14px;
+            margin-right: 6px;
+            color: var(--color-text-lighter);
+        }
+
+        .hot-filter-item span {
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--color-text-secondary); /* 默认颜色更淡 */
+        }
+
+        .hot-filter-item.active {
+            background-color: var(--color-primary-lighter);
+            color: var(--color-primary);
+            border-color: var(--color-primary-light);
+        }
+
+        .hot-filter-item.active i,
+        .hot-filter-item.active span {
+            color: var(--color-primary);
+        }
+
+        .hot-filter-item:hover {
+            background-color: var(--color-primary-lighter);
+            transform: translateY(-2px);
+        }
+
+        /* 筛选部分样式优化 */
+        .filter-section {
+            margin-bottom: 0px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 2px;
+        }
+
+        .filter-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin: 12px 0 8px;
+            color: #333;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .filter-option {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .filter-option input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+        }
+
+        .filter-option span {
+            padding: 8px 14px;
+            background: #f7f7f7;
+            border-radius: 6px;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            box-shadow: var(--shadow-sm);
+            color: var(--color-text);
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .filter-option:hover span {
+            background: #f0f0f0;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .filter-option input:checked + span {
+            background: rgba(42, 157, 143, 0.08);
+            color: var(--color-primary);
+            border-color: var(--color-primary-light);
+            font-weight: 500;
+            box-shadow: 0 2px 8px rgba(42, 157, 143, 0.15);
+        }
+
+        /* 材质选项特殊样式 */
+        .filter-option[class*="material"] span {
+            position: relative;
+            padding-left: 32px;
+        }
+
+        .filter-option[class*="material"] span:before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: #f0f0f0;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        /* 为每种材质添加特殊样式 */
+        .filter-option input[value="头层牛皮"] + span:before {
+            background: linear-gradient(135deg, #8B4513, #A0522D);
+            border-color: #8B4513;
+        }
+
+        .filter-option input[value="布艺"] + span:before {
+            background: linear-gradient(135deg, #E0E0E0, #F5F5F5);
+            border-color: #CCCCCC;
+        }
+
+        .filter-option input[value="科技布"] + span:before {
+            background: linear-gradient(135deg, #607D8B, #78909C);
+            border-color: #546E7A;
+        }
+
+        .filter-option input[value="麻布"] + span:before {
+            background: linear-gradient(135deg, #BCAAA4, #D7CCC8);
+            border-color: #A1887F;
+        }
+
+        .filter-option input[value="绒布"] + span:before {
+            background: linear-gradient(135deg, #90A4AE, #B0BEC5);
+            border-color: #78909C;
+        }
+
+        /* 选中状态的材质按钮 */
+        .filter-option input[value="头层牛皮"]:checked + span:before,
+        .filter-option input[value="布艺"]:checked + span:before,
+        .filter-option input[value="科技布"]:checked + span:before,
+        .filter-option input[value="麻布"]:checked + span:before,
+        .filter-option input[value="绒布"]:checked + span:before {
+            transform: translateY(-50%) scale(1.2);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        /* 不限选项的样式 */
+        .filter-option input.unlimited-option + span {
+            background-color: #f0f0f0;
+            color: var(--color-text-secondary);
+        }
+
+        .filter-option input.unlimited-option:checked + span {
+            background-color: #e8f5f3;
+            color: var(--color-primary);
+        }
+
+        /* 价格区间样式增强 */
+        .filter-option input[name="price"] + span {
+            background: linear-gradient(to right, rgba(42, 157, 143, 0.03), rgba(42, 157, 143, 0.08));
+        }
+
+        .filter-option input[name="price"]:checked + span {
+            background: linear-gradient(to right, rgba(42, 157, 143, 0.1), rgba(42, 157, 143, 0.2));
+        }
+
+        /* 自定义尺寸输入区域 */
+        .custom-size-inputs {
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+            gap: 4px;
+        }
+
+        .custom-size-inputs.hidden {
+            display: none;
+        }
+
+        .size-input {
+            width: 60px;
+            padding: 6px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        /* 浮动筛选按钮 */
+        .float-filter-btn {
+            position: fixed;
+            right: 20px;
+            bottom: 100px;
+            width: 60px;
+            height: 60px;
+            border-radius: 30px;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 15;
+            transition: all 0.3s ease;
+        }
+
+        .float-filter-btn i {
+            font-size: 18px;
+            color: var(--color-primary);
+            margin-bottom: 2px;
+        }
+
+        .float-filter-btn .filter-label {
+            font-size: 12px;
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        .float-filter-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .float-filter-btn:active {
+            transform: translateY(0);
+            background: #f8f8f8;
+        }
+
+        /* 不限选项高亮样式 */
+        .filter-option .unlimited-option:checked + span {
+            background: rgba(230, 230, 230, 0.5);
+            color: #666;
+            border: 1px dashed #ccc;
+        }
+
+        .product-list {
+            padding: 10px;
+        }
+        .product-item {
+            display: flex;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+            position: relative;
+            min-height: 150px; /* 恢复到最小高度而非固定高度 */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            align-items: center; /* 确保子元素在交叉轴上居中 */
+        }
+        .product-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .product-item .product-info {
+            flex: 1;
+            padding: 12px 12px 12px 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* 内容在垂直方向均匀分布 */
+            overflow-y: auto; /* 如果内容过多允许滚动 */
+        }
+        .product-image {
+            width: 150px;
+            height: 150px; /* 增加宽度和高度到150px */
+            object-fit: cover; /* 使用cover确保填满正方形区域 */
+            object-position: center; /* 确保图片居中 */
+            flex-shrink: 0;
+            border-radius: 8px 0 0 8px;
+            align-self: center; /* 垂直居中图片 */
+        }
+        .product-name {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .product-description {
+            font-size: 12px;
+            color: var(--gray-600);
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+        .product-price {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 16px;
+        }
+        .product-rating {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: var(--gray-600);
+        }
+        .product-rating i {
+            color: var(--secondary-color);
+            margin-right: 2px;
+        }
+        .product-grid-view {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .grid-item {
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            height: auto; /* 让高度自适应内容 */
+        }
+        .grid-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .grid-image {
+            width: 100%;
+            aspect-ratio: 1/1; /* 使用纵横比确保是正方形 */
+            object-fit: cover;
+            object-position: center;
+            height: auto; /* 让高度自动调整 */
+        }
+        .grid-item .product-info {
+            padding: 12px;
+            height: auto;
+            max-height: none;
+        }
+        .grid-item .product-name {
+            font-size: 14px;
+            margin-bottom: 4px;
+            -webkit-line-clamp: 1;
+        }
+        .grid-item .product-meta {
+            margin-top: 5px;
+        }
+        .view-toggle {
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+        }
+        .toggle-btn {
+            font-size: 18px;
+            color: var(--gray-500);
+            padding: 5px;
+        }
+        .toggle-btn.active {
+            color: var(--primary-color);
+        }
+        .products-count {
+            font-size: 12px;
+            color: var(--gray-600);
+        }
+        /* 更新导航栏样式 */
+        .tab-bar {
+            background: linear-gradient(to bottom, white, var(--brand-light-dark));
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            z-index: 50;
+            border-radius: 24px 24px 0 0;
+            border-top: 1px solid rgba(42, 157, 143, 0.1);
+        }
+        
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 20%;
+            text-decoration: none;
+        }
+        
+        .tab-icon {
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+        
+        .tab-label {
+            font-size: 12px;
+        }
+        
+        .tab-active {
+            color: var(--brand-primary);
+        }
+        
+        .tab-inactive {
+            color: var(--brand-dark-light);
+        }
+
+        .btn-press {
+            cursor: pointer;
+            transition: transform var(--transition-fast) var(--cubic-bounce);
+        }
+
+        .btn-press:active {
+            transform: scale(0.95);
+        }
+
+        /* 同层级分类导航样式 */
+        .category-nav {
+            background-color: white;
+            padding: 12px 0 5px;
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+            position: relative;
+        }
+        .category-nav::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        .category-nav-inner {
+            display: flex;
+            padding: 0 15px;
+        }
+        .category-item {
+            padding: 8px 10px;
+            margin-right: 5px;
+            font-size: 14px;
+            color: var(--brand-dark-light);
+            white-space: nowrap;
+            position: relative;
+            transition: all 0.3s ease;
+            border-radius: 16px;
+            cursor: pointer;
+        }
+        .category-item.active {
+            color: var(--brand-primary);
+            font-weight: 500;
+            background-color: var(--brand-primary-transparent);
+            box-shadow: var(--shadow-sm);
+        }
+        .category-item.active:after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 25%;
+            right: 25%;
+            height: 3px;
+            border-radius: 2px;
+            background-color: var(--brand-primary);
+        }
+        .category-scroll-hint {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 30px;
+            background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1));
+            pointer-events: none;
+            z-index: 2;
+        }
+        .category-scroll-hint-left {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 30px;
+            background: linear-gradient(to left, rgba(255,255,255,0), rgba(255,255,255,1));
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .category-nav.scrolled-start .category-scroll-hint-left {
+            opacity: 1;
+        }
+
+        /* 价格筛选按钮样式 */
+        .price-filter {
+            font-size: 18px;
+            color: var(--gray-500);
+            padding: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .price-filter:hover {
+            color: var(--brand-primary-light);
+        }
+        .price-filter.active {
+            color: var(--primary-color);
+        }
+        .price-filter i {
+            transition: all 0.3s;
+        }
+
+        /* 商品标签与参数样式 */
+        .product-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 6px;
+        }
+        .product-tag {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+        }
+        .tag-promo {
+            background-color: var(--brand-error);
+            color: white;
+        }
+        .tag-new {
+            background-color: var(--brand-info);
+            color: white;
+        }
+        .tag-hot {
+            background-color: var(--brand-accent);
+            color: white;
+        }
+        .tag-custom {
+            background-color: var(--brand-secondary-light);
+            color: var(--brand-dark);
+        }
+        .product-params {
+            font-size: 11px;
+            color: var(--brand-dark-light);
+            background-color: var(--brand-light);
+            padding: 2px 7px;
+            border-radius: 10px;
+            margin-bottom: 4px;
+            display: inline-block;
+        }
+        .delivery-info {
+            font-size: 11px;
+            color: var(--brand-success);
+            margin-top: 3px;
+            display: flex;
+            align-items: center;
+        }
+        .delivery-info i {
+            font-size: 10px;
+            margin-right: 4px;
+        }
+        /* 网格视图中的标签样式调整 */
+        .grid-item .product-tags {
+            margin-top: 5px;
+            margin-bottom: 3px;
+        }
+        .grid-item .product-params {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            display: block;
+        }
+        .grid-item .delivery-info {
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        /* 商品图片轮播样式 */
+        .product-gallery {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            flex-shrink: 0;
+            overflow: hidden;
+            border-radius: 8px 0 0 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .product-gallery:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+        }
+        
+        .product-gallery-inner {
+            display: flex;
+            transition: transform 0.3s ease;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .product-gallery-inner img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            object-position: center;
+            flex-shrink: 0;
+        }
+        .gallery-dots {
+            position: absolute;
+            bottom: 8px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            background-color: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(2px);
+            border-radius: 10px;
+            padding: 4px 6px;
+            width: fit-content;
+            margin: 0 auto;
+        }
+        
+        .gallery-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.6);
+            transition: all 0.25s ease;
+        }
+        
+        .gallery-dot.active {
+            width: 18px;
+            background-color: white;
+        }
+        
+        /* 收藏和预览按钮 */
+        .product-actions {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            display: flex;
+            flex-direction: row;
+            gap: 8px;
+            z-index: 15; /* 提高层级，确保显示在最上方 */
+            opacity: 0.85; /* 初始透明度 */
+            transform: translateY(0);
+            transition: all 0.25s ease;
+        }
+        .product-gallery:hover .product-actions {
+            opacity: 1;
+            transform: translateY(0); /* 鼠标悬停时完全显示 */
+        }
+        .action-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.92);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(2px);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+        }
+        .action-btn i {
+            font-size: 15px;
+            transition: all 0.2s ease;
+        }
+        .action-btn:hover {
+            transform: scale(1.12);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            background-color: white;
+        }
+        .action-btn:hover i {
+            transform: scale(1.1);
+        }
+        .action-btn.favorite {
+            color: #9E9E9E;
+        }
+        .action-btn.favorite:hover {
+            color: var(--brand-error);
+        }
+        .action-btn.favorite.active {
+            color: var(--brand-error);
+            background-color: rgba(255, 240, 240, 0.95);
+            transform: scale(1.05);
+        }
+        .action-btn.quick-view {
+            color: var(--brand-dark);
+        }
+        .action-btn.quick-view:hover {
+            color: var(--brand-primary);
+        }
+        
+        /* 网格视图中的操作按钮调整 */
+        .grid-item .product-gallery .product-actions {
+            right: 8px;
+            top: 8px;
+        }
+        .grid-item .action-btn {
+            width: 30px;
+            height: 30px;
+        }
+        .grid-item .action-btn i {
+            font-size: 13px;
+        }
+        
+        /* 快速预览模态框 */
+        .preview-modal {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .preview-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        .preview-content {
+            width: 90%;
+            max-width: 500px;
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        .preview-modal.active .preview-content {
+            transform: scale(1);
+        }
+        .preview-header {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .preview-title {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .preview-close {
+            font-size: 20px;
+            color: var(--gray-500);
+            cursor: pointer;
+        }
+        .preview-body {
+            padding: 15px;
+        }
+        .preview-image-container {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+        .preview-rotate-hint {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            padding: 5px 10px;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            border-radius: 15px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .preview-rotate-hint i {
+            animation: rotate 2s infinite linear;
+        }
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .preview-info {
+            padding: 15px;
+        }
+        .preview-footer {
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid #f0f0f0;
+        }
+        .preview-price {
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 18px;
+        }
+        .preview-btn {
+            padding: 8px 15px;
+            background-color: var(--brand-primary);
+            color: white;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        /* 收藏和预览按钮 - 响应式调整 */
+        @media screen and (max-width: 768px) {
+            .product-actions {
+                right: 8px;
+                top: 8px;
+                gap: 6px;
+            }
+            .action-btn {
+                width: 30px;
+                height: 30px;
+            }
+            .action-btn i {
+                font-size: 14px;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .product-actions {
+                right: 6px;
+                top: 6px;
+                gap: 5px;
+            }
+            .action-btn {
+                width: 28px;
+                height: 28px;
+            }
+            .action-btn i {
+                font-size: 12px;
+            }
+        }
+        
+        /* 增加产品画廊区域的交互效果 */
+        .product-gallery {
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            display: flex; /* 确保内部图片能够正确布局 */
+            align-items: center; /* 内部内容垂直居中 */
+            justify-content: center; /* 内部内容水平居中 */
+        }
+        
+        .product-gallery:hover {
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transform: translateY(-3px);
+        }
+
+        /* 消息提示框样式 */
+        .message-toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            background-color: rgba(0, 0, 0, 0.75);
+            color: white;
+            border-radius: 4px;
+            font-size: 14px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .message-toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .message-toast.success {
+            background-color: rgba(46, 125, 50, 0.85);
+        }
+        
+        .message-toast.error {
+            background-color: rgba(198, 40, 40, 0.85);
+        }
+        
+        /* 图片滑动指示器增强 */
+        .gallery-dots {
+            position: absolute;
+            bottom: 8px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 4px;
+            background-color: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(2px);
+            border-radius: 10px;
+            padding: 4px 6px;
+            width: fit-content;
+            margin: 0 auto;
+        }
+        
+        .gallery-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.6);
+            transition: all 0.25s ease;
+        }
+        
+        .gallery-dot.active {
+            width: 18px;
+            background-color: white;
+        }
+
+        /* 网格视图中的产品画廊调整 */
+        .grid-item .product-gallery {
+            width: 100%;
+            height: 0;
+            padding-bottom: 100%; /* 保持1:1比例 */
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            display: block; /* 覆盖flex布局 */
+        }
+        
+        .grid-item .product-gallery-inner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+        }
+        
+        .grid-item .product-gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .grid-item .product-info {
+            padding: 12px;
+            height: auto;
+            max-height: none;
+        }
+
+        /* 网格视图中添加产品描述样式 */
+        .grid-item .product-description {
+            font-size: 11px;
+            color: var(--gray-600);
+            margin: 5px 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            font-style: italic;
+        }
+
+        /* 骨架屏样式 */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: skeleton-loading 1.5s infinite;
+            border-radius: 4px;
+        }
+        
+        @keyframes skeleton-loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+        
+        .skeleton-product {
+            opacity: 0;
+            animation: fade-in 0.3s ease forwards;
+            animation-delay: 0.1s;
+        }
+        
+        .skeleton-item {
+            display: flex;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 15px;
+            min-height: 150px;
+        }
+        
+        .skeleton-image {
+            width: 150px;
+            height: 150px;
+            flex-shrink: 0;
+        }
+        
+        .skeleton-info {
+            flex: 1;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .skeleton-tag {
+            width: 50px;
+            height: 16px;
+        }
+        
+        .skeleton-name {
+            width: 80%;
+            height: 18px;
+        }
+        
+        .skeleton-params {
+            width: 60%;
+            height: 12px;
+        }
+        
+        .skeleton-desc {
+            width: 95%;
+            height: 40px;
+        }
+        
+        .skeleton-price {
+            width: 60px;
+            height: 20px;
+        }
+        
+        .skeleton-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .skeleton-grid-item {
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .skeleton-grid-image {
+            width: 100%;
+            aspect-ratio: 1/1;
+        }
+        
+        .skeleton-grid-info {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* 懒加载图片样式 */
+        .lazy-image {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .lazy-image.loaded {
+            opacity: 1;
+        }
+        
+        /* 加载更多指示器 */
+        .loading-indicator {
+            text-align: center;
+            padding: 20px;
+            display: none;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(var(--color-primary-rgb), 0.3);
+            border-radius: 50%;
+            border-top-color: var(--color-primary);
+            display: inline-block;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 10px;
+        }
+        
+        .loading-text {
+            color: var(--color-text-secondary);
+            font-size: 14px;
+            margin-top: 8px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-dots {
+            display: inline-block;
+        }
+        
+        .loading-dots span {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--color-primary);
+            margin: 0 4px;
+            opacity: 0.6;
+            animation: dots 1.4s infinite ease-in-out;
+        }
+        
+        .loading-dots span:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .loading-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .loading-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes dots {
+            0%, 80%, 100% { 
+                transform: scale(0);
+            } 
+            40% { 
+                transform: scale(1);
+            }
+        }
+        
+        /* 筛选结果加载状态覆盖层 */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        
+        .loading-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .loading-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .loading-content .loading-spinner {
+            margin-bottom: 15px;
+        }
+
+        /* 通用样式 */
+        .hidden {
+            display: none;
+        }
+
+        /* 筛选结果相关样式 */
+        .applied-filters {
+            display: flex;
+            align-items: center;
+            background-color: var(--color-bg);
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .applied-filters-title {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            margin-right: 10px;
+        }
+
+        .applied-filters-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .filter-tag {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--color-primary-light);
+            color: var(--color-primary);
+            padding: 5px 10px;
+            border-radius: 16px;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .filter-tag i {
+            margin-left: 6px;
+            font-size: 10px;
+            cursor: pointer;
+        }
+
+        .filter-tag:hover {
+            background-color: var(--color-primary-lighter);
+        }
+
+        .applied-filters-clear {
+            color: var(--color-danger);
+            font-size: 12px;
+            cursor: pointer;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .applied-filters-clear:hover {
+            background-color: rgba(255, 76, 76, 0.1);
+        }
+
+        /* 空状态样式 */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+            background-color: var(--color-bg);
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .empty-state-icon {
+            font-size: 40px;
+            color: var(--color-text-lighter);
+            margin-bottom: 15px;
+        }
+
+        .empty-state-text {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--color-text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .empty-state-subtext {
+            font-size: 14px;
+            color: var(--color-text-lighter);
+            margin-bottom: 20px;
+        }
+
+        .empty-state-btn {
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .empty-state-btn:hover {
+            background-color: var(--color-primary-dark);
+        }
+
+        /* 底部按钮样式 */
+        .filter-footer {
+            display: flex;
+            padding: 0;
+            border-top: 1px solid #f0f0f0;
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            position: absolute;
+            bottom: 70px; /* 将按钮放置在底部导航栏上方 */
+            left: 0;
+            right: 0;
+            z-index: 100;
+            width: 100%;
+            border-radius: 0; /* 确保没有圆角 */
+        }
+
+        .filter-reset-btn {
+            flex: 1;
+            background-color: white;
+            color: var(--color-text);
+            border: none;
+            padding: 14px 0;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .filter-apply-btn {
+            flex: 1;
+            background-color: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 14px 0;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .filter-apply-btn:hover {
+            background-color: var(--color-primary-darker);
+        }
+
+        /* 尺寸选项样式 */
+        .filter-option.size-option span {
+            background: linear-gradient(to right, rgba(244, 162, 97, 0.03), rgba(244, 162, 97, 0.08));
+            border-radius: 4px;
+        }
+
+        .filter-option.size-option input:checked + span {
+            background: linear-gradient(to right, rgba(244, 162, 97, 0.1), rgba(244, 162, 97, 0.2));
+            color: var(--brand-accent-dark);
+            border-color: var(--brand-accent-light);
+            box-shadow: 0 2px 8px rgba(244, 162, 97, 0.15);
+        }
+
+        /* 类型选项样式 */
+        .filter-option.type-option span {
+            border-radius: 8px;
+            background: linear-gradient(to bottom, #f9f9f9, #f0f0f0);
+        }
+
+        .filter-option.type-option input:checked + span {
+            background: linear-gradient(to bottom, #e8f5f3, #d5eeeb);
+        }
+
+        /* 款式选项样式 */
+        .filter-option.style-option span {
+            border-radius: 20px;
+            padding: 6px 16px;
+        }
+
+        .filter-option.style-option input:checked + span {
+            background: var(--brand-gradient-primary);
+            color: white;
+            border-color: transparent;
+        }
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: var(--brand-error);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            opacity: 0;
+            transform: scale(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- 全局导航栏 -->
+    <div id="navbar"></div>
+    
+    <!-- 加载覆盖层 -->
+    <div class="loading-overlay" id="filterLoadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">正在筛选商品...</div>
+        </div>
+    </div>
+    
+    <!-- 页面内容 -->
+    <div class="container">
+        <!-- 页面头部 -->
+        <div class="header">
+            <div class="header-left">
+                <i class="fas fa-arrow-left" onclick="goBack()"></i>
+            </div>
+            <div class="header-title" style="color:var(--primary-color)">沙发分类</div>
+            <!-- <div class="header-right">
+                <i class="fas fa-search"></i>
+            </div> -->
+        </div>
+        
+        <!-- 同层级分类导航 -->
+        <div class="category-nav">
+            <div class="category-nav-inner">
+                <div class="category-item" data-category="全部">全部</div>
+                <div class="category-item" data-category="布艺沙发">布艺沙发</div>
+                <div class="category-item active" data-category="功能沙发">功能沙发</div>
+                <div class="category-item" data-category="真皮沙发">真皮沙发</div>
+                <div class="category-item" data-category="压缩沙发">压缩沙发</div>
+                <div class="category-item" data-category="沙发床">沙发床</div>
+               
+            </div>
+            <div class="category-scroll-hint-left"></div>
+            <div class="category-scroll-hint"></div>
+        </div>
+        
+        <!-- 筛选过滤器 -->
+        <div class="filter-wrapper">
+            <!-- <div class="filter-tabs">
+                <div class="filter-tab active" data-filter="all">
+                    综合
+                </div>
+                <div class="filter-tab" data-filter="sales">
+                    销量
+                </div>
+                <div class="filter-tab" data-filter="price">
+                    价格 <i class="fas fa-chevron-down"></i>
+                </div>
+           
+            </div> -->
+            
+            <!-- 切换视图按钮 -->
+            <div class="view-toggle">
+                <div class="products-count">共58件商品</div>
+                <div class="toggle-buttons">
+                    <span class="price-filter" id="priceFilter" title="价格排序">
+                        <i class="fas fa-sort" aria-hidden="true"></i>
+                    </span>
+                    <span class="toggle-btn active" data-view="list"><i class="fas fa-list"></i></span>
+                    <span class="toggle-btn" data-view="grid"><i class="fas fa-th-large"></i></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 骨架屏 - 列表视图 -->
+        <div class="skeleton-list" id="skeletonList">
+            <div class="skeleton-item">
+                <div class="skeleton-image skeleton"></div>
+                <div class="skeleton-info">
+                    <div class="skeleton-tag skeleton"></div>
+                    <div class="skeleton-name skeleton"></div>
+                    <div class="skeleton-params skeleton"></div>
+                    <div class="skeleton-desc skeleton"></div>
+                    <div class="skeleton-price skeleton"></div>
+                </div>
+            </div>
+            <div class="skeleton-item">
+                <div class="skeleton-image skeleton"></div>
+                <div class="skeleton-info">
+                    <div class="skeleton-tag skeleton"></div>
+                    <div class="skeleton-name skeleton"></div>
+                    <div class="skeleton-params skeleton"></div>
+                    <div class="skeleton-desc skeleton"></div>
+                    <div class="skeleton-price skeleton"></div>
+                </div>
+            </div>
+            <div class="skeleton-item">
+                <div class="skeleton-image skeleton"></div>
+                <div class="skeleton-info">
+                    <div class="skeleton-tag skeleton"></div>
+                    <div class="skeleton-name skeleton"></div>
+                    <div class="skeleton-params skeleton"></div>
+                    <div class="skeleton-desc skeleton"></div>
+                    <div class="skeleton-price skeleton"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 骨架屏 - 网格视图 -->
+        <div class="skeleton-grid" id="skeletonGrid" style="display: none;">
+            <div class="skeleton-grid-item">
+                <div class="skeleton-grid-image skeleton"></div>
+                <div class="skeleton-grid-info">
+                    <div class="skeleton-tag skeleton"></div>
+                    <div class="skeleton-name skeleton"></div>
+                    <div class="skeleton-params skeleton"></div>
+                    <div class="skeleton-price skeleton"></div>
+                </div>
+            </div>
+            <div class="skeleton-grid-item">
+                <div class="skeleton-grid-image skeleton"></div>
+                <div class="skeleton-grid-info">
+                    <div class="skeleton-tag skeleton"></div>
+                    <div class="skeleton-name skeleton"></div>
+                    <div class="skeleton-params skeleton"></div>
+                    <div class="skeleton-price skeleton"></div>
+                </div>
+            </div>
+            <div class="skeleton-grid-item">
+                <div class="skeleton-grid-image skeleton"></div>
+                <div class="skeleton-grid-info">
+                    <div class="skeleton-tag skeleton"></div>
+                    <div class="skeleton-name skeleton"></div>
+                    <div class="skeleton-params skeleton"></div>
+                    <div class="skeleton-price skeleton"></div>
+                </div>
+            </div>
+            <div class="skeleton-grid-item">
+                <div class="skeleton-grid-image skeleton"></div>
+                <div class="skeleton-grid-info">
+                    <div class="skeleton-tag skeleton"></div>
+                    <div class="skeleton-name skeleton"></div>
+                    <div class="skeleton-params skeleton"></div>
+                    <div class="skeleton-price skeleton"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 商品列表 - 列表视图 -->
+        <div class="product-list list-view" id="productList" style="display: none;">
+            <div class="product-item">
+                <div class="product-gallery">
+                    <div class="product-gallery-inner" data-index="0">
+                        <img src="https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=400&h=400&auto=format&fit=crop&crop=edges" alt="北欧简约沙发-1">
+                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=400&auto=format&fit=crop&crop=edges" alt="北欧简约沙发-2">
+                        <img src="https://images.unsplash.com/photo-1567016376408-0226e4d0b1ea?w=400&h=400&auto=format&fit=crop&crop=edges" alt="北欧简约沙发-3">
+                    </div>
+                    <div class="gallery-dots">
+                        <div class="gallery-dot active"></div>
+                        <div class="gallery-dot"></div>
+                        <div class="gallery-dot"></div>
+                    </div>
+                    <div class="product-actions">
+                        <div class="action-btn favorite" onclick="toggleFavorite(this, event)">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn quick-view" onclick="showPreview(this, event)">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-tags">
+                        <span class="product-tag tag-promo">限时特价</span>
+                        <span class="product-tag tag-custom">可定制</span>
+                    </div>
+                    <div class="product-name">北欧简约三人沙发 舒适亚麻面料</div>
+                    <div class="product-params">三人位 | 亚麻面料 | 实木框架</div>
+                    <div class="product-description">"这款沙发用了半年，质感超出预期，面料透气不粘身，框架非常坚固。适合有小孩的家庭，清洁也很容易。"</div>
+                    <div class="product-meta">
+                        <div class="product-price">¥2,899</div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.5 (126评价)</span>
+                        </div>
+                    </div>
+                    <div class="delivery-info">
+                        <i class="fas fa-truck"></i>今日下单，预计3天送达
+                    </div>
+                </div>
+            </div>
+            
+            <div class="product-item">
+                <div class="product-gallery">
+                    <div class="product-gallery-inner" data-index="0">
+                        <img src="https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?w=400&h=400&auto=format&fit=crop&crop=edges" alt="现代布艺沙发-1">
+                        <img src="https://images.unsplash.com/photo-1564078516393-cf04bd966897?w=400&h=400&auto=format&fit=crop&crop=edges" alt="现代布艺沙发-2">
+                        <img src="https://images.unsplash.com/photo-1577140917170-285929fb55b7?w=400&h=400&auto=format&fit=crop&crop=edges" alt="现代布艺沙发-3">
+                    </div>
+                    <div class="gallery-dots">
+                        <div class="gallery-dot active"></div>
+                        <div class="gallery-dot"></div>
+                        <div class="gallery-dot"></div>
+                    </div>
+                    <div class="product-actions">
+                        <div class="action-btn favorite" onclick="toggleFavorite(this, event)">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn quick-view" onclick="showPreview(this, event)">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-tags">
+                        <span class="product-tag tag-new">新品</span>
+                        <span class="product-tag tag-custom">可定制</span>
+                    </div>
+                    <div class="product-name">现代简约布艺沙发 两人位</div>
+                    <div class="product-params">双人位 | 亲肤棉麻 | 多色可选</div>
+                    <div class="product-description">"布料质地柔软舒适，简约的设计很百搭，小户型首选。安装简单，坐感比想象中要软，非常适合午休小憩。"</div>
+                    <div class="product-meta">
+                        <div class="product-price">¥1,799</div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.7 (98评价)</span>
+                        </div>
+                    </div>
+                    <div class="delivery-info">
+                        <i class="fas fa-truck"></i>今日下单，预计3-5天送达
+                    </div>
+                </div>
+            </div>
+            
+            <div class="product-item">
+                <div class="product-gallery">
+                    <div class="product-gallery-inner" data-index="0">
+                        <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=400&h=400&auto=format&fit=crop&crop=edges" alt="贵妃休闲沙发-1">
+                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&auto=format&fit=crop&crop=edges" alt="贵妃休闲沙发-2">
+                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&auto=format&fit=crop&crop=edges" alt="贵妃休闲沙发-3">
+                    </div>
+                    <div class="gallery-dots">
+                        <div class="gallery-dot active"></div>
+                        <div class="gallery-dot"></div>
+                        <div class="gallery-dot"></div>
+                    </div>
+                    <div class="product-actions">
+                        <div class="action-btn favorite" onclick="toggleFavorite(this, event)">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn quick-view" onclick="showPreview(this, event)">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-tags">
+                        <span class="product-tag tag-hot">热卖</span>
+                        <span class="product-tag tag-custom">可定制</span>
+                    </div>
+                    <div class="product-name">贵妃休闲沙发 轻奢风格</div>
+                    <div class="product-params">贵妃椅 | 天鹅绒面料 | 高弹海绵</div>
+                    <div class="product-description">"绒面触感极佳，坐在上面非常舒适。颜色和图片完全一致，轻奢感很强。靠背倾斜角度刚好。"</div>
+                    <div class="product-meta">
+                        <div class="product-price">¥3,599</div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.8 (56评价)</span>
+                        </div>
+                    </div>
+                    <div class="delivery-info">
+                        <i class="fas fa-truck"></i>今日下单，预计5-7天送达
+                    </div>
+                </div>
+            </div>
+            
+            <div class="product-item">
+                <div class="product-gallery">
+                    <div class="product-gallery-inner" data-index="0">
+                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&auto=format&fit=crop&crop=edges" alt="单人休闲椅-1">
+                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&auto=format&fit=crop&crop=edges" alt="单人休闲椅-2">
+                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&auto=format&fit=crop&crop=edges" alt="单人休闲椅-3">
+                    </div>
+                    <div class="gallery-dots">
+                        <div class="gallery-dot active"></div>
+                        <div class="gallery-dot"></div>
+                        <div class="gallery-dot"></div>
+                    </div>
+                    <div class="product-actions">
+                        <div class="action-btn favorite" onclick="toggleFavorite(this, event)">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn quick-view" onclick="showPreview(this, event)">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-tags">
+                        <span class="product-tag tag-new">新品</span>
+                    </div>
+                    <div class="product-name">单人休闲沙发椅 北欧风</div>
+                    <div class="product-params">单人位 | 羊毛混纺 | 四色可选</div>
+                    <div class="product-description">"给老人买的，高度适中坐起来很轻松，扶手宽度刚好，布料透气性好。整体尺寸适合小客厅。"</div>
+                    <div class="product-meta">
+                        <div class="product-price">¥899</div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.6 (203评价)</span>
+                        </div>
+                    </div>
+                    <div class="delivery-info">
+                        <i class="fas fa-truck"></i>现货，今日下单，最快明天送达
+                    </div>
+                </div>
+            </div>
+            
+            <div class="product-item">
+                <div class="product-gallery">
+                    <div class="product-gallery-inner" data-index="0">
+                        <img src="https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=400&h=400&auto=format&fit=crop&crop=edges" alt="小户型沙发-1">
+                        <img src="https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=400&h=400&auto=format&fit=crop&crop=edges" alt="小户型沙发-2">
+                        <img src="https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=400&h=400&auto=format&fit=crop&crop=edges" alt="小户型沙发-3">
+                    </div>
+                    <div class="gallery-dots">
+                        <div class="gallery-dot active"></div>
+                        <div class="gallery-dot"></div>
+                        <div class="gallery-dot"></div>
+                    </div>
+                    <div class="product-actions">
+                        <div class="action-btn favorite" onclick="toggleFavorite(this, event)">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn quick-view" onclick="showPreview(this, event)">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-tags">
+                        <span class="product-tag tag-hot">热卖</span>
+                        <span class="product-tag tag-promo">限时优惠</span>
+                    </div>
+                    <div class="product-name">小户型多功能沙发 可折叠沙发床</div>
+                    <div class="product-params">沙发床 | 可折叠 | 节省空间</div>
+                    <div class="product-description">"太实用了！白天是漂亮的沙发，晚上可以变成舒适的床。变形机制很顺畅，床垫厚度刚好。"</div>
+                    <div class="product-meta">
+                        <div class="product-price">¥1,299</div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.2 (87评价)</span>
+                        </div>
+                    </div>
+                    <div class="delivery-info">
+                        <i class="fas fa-truck"></i>今日下单，预计4天送达
+                    </div>
+                </div>
+            </div>
+            
+            <div class="product-item">
+                <div class="product-gallery">
+                    <div class="product-gallery-inner" data-index="0">
+                        <img src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=400&h=400&auto=format&fit=crop&crop=edges" alt="家庭影院沙发-1">
+                        <img src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=400&h=400&auto=format&fit=crop&crop=edges" alt="家庭影院沙发-2">
+                        <img src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=400&h=400&auto=format&fit=crop&crop=edges" alt="家庭影院沙发-3">
+                    </div>
+                    <div class="gallery-dots">
+                        <div class="gallery-dot active"></div>
+                        <div class="gallery-dot"></div>
+                        <div class="gallery-dot"></div>
+                    </div>
+                    <div class="product-actions">
+                        <div class="action-btn favorite" onclick="toggleFavorite(this, event)">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn quick-view" onclick="showPreview(this, event)">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-tags">
+                        <span class="product-tag tag-promo">限时特价</span>
+                        <span class="product-tag tag-custom">可定制</span>
+                    </div>
+                    <div class="product-name">家庭影院沙发 电动多功能</div>
+                    <div class="product-params">组合套装 | 电动伸缩 | 搁杯架</div>
+                    <div class="product-description">"电动调节超方便，一键就能变成躺椅，搁杯架设计很贴心。真皮材质好打理，看电影时家人都抢这个位置。"</div>
+                    <div class="product-meta">
+                        <div class="product-price">¥5,999</div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.9 (45评价)</span>
+                        </div>
+                    </div>
+                    <div class="delivery-info">
+                        <i class="fas fa-truck"></i>定制产品，下单后10-15天发货
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 商品列表 - 网格视图 (默认隐藏) -->
+        <div class="product-list product-grid-view" style="display: none;">
+            <div class="grid-item">
+                <div class="product-gallery">
+                    <div class="product-gallery-inner" data-index="0">
+                        <img src="https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=400&h=400&auto=format&fit=crop&crop=edges" alt="北欧简约沙发-1">
+                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400&h=400&auto=format&fit=crop&crop=edges" alt="北欧简约沙发-2">
+                        <img src="https://images.unsplash.com/photo-1567016376408-0226e4d0b1ea?w=400&h=400&auto=format&fit=crop&crop=edges" alt="北欧简约沙发-3">
+                    </div>
+                    <div class="gallery-dots">
+                        <div class="gallery-dot active"></div>
+                        <div class="gallery-dot"></div>
+                        <div class="gallery-dot"></div>
+                    </div>
+                    <div class="product-actions">
+                        <div class="action-btn favorite" onclick="toggleFavorite(this, event)">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn quick-view" onclick="showPreview(this, event)">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-tags">
+                        <span class="product-tag tag-promo">限时特价</span>
+                        <span class="product-tag tag-custom">可定制</span>
+                    </div>
+                    <div class="product-name">北欧简约三人沙发 舒适亚麻面料</div>
+                    <div class="product-params">三人位 | 亚麻面料 | 实木框架</div>
+                    <div class="product-description">"这款沙发用了半年，质感超出预期，面料透气不粘身，框架非常坚固。适合有小孩的家庭。"</div>
+                    <div class="product-meta">
+                        <div class="product-price">¥2,899</div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.5</span>
+                        </div>
+                    </div>
+                    <div class="delivery-info">
+                        <i class="fas fa-truck"></i>预计3天送达
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid-item">
+                <div class="product-gallery">
+                    <div class="product-gallery-inner" data-index="0">
+                        <img src="https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?w=400&h=400&auto=format&fit=crop&crop=edges" alt="现代布艺沙发-1">
+                        <img src="https://images.unsplash.com/photo-1564078516393-cf04bd966897?w=400&h=400&auto=format&fit=crop&crop=edges" alt="现代布艺沙发-2">
+                        <img src="https://images.unsplash.com/photo-1577140917170-285929fb55b7?w=400&h=400&auto=format&fit=crop&crop=edges" alt="现代布艺沙发-3">
+                    </div>
+                    <div class="gallery-dots">
+                        <div class="gallery-dot active"></div>
+                        <div class="gallery-dot"></div>
+                        <div class="gallery-dot"></div>
+                    </div>
+                    <div class="product-actions">
+                        <div class="action-btn favorite" onclick="toggleFavorite(this, event)">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn quick-view" onclick="showPreview(this, event)">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-tags">
+                        <span class="product-tag tag-new">新品</span>
+                    </div>
+                    <div class="product-name">现代简约布艺沙发 两人位</div>
+                    <div class="product-params">双人位 | 亲肤棉麻 | 多色可选</div>
+                    <div class="product-description">"布料质地柔软舒适，简约的设计很百搭，小户型首选。安装简单，坐感比想象中要软。"</div>
+                    <div class="product-meta">
+                        <div class="product-price">¥1,799</div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.7</span>
+                        </div>
+                    </div>
+                    <div class="delivery-info">
+                        <i class="fas fa-truck"></i>3-5天送达
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid-item">
+                <div class="product-gallery">
+                    <div class="product-gallery-inner" data-index="0">
+                        <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=400&h=400&auto=format&fit=crop&crop=edges" alt="贵妃休闲沙发-1">
+                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&auto=format&fit=crop&crop=edges" alt="贵妃休闲沙发-2">
+                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&auto=format&fit=crop&crop=edges" alt="贵妃休闲沙发-3">
+                    </div>
+                    <div class="gallery-dots">
+                        <div class="gallery-dot active"></div>
+                        <div class="gallery-dot"></div>
+                        <div class="gallery-dot"></div>
+                    </div>
+                    <div class="product-actions">
+                        <div class="action-btn favorite" onclick="toggleFavorite(this, event)">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn quick-view" onclick="showPreview(this, event)">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-tags">
+                        <span class="product-tag tag-hot">热卖</span>
+                        <span class="product-tag tag-custom">可定制</span>
+                    </div>
+                    <div class="product-name">贵妃休闲沙发 轻奢风格</div>
+                    <div class="product-params">贵妃椅 | 天鹅绒面料 | 高弹海绵</div>
+                    <div class="product-description">"绒面触感极佳，坐在上面非常舒适。颜色和图片完全一致，轻奢感很强。靠背倾斜角度刚好。"</div>
+                    <div class="product-meta">
+                        <div class="product-price">¥3,599</div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.8 (56评价)</span>
+                        </div>
+                    </div>
+                    <div class="delivery-info">
+                        <i class="fas fa-truck"></i>5-7天送达
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid-item">
+                <div class="product-gallery">
+                    <div class="product-gallery-inner" data-index="0">
+                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&auto=format&fit=crop&crop=edges" alt="单人休闲椅-1">
+                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&auto=format&fit=crop&crop=edges" alt="单人休闲椅-2">
+                        <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&auto=format&fit=crop&crop=edges" alt="单人休闲椅-3">
+                    </div>
+                    <div class="gallery-dots">
+                        <div class="gallery-dot active"></div>
+                        <div class="gallery-dot"></div>
+                        <div class="gallery-dot"></div>
+                    </div>
+                    <div class="product-actions">
+                        <div class="action-btn favorite" onclick="toggleFavorite(this, event)">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn quick-view" onclick="showPreview(this, event)">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-tags">
+                        <span class="product-tag tag-new">新品</span>
+                    </div>
+                    <div class="product-name">单人休闲沙发椅 北欧风</div>
+                    <div class="product-params">单人位 | 羊毛混纺 | 四色可选</div>
+                    <div class="product-meta">
+                        <div class="product-price">¥899</div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.6</span>
+                        </div>
+                    </div>
+                    <div class="delivery-info">
+                        <i class="fas fa-truck"></i>最快明天送达
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid-item">
+                <div class="product-gallery">
+                    <div class="product-gallery-inner" data-index="0">
+                        <img src="https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=400&h=400&auto=format&fit=crop&crop=edges" alt="小户型沙发-1">
+                        <img src="https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=400&h=400&auto=format&fit=crop&crop=edges" alt="小户型沙发-2">
+                        <img src="https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=400&h=400&auto=format&fit=crop&crop=edges" alt="小户型沙发-3">
+                    </div>
+                    <div class="gallery-dots">
+                        <div class="gallery-dot active"></div>
+                        <div class="gallery-dot"></div>
+                        <div class="gallery-dot"></div>
+                    </div>
+                    <div class="product-actions">
+                        <div class="action-btn favorite" onclick="toggleFavorite(this, event)">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn quick-view" onclick="showPreview(this, event)">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-tags">
+                        <span class="product-tag tag-hot">热卖</span>
+                        <span class="product-tag tag-promo">限时优惠</span>
+                    </div>
+                    <div class="product-name">小户型多功能沙发 可折叠沙发床</div>
+                    <div class="product-params">沙发床 | 可折叠 | 节省空间</div>
+                    <div class="product-description">"太实用了！白天是漂亮的沙发，晚上可以变成舒适的床。变形机制很顺畅，床垫厚度刚好。"</div>
+                    <div class="product-meta">
+                        <div class="product-price">¥1,299</div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.2</span>
+                        </div>
+                    </div>
+                    <div class="delivery-info">
+                        <i class="fas fa-truck"></i>预计4天送达
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid-item">
+                <div class="product-gallery">
+                    <div class="product-gallery-inner" data-index="0">
+                        <img src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=400&h=400&auto=format&fit=crop&crop=edges" alt="家庭影院沙发-1">
+                        <img src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=400&h=400&auto=format&fit=crop&crop=edges" alt="家庭影院沙发-2">
+                        <img src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=400&h=400&auto=format&fit=crop&crop=edges" alt="家庭影院沙发-3">
+                    </div>
+                    <div class="gallery-dots">
+                        <div class="gallery-dot active"></div>
+                        <div class="gallery-dot"></div>
+                        <div class="gallery-dot"></div>
+                    </div>
+                    <div class="product-actions">
+                        <div class="action-btn favorite" onclick="toggleFavorite(this, event)">
+                            <i class="far fa-heart"></i>
+                        </div>
+                        <div class="action-btn quick-view" onclick="showPreview(this, event)">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <div class="product-tags">
+                        <span class="product-tag tag-promo">限时特价</span>
+                        <span class="product-tag tag-custom">可定制</span>
+                    </div>
+                    <div class="product-name">家庭影院沙发 电动多功能</div>
+                    <div class="product-params">组合套装 | 电动伸缩 | 搁杯架</div>
+                    <div class="product-description">"电动调节超方便，一键就能变成躺椅，搁杯架设计很贴心。真皮材质好打理，看电影时家人都抢这个位置。"</div>
+                    <div class="product-meta">
+                        <div class="product-price">¥5,999</div>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <span>4.9</span>
+                        </div>
+                    </div>
+                    <div class="delivery-info">
+                        <i class="fas fa-truck"></i>10-15天发货
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部导航栏 -->
+        <div class="tab-bar">
+            <a href="home.html" class="tab-item btn-press">
+                <div class="tab-icon tab-inactive"><i class="fas fa-home"></i></div>
+                <div class="tab-label tab-inactive">首页</div>
+            </a>
+            <a href="category.html" class="tab-item btn-press">
+                <div class="tab-icon tab-active"><i class="fas fa-store"></i></div>
+                <div class="tab-label tab-active">展厅</div>
+            </a>
+            <a href="customize.html" class="tab-item btn-press">
+                <div class="tab-icon tab-inactive"><i class="fas fa-magic"></i></div>
+                <div class="tab-label tab-inactive">定制</div>
+            </a>
+            <!-- <a href="cart.html" class="tab-item btn-press">
+                <div class="tab-icon tab-inactive"><i class="fas fa-users"></i></div>
+                <div class="tab-label tab-inactive">社区</div>
+            </a> -->
+            <a href="cart.html" class="tab-item btn-press">
+                <div class="tab-icon tab-inactive position-relative">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-badge" class="cart-badge">0</span>
+                </div>
+                <div class="tab-label tab-inactive">购物车</div>
+            </a>
+            <a href="profile.html" class="tab-item btn-press">
+                <div class="tab-icon tab-inactive"><i class="fas fa-user"></i></div>
+                <div class="tab-label tab-inactive">我的</div>
+            </a>
+        </div>
+    </div>
+    
+    <!-- 筛选抽屉 -->
+    <div class="filter-drawer" id="filterDrawer" onclick="if(event.target === this) toggleFilter();">
+        <div class="filter-panel" id="filterPanel" onclick="event.stopPropagation();">
+            <div class="filter-header">
+                <h3>筛选条件</h3>
+                <button class="filter-close-btn" id="closeFilterBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- 已选条件展示区 -->
+            <div class="selected-filters">
+                <div class="selected-filters-title">已选条件</div>
+                <div class="selected-filters-content" id="selectedFiltersContent">
+                    <div class="selected-filters-empty">暂无已选条件</div>
+                </div>
+            </div>
+            
+            <!-- 筛选内容区 -->
+            <div class="filter-content">
+                <!-- 热门筛选组合 -->
+                <div class="hot-filter-title">热门筛选</div>
+                <div class="hot-filter-items">
+                    <div class="hot-filter-item" data-combination="small">
+                        <i class="fas fa-home"></i>
+                        <span>小户型首选</span>
+                    </div>
+                    <div class="hot-filter-item" data-combination="value">
+                        <i class="fas fa-tags"></i>
+                        <span>高性价比</span>
+                    </div>
+                    <div class="hot-filter-item" data-combination="modern">
+                        <i class="fas fa-star"></i>
+                        <span>现代简约风</span>
+                    </div>
+                    <div class="hot-filter-item" data-combination="family">
+                        <i class="fas fa-users"></i>
+                        <span>大家庭组合</span>
+                    </div>
+                </div>
+                
+                <!-- 筛选区域开始 -->
+                <div class="filter-section">
+                    <div class="filter-section-title">沙发类型</div>
+                    <div class="filter-options">
+                        <label class="filter-option type-option">
+                            <input type="checkbox" name="type" value="不限" class="unlimited-option">
+                            <span>不限</span>
+                        </label>
+                        <label class="filter-option type-option">
+                            <input type="checkbox" name="type" value="直排沙发">
+                            <span>直排沙发</span>
+                        </label>
+                        <label class="filter-option type-option">
+                            <input type="checkbox" name="type" value="转角沙发">
+                            <span>转角沙发</span>
+                        </label>
+                        <label class="filter-option type-option">
+                            <input type="checkbox" name="type" value="贵妃椅">
+                            <span>贵妃椅</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 价格区间 -->
+                <div class="filter-section">
+                    <div class="filter-title">价格区间</div>
+                    <div class="filter-options">
+                        <label class="filter-option price-option">
+                            <input type="radio" name="price" value="不限" checked>
+                            <span>不限</span>
+                        </label>
+                        <label class="filter-option price-option">
+                            <input type="radio" name="price" value="0-1000">
+                            <span>1000元以下</span>
+                        </label>
+                        <label class="filter-option price-option">
+                            <input type="radio" name="price" value="1000-3000">
+                            <span>1000-3000元</span>
+                        </label>
+                        <label class="filter-option price-option">
+                            <input type="radio" name="price" value="3000-5000">
+                            <span>3000-5000元</span>
+                        </label>
+                        <label class="filter-option price-option">
+                            <input type="radio" name="price" value="5000+">
+                            <span>5000元以上</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 材质 -->
+                <div class="filter-section">
+                    <div class="filter-title">材质</div>
+                    <div class="filter-options">
+                        <label class="filter-option material-option">
+                            <input type="checkbox" name="material" value="不限" class="unlimited-option">
+                            <span>不限</span>
+                        </label>
+                        <label class="filter-option material-option">
+                            <input type="checkbox" name="material" value="头层牛皮">
+                            <span>头层牛皮</span>
+                        </label>
+                        <label class="filter-option material-option">
+                            <input type="checkbox" name="material" value="布艺">
+                            <span>布艺</span>
+                        </label>
+                        <label class="filter-option material-option">
+                            <input type="checkbox" name="material" value="科技布">
+                            <span>科技布</span>
+                        </label>
+                        <label class="filter-option material-option">
+                            <input type="checkbox" name="material" value="麻布">
+                            <span>麻布</span>
+                        </label>
+                        <label class="filter-option material-option">
+                            <input type="checkbox" name="material" value="绒布">
+                            <span>绒布</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 尺寸 -->
+                <div class="filter-section">
+                    <div class="filter-title">尺寸</div>
+                    <div class="filter-options">
+                        <label class="filter-option size-option">
+                            <input type="radio" name="size" value="不限" checked>
+                            <span>不限</span>
+                        </label>
+                        <label class="filter-option size-option">
+                            <input type="radio" name="size" value="2">
+                            <span>2米</span>
+                        </label>
+                        <label class="filter-option size-option">
+                            <input type="radio" name="size" value="2.5">
+                            <span>2.5米</span>
+                        </label>
+                        <label class="filter-option size-option">
+                            <input type="radio" name="size" value="3">
+                            <span>3米</span>
+                        </label>
+                        <label class="filter-option size-option">
+                            <input type="radio" name="size" value="3.5">
+                            <span>3.5米</span>
+                        </label>
+                        <label class="filter-option size-option">
+                            <input type="radio" name="size" value="4">
+                            <span>4米及以上</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- 款式 -->
+                <div class="filter-section">
+                    <div class="filter-title">款式</div>
+                    <div class="filter-options">
+                        <label class="filter-option style-option">
+                            <input type="checkbox" name="style" value="不限" class="unlimited-option">
+                            <span>不限</span>
+                        </label>
+                        <label class="filter-option style-option">
+                            <input type="checkbox" name="style" value="现代简约">
+                            <span>现代简约</span>
+                        </label>
+                        <label class="filter-option style-option">
+                            <input type="checkbox" name="style" value="轻奢">
+                            <span>轻奢</span>
+                        </label>
+                        <label class="filter-option style-option">
+                            <input type="checkbox" name="style" value="美式">
+                            <span>美式</span>
+                        </label>
+                        <label class="filter-option style-option">
+                            <input type="checkbox" name="style" value="欧式">
+                            <span>欧式</span>
+                        </label>
+                        <label class="filter-option style-option">
+                            <input type="checkbox" name="style" value="北欧">
+                            <span>北欧</span>
+                        </label>
+                        <label class="filter-option style-option">
+                            <input type="checkbox" name="style" value="新中式">
+                            <span>新中式</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 底部按钮 - 固定在底部 -->
+            <div class="filter-footer">
+                <button class="filter-reset-btn" id="resetFilterBtn">
+                    重置
+                </button>
+                <button class="filter-apply-btn" id="applyFilterBtn">
+                    确定
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 浮动筛选按钮 -->
+    <div class="float-filter-btn" id="filterBtn" onclick="event.stopPropagation(); toggleFilter();">
+        <i class="fas fa-filter"></i>
+        <span class="filter-label">筛选</span>
+    </div>
+
+    <!-- 快速预览模态框 -->
+    <div class="preview-modal" id="previewModal">
+        <div class="preview-content">
+            <div class="preview-header">
+                <div class="preview-title">商品预览</div>
+                <div class="preview-close" onclick="closePreview()">
+                    <i class="fas fa-times"></i>
+                </div>
+            </div>
+            <div class="preview-body">
+                <div class="preview-image-container">
+                    <img id="previewImage" src="" alt="商品预览" class="w-full h-full object-cover">
+                    <div class="preview-rotate-hint">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>拖动可360°旋转查看</span>
+                    </div>
+                </div>
+                <div class="preview-info">
+                    <h3 id="previewName" class="text-lg font-medium mb-2"></h3>
+                    <p id="previewDesc" class="text-sm text-gray-600"></p>
+                </div>
+            </div>
+            <div class="preview-footer">
+                <div id="previewPrice" class="preview-price"></div>
+                <div class="preview-btn" onclick="goToDetail()">查看详情</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 加载更多指示器 -->
+    <div class="loading-indicator" id="loadingIndicator">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">正在加载更多商品...</div>
+    </div>
+</div>
+
+<!-- 引入 FontAwesome -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<!-- 引入 Swiper -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+<!-- 引入主脚本文件 -->
+<script src="../js/main.js"></script>
+</body>
+</html> 

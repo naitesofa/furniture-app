@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>收货地址管理 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        /* 主题颜色变量 - 与首页保持一致 */
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+            
+            /* 渐变色 */
+            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
+            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
+            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
+            
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
+            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
+            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--brand-dark);
+        }
+
+        /* 导航栏样式 */
+        .nav-bar {
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-bar i {
+            color: var(--brand-dark-light);
+            transition: color 0.3s ease;
+        }
+
+        .nav-bar i:hover {
+            color: var(--brand-primary);
+        }
+
+        /* 地址卡片样式 */
+        .address-card {
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            padding: 16px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .address-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .address-card.default {
+            border: 2px solid var(--brand-primary-transparent);
+        }
+
+        .default-tag {
+            background: var(--brand-primary-transparent);
+            color: var(--brand-primary);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        /* 操作按钮样式 */
+        .action-btn {
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .edit-btn {
+            color: var(--brand-primary);
+            background: var(--brand-primary-transparent);
+        }
+
+        .delete-btn {
+            color: var(--brand-error);
+            background: rgba(239, 68, 68, 0.1);
+            margin-left: 8px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* 新增地址按钮样式 */
+        .add-address-btn {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--brand-gradient-primary);
+            color: white;
+            padding: 12px 32px;
+            border-radius: 24px;
+            font-weight: 500;
+            box-shadow: var(--shadow-highlight);
+            transition: all 0.3s ease;
+        }
+
+        .add-address-btn:hover {
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .add-address-btn:active {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .add-address-btn i {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <div class="flex items-center">
+                <a href="javascript:history.back()" class="text-gray-500 mr-3">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="text-lg font-medium">收货地址管理</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主要内容区 -->
+    <div class="main-content pt-14 pb-24 px-4">
+        <!-- 默认地址 -->
+        <div class="address-card default" data-address-id="1">
+            <div class="flex items-center mb-2">
+                <div class="font-medium">李小明</div>
+                <div class="text-sm text-gray-500 ml-4">13800138000</div>
+                <div class="default-tag ml-auto">默认地址</div>
+            </div>
+            <div class="text-sm text-gray-600 mb-3">
+                广东省深圳市南山区科技园南区A栋1001室
+            </div>
+            <div class="flex items-center justify-end">
+                <a href="address-edit.html?id=1&name=李小明&phone=13800138000&province=广东省&city=深圳市&district=南山区&address=科技园南区A栋1001室&tag=家&isDefault=1" class="action-btn edit-btn">
+                    <i class="fas fa-edit mr-1"></i>编辑
+                </a>
+                <button class="action-btn delete-btn">
+                    <i class="fas fa-trash-alt mr-1"></i>删除
+                </button>
+            </div>
+        </div>
+
+        <!-- 其他地址 -->
+        <div class="address-card" data-address-id="2">
+            <div class="flex items-center mb-2">
+                <div class="font-medium">李小明</div>
+                <div class="text-sm text-gray-500 ml-4">13800138000</div>
+            </div>
+            <div class="text-sm text-gray-600 mb-3">
+                广东省广州市天河区珠江新城花城大道123号
+            </div>
+            <div class="flex items-center justify-end">
+                <a href="address-edit.html?id=2&name=李小明&phone=13800138000&province=广东省&city=广州市&district=天河区&address=珠江新城花城大道123号&tag=公司&isDefault=0" class="action-btn edit-btn">
+                    <i class="fas fa-edit mr-1"></i>编辑
+                </a>
+                <button class="action-btn delete-btn">
+                    <i class="fas fa-trash-alt mr-1"></i>删除
+                </button>
+            </div>
+        </div>
+
+        <div class="address-card" data-address-id="3">
+            <div class="flex items-center mb-2">
+                <div class="font-medium">李小明</div>
+                <div class="text-sm text-gray-500 ml-4">13800138000</div>
+            </div>
+            <div class="text-sm text-gray-600 mb-3">
+                广东省深圳市福田区福中三路1000号
+            </div>
+            <div class="flex items-center justify-end">
+                <a href="address-edit.html?id=3&name=李小明&phone=13800138000&province=广东省&city=深圳市&district=福田区&address=福中三路1000号&tag=其他&isDefault=0" class="action-btn edit-btn">
+                    <i class="fas fa-edit mr-1"></i>编辑
+                </a>
+                <button class="action-btn delete-btn">
+                    <i class="fas fa-trash-alt mr-1"></i>删除
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 新增地址按钮 -->
+    <a href="address-edit.html" class="add-address-btn">
+        <i class="fas fa-plus"></i>新增收货地址
+    </a>
+
+    <script>
+        // 删除地址确认弹窗
+        function showDeleteConfirm(addressId) {
+            return confirm('确认要删除这个收货地址吗？');
+        }
+
+        // 删除地址
+        function deleteAddress(addressId) {
+            if (showDeleteConfirm(addressId)) {
+                // 这里可以添加与后端API的通信代码
+                // 目前模拟删除效果
+                const addressCard = document.querySelector(`[data-address-id="${addressId}"]`);
+                if (addressCard) {
+                    addressCard.style.animation = 'fadeOut 0.3s ease';
+                    setTimeout(() => {
+                        addressCard.remove();
+                    }, 300);
+                }
+            }
+        }
+
+        // 为所有删除按钮添加点击事件
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const addressCard = this.closest('.address-card');
+                const addressId = addressCard.getAttribute('data-address-id');
+                deleteAddress(addressId);
+            });
+        });
+
+        // 添加淡出动画样式
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeOut {
+                from { opacity: 1; transform: translateY(0); }
+                to { opacity: 0; transform: translateY(-10px); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html> 

@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消息中心 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        /* 主题颜色变量 - 与首页保持一致 */
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+            
+            /* 渐变色 */
+            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
+            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
+            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
+            --brand-gradient-light: linear-gradient(135deg, #f0f4fd, #e6eefa);
+            
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
+            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
+            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: var(--brand-dark);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* 主内容区域样式 */
+        .main-content {
+            position: absolute;
+            top: 135px; /* 调整顶部距离，为新导航腾出空间 */
+            bottom: 70px;
+            left: 0;
+            right: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background-color: #f5f5f5;
+        }
+
+        /* 顶部导航栏样式 */
+        .nav-bar {
+            background: white;
+            box-shadow: none;
+            position: fixed;
+            top: 20px;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            height: 50px;
+        }
+
+        /* 状态栏样式 */
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 2px 16px;
+            font-size: 12px;
+            background-color: white;
+            height: 20px;
+        }
+        
+        .status-bar .time {
+            font-weight: 500;
+        }
+        
+        .status-bar .icons {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+        
+        /* Toast提示 */
+        .toast-notification {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(38, 70, 83, 0.9);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 24px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        /* 类别导航样式 */
+        .category-nav {
+            display: flex;
+            justify-content: space-around;
+            background-color: white;
+            padding: 12px 0;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .category-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 0;
+            width: 25%;
+            color: #666;
+            font-size: 12px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .category-item.active {
+            color: var(--brand-primary);
+        }
+        
+        .category-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background-color: var(--brand-primary);
+            border-radius: 3px;
+        }
+        
+        .category-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(42, 157, 143, 0.1);
+            border-radius: 50%;
+            margin-bottom: 6px;
+            font-size: 18px;
+            transition: all 0.3s ease;
+        }
+        
+        .category-item.active .category-icon {
+            background-color: rgba(42, 157, 143, 0.2);
+            transform: scale(1.05);
+        }
+        
+        .category-item:nth-child(1) .category-icon {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #3B82F6;
+        }
+        
+        .category-item:nth-child(1).active .category-icon {
+            background-color: rgba(59, 130, 246, 0.2);
+        }
+        
+        .category-item:nth-child(1).active {
+            color: #3B82F6;
+        }
+        
+        .category-item:nth-child(1).active::after {
+            background-color: #3B82F6;
+        }
+        
+        .category-item:nth-child(2) .category-icon {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: #F59E0B;
+        }
+        
+        .category-item:nth-child(2).active .category-icon {
+            background-color: rgba(245, 158, 11, 0.2);
+        }
+        
+        .category-item:nth-child(2).active {
+            color: #F59E0B;
+        }
+        
+        .category-item:nth-child(2).active::after {
+            background-color: #F59E0B;
+        }
+        
+        .category-item:nth-child(3) .category-icon {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+        
+        .category-item:nth-child(3).active .category-icon {
+            background-color: rgba(239, 68, 68, 0.2);
+        }
+        
+        .category-item:nth-child(3).active {
+            color: #EF4444;
+        }
+        
+        .category-item:nth-child(3).active::after {
+            background-color: #EF4444;
+        }
+        
+        .category-item:nth-child(4) .category-icon {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+        
+        .category-item:nth-child(4).active .category-icon {
+            background-color: rgba(16, 185, 129, 0.2);
+        }
+        
+        .category-item:nth-child(4).active {
+            color: #10B981;
+        }
+        
+        .category-item:nth-child(4).active::after {
+            background-color: #10B981;
+        }
+        
+        .category-badge {
+            position: absolute;
+            top: 0;
+            right: 50%;
+            margin-right: -25px;
+            background-color: #EF4444;
+            color: white;
+            font-size: 10px;
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 4px;
+            font-weight: 500;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+        }
+
+        /* 通知列表样式 */
+        .notifications-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        .notification-item {
+            padding: 16px;
+            background-color: white;
+            display: flex;
+            align-items: flex-start;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .notification-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 12px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+        
+        .notification-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .notification-content {
+            flex: 1;
+        }
+        
+        .notification-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #333;
+        }
+        
+        .notification-message {
+            font-size: 13px;
+            color: #999;
+            line-height: 1.4;
+        }
+        
+        .notification-time {
+            font-size: 13px;
+            color: #bbb;
+            text-align: right;
+            margin-left: 8px;
+            white-space: nowrap;
+        }
+        
+        .notification-badge {
+            width: 22px;
+            height: 22px;
+            background-color: #ff3e3e;
+            border-radius: 50%;
+            color: white;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+        }
+
+        /* 底部导航栏样式 - 保持不变 */
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            border-top: 1px solid rgba(233, 236, 239, 0.5);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4px 0;
+            color: var(--brand-dark-light);
+            font-size: 10px;
+        }
+        
+        .nav-item.active {
+            color: var(--brand-primary);
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        /* 历史消息折叠区 */
+        .history-section {
+            padding: 15px;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #999;
+            font-size: 14px;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* 消息类型标记 */
+        .message-type {
+            display: inline-block;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-left: 5px;
+            font-weight: 500;
+        }
+        
+        .message-type.service {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #3B82F6;
+        }
+        
+        .message-type.logistics {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: #F59E0B;
+        }
+        
+        .message-type.system {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+        
+        .message-type.promotion {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+
+        /* 官方标记 */
+        .official-tag {
+            display: inline-block;
+            font-size: 11px;
+            color: #fff;
+            background-color: #999;
+            padding: 1px 5px;
+            border-radius: 2px;
+            margin-left: 5px;
+        }
+        
+        /* 分类标题 */
+        .category-title {
+            padding: 14px 16px 8px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #666;
+            background-color: #f5f5f5;
+        }
+        
+        /* 空状态提示 */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+            color: #999;
+            height: 100%;
+        }
+        
+        .empty-icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+        
+        .empty-text {
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+        
+        .empty-subtext {
+            font-size: 13px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+    <!-- 状态栏 -->
+    <div class="status-bar fixed top-0 left-0 right-0 z-20">
+        <div class="time">16:56</div>
+        <div class="icons">
+            <i class="fas fa-signal"></i>
+            <i class="fas fa-wifi"></i>
+            <i class="fas fa-battery-three-quarters"></i>
+        </div>
+    </div>
+
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar">
+        <div class="flex items-center justify-between px-4 h-full">
+            <div class="text-xl font-medium">消息</div>
+            <div class="flex items-center">
+                <a href="#" class="text-gray-700" id="clear-btn">
+                    <i class="fas fa-times-circle"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast提示 -->
+    <div class="toast-notification" id="toast">已清除全部未读消息</div>
+    
+    <!-- 类别导航 -->
+    <div class="category-nav">
+        <div class="category-item active" data-type="all">
+            <div class="category-icon">
+                <i class="fas fa-comment-dots"></i>
+            </div>
+            <div>全部</div>
+            <div class="category-badge">9</div>
+        </div>
+        <div class="category-item" data-type="service">
+            <div class="category-icon">
+                <i class="fas fa-headset"></i>
+            </div>
+            <div>客服</div>
+            <div class="category-badge">5</div>
+        </div>
+        <div class="category-item" data-type="logistics">
+            <div class="category-icon">
+                <i class="fas fa-truck"></i>
+            </div>
+            <div>物流</div>
+            <div class="category-badge">3</div>
+        </div>
+        <div class="category-item" data-type="promotion">
+            <div class="category-icon">
+                <i class="fas fa-gift"></i>
+            </div>
+            <div>优惠</div>
+            <div class="category-badge">1</div>
+        </div>
+    </div>
+    
+    <!-- 主要内容区 -->
+    <div class="main-content">
+        <!-- 默认显示的混合消息列表 - 优先客服,然后物流和优惠 -->
+        <div class="notifications-container" id="all-notifications">
+            <!-- 客服分类标题 -->
+            <div class="category-title">
+                <i class="fas fa-headset mr-1 text-blue-500"></i> 客服消息
+            </div>
+            
+            <!-- 小米客服 -->
+            <div class="notification-item" data-type="service">
+                <div class="notification-logo">
+                    <img src="https://i.imgur.com/JEiEPGx.png" alt="小米">
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">
+                      家安逸
+                        <span class="message-type service">客服</span>
+                    </div>
+                    <div class="notification-message">
+                        您好，宝贝在购物车等待您带它回家~看一下吧
+                    </div>
+                </div>
+                <div class="notification-time">
+                    昨天
+                </div>
+                <div class="notification-badge">1</div>
+        </div>
+        
+            
+            <!-- 物流分类标题 -->
+            <div class="category-title">
+                <i class="fas fa-truck mr-1 text-yellow-500"></i> 物流消息
+            </div>
+            
+            <!-- 物流消息1 -->
+            <div class="notification-item" data-type="logistics">
+                <div class="notification-logo">
+                    <img src="https://i.imgur.com/JEiEPGx.png" alt="小米">
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">
+                        物流状态更新
+                        <span class="message-type logistics">物流</span>
+                    </div>
+                    <div class="notification-message">
+                        您的订单 #1234567890 已发货，预计3天内送达
+                    </div>
+                </div>
+                <div class="notification-time">
+                    今天
+                </div>
+                <div class="notification-badge">1</div>
+            </div>
+            
+            <!-- 优惠分类标题 -->
+            <div class="category-title">
+                <i class="fas fa-gift mr-1 text-green-500"></i> 优惠活动
+            </div>
+            
+            <!-- 活动消息1 -->
+            <div class="notification-item" data-type="promotion">
+                <div class="notification-logo">
+                    <img src="https://i.imgur.com/MpU5caW.png" alt="京东">
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">
+                        618年中大促
+                        <span class="message-type promotion">优惠</span>
+                    </div>
+                    <div class="notification-message">
+                        618大促开始啦！全场5折起，还有满300减30优惠券等您领取！
+                    </div>
+                </div>
+                <div class="notification-time">
+                    3天前
+                </div>
+                <div class="notification-badge">1</div>
+            </div>
+        </div>
+        
+        <!-- 通知列表 - 客服消息（默认隐藏） -->
+        <div class="notifications-container hidden" id="service-notifications">
+            <!-- 小米客服 -->
+            <div class="notification-item">
+                <div class="notification-logo">
+                    <img src="https://i.imgur.com/JEiEPGx.png" alt="小米">
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">
+                        小米电脑数码官方旗舰店
+                        <span class="message-type service">客服</span>
+                    </div>
+                    <div class="notification-message">
+                        您好，宝贝在购物车等待您带它回家~看一下吧
+                    </div>
+                </div>
+                <div class="notification-time">
+                    昨天
+                </div>
+                <div class="notification-badge">1</div>
+            </div>
+            
+            <!-- 华为客服 -->
+            <div class="notification-item">
+                <div class="notification-logo">
+                    <img src="https://i.imgur.com/GWMEXgZ.png" alt="华为">
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">
+                        华为京东自营官方旗舰店
+                        <span class="message-type service">客服</span>
+                    </div>
+                    <div class="notification-message">
+                        感谢您的咨询，若是没有其他问题，对话将自动关闭
+                    </div>
+                </div>
+                <div class="notification-time">
+                    星期二
+                </div>
+                <div class="notification-badge">2</div>
+            </div>
+            
+            <!-- 荣耀客服 -->
+            <div class="notification-item">
+                <div class="notification-logo">
+                    <img src="https://i.imgur.com/m1YH5TO.png" alt="荣耀">
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">
+                        荣耀京东自营旗舰店
+                        <span class="message-type service">客服</span>
+                    </div>
+                    <div class="notification-message">
+                        会话即将关闭，如后期您还有问题需要咨询，可以再次发起对话
+                    </div>
+                </div>
+                <div class="notification-time">
+                    星期一
+                </div>
+                <div class="notification-badge">2</div>
+            </div>
+            
+            <!-- 京东客服 -->
+            <div class="notification-item">
+                <div class="notification-logo">
+                    <img src="https://i.imgur.com/MpU5caW.png" alt="京东客服">
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">
+                        京东客服 <span class="official-tag">官方</span>
+                        <span class="message-type service">客服</span>
+                    </div>
+                    <div class="notification-message">
+                        京东客服很高兴为您服务，请问有什么可以帮到您？
+                    </div>
+                </div>
+                <div class="notification-time">
+                    星期一
+                </div>
+            </div>
+        </div>
+        
+        <!-- 通知列表 - 物流消息（默认隐藏） -->
+        <div class="notifications-container hidden" id="logistics-notifications">
+            <!-- 物流消息1 -->
+            <div class="notification-item">
+                <div class="notification-logo">
+                    <img src="https://i.imgur.com/JEiEPGx.png" alt="小米">
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">
+                        物流状态更新
+                        <span class="message-type logistics">物流</span>
+                    </div>
+                    <div class="notification-message">
+                        您的订单 #1234567890 已发货，预计3天内送达
+                    </div>
+                </div>
+                <div class="notification-time">
+                    今天
+                </div>
+                <div class="notification-badge">1</div>
+            </div>
+            
+            <!-- 物流消息2 -->
+            <div class="notification-item">
+                <div class="notification-logo">
+                    <img src="https://i.imgur.com/GWMEXgZ.png" alt="华为">
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">
+                        包裹已签收
+                        <span class="message-type logistics">物流</span>
+                    </div>
+                    <div class="notification-message">
+                        您的华为手环订单已由本人签收，感谢您的购买
+                    </div>
+                </div>
+                <div class="notification-time">
+                    星期二
+                </div>
+                <div class="notification-badge">1</div>
+            </div>
+            
+            <!-- 物流消息3 -->
+            <div class="notification-item">
+                <div class="notification-logo">
+                    <img src="https://i.imgur.com/MpU5caW.png" alt="京东物流">
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">
+                        配送通知
+                        <span class="message-type logistics">物流</span>
+                    </div>
+                    <div class="notification-message">
+                        您的包裹已到达配送站，将会在今天18:00前送达
+                    </div>
+                </div>
+                <div class="notification-time">
+                    昨天
+                </div>
+                <div class="notification-badge">1</div>
+            </div>
+        </div>
+        
+        <!-- 通知列表 - 优惠消息（默认隐藏） -->
+        <div class="notifications-container hidden" id="promotion-notifications">
+            <!-- 活动消息1 -->
+            <div class="notification-item">
+                <div class="notification-logo">
+                    <img src="https://i.imgur.com/MpU5caW.png" alt="京东">
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">
+                        618年中大促
+                        <span class="message-type promotion">优惠</span>
+                    </div>
+                    <div class="notification-message">
+                        618大促开始啦！全场5折起，还有满300减30优惠券等您领取！
+                    </div>
+                </div>
+                <div class="notification-time">
+                    3天前
+                </div>
+                <div class="notification-badge">1</div>
+            </div>
+            
+            <!-- 活动消息2 -->
+            <div class="notification-item">
+                <div class="notification-logo">
+                    <img src="https://i.imgur.com/GWMEXgZ.png" alt="华为">
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">
+                        华为周年庆活动
+                        <span class="message-type promotion">优惠</span>
+                    </div>
+                    <div class="notification-message">
+                        华为品牌周年庆，指定产品满1000减100，更有精美礼品赠送
+                    </div>
+                </div>
+                <div class="notification-time">
+                    上周
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部导航栏 - 保持不变 -->
+    <div class="bottom-nav">
+        <a href="home.html" class="nav-item">
+            <div class="nav-icon"><i class="fas fa-home"></i></div>
+            <div>首页</div>
+        </a>
+        <a href="category.html" class="nav-item">
+            <div class="nav-icon"><i class="fas fa-th-large"></i></div>
+            <div>展厅</div>
+        </a>
+        <a href="cart.html" class="nav-item">
+            <div class="nav-icon"><i class="fas fa-shopping-cart"></i></div>
+            <div>购物车</div>
+        </a>
+        <a href="notifications.html" class="nav-item active">
+            <div class="nav-icon"><i class="fas fa-bell"></i></div>
+            <div>消息</div>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <div class="nav-icon"><i class="fas fa-user"></i></div>
+            <div>我的</div>
+        </a>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
+            const categoryItems = document.querySelectorAll('.category-item');
+            const notificationContainers = document.querySelectorAll('.notifications-container');
+            const clearBtn = document.getElementById('clear-btn');
+            const toast = document.getElementById('toast');
+            
+            // 更新时间显示
+            function updateTime() {
+                const now = new Date();
+                const hours = now.getHours().toString().padStart(2, '0');
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                document.querySelector('.time').textContent = `${hours}:${minutes}`;
+            }
+            
+            // 类别切换功能
+            categoryItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    // 移除所有类别的active类
+                    categoryItems.forEach(t => t.classList.remove('active'));
+                    
+                    // 给当前类别添加active类
+                    this.classList.add('active');
+                    
+                    // 获取当前类别的类型
+                    const categoryType = this.getAttribute('data-type');
+                    
+                    // 隐藏所有消息容器
+                    notificationContainers.forEach(container => {
+                        container.classList.add('hidden');
+                    });
+                    
+                    // 显示对应类型的消息容器
+                    document.getElementById(`${categoryType}-notifications`).classList.remove('hidden');
+                });
+            });
+            
+            // 清除按钮点击事件 - 清除所有未读消息
+            clearBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // 清除所有消息徽章
+                const badges = document.querySelectorAll('.notification-badge');
+                badges.forEach(badge => {
+                    badge.style.display = 'none';
+                });
+                
+                // 清除类别上的消息计数徽章
+                const categoryBadges = document.querySelectorAll('.category-badge');
+                categoryBadges.forEach(badge => {
+                    badge.style.display = 'none';
+                });
+                
+                // 显示提示信息
+                showToast('已清除全部未读消息');
+            });
+            
+            // 显示Toast提示
+            function showToast(message) {
+                toast.textContent = message;
+                toast.style.opacity = '1';
+                
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                }, 2000);
+            }
+            
+            // 消息项点击事件
+            document.querySelectorAll('.notification-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    // 添加点击反馈效果
+                    this.style.backgroundColor = 'rgba(42, 157, 143, 0.05)';
+                    setTimeout(() => {
+                        this.style.backgroundColor = 'white';
+                    }, 200);
+                    
+                    // 移除消息计数
+                    const badge = this.querySelector('.notification-badge');
+                    if (badge) {
+                        badge.style.display = 'none';
+                        
+                        // 更新类别上的消息计数徽章
+                        const type = this.getAttribute('data-type');
+                        if (type) {
+                            const typeBadge = document.querySelector(`.category-item[data-type="${type}"] .category-badge`);
+                            if (typeBadge) {
+                                let count = parseInt(typeBadge.textContent);
+                                if (count > 0) {
+                                    count--;
+                                    if (count > 0) {
+                                        typeBadge.textContent = count;
+                                    } else {
+                                        typeBadge.style.display = 'none';
+                                    }
+                                }
+                            }
+                            
+                            // 更新全部分类的消息计数
+                            const allBadge = document.querySelector(`.category-item[data-type="all"] .category-badge`);
+                            if (allBadge) {
+                                let allCount = parseInt(allBadge.textContent);
+                                if (allCount > 0) {
+                                    allCount--;
+                                    if (allCount > 0) {
+                                        allBadge.textContent = allCount;
+                                    } else {
+                                        allBadge.style.display = 'none';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+            
+            // 初始化时间并每分钟更新一次
+            updateTime();
+            setInterval(updateTime, 60000);
+        });
+    </script>
+</body>
+</html> 

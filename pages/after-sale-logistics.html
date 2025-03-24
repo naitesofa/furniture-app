@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>填写退货物流 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+            
+            /* 渐变色 */
+            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
+            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
+            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
+            
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
+            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
+            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--brand-dark);
+        }
+
+        .section {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .info-row {
+            display: flex;
+            margin-bottom: 12px;
+        }
+
+        .info-label {
+            width: 80px;
+            color: var(--brand-dark-light);
+            flex-shrink: 0;
+        }
+
+        .info-value {
+            flex-grow: 1;
+        }
+
+        /* 底部按钮 */
+        .bottom-btn {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            z-index: 10;
+        }
+
+        .btn-full {
+            width: 100%;
+            padding: 12px;
+            border-radius: 25px;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--brand-gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-highlight);
+        }
+
+        .btn-primary:disabled {
+            background: #cccccc;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .form-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            border-width: 1px;
+            border-radius: 0.375rem;
+            border-color: var(--brand-light-dark);
+            background-color: var(--brand-light);
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.1);
+        }
+
+        .form-label {
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <div class="flex items-center">
+                <a href="#" class="text-gray-500 mr-3" id="backLink">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="text-lg font-medium">填写退货物流</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="pt-14 pb-20 px-4">
+        <!-- 售后信息 -->
+        <div class="section p-4">
+            <div class="section-title">售后信息</div>
+            
+            <div class="info-row text-sm">
+                <div class="info-label">售后单号</div>
+                <div class="info-value" id="afterSaleId">AS2023112301</div>
+            </div>
+            
+            <div class="info-row text-sm">
+                <div class="info-label">售后类型</div>
+                <div class="info-value" id="serviceType">退货退款</div>
+            </div>
+            
+            <div class="info-row text-sm">
+                <div class="info-label">退款金额</div>
+                <div class="info-value text-red-500" id="refundAmount">¥599.00</div>
+            </div>
+        </div>
+        
+        <!-- 退货地址 -->
+        <div class="section p-4">
+            <div class="section-title">退货地址</div>
+            
+            <div class="bg-gray-50 p-3 rounded-md">
+                <div class="text-sm font-medium" id="returnAddressName">家逸生活家具官方售后部</div>
+                <div class="text-sm text-gray-500 mt-1" id="returnAddressPhone">400-123-4567</div>
+                <div class="text-sm text-gray-500 mt-1" id="returnAddressFull">广东省广州市天河区珠江新城88号环球中心12楼</div>
+            </div>
+            
+            <div class="mt-3 text-xs text-red-500">
+                <i class="fas fa-exclamation-circle mr-1"></i>
+                请确保包裹完好，并附上售后单号信息
+            </div>
+        </div>
+        
+        <!-- 填写物流信息 -->
+        <div class="section p-4">
+            <div class="section-title">填写物流信息</div>
+            
+            <div class="mb-4">
+                <label for="logisticsCompany" class="form-label">物流公司</label>
+                <select id="logisticsCompany" class="form-control form-select">
+                    <option value="">请选择物流公司</option>
+                    <option value="SF">顺丰速运</option>
+                    <option value="ZTO">中通快递</option>
+                    <option value="YTO">圆通速递</option>
+                    <option value="STO">申通快递</option>
+                    <option value="YUNDA">韵达快递</option>
+                    <option value="EMS">EMS</option>
+                    <option value="OTHER">其他物流</option>
+                </select>
+            </div>
+            
+            <div class="mb-2">
+                <label for="trackingNumber" class="form-label">物流单号</label>
+                <input type="text" id="trackingNumber" class="form-control" placeholder="请输入物流单号">
+            </div>
+            
+            <div class="text-xs text-gray-500 mb-4">
+                物流单号将用于跟踪您的退货包裹，请确保信息正确
+            </div>
+            
+            <div>
+                <label for="remark" class="form-label">备注信息（选填）</label>
+                <textarea id="remark" class="form-control" rows="3" placeholder="如有特殊情况，请在此备注"></textarea>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部按钮 -->
+    <div class="bottom-btn">
+        <button id="submitBtn" class="btn-full btn-primary" disabled>提交物流信息</button>
+    </div>
+    
+    <!-- Toast提示 -->
+    <div id="toastContainer" class="fixed top-0 left-0 right-0 flex justify-center px-4 py-3 pointer-events-none transition-opacity duration-300 opacity-0 z-50">
+        <div id="toastMessage" class="bg-gray-800 text-white text-sm px-4 py-2 rounded-md shadow-md max-w-xs text-center opacity-90"></div>
+    </div>
+    
+    <!-- 脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取URL参数
+            const urlParams = new URLSearchParams(window.location.search);
+            const afterSaleId = urlParams.get('id');
+            
+            // 返回链接处理
+            const backLink = document.getElementById('backLink');
+            backLink.href = `after-sale-detail.html?id=${afterSaleId}`;
+            
+            // 获取表单元素
+            const logisticsCompany = document.getElementById('logisticsCompany');
+            const trackingNumber = document.getElementById('trackingNumber');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // 加载售后信息
+            function loadAfterSaleInfo() {
+                // 这里应该从API获取数据
+                // 模拟数据
+                document.getElementById('afterSaleId').textContent = afterSaleId || 'AS2023112301';
+                document.getElementById('serviceType').textContent = '退货退款';
+                document.getElementById('refundAmount').textContent = '¥599.00';
+            }
+            
+            // 表单验证
+            function validateForm() {
+                const companyValid = logisticsCompany.value !== '';
+                const trackingValid = trackingNumber.value.trim().length >= 5;
+                
+                // 启用或禁用提交按钮
+                submitBtn.disabled = !(companyValid && trackingValid);
+            }
+            
+            // 绑定表单验证事件
+            logisticsCompany.addEventListener('change', validateForm);
+            trackingNumber.addEventListener('input', validateForm);
+            
+            // 提交按钮点击事件
+            submitBtn.addEventListener('click', function() {
+                // 检查表单
+                if (logisticsCompany.value === '' || trackingNumber.value.trim() === '') {
+                    showToast('请填写完整的物流信息');
+                    return;
+                }
+                
+                // 禁用提交按钮，防止重复提交
+                submitBtn.disabled = true;
+                submitBtn.textContent = '提交中...';
+                
+                // 模拟提交请求
+                setTimeout(function() {
+                    // 显示成功提示
+                    showToast('物流信息提交成功');
+                    
+                    // 跳转到售后详情页
+                    setTimeout(function() {
+                        window.location.href = `after-sale-detail.html?id=${afterSaleId}`;
+                    }, 1500);
+                }, 1000);
+            });
+            
+            // 显示Toast消息
+            function showToast(message) {
+                const toastContainer = document.getElementById('toastContainer');
+                const toastMessage = document.getElementById('toastMessage');
+                
+                toastMessage.textContent = message;
+                toastContainer.style.opacity = '1';
+                
+                // 设置自动隐藏
+                setTimeout(function() {
+                    toastContainer.style.opacity = '0';
+                }, 2000);
+            }
+            
+            // 初始化页面
+            loadAfterSaleInfo();
+        });
+    </script>
+</body>
+</html> 

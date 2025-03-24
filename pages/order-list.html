@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的订单 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        /* 主题颜色变量 - 与首页保持一致 */
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+            
+            /* 渐变色 */
+            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
+            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
+            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
+            
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
+            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
+            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--brand-dark);
+        }
+
+        /* 导航栏样式 */
+        .nav-bar {
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-bar i {
+            color: var(--brand-dark-light);
+            transition: color 0.3s ease;
+        }
+
+        .nav-bar i:hover {
+            color: var(--brand-primary);
+        }
+
+        /* 标签栏样式 */
+        .tab-group {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: var(--brand-primary);
+            font-weight: 500;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 25%;
+            width: 50%;
+            height: 3px;
+            background-color: var(--brand-primary);
+            border-radius: 3px;
+        }
+
+        /* 订单卡片样式 */
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s ease;
+        }
+
+        .order-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .product-image {
+            border: 1px solid var(--brand-light-dark);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .product-image:hover {
+            transform: scale(1.02);
+        }
+
+        /* 按钮样式 */
+        .btn {
+            transition: all 0.3s ease;
+            border-radius: 20px;
+        }
+
+        .btn-primary {
+            background: var(--brand-gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-highlight);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--brand-dark-light);
+            color: var(--brand-dark);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--brand-light-dark);
+        }
+
+        /* 底部导航 */
+        .tab-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            z-index: 100;
+        }
+
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 4px 0;
+            width: 25%;
+        }
+
+        .tab-icon {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .tab-label {
+            font-size: 12px;
+        }
+
+        .tab-active {
+            color: var(--brand-primary);
+        }
+
+        .tab-inactive {
+            color: #A0AEC0;
+        }
+
+        .btn-press {
+            transition: transform 0.1s;
+        }
+
+        .btn-press:active {
+            transform: scale(0.95);
+        }
+
+        /* 空状态样式 */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            color: var(--brand-dark-light);
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            color: var(--brand-light-dark);
+            margin-bottom: 16px;
+        }
+        
+        /* 模态框样式 */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal-container {
+            background-color: white;
+            width: 85%;
+            max-width: 400px;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: var(--shadow-lg);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.active .modal-container {
+            transform: translateY(0);
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        
+        .modal-content {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            border-radius: 20px;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .modal-btn-cancel {
+            background-color: var(--brand-light-dark);
+            color: var(--brand-dark);
+            margin-right: 10px;
+        }
+        
+        .modal-btn-confirm {
+            background: var(--brand-gradient-primary);
+            color: white;
+        }
+        
+        /* 消息提示样式 */
+        .toast-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .toast-container.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .toast {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 24px;
+            font-size: 14px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <div class="flex items-center">
+                <a href="profile.html" class="text-gray-500 mr-3">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="text-lg font-medium">我的订单</div>
+            </div>
+            <div class="flex items-center">
+                <a href="#" class="text-gray-500 ml-3">
+                    <i class="fas fa-search"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 标签栏 -->
+    <div class="tab-group mt-14 mx-4 flex justify-between">
+        <div class="tab active flex-1 text-center py-3">全部</div>
+        <div class="tab flex-1 text-center py-3">待付款</div>
+        <div class="tab flex-1 text-center py-3">待发货</div>
+        <div class="tab flex-1 text-center py-3">待收货</div>
+        <div class="tab flex-1 text-center py-3">待评价</div>
+    </div>
+    
+    <!-- 订单列表 -->
+    <div class="order-list mt-4 px-4 pb-24">
+        <!-- 订单卡片 1 - 待付款 -->
+        <div class="order-card mb-4 overflow-hidden">
+            <!-- 订单头部 -->
+            <div class="p-4 flex justify-between items-center border-b border-gray-100">
+                <div class="flex items-center">
+                    <div class="text-xs text-gray-500">订单号：</div>
+                    <div class="text-xs">2023112309876</div>
+                </div>
+                <div class="text-sm font-medium text-brand-error">待付款</div>
+            </div>
+            
+            <!-- 订单商品 -->
+            <div class="p-4">
+                <div class="flex">
+                    <div class="product-image w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="设计师台灯" class="w-full h-full object-cover">
+                    </div>
+                    <div class="ml-3 flex-1">
+                        <div class="text-sm font-medium">北欧设计师台灯</div>
+                        <div class="text-xs text-gray-500 mt-1">黑色</div>
+                        <div class="flex justify-between mt-2">
+                            <div class="text-sm font-medium">¥599</div>
+                            <div class="text-sm text-gray-500">x1</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 多个商品时的展示 -->
+                <div class="flex mt-3">
+                    <div class="product-image w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="北欧风格沙发" class="w-full h-full object-cover">
+                    </div>
+                    <div class="ml-3 flex-1">
+                        <div class="text-sm font-medium">北欧风格三人沙发</div>
+                        <div class="text-xs text-gray-500 mt-1">浅灰色</div>
+                        <div class="flex justify-between mt-2">
+                            <div class="text-sm font-medium">¥4,299</div>
+                            <div class="text-sm text-gray-500">x1</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 订单金额 -->
+            <div class="px-4 py-3 bg-gray-50 flex justify-between items-center">
+                <div class="text-xs text-gray-500">共2件商品</div>
+                <div class="flex items-center">
+                    <div class="text-xs text-gray-500 mr-1">实付：</div>
+                    <div class="text-sm font-medium text-brand-primary">¥4,898</div>
+                </div>
+            </div>
+            
+            <!-- 订单操作 -->
+            <div class="p-3 flex justify-end space-x-3 border-t border-gray-100">
+                <button class="btn btn-outline text-xs px-4 py-1.5 cancel-order-btn" data-order-id="2023112309876">取消订单</button>
+                <a href="payment.html?id=2023112309876" class="btn btn-primary text-xs px-4 py-1.5">立即付款</a>
+            </div>
+        </div>
+        
+        <!-- 订单卡片 2 - 待发货 -->
+        <div class="order-card mb-4 overflow-hidden">
+            <!-- 订单头部 -->
+            <div class="p-4 flex justify-between items-center border-b border-gray-100">
+                <div class="flex items-center">
+                    <div class="text-xs text-gray-500">订单号：</div>
+                    <div class="text-xs">2023112208765</div>
+                </div>
+                <div class="text-sm font-medium text-brand-warning">待发货</div>
+            </div>
+            
+            <!-- 订单商品 -->
+            <div class="p-4">
+                <div class="flex">
+                    <div class="product-image w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="现代简约书桌" class="w-full h-full object-cover">
+                    </div>
+                    <div class="ml-3 flex-1">
+                        <div class="text-sm font-medium">现代简约书桌</div>
+                        <div class="text-xs text-gray-500 mt-1">原木色</div>
+                        <div class="flex justify-between mt-2">
+                            <div class="text-sm font-medium">¥1,299</div>
+                            <div class="text-sm text-gray-500">x1</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 订单金额 -->
+            <div class="px-4 py-3 bg-gray-50 flex justify-between items-center">
+                <div class="text-xs text-gray-500">共1件商品</div>
+                <div class="flex items-center">
+                    <div class="text-xs text-gray-500 mr-1">实付：</div>
+                    <div class="text-sm font-medium text-brand-primary">¥1,299</div>
+                </div>
+            </div>
+            
+            <!-- 订单操作 -->
+            <div class="p-3 flex justify-end space-x-3 border-t border-gray-100">
+                <a href="order-detail.html?id=2023112208765" class="btn btn-outline text-xs px-4 py-1.5 view-detail-btn">查看详情</a>
+                <button class="btn btn-outline text-xs px-4 py-1.5">提醒发货</button>
+            </div>
+        </div>
+        
+        <!-- 订单卡片 3 - 待收货 -->
+        <div class="order-card mb-4 overflow-hidden">
+            <!-- 订单头部 -->
+            <div class="p-4 flex justify-between items-center border-b border-gray-100">
+                <div class="flex items-center">
+                    <div class="text-xs text-gray-500">订单号：</div>
+                    <div class="text-xs">2023112107654</div>
+                </div>
+                <div class="text-sm font-medium text-brand-info">待收货</div>
+            </div>
+            
+            <!-- 订单商品 -->
+            <div class="p-4">
+                <div class="flex">
+                    <div class="product-image w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1567016376408-0226e4d0c1ea?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="北欧风格餐桌" class="w-full h-full object-cover">
+                    </div>
+                    <div class="ml-3 flex-1">
+                        <div class="text-sm font-medium">北欧风格餐桌</div>
+                        <div class="text-xs text-gray-500 mt-1">白色</div>
+                        <div class="flex justify-between mt-2">
+                            <div class="text-sm font-medium">¥2,499</div>
+                            <div class="text-sm text-gray-500">x1</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 物流信息 -->
+            <div class="px-4 py-3 bg-gray-50 border-t border-b border-gray-100">
+                <div class="flex items-center">
+                    <i class="fas fa-truck text-brand-info text-sm mr-2"></i>
+                    <div class="text-xs text-gray-600 flex-1">您的订单已由【顺丰速运】发出，运单号：SF1234567890</div>
+                    <i class="fas fa-chevron-right text-gray-400 text-xs"></i>
+                </div>
+            </div>
+            
+            <!-- 订单金额 -->
+            <div class="px-4 py-3 bg-gray-50 flex justify-between items-center">
+                <div class="text-xs text-gray-500">共1件商品</div>
+                <div class="flex items-center">
+                    <div class="text-xs text-gray-500 mr-1">实付：</div>
+                    <div class="text-sm font-medium text-brand-primary">¥2,499</div>
+                </div>
+            </div>
+            
+            <!-- 订单操作 -->
+            <div class="p-3 flex justify-end space-x-3 border-t border-gray-100">
+                <a href="logistics-detail.html?id=2023112107654&tracking=SF1234567890" class="btn btn-outline text-xs px-4 py-1.5 view-logistics-btn">查看物流</a>
+                <button class="btn btn-primary text-xs px-4 py-1.5 confirm-receipt-btn" data-order-id="2023112107654">确认收货</button>
+            </div>
+        </div>
+        
+        <!-- 订单卡片 4 - 待评价 -->
+        <div class="order-card mb-4 overflow-hidden">
+            <!-- 订单头部 -->
+            <div class="p-4 flex justify-between items-center border-b border-gray-100">
+                <div class="flex items-center">
+                    <div class="text-xs text-gray-500">订单号：</div>
+                    <div class="text-xs">2023112006543</div>
+                </div>
+                <div class="text-sm font-medium text-brand-success">待评价</div>
+            </div>
+            
+            <!-- 订单商品 -->
+            <div class="p-4">
+                <div class="flex">
+                    <div class="product-image w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="北欧风格床头柜" class="w-full h-full object-cover">
+                    </div>
+                    <div class="ml-3 flex-1">
+                        <div class="text-sm font-medium">北欧风格床头柜</div>
+                        <div class="text-xs text-gray-500 mt-1">原木色</div>
+                        <div class="flex justify-between mt-2">
+                            <div class="text-sm font-medium">¥899</div>
+                            <div class="text-sm text-gray-500">x2</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 订单金额 -->
+            <div class="px-4 py-3 bg-gray-50 flex justify-between items-center">
+                <div class="text-xs text-gray-500">共2件商品</div>
+                <div class="flex items-center">
+                    <div class="text-xs text-gray-500 mr-1">实付：</div>
+                    <div class="text-sm font-medium text-brand-primary">¥1,798</div>
+                </div>
+            </div>
+            
+            <!-- 订单操作 -->
+            <div class="p-3 flex justify-end space-x-3 border-t border-gray-100">
+                <a href="order-detail.html?id=2023112006543" class="btn btn-outline text-xs px-4 py-1.5">查看详情</a>
+                <a href="review.html?orderId=2023112006543&productId=10001" class="btn btn-primary text-xs px-4 py-1.5">评价晒单</a>
+                <a href="after-sale.html?id=2023112006543" class="btn btn-outline text-xs px-4 py-1.5 after-sale-btn">申请售后</a>
+            </div>
+        </div>
+        
+        <!-- 订单卡片 5 - 已完成 -->
+        <div class="order-card mb-4 overflow-hidden">
+            <!-- 订单头部 -->
+            <div class="p-4 flex justify-between items-center border-b border-gray-100">
+                <div class="flex items-center">
+                    <div class="text-xs text-gray-500">订单号：</div>
+                    <div class="text-xs">2023111905432</div>
+                </div>
+                <div class="text-sm text-gray-500">已完成</div>
+            </div>
+            
+            <!-- 订单商品 -->
+            <div class="p-4">
+                <div class="flex">
+                    <div class="product-image w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1540574163026-643ea20ade25?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="现代简约茶几" class="w-full h-full object-cover">
+                    </div>
+                    <div class="ml-3 flex-1">
+                        <div class="text-sm font-medium">现代简约茶几</div>
+                        <div class="text-xs text-gray-500 mt-1">白色</div>
+                        <div class="flex justify-between mt-2">
+                            <div class="text-sm font-medium">¥1,099</div>
+                            <div class="text-sm text-gray-500">x1</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 订单金额 -->
+            <div class="px-4 py-3 bg-gray-50 flex justify-between items-center">
+                <div class="text-xs text-gray-500">共1件商品</div>
+                <div class="flex items-center">
+                    <div class="text-xs text-gray-500 mr-1">实付：</div>
+                    <div class="text-sm font-medium text-brand-primary">¥1,099</div>
+                </div>
+            </div>
+            
+            <!-- 订单操作 -->
+            <div class="p-3 flex justify-end space-x-3 border-t border-gray-100">
+                <button class="btn btn-outline text-xs px-4 py-1.5">再次购买</button>
+                <a href="after-sale.html?id=2023111905432" class="btn btn-outline text-xs px-4 py-1.5 after-sale-btn">申请售后</a>
+            </div>
+        </div>
+        
+        <!-- 空状态 - 当没有订单时显示 -->
+        <div class="empty-state hidden">
+            <div class="empty-icon">
+                <i class="fas fa-file-invoice"></i>
+            </div>
+            <div class="text-base mb-2">暂无相关订单</div>
+            <div class="text-sm text-gray-500 mb-6">去逛逛，挑选心仪的商品吧</div>
+            <a href="home.html" class="btn btn-primary px-6 py-2">
+                去购物
+            </a>
+        </div>
+    </div>
+    
+    <!-- 底部导航 -->
+    <div class="tab-bar">
+        <a href="home.html" class="tab-item btn-press">
+            <div class="tab-icon tab-inactive"><i class="fas fa-home"></i></div>
+            <div class="tab-label tab-inactive">首页</div>
+        </a>
+        <a href="category.html" class="tab-item btn-press">
+            <div class="tab-icon tab-inactive"><i class="fas fa-th-large"></i></div>
+            <div class="tab-label tab-inactive">分类</div>
+        </a>
+        <a href="cart.html" class="tab-item btn-press">
+            <div class="tab-icon tab-inactive"><i class="fas fa-shopping-cart"></i></div>
+            <div class="tab-label tab-inactive">购物车</div>
+        </a>
+        <a href="profile.html" class="tab-item btn-press">
+            <div class="tab-icon tab-active"><i class="fas fa-user"></i></div>
+            <div class="tab-label tab-active">我的</div>
+        </a>
+    </div>
+    
+    <!-- 自定义模态框 -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-container">
+            <div class="modal-title">确认收货</div>
+            <div class="modal-content">确认已收到商品吗？确认收货后，货款将支付给卖家</div>
+            <div class="modal-actions">
+                <div class="modal-btn modal-btn-cancel" id="modalCancelBtn">取消</div>
+                <div class="modal-btn modal-btn-confirm" id="modalConfirmBtn">确认</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 消息提示 -->
+    <div class="toast-container" id="toastContainer">
+        <div class="toast" id="toastMessage"></div>
+    </div>
+    
+    <!-- 加载状态 -->
+    <div id="loading" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.7); display: none; justify-content: center; align-items: center; z-index: 1500;">
+        <div><i class="fas fa-spinner fa-spin" style="font-size: 24px; color: var(--brand-primary);"></i></div>
+    </div>
+    
+    <script>
+        // 全局变量
+        let currentTab = '全部';
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化页面
+            initPage();
+        });
+
+        function initPage() {
+            // 为每个订单卡片添加data-order-id属性
+            document.querySelectorAll('.order-card').forEach(card => {
+                const orderIdElem = card.querySelector('.text-xs:not(.text-gray-500)');
+                if (orderIdElem) {
+                    const orderId = orderIdElem.textContent.trim();
+                    card.setAttribute('data-order-id', orderId);
+                }
+            });
+            
+            // 获取当前活动的选项卡
+            currentTab = getActiveTab();
+            
+            // 设置选项卡切换事件
+            setupTabs();
+            
+            // 根据当前选项卡过滤订单
+            filterOrders(currentTab);
+            
+            // 设置按钮行为
+            setupButtonActions();
+            
+            // 初始化模态框关闭行为（点击模态框外部可关闭）
+            const modal = document.getElementById('confirmModal');
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+            
+            // 为订单卡片添加点击事件，使整个卡片可点击
+            document.querySelectorAll('.order-card').forEach(card => {
+                card.addEventListener('click', function(e) {
+                    // 如果点击的是按钮或其子元素，不执行默认点击行为
+                    if (e.target.closest('button') || e.target.closest('a')) {
+                        return;
+                    }
+                    
+                    // 获取订单ID
+                    const orderId = this.getAttribute('data-order-id');
+                    if (orderId) {
+                        // 跳转到订单详情页面
+                        window.location.href = `order-detail.html?id=${orderId}&from=${currentTab}`;
+                    }
+                });
+            });
+        }
+
+        function getActiveTab() {
+            // 从URL参数获取选项卡，如果没有则默认为'全部'
+            const urlParams = new URLSearchParams(window.location.search);
+            let tab = urlParams.get('status');
+            
+            if (!tab) {
+                tab = '全部';
+            }
+            
+            // 设置对应的选项卡为激活状态
+            document.querySelectorAll('.tab').forEach(item => {
+                if (item.textContent.trim() === tab) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+            
+            return tab;
+        }
+
+        function setupTabs() {
+            // 为所有选项卡添加点击事件
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // 移除所有选项卡的激活状态
+                    document.querySelectorAll('.tab').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    
+                    // 设置当前选项卡为激活状态
+                    this.classList.add('active');
+                    
+                    // 更新当前选项卡状态
+                    currentTab = this.textContent.trim();
+                    
+                    // 根据选项卡过滤订单
+                    filterOrders(currentTab);
+                    
+                    // 更新URL，不刷新页面
+                    const url = new URL(window.location.href);
+                    url.searchParams.set('status', currentTab);
+                    window.history.pushState({}, '', url.toString());
+                });
+            });
+        }
+
+        // 为所有订单卡片内的按钮添加通用的事件处理函数
+        function setupButtonActions() {
+            // 设置查看详情按钮事件
+            document.querySelectorAll('.view-detail-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const orderId = this.closest('.order-card').getAttribute('data-order-id');
+                    window.location.href = `order-detail.html?id=${orderId}&from=${currentTab}`;
+                });
+            });
+
+            // 设置查看物流按钮事件
+            document.querySelectorAll('.view-logistics-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const orderId = this.closest('.order-card').getAttribute('data-order-id');
+                    window.location.href = `logistics-detail.html?id=${orderId}&from=${currentTab}`;
+                });
+            });
+
+            // 设置取消订单按钮事件
+            document.querySelectorAll('.cancel-order-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const orderId = this.closest('.order-card').getAttribute('data-order-id');
+                    window.location.href = `order-cancel.html?id=${orderId}&from=${currentTab}`;
+                });
+            });
+
+            // 设置评价晒单按钮事件
+            document.querySelectorAll('.btn-primary').forEach(btn => {
+                // 检查文本内容包含"评价晒单"或"去评价"
+                if (btn.textContent.includes('评价晒单') || btn.textContent.includes('去评价')) {
+                    btn.addEventListener('click', function(e) {
+                        if(!btn.href) {
+                            e.preventDefault();
+                            const orderId = this.closest('.order-card').getAttribute('data-order-id');
+                            window.location.href = `review.html?orderId=${orderId}&from=${currentTab}`;
+                        }
+                    });
+                }
+            });
+
+            // 设置申请售后按钮事件
+            document.querySelectorAll('.after-sale-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const orderCard = this.closest('.order-card');
+                    const orderId = orderCard.getAttribute('data-order-id');
+                    window.location.href = `after-sale.html?id=${orderId}&from=${currentTab}`;
+                });
+            });
+
+            // 设置确认收货按钮事件
+            document.querySelectorAll('.confirm-receipt-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const orderCard = this.closest('.order-card');
+                    const orderId = orderCard.getAttribute('data-order-id');
+                    
+                    // 显示确认模态框
+                    const modal = document.getElementById('confirmModal');
+                    const confirmBtn = document.getElementById('modalConfirmBtn');
+                    const cancelBtn = document.getElementById('modalCancelBtn');
+                    
+                    // 显示模态框
+                    modal.classList.add('active');
+                    
+                    // 确认按钮点击事件
+                    const confirmHandler = function() {
+                        // 显示加载状态
+                        document.getElementById('loading').style.display = 'flex';
+                        
+                        // 移除之前的事件监听
+                        confirmBtn.removeEventListener('click', confirmHandler);
+                        cancelBtn.removeEventListener('click', cancelHandler);
+                        
+                        // 关闭模态框
+                        modal.classList.remove('active');
+                        
+                        // 模拟API请求延迟
+                        setTimeout(() => {
+                            // 隐藏加载状态
+                            document.getElementById('loading').style.display = 'none';
+                            
+                            // 更新订单状态为"待评价"
+                            const statusElem = orderCard.querySelector('.text-sm.font-medium') || orderCard.querySelector('.text-sm');
+                            if (statusElem) {
+                                statusElem.textContent = '待评价';
+                                statusElem.className = 'text-sm font-medium text-brand-success';
+                            }
+                            
+                            // 隐藏物流信息
+                            const logisticsInfo = orderCard.querySelector('.px-4.py-3.bg-gray-50.border-t.border-b');
+                            if (logisticsInfo) {
+                                logisticsInfo.style.display = 'none';
+                            }
+                            
+                            // 更新底部按钮
+                            const bottomBtnContainer = orderCard.querySelector('.p-3.flex.justify-end.space-x-3.border-t.border-gray-100');
+                            if (bottomBtnContainer) {
+                                bottomBtnContainer.innerHTML = `
+                                    <a href="order-detail.html?id=${orderId}" class="btn btn-outline text-xs px-4 py-1.5 view-detail-btn">查看详情</a>
+                                    <a href="review.html?orderId=${orderId}" class="btn btn-primary text-xs px-4 py-1.5">去评价</a>
+                                `;
+                            }
+                            
+                            // 检查当前是否在"待收货"选项卡
+                            if (currentTab === '待收货') {
+                                // 将订单移至"待评价"选项卡，或者重新应用过滤器
+                                const waitReviewTab = Array.from(document.querySelectorAll('.tab')).find(tab => tab.textContent.trim() === '待评价');
+                                if (waitReviewTab) {
+                                    waitReviewTab.click();
+                                } else {
+                                    filterOrders(currentTab);
+                                }
+                            } else {
+                                // 在其他选项卡中，重新应用当前过滤器
+                                filterOrders(currentTab);
+                            }
+                            
+                            // 显示成功提示
+                            showToast('确认收货成功');
+                            
+                            // 重新绑定按钮事件
+                            setupButtonActions();
+                        }, 1000);
+                    };
+                    
+                    // 取消按钮点击事件
+                    const cancelHandler = function() {
+                        modal.classList.remove('active');
+                        confirmBtn.removeEventListener('click', confirmHandler);
+                        cancelBtn.removeEventListener('click', cancelHandler);
+                    };
+                    
+                    // 绑定事件
+                    confirmBtn.addEventListener('click', confirmHandler);
+                    cancelBtn.addEventListener('click', cancelHandler);
+                });
+            });
+        }
+        
+        // 显示Toast提示
+        function showToast(message) {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.getElementById('toastMessage');
+            
+            toast.textContent = message;
+            toastContainer.classList.add('active');
+            
+            setTimeout(() => {
+                toastContainer.classList.remove('active');
+            }, 2000);
+        }
+        
+        // 筛选订单的函数
+        function filterOrders(status) {
+            const orderCards = document.querySelectorAll('.order-card');
+            const emptyState = document.querySelector('.empty-state');
+            let visibleCount = 0;
+            
+            // 订单状态映射
+            const orderStatusMap = {
+                '全部': 'all',
+                '待付款': 'text-brand-error',
+                '待发货': 'text-brand-warning',
+                '待收货': 'text-brand-info',
+                '待评价': 'text-brand-success',
+                '已完成': 'text-gray-500'
+            };
+                
+                orderCards.forEach(card => {
+                if (status === '全部') {
+                    // 全部分类显示所有订单
+                    card.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    const statusElement = card.querySelector('.text-sm.font-medium') || card.querySelector('.text-sm');
+                    const statusClass = statusElement ? statusElement.className : '';
+                    const statusText = statusElement ? statusElement.textContent.trim() : '';
+                    
+                    // 使用文本内容匹配更准确
+                    if (statusText === status || statusClass.includes(orderStatusMap[status])) {
+                        card.classList.remove('hidden');
+                        visibleCount++;
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                    }
+                });
+                
+                // 如果没有符合条件的订单，显示空状态
+                if (visibleCount === 0) {
+                    emptyState.classList.remove('hidden');
+                } else {
+                    emptyState.classList.add('hidden');
+            }
+            
+            // 每次过滤后重新绑定按钮事件
+            setupButtonActions();
+        }
+    </script>
+</body>
+</html> 

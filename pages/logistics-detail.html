@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物流详情 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        /* 主题颜色变量 - 与首页保持一致 */
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+            
+            /* 渐变色 */
+            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
+            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
+            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
+            
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
+            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
+            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--brand-dark);
+        }
+
+        /* 导航栏样式 */
+        .nav-bar {
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-bar i {
+            color: var(--brand-dark-light);
+            transition: color 0.3s ease;
+        }
+
+        .nav-bar i:hover {
+            color: var(--brand-primary);
+        }
+
+        /* 卡片样式 */
+        .section {
+            background-color: white;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* 按钮样式 */
+        .btn {
+            transition: all 0.3s ease;
+            border-radius: 24px;
+        }
+
+        .btn-primary {
+            background: var(--brand-gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-highlight);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--brand-dark-light);
+            color: var(--brand-dark);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--brand-light-dark);
+            transform: translateY(-2px);
+        }
+
+        /* 物流时间线样式 */
+        .timeline {
+            position: relative;
+            padding-left: 20px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 6px;
+            width: 2px;
+            background-color: var(--brand-light-dark);
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 24px;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -20px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--brand-light-dark);
+            top: 4px;
+        }
+
+        .timeline-item:first-child .timeline-dot {
+            background-color: var(--brand-primary);
+            width: 16px;
+            height: 16px;
+            left: -22px;
+            top: 2px;
+        }
+
+        .timeline-item.active {
+            color: var(--brand-primary);
+        }
+
+        /* 物流图标旋转动画 */
+        @keyframes truckMove {
+            0% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            100% { transform: translateX(-5px); }
+        }
+
+        .truck-icon {
+            animation: truckMove 3s ease-in-out infinite;
+        }
+
+        /* 下拉菜单样式 */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
+            z-index: 10;
+            min-width: 160px;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 12px 16px;
+            display: block;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--brand-primary-transparent);
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <div class="flex items-center">
+                <a href="javascript:history.back()" class="text-gray-500 mr-3" id="backLink">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="text-lg font-medium">物流详情</div>
+            </div>
+            <div class="flex items-center">
+                <div class="dropdown">
+                    <a href="#" class="text-gray-500 ml-3">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </a>
+                    <div class="dropdown-content">
+                        <a href="#" class="dropdown-item text-sm" id="copyTrackingBtn">
+                            <i class="fas fa-copy mr-2"></i>复制运单号
+                        </a>
+                        <a href="#" class="dropdown-item text-sm" id="refreshLogisticsBtn">
+                            <i class="fas fa-sync-alt mr-2"></i>刷新物流
+                        </a>
+                        <a href="#" class="dropdown-item text-sm" id="queryExternalBtn">
+                            <i class="fas fa-external-link-alt mr-2"></i>官网查询
+                        </a>
+                        <a href="customer-service.html" class="dropdown-item text-sm">
+                            <i class="fas fa-headset mr-2"></i>联系客服
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主要内容区 -->
+    <div class="pt-14 pb-6 px-4">
+        <!-- 物流概览 -->
+        <div class="section p-4 mb-4">
+            <div class="flex items-center justify-between mb-3">
+                <div class="text-sm font-medium flex items-center">
+                    <i class="fas fa-truck text-brand-primary mr-2 truck-icon"></i>
+                    <span id="deliveryStatus">运输中</span>
+                </div>
+                <div class="text-xs px-2 py-1 rounded-full bg-brand-primary bg-opacity-10 text-brand-primary" id="statusBadge">
+                    在途
+                </div>
+            </div>
+            
+            <div class="text-sm flex mb-2">
+                <div class="text-gray-500 w-20">物流公司：</div>
+                <div class="flex-1" id="logisticsCompany">顺丰速运</div>
+            </div>
+            
+            <div class="text-sm flex mb-2">
+                <div class="text-gray-500 w-20">运单号码：</div>
+                <div class="flex-1" id="trackingNumber">SF1234567890</div>
+            </div>
+            
+            <div class="text-sm flex" id="courierInfoSection" style="display: none;">
+                <div class="text-gray-500 w-20">配送员：</div>
+                <div class="flex-1" id="courierName">张师傅</div>
+                <a href="tel:10086" class="text-brand-primary text-xs" id="courierPhoneLink">
+                    <i class="fas fa-phone-alt mr-1"></i>拨打电话
+                </a>
+            </div>
+        </div>
+        
+        <!-- 订单信息 -->
+        <div class="section p-4 mb-4">
+            <div class="text-sm font-medium mb-3">订单信息</div>
+            
+            <div class="text-sm flex mb-2">
+                <div class="text-gray-500 w-20">订单编号：</div>
+                <div class="flex-1" id="orderId">2023112107654</div>
+            </div>
+            
+            <div class="text-sm flex mb-2">
+                <div class="text-gray-500 w-20">收货人：</div>
+                <div class="flex-1" id="recipientName">李小明</div>
+            </div>
+            
+            <div class="text-sm flex">
+                <div class="text-gray-500 w-20">收货地址：</div>
+                <div class="flex-1" id="recipientAddress">广东省深圳市南山区科技园南区A栋1001室</div>
+            </div>
+        </div>
+        
+        <!-- 物流轨迹 -->
+        <div class="section p-4">
+            <div class="flex items-center justify-between mb-3">
+                <div class="text-sm font-medium">物流轨迹</div>
+                <div class="text-xs text-gray-500" id="updateTime">最后更新：2023-11-22 15:30:45</div>
+            </div>
+            
+            <!-- 物流时间线 -->
+            <div class="timeline" id="logisticsTimeline">
+                <!-- 时间线项目将通过JavaScript动态添加 -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部操作栏 -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-3 flex justify-between z-10">
+        <a href="order-detail.html" class="btn btn-outline px-4 py-2" id="backToOrderBtn">
+            <i class="fas fa-file-alt mr-1"></i>返回订单
+        </a>
+        <a href="tel:10086" class="btn btn-outline px-4 py-2" id="callCourierBtn">
+            <i class="fas fa-phone-alt mr-1"></i>联系快递员
+        </a>
+        <a href="customer-service.html" class="btn btn-primary px-4 py-2">
+            <i class="fas fa-headset mr-1"></i>联系客服
+        </a>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取URL参数
+            function getUrlParam(name) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(name);
+            }
+            
+            // 获取订单ID和物流单号
+            const orderId = getUrlParam('id');
+            const trackingNumber = getUrlParam('tracking');
+            
+            // 更新页面显示
+            if (orderId) {
+                const orderIdEl = document.getElementById('orderId');
+                if (orderIdEl) {
+                    orderIdEl.textContent = orderId;
+                }
+                
+                // 更新返回订单按钮的链接
+                const backToOrderBtn = document.getElementById('backToOrderBtn');
+                if (backToOrderBtn) {
+                    backToOrderBtn.href = `order-detail.html?id=${orderId}`;
+                }
+            }
+            
+            if (trackingNumber) {
+                const trackingNumberEl = document.getElementById('trackingNumber');
+                if (trackingNumberEl) {
+                    trackingNumberEl.textContent = trackingNumber;
+                }
+            }
+            
+            // 复制运单号
+            const copyTrackingBtn = document.getElementById('copyTrackingBtn');
+            if (copyTrackingBtn) {
+                copyTrackingBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const tracking = document.getElementById('trackingNumber').textContent;
+                    navigator.clipboard.writeText(tracking).then(function() {
+                        alert('运单号已复制到剪贴板');
+                    }, function() {
+                        alert('复制失败，请手动复制');
+                    });
+                });
+            }
+            
+            // 刷新物流信息
+            const refreshLogisticsBtn = document.getElementById('refreshLogisticsBtn');
+            if (refreshLogisticsBtn) {
+                refreshLogisticsBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // 显示加载动画
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>刷新中...';
+                    
+                    // 模拟刷新延迟
+                    setTimeout(() => {
+                        // 恢复按钮状态
+                        this.innerHTML = '<i class="fas fa-sync-alt mr-2"></i>刷新物流';
+                        // 更新最后更新时间
+                        const now = new Date();
+                        const updateTimeEl = document.getElementById('updateTime');
+                        if (updateTimeEl) {
+                            const formattedTime = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+                            updateTimeEl.textContent = `最后更新：${formattedTime}`;
+                        }
+                        alert('物流信息已更新');
+                    }, 1500);
+                });
+            }
+            
+            // 官网查询按钮点击事件
+            const queryExternalBtn = document.getElementById('queryExternalBtn');
+            if (queryExternalBtn) {
+                queryExternalBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const tracking = document.getElementById('trackingNumber').textContent;
+                    const company = document.getElementById('logisticsCompany').textContent;
+                    
+                    // 根据物流公司名称决定跳转到哪个官网
+                    let url = '';
+                    if (company.includes('顺丰')) {
+                        // 顺丰官网查询
+                        url = `https://www.sf-express.com/cn/sc/dynamic_function/waybill/#search/bill-number/${tracking}`;
+                    } else if (company.includes('中通')) {
+                        // 中通官网查询
+                        url = `https://www.zto.com/express/expressCheck.html?txtBill=${tracking}`;
+                    } else if (company.includes('圆通')) {
+                        // 圆通官网查询
+                        url = `https://www.yto.net.cn/gw/service/home-detail?mailNo=${tracking}`;
+                    } else if (company.includes('申通')) {
+                        // 申通官网查询
+                        url = `https://www.sto.cn/query/result?waybillNo=${tracking}`;
+                    } else if (company.includes('韵达')) {
+                        // 韵达官网查询
+                        url = `https://www.yundaex.com/cn/track?mailNo=${tracking}`;
+                    } else if (company.includes('京东')) {
+                        // 京东物流查询
+                        url = `https://www.jdwl.com/order/search?waybillCodes=${tracking}`;
+                    } else {
+                        // 默认使用快递100
+                        url = `https://www.kuaidi100.com/chaxun?nu=${tracking}`;
+                    }
+                    
+                    // 在新窗口打开查询页面
+                    window.open(url, '_blank');
+                });
+            }
+            
+            // 模拟物流数据
+            const logisticsData = [
+                {
+                    time: '2023-11-22 15:30:45',
+                    status: '【深圳市】已签收，签收人为门卫小哥，感谢您使用顺丰速运',
+                    active: true
+                },
+                {
+                    time: '2023-11-22 10:30:45',
+                    status: '【深圳市】快件已到达【南山科技园营业点】'
+                },
+                {
+                    time: '2023-11-22 08:15:30',
+                    status: '【深圳市】快件在【深圳转运中心】完成分拣，准备发往【南山科技园营业点】'
+                },
+                {
+                    time: '2023-11-21 20:45:12',
+                    status: '【广州市】快件已从【广州发货中心】发出'
+                },
+                {
+                    time: '2023-11-21 18:30:00',
+                    status: '【广州市】顺丰速运已收取快件'
+                },
+                {
+                    time: '2023-11-21 15:40:22',
+                    status: '【广州市】商家已发货'
+                },
+                {
+                    time: '2023-11-21 15:35:22',
+                    status: '【系统通知】您的订单已支付成功'
+                },
+                {
+                    time: '2023-11-21 15:30:45',
+                    status: '【系统通知】您的订单已提交成功'
+                }
+            ];
+            
+            // 更新物流时间线
+            const logisticsTimeline = document.getElementById('logisticsTimeline');
+            if (logisticsTimeline) {
+                logisticsData.forEach((item, index) => {
+                    const timelineItem = document.createElement('div');
+                    timelineItem.className = `timeline-item ${item.active ? 'active' : ''}`;
+                    
+                    timelineItem.innerHTML = `
+                        <div class="timeline-dot"></div>
+                        <div class="text-sm">${item.status}</div>
+                        <div class="text-xs text-gray-500 mt-1">${item.time}</div>
+                    `;
+                    
+                    logisticsTimeline.appendChild(timelineItem);
+                });
+                
+                // 根据最新物流状态更新顶部状态信息
+                const latestStatus = logisticsData[0];
+                const deliveryStatus = document.getElementById('deliveryStatus');
+                const statusBadge = document.getElementById('statusBadge');
+                
+                if (deliveryStatus && statusBadge) {
+                    // 判断物流状态
+                    if (latestStatus.status.includes('已签收')) {
+                        deliveryStatus.textContent = '已签收';
+                        statusBadge.textContent = '已完成';
+                        statusBadge.className = 'text-xs px-2 py-1 rounded-full bg-brand-success bg-opacity-10 text-brand-success';
+                    } else if (latestStatus.status.includes('到达')) {
+                        deliveryStatus.textContent = '即将配送';
+                        statusBadge.textContent = '派送中';
+                        statusBadge.className = 'text-xs px-2 py-1 rounded-full bg-brand-info bg-opacity-10 text-brand-info';
+                        
+                        // 显示配送员信息
+                        const courierInfoSection = document.getElementById('courierInfoSection');
+                        if (courierInfoSection) {
+                            courierInfoSection.style.display = 'flex';
+                            
+                            // 更新联系快递员按钮
+                            const callCourierBtn = document.getElementById('callCourierBtn');
+                            if (callCourierBtn) {
+                                callCourierBtn.href = 'tel:13888888888';
+                            }
+                            
+                            // 更新快递员电话链接
+                            const courierPhoneLink = document.getElementById('courierPhoneLink');
+                            if (courierPhoneLink) {
+                                courierPhoneLink.href = 'tel:13888888888';
+                            }
+                        }
+                    } else {
+                        deliveryStatus.textContent = '运输中';
+                        statusBadge.textContent = '在途';
+                        statusBadge.className = 'text-xs px-2 py-1 rounded-full bg-brand-primary bg-opacity-10 text-brand-primary';
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>取消订单 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        /* 主题颜色变量 - 与首页保持一致 */
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+            
+            /* 渐变色 */
+            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
+            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
+            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
+            
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
+            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
+            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--brand-dark);
+        }
+
+        /* 导航栏样式 */
+        .nav-bar {
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-bar i {
+            color: var(--brand-dark-light);
+            transition: color 0.3s ease;
+        }
+
+        .nav-bar i:hover {
+            color: var(--brand-primary);
+        }
+
+        /* 卡片样式 */
+        .section {
+            background-color: white;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* 取消原因选项样式 */
+        .reason-option {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--brand-light-dark);
+            transition: background-color 0.2s ease;
+        }
+
+        .reason-option:last-child {
+            border-bottom: none;
+        }
+
+        .reason-option:hover {
+            background-color: var(--brand-primary-transparent);
+        }
+
+        .reason-option.selected {
+            background-color: var(--brand-primary-transparent);
+        }
+
+        .radio-circle {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid var(--brand-dark-light);
+            margin-right: 12px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .radio-circle::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--brand-primary);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .reason-option.selected .radio-circle {
+            border-color: var(--brand-primary);
+        }
+
+        .reason-option.selected .radio-circle::after {
+            opacity: 1;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            transition: all 0.3s ease;
+            border-radius: 24px;
+        }
+
+        .btn-primary {
+            background: var(--brand-gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-highlight);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--brand-dark-light);
+            color: var(--brand-dark);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--brand-light-dark);
+            transform: translateY(-2px);
+        }
+
+        /* 成功动画 */
+        @keyframes checkmark {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-checkmark {
+            animation: checkmark 0.5s ease-in-out forwards;
+        }
+
+        /* 商品信息样式 */
+        .product-info {
+            border: 1px solid var(--brand-light-dark);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 16px;
+        }
+
+        .product-image {
+            border: 1px solid var(--brand-light-dark);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* 其他输入框样式 */
+        .custom-reason {
+            border: 1px solid var(--brand-light-dark);
+            border-radius: 8px;
+            padding: 10px 12px;
+            width: 100%;
+            margin-top: 8px;
+            transition: border-color 0.3s ease;
+            resize: none;
+        }
+
+        .custom-reason:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 2px var(--brand-primary-transparent);
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <div class="flex items-center">
+                <a href="javascript:history.back()" class="text-gray-500 mr-3" id="backLink">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="text-lg font-medium">取消订单</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主要内容区 -->
+    <div class="pt-14 pb-24 px-4">
+        <!-- 取消订单信息 -->
+        <div class="section p-4 mb-4">
+            <div class="text-sm font-medium mb-3">订单信息</div>
+            
+            <div class="text-sm flex mb-2">
+                <div class="text-gray-500 w-20">订单编号：</div>
+                <div class="flex-1" id="orderId">2023112309876</div>
+            </div>
+            
+            <div class="text-sm flex mb-2">
+                <div class="text-gray-500 w-20">下单时间：</div>
+                <div id="orderTime">2023-11-23 10:30:45</div>
+            </div>
+            
+            <div class="text-sm flex">
+                <div class="text-gray-500 w-20">订单金额：</div>
+                <div class="text-brand-primary" id="orderAmount">¥4,898</div>
+            </div>
+        </div>
+        
+        <!-- 商品信息 -->
+        <div class="section p-4 mb-4" id="productInfo">
+            <!-- 商品信息将通过JavaScript动态加载 -->
+        </div>
+        
+        <!-- 取消原因 -->
+        <div class="section p-4 mb-4" id="reasonsSection">
+            <div class="text-sm font-medium mb-3">请选择取消原因</div>
+            
+            <div class="reason-option" data-reason="不想买了">
+                <div class="radio-circle"></div>
+                <div class="text-sm">不想买了</div>
+            </div>
+            
+            <div class="reason-option" data-reason="信息填写错误，重新拍">
+                <div class="radio-circle"></div>
+                <div class="text-sm">信息填写错误，重新拍</div>
+            </div>
+            
+            <div class="reason-option" data-reason="商品缺货">
+                <div class="radio-circle"></div>
+                <div class="text-sm">商品缺货</div>
+            </div>
+            
+            <div class="reason-option" data-reason="重复下单">
+                <div class="radio-circle"></div>
+                <div class="text-sm">重复下单</div>
+            </div>
+            
+            <div class="reason-option" data-reason="其他原因">
+                <div class="radio-circle"></div>
+                <div class="text-sm">其他原因</div>
+            </div>
+            
+            <!-- 其他原因输入框，默认隐藏 -->
+            <textarea class="custom-reason hidden" id="customReason" placeholder="请输入取消原因..." maxlength="200"></textarea>
+        </div>
+        
+        <!-- 取消成功状态，默认隐藏 -->
+        <div class="section p-4 mb-4 hidden" id="successSection">
+            <div class="flex flex-col items-center py-6">
+                <div class="w-16 h-16 rounded-full bg-brand-primary bg-opacity-10 flex items-center justify-center mb-4">
+                    <i class="fas fa-check text-2xl text-brand-primary success-checkmark"></i>
+                </div>
+                <div class="text-lg font-medium mb-2">订单取消成功</div>
+                <div class="text-sm text-gray-500 mb-6 text-center">您的订单已取消，货款将原路退回</div>
+                <div class="text-xs text-gray-400 mb-1">将在 <span id="countdownTime">5</span> 秒后返回订单列表</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部操作栏 -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 p-3 flex justify-between z-10" id="actionBar">
+        <a href="javascript:history.back()" class="btn btn-outline px-4 py-2">
+            <i class="fas fa-arrow-left mr-1"></i>返回
+        </a>
+        <button class="btn btn-primary px-6 py-2 disabled:opacity-50" id="confirmCancelBtn" disabled>
+            确认取消
+        </button>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取URL参数
+            function getUrlParam(name) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(name);
+            }
+            
+            // 获取订单ID和返回页面参数
+            const orderId = getUrlParam('id');
+            const returnTab = getUrlParam('tab');
+            
+            // 更新页面显示的订单信息
+            if (orderId) {
+                const orderIdEl = document.getElementById('orderId');
+                if (orderIdEl) {
+                    orderIdEl.textContent = orderId;
+                }
+                
+                // 在实际应用中，这里会通过API请求获取订单详情
+                // 这里使用模拟数据
+                const orderData = {
+                    id: orderId,
+                    time: '2023-11-23 10:30:45',
+                    amount: '¥4,898',
+                    products: [
+                        {
+                            name: '北欧设计师台灯',
+                            image: 'https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
+                            spec: '黑色',
+                            price: '¥599',
+                            quantity: 1
+                        },
+                        {
+                            name: '北欧风格三人沙发',
+                            image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
+                            spec: '浅灰色',
+                            price: '¥4,299',
+                            quantity: 1
+                        }
+                    ]
+                };
+                
+                // 更新订单时间和金额
+                const orderTimeEl = document.getElementById('orderTime');
+                const orderAmountEl = document.getElementById('orderAmount');
+                
+                if (orderTimeEl) {
+                    orderTimeEl.textContent = orderData.time;
+                }
+                
+                if (orderAmountEl) {
+                    orderAmountEl.textContent = orderData.amount;
+                }
+                
+                // 加载商品信息
+                const productInfoEl = document.getElementById('productInfo');
+                if (productInfoEl) {
+                    let productHTML = '<div class="text-sm font-medium mb-3">商品信息</div>';
+                    
+                    orderData.products.forEach(product => {
+                        productHTML += `
+                        <div class="flex mb-3 last:mb-0">
+                            <div class="product-image w-16 h-16 bg-gray-100 rounded-md overflow-hidden">
+                                <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover">
+                            </div>
+                            <div class="ml-3 flex-1">
+                                <div class="text-sm font-medium">${product.name}</div>
+                                <div class="text-xs text-gray-500 mt-1">${product.spec}</div>
+                                <div class="flex justify-between mt-2">
+                                    <div class="text-sm font-medium">${product.price}</div>
+                                    <div class="text-sm text-gray-500">x${product.quantity}</div>
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                    });
+                    
+                    productInfoEl.innerHTML = productHTML;
+                }
+                
+                // 更新返回链接
+                const backLink = document.getElementById('backLink');
+                if (backLink && returnTab) {
+                    backLink.href = `order-list.html?status=${returnTab}`;
+                }
+            }
+            
+            // 取消原因选择
+            const reasonOptions = document.querySelectorAll('.reason-option');
+            const confirmCancelBtn = document.getElementById('confirmCancelBtn');
+            const customReasonInput = document.getElementById('customReason');
+            
+            let selectedReason = '';
+            
+            // 添加点击事件到每个原因选项
+            reasonOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除其他选项的selected类
+                    reasonOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // 为当前选项添加selected类
+                    this.classList.add('selected');
+                    
+                    // 获取选中的原因
+                    selectedReason = this.getAttribute('data-reason');
+                    
+                    // 启用确认按钮
+                    if (confirmCancelBtn) {
+                        confirmCancelBtn.disabled = false;
+                    }
+                    
+                    // 如果选择"其他原因"，显示输入框
+                    if (selectedReason === '其他原因') {
+                        customReasonInput.classList.remove('hidden');
+                        customReasonInput.focus();
+                    } else {
+                        customReasonInput.classList.add('hidden');
+                    }
+                });
+            });
+            
+            // 其他原因输入框监听
+            if (customReasonInput) {
+                customReasonInput.addEventListener('input', function() {
+                    if (this.value.trim() !== '') {
+                        confirmCancelBtn.disabled = false;
+                    } else {
+                        confirmCancelBtn.disabled = true;
+                    }
+                });
+            }
+            
+            // 确认取消按钮点击事件
+            if (confirmCancelBtn) {
+                confirmCancelBtn.addEventListener('click', function() {
+                    const finalReason = selectedReason === '其他原因' ? customReasonInput.value.trim() : selectedReason;
+                    
+                    if (!finalReason) {
+                        alert('请选择或输入取消原因');
+                        return;
+                    }
+                    
+                    // 显示加载状态
+                    this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>处理中...';
+                    this.disabled = true;
+                    
+                    // 在实际应用中，这里会发送请求到服务器，取消订单
+                    // 这里模拟API请求延迟
+                    setTimeout(() => {
+                        // 隐藏订单信息和原因选择部分
+                        document.getElementById('reasonsSection').classList.add('hidden');
+                        document.getElementById('productInfo').classList.add('hidden');
+                        document.getElementById('actionBar').classList.add('hidden');
+                        
+                        // 显示成功状态
+                        const successSection = document.getElementById('successSection');
+                        successSection.classList.remove('hidden');
+                        
+                        // 启动倒计时
+                        let countdown = 5;
+                        const countdownEl = document.getElementById('countdownTime');
+                        
+                        const timer = setInterval(() => {
+                            countdown--;
+                            if (countdownEl) {
+                                countdownEl.textContent = countdown;
+                            }
+                            
+                            if (countdown <= 0) {
+                                clearInterval(timer);
+                                // 返回订单列表页
+                                window.location.href = returnTab ? 
+                                    `order-list.html?status=${returnTab}` : 
+                                    'order-list.html?status=全部';
+                            }
+                        }, 1000);
+                    }, 1500);
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

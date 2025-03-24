@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人设置 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        /* 主题颜色变量 - 与首页保持一致 */
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+            
+            /* 渐变色 */
+            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
+            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
+            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
+            
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
+            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
+            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--brand-dark);
+        }
+
+        /* 导航栏样式 */
+        .nav-bar {
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-bar i {
+            color: var(--brand-dark-light);
+            transition: color 0.3s ease;
+        }
+
+        .nav-bar i:hover {
+            color: var(--brand-primary);
+        }
+
+        /* 设置菜单样式 */
+        .settings-card {
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .settings-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--brand-light-dark);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .settings-item:last-child {
+            border-bottom: none;
+        }
+
+        .settings-item:hover {
+            background-color: var(--brand-primary-transparent);
+        }
+
+        .settings-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .bg-primary-light {
+            background-color: var(--brand-primary-transparent);
+        }
+
+        .bg-secondary-light {
+            background-color: rgba(233, 196, 106, 0.1);
+        }
+
+        .bg-error-light {
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        .bg-info-light {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        .bg-success-light {
+            background-color: rgba(56, 178, 172, 0.1);
+        }
+
+        .bg-warning-light {
+            background-color: rgba(245, 158, 11, 0.1);
+        }
+
+        /* 退出登录按钮样式 */
+        .logout-btn {
+            background-color: white;
+            color: var(--brand-error);
+            text-align: center;
+            padding: 14px;
+            border-radius: 16px;
+            margin-top: 24px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(239, 68, 68, 0.05);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-press {
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-press:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <div class="flex items-center">
+                <a href="profile.html" class="text-gray-500 mr-3">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="text-lg font-medium">设置</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主要内容区 -->
+    <div class="main-content pt-14 pb-24 px-4">
+        <!-- 账号信息设置 -->
+        <div class="settings-card">
+            <a href="profile-edit.html" class="settings-item btn-press">
+                <div class="flex items-center">
+                    <div class="settings-icon bg-primary-light">
+                        <i class="fas fa-user text-blue-500"></i>
+                    </div>
+                    <div>个人资料</div>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+            </a>
+            <a href="address.html" class="settings-item btn-press">
+                <div class="flex items-center">
+                    <div class="settings-icon bg-secondary-light">
+                        <i class="fas fa-map-marker-alt text-yellow-500"></i>
+                    </div>
+                    <div>收货地址</div>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+            </a>
+            <a href="account-security.html" class="settings-item btn-press">
+                <div class="flex items-center">
+                    <div class="settings-icon bg-info-light">
+                        <i class="fas fa-shield-alt text-blue-500"></i>
+                    </div>
+                    <div>账号与安全</div>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+            </a>
+        </div>
+        
+        <!-- 应用设置 -->
+        <div class="settings-card">
+            <a href="notification-settings.html" class="settings-item btn-press">
+                <div class="flex items-center">
+                    <div class="settings-icon bg-success-light">
+                        <i class="fas fa-bell text-green-500"></i>
+                    </div>
+                    <div>消息通知</div>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+            </a>
+            <div class="settings-item btn-press">
+                <div class="flex items-center">
+                    <div class="settings-icon bg-primary-light">
+                        <i class="fas fa-moon text-blue-500"></i>
+                    </div>
+                    <div>深色模式</div>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="darkModeSwitch">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+            <a href="privacy-settings.html" class="settings-item btn-press">
+                <div class="flex items-center">
+                    <div class="settings-icon bg-warning-light">
+                        <i class="fas fa-lock text-orange-500"></i>
+                    </div>
+                    <div>隐私设置</div>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+            </a>
+        </div>
+        
+        <!-- 其他设置 -->
+        <div class="settings-card">
+            <a href="about.html" class="settings-item btn-press">
+                <div class="flex items-center">
+                    <div class="settings-icon bg-secondary-light">
+                        <i class="fas fa-info-circle text-yellow-500"></i>
+                    </div>
+                    <div>关于我们</div>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+            </a>
+            <a href="feedback.html" class="settings-item btn-press">
+                <div class="flex items-center">
+                    <div class="settings-icon bg-info-light">
+                        <i class="fas fa-comment-alt text-blue-500"></i>
+                    </div>
+                    <div>意见反馈</div>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+            </a>
+            <a href="help-center.html" class="settings-item btn-press">
+                <div class="flex items-center">
+                    <div class="settings-icon bg-success-light">
+                        <i class="fas fa-question-circle text-green-500"></i>
+                    </div>
+                    <div>帮助中心</div>
+                </div>
+                <i class="fas fa-chevron-right text-gray-400"></i>
+            </a>
+        </div>
+        
+        <!-- 退出登录按钮 -->
+        <div class="logout-btn btn-press" id="logoutBtn">
+            退出登录
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 深色模式切换
+            const darkModeSwitch = document.getElementById('darkModeSwitch');
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            
+            // 根据存储的设置初始化开关状态
+            if (darkModeSwitch) {
+                darkModeSwitch.checked = isDarkMode;
+            }
+            
+            // 监听开关变化
+            if (darkModeSwitch) {
+                darkModeSwitch.addEventListener('change', function() {
+                    localStorage.setItem('darkMode', this.checked);
+                    // 这里可以添加实际的深色模式切换逻辑
+                    alert(this.checked ? '已开启深色模式' : '已关闭深色模式');
+                });
+            }
+            
+            // 退出登录处理
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    if (confirm('确定要退出登录吗？')) {
+                        // 清除登录状态
+                        localStorage.removeItem('isLoggedIn');
+                        // 跳转到登录页
+                        window.location.href = 'login.html';
+                    }
+                });
+            }
+        });
+        
+        // 开关样式
+        document.head.insertAdjacentHTML('beforeend', `
+            <style>
+                .switch {
+                    position: relative;
+                    display: inline-block;
+                    width: 50px;
+                    height: 24px;
+                }
+
+                .switch input {
+                    opacity: 0;
+                    width: 0;
+                    height: 0;
+                }
+
+                .slider {
+                    position: absolute;
+                    cursor: pointer;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: #ccc;
+                    transition: .4s;
+                }
+
+                .slider:before {
+                    position: absolute;
+                    content: "";
+                    height: 18px;
+                    width: 18px;
+                    left: 3px;
+                    bottom: 3px;
+                    background-color: white;
+                    transition: .4s;
+                }
+
+                input:checked + .slider {
+                    background-color: var(--brand-primary);
+                }
+
+                input:focus + .slider {
+                    box-shadow: 0 0 1px var(--brand-primary);
+                }
+
+                input:checked + .slider:before {
+                    transform: translateX(26px);
+                }
+
+                .slider.round {
+                    border-radius: 24px;
+                }
+
+                .slider.round:before {
+                    border-radius: 50%;
+                }
+            </style>
+        `);
+    </script>
+</body>
+</html> 

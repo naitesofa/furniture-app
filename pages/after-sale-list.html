@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的售后 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+            
+            /* 渐变色 */
+            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
+            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
+            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
+            
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
+            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
+            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--brand-dark);
+        }
+
+        .section {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .after-sale-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .after-sale-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--brand-light-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .status-tag {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background-color: var(--brand-primary-transparent);
+            color: var(--brand-primary);
+        }
+
+        .status-approved {
+            background-color: rgba(56, 178, 172, 0.1);
+            color: var(--brand-success);
+        }
+
+        .status-processing {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: var(--brand-warning);
+        }
+
+        .status-completed {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--brand-info);
+        }
+
+        .status-rejected {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--brand-error);
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* 标签切换样式 */
+        .tabs {
+            display: flex;
+            background-color: white;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 48px;
+            z-index: 5;
+        }
+        
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .tab {
+            flex: 1;
+            min-width: fit-content;
+            padding: 12px 16px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--brand-dark-light);
+            position: relative;
+            white-space: nowrap;
+            transition: color 0.3s;
+        }
+        
+        .tab.active {
+            color: var(--brand-primary);
+            font-weight: 500;
+        }
+        
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 3px;
+            background-color: var(--brand-primary);
+            border-radius: 3px 3px 0 0;
+        }
+
+        /* 加载动画 */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .loading-spinner {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(42, 157, 143, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--brand-primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 底部按钮 */
+        .bottom-btn {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            z-index: 10;
+        }
+
+        .btn-full {
+            width: 100%;
+            padding: 12px;
+            border-radius: 25px;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--brand-gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-highlight);
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <div class="flex items-center">
+                <a href="profile.html" class="text-gray-500 mr-3">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="text-lg font-medium">我的售后</div>
+            </div>
+            <div class="flex items-center">
+                <a href="customer-service.html" class="text-gray-500 ml-3">
+                    <i class="fas fa-headset"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 标签切换 -->
+    <div class="tabs">
+        <div class="tab active" data-status="all">全部</div>
+        <div class="tab" data-status="pending">待审核</div>
+        <div class="tab" data-status="processing">处理中</div>
+        <div class="tab" data-status="completed">已完成</div>
+        <div class="tab" data-status="rejected">已拒绝</div>
+    </div>
+    
+    <div class="pt-24 pb-20 px-4">
+        <!-- 加载动画 -->
+        <div class="loading" id="loadingSpinner">
+            <div class="loading-spinner"></div>
+            <div class="mt-4 text-sm text-gray-500">加载中...</div>
+        </div>
+        
+        <!-- 售后列表容器 -->
+        <div id="afterSaleList">
+            <!-- 售后卡片由JavaScript动态加载 -->
+        </div>
+        
+        <!-- 空状态 -->
+        <div class="empty-state hidden" id="emptyState">
+            <img src="../assets/empty-box.svg" alt="暂无售后" class="empty-icon">
+            <div class="text-gray-500 text-sm mb-4">您暂时没有售后申请</div>
+            <a href="order-list.html" class="text-brand-primary text-sm">去浏览我的订单</a>
+        </div>
+    </div>
+    
+    <!-- 脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 元素引用
+            const tabs = document.querySelectorAll('.tab');
+            const afterSaleList = document.getElementById('afterSaleList');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            const emptyState = document.getElementById('emptyState');
+            
+            // 当前选中的标签
+            let currentTab = 'all';
+            
+            // 模拟售后数据
+            const afterSaleData = [
+                {
+                    id: 'AS2023112301',
+                    orderId: '2023112395824',
+                    type: '退货退款',
+                    reason: '商品质量问题',
+                    status: 'pending',
+                    statusText: '待审核',
+                    date: '2023-11-23 14:30:45',
+                    product: {
+                        name: '北欧设计师台灯',
+                        image: 'https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
+                        price: 599,
+                        quantity: 1,
+                        spec: '黑色'
+                    }
+                },
+                {
+                    id: 'AS2023112201',
+                    orderId: '2023112202341',
+                    type: '换货',
+                    reason: '尺寸/颜色不合适',
+                    status: 'processing',
+                    statusText: '处理中',
+                    date: '2023-11-22 09:15:22',
+                    product: {
+                        name: '北欧风格实木餐桌',
+                        image: 'https://images.unsplash.com/photo-1532372320572-cda25653a694?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
+                        price: 2899,
+                        quantity: 1,
+                        spec: '原木色 120cm'
+                    }
+                },
+                {
+                    id: 'AS2023111501',
+                    orderId: '2023111545678',
+                    type: '维修',
+                    reason: '商品损坏',
+                    status: 'approved',
+                    statusText: '已通过',
+                    date: '2023-11-15 16:42:18',
+                    product: {
+                        name: '北欧风格三人沙发',
+                        image: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
+                        price: 4299,
+                        quantity: 1,
+                        spec: '浅灰色'
+                    }
+                },
+                {
+                    id: 'AS2023110501',
+                    orderId: '2023110534521',
+                    type: '退货退款',
+                    reason: '七天无理由退货',
+                    status: 'completed',
+                    statusText: '已完成',
+                    date: '2023-11-05 10:30:45',
+                    product: {
+                        name: '现代简约床头柜',
+                        image: 'https://images.unsplash.com/photo-1565791380713-1756b9a05343?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
+                        price: 899,
+                        quantity: 2,
+                        spec: '白色'
+                    }
+                },
+                {
+                    id: 'AS2023102801',
+                    orderId: '2023102887654',
+                    type: '补发配件',
+                    reason: '缺少配件',
+                    status: 'rejected',
+                    statusText: '已拒绝',
+                    date: '2023-10-28 08:20:33',
+                    product: {
+                        name: '北欧风格落地灯',
+                        image: 'https://images.unsplash.com/photo-1513506003901-1e6a229e2d15?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
+                        price: 1299,
+                        quantity: 1,
+                        spec: '原木色'
+                    }
+                }
+            ];
+            
+            // 初始化页面
+            function initPage() {
+                // 检查URL参数
+                const urlParams = new URLSearchParams(window.location.search);
+                const statusParam = urlParams.get('status');
+                
+                if (statusParam) {
+                    currentTab = statusParam;
+                    // 更新标签选中状态
+                    tabs.forEach(tab => {
+                        if (tab.getAttribute('data-status') === statusParam) {
+                            tab.classList.add('active');
+                        } else {
+                            tab.classList.remove('active');
+                        }
+                    });
+                }
+                
+                // 加载售后列表
+                loadAfterSaleList(currentTab);
+                
+                // 设置标签切换事件
+                tabs.forEach(tab => {
+                    tab.addEventListener('click', function() {
+                        const status = this.getAttribute('data-status');
+                        
+                        // 更新标签状态
+                        tabs.forEach(t => t.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        // 更新当前标签
+                        currentTab = status;
+                        
+                        // 更新URL参数（不刷新页面）
+                        const url = new URL(window.location);
+                        url.searchParams.set('status', status);
+                        window.history.pushState({}, '', url);
+                        
+                        // 加载对应的售后列表
+                        loadAfterSaleList(status);
+                    });
+                });
+            }
+            
+            // 加载售后列表
+            function loadAfterSaleList(status) {
+                // 显示加载动画
+                loadingSpinner.classList.add('active');
+                afterSaleList.innerHTML = '';
+                emptyState.classList.add('hidden');
+                
+                // 模拟网络请求延迟
+                setTimeout(function() {
+                    // 过滤数据
+                    let filteredData = afterSaleData;
+                    if (status !== 'all') {
+                        filteredData = afterSaleData.filter(item => item.status === status);
+                    }
+                    
+                    // 隐藏加载动画
+                    loadingSpinner.classList.remove('active');
+                    
+                    // 检查是否有数据
+                    if (filteredData.length === 0) {
+                        emptyState.classList.remove('hidden');
+                        return;
+                    }
+                    
+                    // 渲染售后列表
+                    filteredData.forEach(item => {
+                        const card = createAfterSaleCard(item);
+                        afterSaleList.appendChild(card);
+                    });
+                    
+                    // 绑定点击事件
+                    const cards = document.querySelectorAll('.after-sale-card');
+                    cards.forEach(card => {
+                        card.addEventListener('click', function() {
+                            const id = this.getAttribute('data-id');
+                            window.location.href = `after-sale-detail.html?id=${id}`;
+                        });
+                    });
+                }, 500);
+            }
+            
+            // 创建售后卡片
+            function createAfterSaleCard(data) {
+                // 创建卡片容器
+                const card = document.createElement('div');
+                card.className = 'after-sale-card';
+                card.setAttribute('data-id', data.id);
+                
+                // 设置状态样式
+                let statusClass = 'status-pending';
+                switch(data.status) {
+                    case 'approved':
+                    case 'processing':
+                        statusClass = 'status-processing';
+                        break;
+                    case 'completed':
+                        statusClass = 'status-completed';
+                        break;
+                    case 'rejected':
+                        statusClass = 'status-rejected';
+                        break;
+                }
+                
+                // 构建卡片HTML
+                card.innerHTML = `
+                    <div class="after-sale-header">
+                        <div class="text-sm">${data.id}</div>
+                        <div class="status-tag ${statusClass}">${data.statusText}</div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex mb-4">
+                            <div class="w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
+                                <img src="${data.product.image}" alt="${data.product.name}" class="w-full h-full object-cover">
+                            </div>
+                            <div class="ml-3 flex-1">
+                                <div class="text-sm font-medium">${data.product.name}</div>
+                                <div class="text-xs text-gray-500 mt-1">${data.product.spec}</div>
+                                <div class="flex justify-between mt-2">
+                                    <div class="text-sm font-medium">¥${data.product.price}</div>
+                                    <div class="text-sm text-gray-500">x${data.product.quantity}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <div class="text-gray-500">售后类型：${data.type}</div>
+                            <div class="text-gray-500">申请时间：${data.date.split(' ')[0]}</div>
+                        </div>
+                    </div>
+                `;
+                
+                return card;
+            }
+            
+            // 初始化页面
+            initPage();
+        });
+    </script>
+</body>
+</html> 

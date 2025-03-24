@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>支付成功 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        /* 主题颜色变量 - 与首页保持一致 */
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+            
+            /* 渐变色 */
+            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
+            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
+            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
+            
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
+            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
+            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--brand-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 导航栏样式 */
+        .nav-bar {
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-bar i {
+            color: var(--brand-dark-light);
+            transition: color 0.3s ease;
+        }
+
+        .nav-bar i:hover {
+            color: var(--brand-primary);
+        }
+
+        /* 卡片样式 */
+        .section {
+            background-color: white;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* 成功图标样式 */
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--brand-gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            box-shadow: var(--shadow-highlight);
+        }
+
+        .success-icon i {
+            font-size: 40px;
+            color: white;
+        }
+
+        /* 按钮样式 */
+        .btn {
+            transition: all 0.3s ease;
+            border-radius: 24px;
+        }
+
+        .btn-primary {
+            background: var(--brand-gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-highlight);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--brand-dark-light);
+            color: var(--brand-dark);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--brand-light-dark);
+            transform: translateY(-2px);
+        }
+
+        /* 订单信息样式 */
+        .divider {
+            height: 1px;
+            background-color: var(--brand-light-dark);
+            margin: 12px 0;
+        }
+
+        /* 动画效果 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <div class="flex items-center">
+                <a href="home.html" class="text-gray-500 mr-3">
+                    <i class="fas fa-home"></i>
+                </a>
+                <div class="text-lg font-medium">支付结果</div>
+            </div>
+            <div class="flex items-center">
+                <a href="#" class="text-gray-500 ml-3">
+                    <i class="fas fa-headset"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主要内容区 -->
+    <div class="flex-1 pt-14 pb-8 px-4 flex flex-col">
+        <!-- 支付结果 -->
+        <div class="section p-6 text-center animate-fadeInUp">
+            <div class="success-icon mb-4">
+                <i class="fas fa-check"></i>
+            </div>
+            <div class="text-xl font-bold text-brand-primary mb-2">支付成功</div>
+            <div class="text-sm text-gray-500 mb-4">您的订单已支付成功，商家将尽快为您发货</div>
+            <div class="text-2xl font-bold text-brand-primary mb-6">¥2,499.00</div>
+            
+            <div class="flex justify-center space-x-4">
+                <a href="order-detail.html?id=2023112309876" class="btn btn-primary px-6 py-2 text-sm">
+                    查看订单
+                </a>
+                <a href="home.html" class="btn btn-outline px-6 py-2 text-sm">
+                    返回首页
+                </a>
+            </div>
+        </div>
+        
+        <!-- 订单信息 -->
+        <div class="section p-4 mt-4 animate-fadeInUp delay-1">
+            <div class="text-base font-medium mb-3">订单信息</div>
+            
+            <div class="text-sm flex mb-2">
+                <div class="text-gray-500 w-20">订单编号：</div>
+                <div class="flex-1" id="orderNumber">2023112309876</div>
+                <div class="text-brand-primary text-xs" id="copyOrderBtn">复制</div>
+            </div>
+            
+            <div class="text-sm flex mb-2">
+                <div class="text-gray-500 w-20">支付方式：</div>
+                <div class="flex-1" id="paymentMethod">微信支付</div>
+            </div>
+            
+            <div class="text-sm flex mb-2">
+                <div class="text-gray-500 w-20">支付时间：</div>
+                <div id="paymentTime">2023-11-23 15:35:22</div>
+            </div>
+            
+            <div class="text-sm flex">
+                <div class="text-gray-500 w-20">交易单号：</div>
+                <div class="flex-1" id="transactionId">4200001234202311231234567890</div>
+            </div>
+        </div>
+        
+        <!-- 配送信息 -->
+        <div class="section p-4 mt-4 animate-fadeInUp delay-2">
+            <div class="text-base font-medium mb-3">配送信息</div>
+            
+            <div class="flex items-start">
+                <div class="text-gray-500 mt-1 mr-3">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div class="flex-1">
+                    <div class="flex items-center">
+                        <div class="font-medium">李小明</div>
+                        <div class="text-sm text-gray-500 ml-4">13800138000</div>
+                    </div>
+                    <div class="text-sm text-gray-600 mt-1">
+                        广东省深圳市南山区科技园南区A栋1001室
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 商品信息 -->
+        <div class="section p-4 mt-4 animate-fadeInUp delay-3">
+            <div class="text-base font-medium mb-3">商品信息</div>
+            
+            <div class="flex">
+                <div class="w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1567016376408-0226e4d0c1ea?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="北欧风格餐桌" class="w-full h-full object-cover">
+                </div>
+                <div class="ml-3 flex-1">
+                    <div class="text-sm font-medium">北欧风格餐桌</div>
+                    <div class="text-xs text-gray-500 mt-1">白色</div>
+                    <div class="flex justify-between mt-2">
+                        <div class="text-sm font-medium">¥2,499</div>
+                        <div class="text-sm text-gray-500">x1</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 推荐操作 -->
+        <div class="section p-4 mt-4 animate-fadeInUp delay-4">
+            <div class="text-base font-medium mb-3">您可能想要</div>
+            
+            <div class="grid grid-cols-3 gap-3">
+                <a href="#" class="text-center">
+                    <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center mx-auto">
+                        <i class="fas fa-share-alt text-brand-primary"></i>
+                    </div>
+                    <div class="text-xs mt-2">分享订单</div>
+                </a>
+                <a href="#" class="text-center">
+                    <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center mx-auto">
+                        <i class="fas fa-star text-brand-secondary"></i>
+                    </div>
+                    <div class="text-xs mt-2">收藏商品</div>
+                </a>
+                <a href="#" class="text-center">
+                    <div class="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center mx-auto">
+                        <i class="fas fa-shopping-cart text-brand-accent"></i>
+                    </div>
+                    <div class="text-xs mt-2">继续购物</div>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取URL参数
+            function getUrlParam(name) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(name);
+            }
+            
+            // 根据URL参数更新页面内容
+            const orderId = getUrlParam('id');
+            const method = getUrlParam('method') || 'wechat';
+            
+            // 尝试从本地存储获取订单信息
+            try {
+                const orderData = JSON.parse(localStorage.getItem(`order_${orderId}`));
+                if (orderData) {
+                    // 设置订单金额
+                    const amountEls = document.querySelectorAll('.text-2xl.font-bold.text-brand-primary');
+                    amountEls.forEach(el => {
+                        el.textContent = `¥${orderData.amount}`;
+                    });
+                    
+                    // 设置收货地址信息
+                    if (orderData.address) {
+                        const addressNameEl = document.querySelector('.flex.items-center .font-medium');
+                        const addressPhoneEl = document.querySelector('.flex.items-center .text-sm.text-gray-500');
+                        const addressDetailEl = document.querySelector('.text-sm.text-gray-600.mt-1');
+                        
+                        if (addressNameEl && orderData.address.name) {
+                            addressNameEl.textContent = orderData.address.name;
+                        }
+                        
+                        if (addressPhoneEl && orderData.address.phone) {
+                            addressPhoneEl.textContent = orderData.address.phone;
+                        }
+                        
+                        if (addressDetailEl && orderData.address.detail) {
+                            addressDetailEl.textContent = orderData.address.detail;
+                        }
+                    }
+                    
+                    // 更新订单创建时间
+                    const paymentTimeEl = document.getElementById('paymentTime');
+                    if (paymentTimeEl) {
+                        const now = new Date();
+                        const year = now.getFullYear();
+                        const month = (now.getMonth() + 1).toString().padStart(2, '0');
+                        const day = now.getDate().toString().padStart(2, '0');
+                        const hour = now.getHours().toString().padStart(2, '0');
+                        const minute = now.getMinutes().toString().padStart(2, '0');
+                        const second = now.getSeconds().toString().padStart(2, '0');
+                        
+                        paymentTimeEl.textContent = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+                    }
+                }
+            } catch (e) {
+                console.error('获取订单信息失败:', e);
+            }
+            
+            // 设置订单号
+            const orderNumberEl = document.getElementById('orderNumber');
+            if (orderNumberEl && orderId) {
+                orderNumberEl.textContent = orderId;
+            }
+            
+            // 设置支付方式
+            const paymentMethodEl = document.getElementById('paymentMethod');
+            if (paymentMethodEl) {
+                if (method === 'wechat') {
+                    paymentMethodEl.textContent = '微信支付';
+                } else if (method === 'alipay') {
+                    paymentMethodEl.textContent = '支付宝';
+                } else if (method === 'bank') {
+                    paymentMethodEl.textContent = '银行卡支付';
+                }
+            }
+            
+            // 生成随机交易号
+            const generateTransactionId = (method) => {
+                let prefix = '4200000';
+                if (method === 'alipay') {
+                    prefix = '2088000';
+                } else if (method === 'bank') {
+                    prefix = '6200000';
+                }
+                // 生成13位随机数字
+                const randomPart = Math.floor(Math.random() * 10000000000000).toString().padStart(13, '0');
+                return prefix + randomPart;
+            };
+            
+            // 设置交易单号
+            const transactionIdEl = document.getElementById('transactionId');
+            if (transactionIdEl) {
+                transactionIdEl.textContent = generateTransactionId(method);
+            }
+            
+            // 复制订单号功能
+            const copyOrderBtn = document.getElementById('copyOrderBtn');
+            if (copyOrderBtn) {
+                copyOrderBtn.addEventListener('click', function() {
+                    const orderNumber = document.getElementById('orderNumber').textContent;
+                    navigator.clipboard.writeText(orderNumber).then(function() {
+                        alert('订单号已复制到剪贴板');
+                    }, function() {
+                        alert('复制失败，请手动复制');
+                    });
+                });
+            }
+            
+            // 设置查看订单按钮的链接
+            const viewOrderBtn = document.querySelector('a[href^="order-detail.html"]');
+            if (viewOrderBtn && orderId) {
+                viewOrderBtn.href = `order-detail.html?id=${orderId}`;
+            }
+        });
+    </script>
+</body>
+</html> 

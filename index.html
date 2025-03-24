@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家逸生活 - 高品质家具小程序原型</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .prototype-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(375px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+        }
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            background: white;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            margin: 0 auto;
+            border: 10px solid #000;
+        }
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 30px;
+            background: #000;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            z-index: 10;
+        }
+        .status-bar {
+            height: 44px;
+            background: #000;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 12px;
+            position: relative;
+            z-index: 5;
+        }
+        .phone-title {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        iframe {
+            width: 100%;
+            height: calc(100% - 44px);
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto py-8">
+        <h1 class="text-4xl font-bold text-center mb-8">家逸生活 - 微信小程序原型</h1>
+        <p class="text-center text-gray-600 mb-12">Wayfair风格家具售卖微信小程序的高保真原型设计</p>
+        
+        <div class="prototype-container">
+            <!-- 首页 -->
+            <div>
+                <h2 class="phone-title">首页</h2>
+                <div class="phone-frame">
+                    <div class="notch"></div>
+                    <div class="status-bar">
+                        <span>20:20</span>
+                        <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                    </div>
+                    <iframe src="pages/home.html"></iframe>
+                </div>
+            </div>
+            
+            <!-- 分类页 -->
+            <div>
+                <h2 class="phone-title">分类页</h2>
+                <div class="phone-frame">
+                    <div class="notch"></div>
+                    <div class="status-bar">
+                        <span>20:20</span>
+                        <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                    </div>
+                    <iframe src="pages/categorynew.html"></iframe>
+                </div>
+            </div>
+            
+            <!-- 商品列表页 -->
+            <div>
+                <h2 class="phone-title">商品列表页</h2>
+                <div class="phone-frame">
+                    <div class="notch"></div>
+                    <div class="status-bar">
+                        <span>20:20</span>
+                        <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                    </div>
+                    <iframe src="pages/product-list.html"></iframe>
+                </div>
+            </div>
+            
+            <!-- 商品详情页 -->
+            <div>
+                <h2 class="phone-title">商品详情页</h2>
+                <div class="phone-frame">
+                    <div class="notch"></div>
+                    <div class="status-bar">
+                        <span>20:20</span>
+                        <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                    </div>
+                    <iframe src="pages/product-detail.html"></iframe>
+                </div>
+            </div>
+            
+            <!-- 购物车页 -->
+            <div>
+                <h2 class="phone-title">购物车页</h2>
+                <div class="phone-frame">
+                    <div class="notch"></div>
+                    <div class="status-bar">
+                        <span>20:20</span>
+                        <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                    </div>
+                    <iframe src="pages/cart.html"></iframe>
+                </div>
+            </div>
+            
+            <!-- 个人中心页 -->
+            <div>
+                <h2 class="phone-title">个人中心页</h2>
+                <div class="phone-frame">
+                    <div class="notch"></div>
+                    <div class="status-bar">
+                        <span>20:20</span>
+                        <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                    </div>
+                    <iframe src="pages/profile.html"></iframe>
+                </div>
+            </div>
+            
+            <!-- 搜索页 -->
+            <div>
+                <h2 class="phone-title">搜索页</h2>
+                <div class="phone-frame">
+                    <div class="notch"></div>
+                    <div class="status-bar">
+                        <span>20:20</span>
+                        <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                    </div>
+                    <iframe src="pages/search.html"></iframe>
+                </div>
+            </div>
+            
+            <!-- 订单确认页 -->
+            <div>
+                <h2 class="phone-title">订单确认页</h2>
+                <div class="phone-frame">
+                    <div class="notch"></div>
+                    <div class="status-bar">
+                        <span>20:20</span>
+                        <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                    </div>
+                    <iframe src="pages/checkout.html"></iframe>
+                </div>
+            </div>
+                   <!-- 地址管理页 -->
+                   <div>
+                    <h2 class="phone-title">地址管理页</h2>
+                    <div class="phone-frame">
+                        <div class="notch"></div>
+                        <div class="status-bar">
+                            <span>20:20</span>
+                            <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                        </div>
+                        <iframe src="pages/address.html"></iframe>
+                    </div>
+                </div>
+                  <!-- 沙发定制页 -->
+                  <div>
+                  <h2 class="phone-title">沙发定制页</h2>
+                  <div class="phone-frame">
+                      <div class="notch"></div>
+                      <div class="status-bar">
+                          <span>20:20</span>
+                          <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                      </div>
+                      <iframe src="pages/sofa-custom.html"></iframe>
+                  </div>
+              </div>
+               <!-- 订单列表页 -->
+               <div>
+                <h2 class="phone-title">订单列表页</h2>
+                <div class="phone-frame">
+                    <div class="notch"></div>
+                    <div class="status-bar">
+                        <span>20:20</span>
+                        <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                    </div>
+                    <iframe src="pages/order-list.html"></iframe>
+                </div>
+            </div>
+              <!-- 登录页面页 -->
+              <div>
+                <h2 class="phone-title">登录页</h2>
+                <div class="phone-frame">
+                    <div class="notch"></div>
+                    <div class="status-bar">
+                        <span>20:20</span>
+                        <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                    </div>
+                    <iframe src="pages/login.html"></iframe>
+                </div>
+            </div>
+            <!-- 登录页面页 -->
+            <div>
+                <h2 class="phone-title">支付页面</h2>
+                <div class="phone-frame">
+                    <div class="notch"></div>
+                    <div class="status-bar">
+                        <span>20:20</span>
+                        <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                    </div>
+                    <iframe src="pages/payment.html"></iframe>
+                </div>
+            </div>
+            <!-- 订单详情页 -->
+            <div>
+                <h2 class="phone-title">详情页面</h2>
+                <div class="phone-frame">
+                    <div class="notch"></div>
+                    <div class="status-bar">
+                        <span>20:20</span>
+                        <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                    </div>
+                    <iframe src="pages/order-detail.html"></iframe>
+                </div>
+            </div>
+             <!-- 订单评价页 -->
+             <div>
+                <h2 class="phone-title">订单评价页</h2>
+                <div class="phone-frame">
+                    <div class="notch"></div>
+                    <div class="status-bar">
+                        <span>20:20</span>
+                        <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                    </div>
+                    <iframe src="pages/review.html"></iframe>
+                </div>
+            </div>
+              <!-- 客服页面 -->
+              <div>
+                <h2 class="phone-title">客服页面</h2>
+                <div class="phone-frame">
+                    <div class="notch"></div>
+                    <div class="status-bar">
+                        <span>20:20</span>
+                        <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                    </div>
+                    <iframe src="pages/customer-service.html"></iframe>
+                </div>
+            </div>
+            <!-- 客服页面 -->
+            <div>
+                <h2 class="phone-title">消息通知页面</h2>
+                <div class="phone-frame">
+                    <div class="notch"></div>
+                    <div class="status-bar">
+                        <span>20:20</span>
+                        <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                    </div>
+                    <iframe src="pages/notifications.html"></iframe>
+                </div>
+            </div>
+             <!-- 客服页面 -->
+             <div>
+                <h2 class="phone-title">优惠券页面</h2>
+                <div class="phone-frame">
+                    <div class="notch"></div>
+                    <div class="status-bar">
+                        <span>20:20</span>
+                        <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                    </div>
+                    <iframe src="pages/coupons.html"></iframe>
+                </div>
+            </div>
+            <!-- 启动页 -->
+            <div>
+                <h2 class="phone-title">启动页</h2>
+                <div class="phone-frame">
+                    <div class="notch"></div>
+                    <div class="status-bar">
+                        <span>20:20</span>
+                        <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                    </div>
+                    <iframe src="pages/splash.html"></iframe>
+                </div>
+            </div> 
+            <!-- 收藏页 -->    
+            <div>
+                <h2 class="phone-title">收藏页</h2>
+                <div class="phone-frame">
+                    <div class="notch"></div>
+                    <div class="status-bar">
+                        <span>20:20</span>
+                        <span><i class="fas fa-wifi"></i> <i class="fas fa-battery-full"></i></span>
+                    </div>
+                    <iframe src="pages/favorites.html"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>申请售后 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+            
+            /* 渐变色 */
+            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
+            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
+            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
+            
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
+            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
+            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--brand-dark);
+        }
+
+        .section {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .service-option, .reason-option {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--brand-light-dark);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .service-option:last-child, .reason-option:last-child {
+            border-bottom: none;
+        }
+
+        .radio-circle {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid var(--brand-light-dark);
+            margin-right: 12px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .service-option.selected .radio-circle, .reason-option.selected .radio-circle {
+            border-color: var(--brand-primary);
+        }
+
+        .service-option.selected .radio-circle::after, .reason-option.selected .radio-circle::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--brand-primary);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .custom-reason {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--brand-light-dark);
+            border-radius: 8px;
+            margin-top: 12px;
+            resize: none;
+            outline: none;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .custom-reason:focus {
+            border-color: var(--brand-primary);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .upload-section {
+            margin-top: 16px;
+        }
+
+        .upload-box {
+            width: 100px;
+            height: 100px;
+            border: 1px dashed var(--brand-light-dark);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-box:hover {
+            border-color: var(--brand-primary);
+        }
+
+        .image-preview {
+            display: inline-flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .preview-item {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 20px;
+            height: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        #successMessage {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--brand-gradient-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .success-icon i {
+            font-size: 30px;
+            color: white;
+        }
+
+        /* 底部按钮 */
+        .bottom-btn {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+            z-index: 10;
+        }
+
+        .btn-full {
+            width: 100%;
+            padding: 12px;
+            border-radius: 25px;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--brand-gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-highlight);
+        }
+
+        .btn-primary:disabled {
+            background: #cccccc;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .btn-outline {
+            border: 1px solid var(--brand-dark-light);
+            color: var(--brand-dark);
+            background: white;
+        }
+
+        /* 步骤指示器 */
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        .steps::before {
+            content: '';
+            position: absolute;
+            left: 25%;
+            right: 25%;
+            top: 12px;
+            height: 2px;
+            background-color: var(--brand-light-dark);
+            z-index: 0;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--brand-light-dark);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .step.active .step-number {
+            background-color: var(--brand-primary);
+        }
+
+        .step.completed .step-number {
+            background-color: var(--brand-success);
+        }
+
+        .step-label {
+            font-size: 12px;
+            color: var(--brand-dark-light);
+        }
+
+        .step.active .step-label {
+            color: var(--brand-primary);
+            font-weight: 500;
+        }
+
+        .step.completed .step-label {
+            color: var(--brand-success);
+        }
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <div class="flex items-center">
+                <a href="#" class="text-gray-500 mr-3" id="backLink">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="text-lg font-medium">申请售后</div>
+            </div>
+            <div class="flex items-center">
+                <a href="customer-service.html" class="text-gray-500 ml-3">
+                    <i class="fas fa-headset"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="pt-14 pb-24 px-4">
+        <!-- 步骤指示器 -->
+        <div class="steps mt-4 mb-6">
+            <div class="step active" id="step1">
+                <div class="step-number">1</div>
+                <div class="step-label">售后类型</div>
+            </div>
+            <div class="step" id="step2">
+                <div class="step-number">2</div>
+                <div class="step-label">填写信息</div>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-number">3</div>
+                <div class="step-label">提交申请</div>
+            </div>
+        </div>
+        
+        <!-- 第一步：选择售后类型 -->
+        <div id="step1Form">
+            <!-- 订单信息 -->
+            <div class="section p-4 mb-4">
+                <div class="text-sm font-medium mb-3">订单信息</div>
+                
+                <div class="text-sm flex mb-2">
+                    <div class="text-gray-500 w-20">订单编号：</div>
+                    <div class="flex-1" id="orderId">加载中...</div>
+                </div>
+                
+                <div class="text-sm flex mb-2">
+                    <div class="text-gray-500 w-20">下单时间：</div>
+                    <div id="orderTime">加载中...</div>
+                </div>
+                
+                <div class="text-sm flex">
+                    <div class="text-gray-500 w-20">订单状态：</div>
+                    <div id="orderStatus">加载中...</div>
+                </div>
+            </div>
+            
+            <!-- 商品信息 -->
+            <div class="section p-4 mb-4" id="productInfo">
+                <!-- 商品信息将通过JavaScript动态加载 -->
+            </div>
+            
+            <!-- 售后类型 -->
+            <div class="section p-4 mb-4" id="serviceTypeSection">
+                <div class="text-sm font-medium mb-3">请选择售后类型</div>
+                
+                <div class="service-option" data-type="退货退款">
+                    <div class="radio-circle"></div>
+                    <div class="text-sm">退货退款</div>
+                </div>
+                
+                <div class="service-option" data-type="换货">
+                    <div class="radio-circle"></div>
+                    <div class="text-sm">换货</div>
+                </div>
+                
+                <div class="service-option" data-type="维修">
+                    <div class="radio-circle"></div>
+                    <div class="text-sm">维修</div>
+                </div>
+                
+                <div class="service-option" data-type="补发配件">
+                    <div class="radio-circle"></div>
+                    <div class="text-sm">补发配件</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 第二步：填写售后信息 -->
+        <div id="step2Form" class="hidden">
+            <!-- 售后原因 -->
+            <div class="section p-4 mb-4" id="reasonsSection">
+                <div class="text-sm font-medium mb-3">请选择售后原因</div>
+                
+                <div class="reason-option" data-reason="商品质量问题">
+                    <div class="radio-circle"></div>
+                    <div class="text-sm">商品质量问题</div>
+                </div>
+                
+                <div class="reason-option" data-reason="商品损坏">
+                    <div class="radio-circle"></div>
+                    <div class="text-sm">商品损坏</div>
+                </div>
+                
+                <div class="reason-option" data-reason="商品与描述不符">
+                    <div class="radio-circle"></div>
+                    <div class="text-sm">商品与描述不符</div>
+                </div>
+                
+                <div class="reason-option" data-reason="缺少配件">
+                    <div class="radio-circle"></div>
+                    <div class="text-sm">缺少配件</div>
+                </div>
+                
+                <div class="reason-option" data-reason="尺寸/颜色不合适">
+                    <div class="radio-circle"></div>
+                    <div class="text-sm">尺寸/颜色不合适</div>
+                </div>
+                
+                <div class="reason-option" data-reason="七天无理由退货">
+                    <div class="radio-circle"></div>
+                    <div class="text-sm">七天无理由退货</div>
+                </div>
+                
+                <div class="reason-option" data-reason="其他原因">
+                    <div class="radio-circle"></div>
+                    <div class="text-sm">其他原因</div>
+                </div>
+                
+                <!-- 其他原因输入框，默认隐藏 -->
+                <textarea class="custom-reason hidden" id="customReason" placeholder="请输入售后原因..." maxlength="200"></textarea>
+            </div>
+            
+            <!-- 问题描述 -->
+            <div class="section p-4 mb-4">
+                <div class="text-sm font-medium mb-3">问题描述</div>
+                <textarea class="custom-reason" id="problemDescription" placeholder="请详细描述您遇到的问题，有助于我们更好地为您解决问题..." maxlength="500"></textarea>
+            </div>
+            
+            <!-- 上传图片 -->
+            <div class="section p-4 mb-4">
+                <div class="text-sm font-medium mb-3">上传图片（最多5张）</div>
+                <div class="text-xs text-gray-500 mb-3">请上传清晰的问题照片，便于我们了解问题</div>
+                
+                <div class="image-preview" id="imagePreview">
+                    <div class="upload-box" id="uploadBox">
+                        <i class="fas fa-plus text-gray-400"></i>
+                        <div class="text-xs text-gray-400 mt-1">上传照片</div>
+                    </div>
+                </div>
+                <input type="file" id="imageUpload" accept="image/*" multiple class="hidden">
+            </div>
+            
+            <!-- 联系信息 -->
+            <div class="section p-4 mb-4">
+                <div class="text-sm font-medium mb-3">联系信息</div>
+                
+                <div class="mb-3">
+                    <div class="text-sm mb-1">联系人</div>
+                    <input type="text" id="contactName" class="w-full py-2 px-3 border border-gray-200 rounded-md text-sm" placeholder="请输入联系人姓名">
+                </div>
+                
+                <div>
+                    <div class="text-sm mb-1">联系电话</div>
+                    <input type="tel" id="contactPhone" class="w-full py-2 px-3 border border-gray-200 rounded-md text-sm" placeholder="请输入联系电话">
+                </div>
+            </div>
+        </div>
+        
+        <!-- 第三步：提交申请结果 -->
+        <div id="step3Form" class="hidden section p-4 mb-4">
+            <div id="processingMessage" class="text-center py-8">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-brand-primary"></div>
+                <div class="mt-4 text-sm">正在提交您的售后申请，请稍候...</div>
+            </div>
+            
+            <div id="successMessage" class="hidden">
+                <div class="success-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div class="text-lg font-medium mb-2">申请提交成功</div>
+                <div class="text-sm text-gray-500 mb-6 text-center">您的售后申请已提交成功，我们将尽快处理。<br>您可以在"我的售后"中查看申请进度。</div>
+                <div class="text-sm text-brand-primary mb-2">售后单号：<span id="afterSaleId">AS20230501001</span></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部按钮 -->
+    <div class="bottom-btn">
+        <button id="nextStepBtn" class="btn-full btn-primary" disabled>下一步</button>
+        <button id="prevStepBtn" class="btn-full btn-outline mt-3 hidden">上一步</button>
+        <button id="viewAfterSalesBtn" class="btn-full btn-primary hidden">查看我的售后</button>
+        <button id="returnToOrdersBtn" class="btn-full btn-outline mt-3 hidden">返回订单列表</button>
+    </div>
+    
+    <!-- 脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取URL参数
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('id');
+            const returnTab = urlParams.get('from');
+            
+            // 返回链接处理
+            const backLink = document.getElementById('backLink');
+            if (backLink) {
+                if (returnTab) {
+                    backLink.href = `order-list.html?status=${returnTab}`;
+                } else {
+                    backLink.href = 'order-list.html';
+                }
+            }
+            
+            // 元素引用
+            const step1 = document.getElementById('step1');
+            const step2 = document.getElementById('step2');
+            const step3 = document.getElementById('step3');
+            const step1Form = document.getElementById('step1Form');
+            const step2Form = document.getElementById('step2Form');
+            const step3Form = document.getElementById('step3Form');
+            const nextStepBtn = document.getElementById('nextStepBtn');
+            const prevStepBtn = document.getElementById('prevStepBtn');
+            const viewAfterSalesBtn = document.getElementById('viewAfterSalesBtn');
+            const returnToOrdersBtn = document.getElementById('returnToOrdersBtn');
+            const processingMessage = document.getElementById('processingMessage');
+            const successMessage = document.getElementById('successMessage');
+            
+            // 售后类型选择
+            const serviceOptions = document.querySelectorAll('.service-option');
+            const reasonOptions = document.querySelectorAll('.reason-option');
+            const customReasonInput = document.getElementById('customReason');
+            const problemDescription = document.getElementById('problemDescription');
+            const contactName = document.getElementById('contactName');
+            const contactPhone = document.getElementById('contactPhone');
+            
+            // 存储选择的数据
+            let selectedServiceType = '';
+            let selectedReason = '';
+            let uploadedImages = [];
+            
+            // 图片上传相关
+            const uploadBox = document.getElementById('uploadBox');
+            const imageUpload = document.getElementById('imageUpload');
+            const imagePreview = document.getElementById('imagePreview');
+            
+            // 加载订单信息
+            function loadOrderInfo() {
+                // 这里应该是从API获取数据
+                // 演示用，假设我们有这些信息
+                document.getElementById('orderId').textContent = orderId || '2023112309876';
+                document.getElementById('orderTime').textContent = '2023-11-23 10:30:45';
+                document.getElementById('orderStatus').textContent = '已完成';
+                
+                // 加载商品信息
+                loadProductInfo();
+            }
+            
+            // 加载商品信息
+            function loadProductInfo() {
+                const productInfo = document.getElementById('productInfo');
+                
+                // 根据订单ID，这里应该从API获取商品数据
+                // 演示用，假设我们有这些商品
+                productInfo.innerHTML = `
+                    <div class="text-sm font-medium mb-3">商品信息</div>
+                    
+                    <div class="flex mb-4">
+                        <div class="w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="设计师台灯" class="w-full h-full object-cover">
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <div class="text-sm font-medium">北欧设计师台灯</div>
+                            <div class="text-xs text-gray-500 mt-1">黑色</div>
+                            <div class="flex justify-between mt-2">
+                                <div class="text-sm font-medium">¥599</div>
+                                <div class="text-sm text-gray-500">x1</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex">
+                        <div class="w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="北欧风格沙发" class="w-full h-full object-cover">
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <div class="text-sm font-medium">北欧风格三人沙发</div>
+                            <div class="text-xs text-gray-500 mt-1">浅灰色</div>
+                            <div class="flex justify-between mt-2">
+                                <div class="text-sm font-medium">¥4,299</div>
+                                <div class="text-sm text-gray-500">x1</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // 售后类型选择
+            serviceOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除其他选项的selected类
+                    serviceOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // 为当前选项添加selected类
+                    this.classList.add('selected');
+                    
+                    // 获取选中的售后类型
+                    selectedServiceType = this.getAttribute('data-type');
+                    
+                    // 启用下一步按钮
+                    nextStepBtn.disabled = false;
+                });
+            });
+            
+            // 售后原因选择
+            reasonOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除其他选项的selected类
+                    reasonOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // 为当前选项添加selected类
+                    this.classList.add('selected');
+                    
+                    // 获取选中的原因
+                    selectedReason = this.getAttribute('data-reason');
+                    
+                    // 如果选择"其他原因"，显示输入框
+                    if (selectedReason === '其他原因') {
+                        customReasonInput.classList.remove('hidden');
+                        customReasonInput.focus();
+                    } else {
+                        customReasonInput.classList.add('hidden');
+                    }
+                    
+                    validateStep2();
+                });
+            });
+            
+            // 问题描述输入监听
+            problemDescription.addEventListener('input', validateStep2);
+            contactName.addEventListener('input', validateStep2);
+            contactPhone.addEventListener('input', validateStep2);
+            
+            // 其他原因输入框监听
+            customReasonInput.addEventListener('input', function() {
+                validateStep2();
+            });
+            
+            // 图片上传
+            uploadBox.addEventListener('click', function() {
+                imageUpload.click();
+            });
+            
+            imageUpload.addEventListener('change', function() {
+                const files = this.files;
+                
+                if (files.length > 0) {
+                    for (let i = 0; i < files.length; i++) {
+                        if (uploadedImages.length >= 5) {
+                            alert('最多只能上传5张图片');
+                            break;
+                        }
+                        
+                        const file = files[i];
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            const imgSrc = e.target.result;
+                            uploadedImages.push(imgSrc);
+                            
+                            // 创建预览元素
+                            const previewItem = document.createElement('div');
+                            previewItem.className = 'preview-item';
+                            previewItem.innerHTML = `
+                                <img src="${imgSrc}" alt="Preview">
+                                <div class="remove-image" data-index="${uploadedImages.length - 1}"><i class="fas fa-times"></i></div>
+                            `;
+                            
+                            // 插入到上传按钮之前
+                            imagePreview.insertBefore(previewItem, uploadBox);
+                            
+                            // 如果达到最大上传数量，隐藏上传按钮
+                            if (uploadedImages.length >= 5) {
+                                uploadBox.style.display = 'none';
+                            }
+                            
+                            // 添加删除按钮事件
+                            const removeBtn = previewItem.querySelector('.remove-image');
+                            removeBtn.addEventListener('click', function(e) {
+                                e.stopPropagation();
+                                const index = parseInt(this.getAttribute('data-index'));
+                                uploadedImages.splice(index, 1);
+                                previewItem.remove();
+                                
+                                // 重新显示上传按钮
+                                uploadBox.style.display = 'flex';
+                                
+                                // 重新设置索引
+                                const removeBtns = document.querySelectorAll('.remove-image');
+                                removeBtns.forEach((btn, idx) => {
+                                    btn.setAttribute('data-index', idx);
+                                });
+                            });
+                        };
+                        
+                        reader.readAsDataURL(file);
+                    }
+                }
+                
+                // 清空文件选择，允许重复选择相同文件
+                this.value = '';
+            });
+            
+            // 检查第二步是否有效
+            function validateStep2() {
+                let isValid = false;
+                
+                // 检查是否选择了原因
+                if (selectedReason) {
+                    if (selectedReason === '其他原因') {
+                        // 如果是其他原因，检查输入框是否有内容
+                        isValid = customReasonInput.value.trim().length > 0;
+                    } else {
+                        isValid = true;
+                    }
+                }
+                
+                // 检查问题描述
+                isValid = isValid && problemDescription.value.trim().length > 0;
+                
+                // 检查联系信息
+                isValid = isValid && contactName.value.trim().length > 0 && contactPhone.value.trim().length > 0;
+                
+                // 更新按钮状态
+                nextStepBtn.disabled = !isValid;
+            }
+            
+            // 下一步按钮点击事件
+            nextStepBtn.addEventListener('click', function() {
+                if (step1.classList.contains('active')) {
+                    // 从第一步到第二步
+                    step1.classList.remove('active');
+                    step1.classList.add('completed');
+                    step2.classList.add('active');
+                    
+                    step1Form.classList.add('hidden');
+                    step2Form.classList.remove('hidden');
+                    
+                    prevStepBtn.classList.remove('hidden');
+                    nextStepBtn.disabled = true;
+                    nextStepBtn.textContent = '提交申请';
+                    
+                    // 强制滚动到顶部
+                    window.scrollTo(0, 0);
+                } else if (step2.classList.contains('active')) {
+                    // 从第二步到第三步
+                    step2.classList.remove('active');
+                    step2.classList.add('completed');
+                    step3.classList.add('active');
+                    
+                    step2Form.classList.add('hidden');
+                    step3Form.classList.remove('hidden');
+                    
+                    nextStepBtn.classList.add('hidden');
+                    prevStepBtn.classList.add('hidden');
+                    
+                    // 提交申请
+                    submitAfterSaleApplication();
+                }
+            });
+            
+            // 上一步按钮点击事件
+            prevStepBtn.addEventListener('click', function() {
+                if (step2.classList.contains('active')) {
+                    // 从第二步返回第一步
+                    step2.classList.remove('active');
+                    step1.classList.remove('completed');
+                    step1.classList.add('active');
+                    
+                    step2Form.classList.add('hidden');
+                    step1Form.classList.remove('hidden');
+                    
+                    prevStepBtn.classList.add('hidden');
+                    nextStepBtn.disabled = false;
+                    nextStepBtn.textContent = '下一步';
+                    
+                    // 强制滚动到顶部
+                    window.scrollTo(0, 0);
+                }
+            });
+            
+            // 查看我的售后按钮点击事件
+            viewAfterSalesBtn.addEventListener('click', function() {
+                // 跳转到售后列表页面
+                window.location.href = 'after-sale-list.html';
+            });
+            
+            // 返回订单列表按钮点击事件
+            returnToOrdersBtn.addEventListener('click', function() {
+                // 跳转回订单列表页面
+                if (returnTab) {
+                    window.location.href = `order-list.html?status=${returnTab}`;
+                } else {
+                    window.location.href = 'order-list.html';
+                }
+            });
+            
+            // 提交售后申请
+            function submitAfterSaleApplication() {
+                // 在真实环境中，这里应该发送AJAX请求到服务器
+                // 模拟网络请求延迟
+                setTimeout(function() {
+                    // 隐藏处理中消息，显示成功消息
+                    processingMessage.classList.add('hidden');
+                    successMessage.classList.remove('hidden');
+                    
+                    // 生成随机售后单号
+                    const afterSaleId = 'AS' + new Date().getTime().toString().substr(-10);
+                    document.getElementById('afterSaleId').textContent = afterSaleId;
+                    
+                    // 显示底部按钮
+                    viewAfterSalesBtn.classList.remove('hidden');
+                    returnToOrdersBtn.classList.remove('hidden');
+                }, 2000);
+            }
+            
+            // 初始化页面
+            loadOrderInfo();
+        });
+    </script>
+</body>
+</html> 

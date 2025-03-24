@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>评价商品 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        /* 主题颜色变量 - 与首页保持一致 */
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+            
+            /* 渐变色 */
+            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
+            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
+            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
+            
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
+            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
+            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--brand-dark);
+        }
+
+        /* 导航栏样式 */
+        .nav-bar {
+            background: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-bar i {
+            color: var(--brand-dark-light);
+            transition: color 0.3s ease;
+        }
+
+        .nav-bar i:hover {
+            color: var(--brand-primary);
+        }
+
+        /* 卡片样式 */
+        .section {
+            background-color: white;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* 星级评分样式 */
+        .star-rating {
+            display: flex;
+            align-items: center;
+            margin: 16px 0;
+        }
+
+        .star-rating .star {
+            font-size: 28px;
+            color: var(--brand-light-dark);
+            margin-right: 8px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .star-rating .star.active {
+            color: var(--brand-secondary);
+        }
+
+        .star-rating .star:hover {
+            color: var(--brand-secondary-light);
+        }
+
+        /* 标签选择样式 */
+        .tag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .tag {
+            padding: 6px 12px;
+            background-color: var(--brand-light);
+            border-radius: 16px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tag:hover {
+            background-color: var(--brand-light-dark);
+        }
+
+        .tag.active {
+            background-color: var(--brand-primary-transparent);
+            color: var(--brand-primary);
+        }
+
+        /* 文本区域样式 */
+        .review-textarea {
+            width: 100%;
+            border: 1px solid var(--brand-light-dark);
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 14px;
+            resize: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .review-textarea:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 2px var(--brand-primary-transparent);
+        }
+
+        /* 图片上传样式 */
+        .upload-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .upload-item {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .upload-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .upload-item .delete-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 20px;
+            height: 20px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .upload-btn {
+            width: 80px;
+            height: 80px;
+            border: 1px dashed var(--brand-light-dark);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-btn:hover {
+            border-color: var(--brand-primary);
+            background-color: var(--brand-primary-transparent);
+        }
+
+        .upload-btn i {
+            font-size: 24px;
+            color: var(--brand-dark-light);
+            margin-bottom: 4px;
+        }
+
+        .upload-btn span {
+            font-size: 12px;
+            color: var(--brand-dark-light);
+        }
+
+        /* 匿名开关样式 */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--brand-light-dark);
+            transition: .4s;
+            border-radius: 20px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--brand-primary);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        /* 提交按钮样式 */
+        .submit-btn {
+            background: var(--brand-gradient-primary);
+            color: white;
+            padding: 12px 0;
+            border-radius: 24px;
+            font-weight: 500;
+            width: 100%;
+            text-align: center;
+            box-shadow: var(--shadow-highlight);
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <div class="flex items-center">
+                <a href="javascript:history.back()" class="text-gray-500 mr-3">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="text-lg font-medium">评价商品</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主要内容区 -->
+    <div class="pt-14 pb-24 px-4">
+        <!-- 商品信息 -->
+        <div class="section p-4 animate-fadeIn">
+            <div class="flex">
+                <div class="w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="北欧风格床头柜" class="w-full h-full object-cover" id="product-image">
+                </div>
+                <div class="ml-3 flex-1">
+                    <div class="text-sm font-medium" id="product-name">北欧风格床头柜</div>
+                    <div class="text-xs text-gray-500 mt-1" id="product-spec">原木色</div>
+                    <div class="text-sm font-medium mt-2" id="product-price">¥899</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 评价内容 -->
+        <div class="section p-4 mt-4 animate-fadeIn" style="animation-delay: 0.1s;">
+            <div class="text-base font-medium mb-2">商品评分</div>
+            <div class="text-xs text-gray-500 mb-4">请为该商品评分（必选）</div>
+            
+            <!-- 星级评分 -->
+            <div class="star-rating" id="star-rating">
+                <i class="fas fa-star star" data-rating="1"></i>
+                <i class="fas fa-star star" data-rating="2"></i>
+                <i class="fas fa-star star" data-rating="3"></i>
+                <i class="fas fa-star star" data-rating="4"></i>
+                <i class="fas fa-star star" data-rating="5"></i>
+                <div class="ml-3 text-sm text-brand-primary" id="rating-text">请点击星星评分</div>
+            </div>
+            
+            <!-- 快捷标签 -->
+            <div class="text-base font-medium mb-2">评价标签</div>
+            <div class="text-xs text-gray-500 mb-2">选择标签快速评价（可选）</div>
+            <div class="tag-container">
+                <div class="tag">质量好</div>
+                <div class="tag">性价比高</div>
+                <div class="tag">外观漂亮</div>
+                <div class="tag">做工精细</div>
+                <div class="tag">材质环保</div>
+                <div class="tag">物流快</div>
+                <div class="tag">服务好</div>
+                <div class="tag">包装完好</div>
+            </div>
+            
+            <!-- 评价内容 -->
+            <div class="text-base font-medium mb-2">评价内容</div>
+            <div class="text-xs text-gray-500 mb-2">分享您的使用体验（必填）</div>
+            <textarea class="review-textarea" rows="4" placeholder="请输入您对商品的评价，分享您的购买体验和使用感受..." id="review-content"></textarea>
+            <div class="text-xs text-gray-500 text-right mt-1">0/500</div>
+            
+            <!-- 上传图片 -->
+            <div class="text-base font-medium mb-2 mt-4">上传图片</div>
+            <div class="text-xs text-gray-500 mb-2">上传商品实拍图片（可选，最多9张）</div>
+            <div class="upload-container" id="upload-container">
+                <div class="upload-btn" id="upload-btn">
+                    <i class="fas fa-camera"></i>
+                    <span>上传图片</span>
+                </div>
+            </div>
+            
+            <!-- 匿名评价 -->
+            <div class="flex items-center justify-between mt-6">
+                <div class="text-sm">匿名评价</div>
+                <label class="switch">
+                    <input type="checkbox" id="anonymous-switch">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="text-xs text-gray-500 mt-1">开启后，您的用户名将不会显示在评价中</div>
+        </div>
+        
+        <!-- 提交按钮 -->
+        <div class="mt-6 animate-fadeIn" style="animation-delay: 0.2s;">
+            <button class="submit-btn" id="submit-btn">提交评价</button>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取URL参数
+            function getUrlParam(name) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(name);
+            }
+            
+            // 根据订单ID和商品ID加载商品信息
+            const orderId = getUrlParam('orderId');
+            const productId = getUrlParam('productId');
+            
+            if (orderId && productId) {
+                // 实际应用中，这里会从服务器获取订单和商品信息
+                // 这里仅做演示，使用静态数据
+                console.log(`加载订单 ${orderId} 中的商品 ${productId} 信息`);
+                
+                // 模拟从服务器获取数据
+                // 实际项目中应该通过API获取
+            }
+            
+            // 星级评分功能
+            const stars = document.querySelectorAll('.star');
+            const ratingText = document.getElementById('rating-text');
+            const ratingTexts = ['很差', '较差', '一般', '很好', '非常好'];
+            let currentRating = 0;
+            
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = parseInt(this.getAttribute('data-rating'));
+                    currentRating = rating;
+                    
+                    // 更新星星状态
+                    stars.forEach((s, index) => {
+                        if (index < rating) {
+                            s.classList.add('active');
+                        } else {
+                            s.classList.remove('active');
+                        }
+                    });
+                    
+                    // 更新评分文字
+                    ratingText.textContent = ratingTexts[rating - 1];
+                });
+                
+                star.addEventListener('mouseover', function() {
+                    const rating = parseInt(this.getAttribute('data-rating'));
+                    
+                    // 鼠标悬停效果
+                    stars.forEach((s, index) => {
+                        if (index < rating) {
+                            s.classList.add('active');
+                        } else {
+                            s.classList.remove('active');
+                        }
+                    });
+                });
+                
+                star.addEventListener('mouseout', function() {
+                    // 恢复当前评分状态
+                    stars.forEach((s, index) => {
+                        if (index < currentRating) {
+                            s.classList.add('active');
+                        } else {
+                            s.classList.remove('active');
+                        }
+                    });
+                });
+            });
+            
+            // 标签选择功能
+            const tags = document.querySelectorAll('.tag');
+            tags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                });
+            });
+            
+            // 文本区域字数统计
+            const reviewContent = document.getElementById('review-content');
+            const charCount = document.querySelector('.text-right');
+            
+            reviewContent.addEventListener('input', function() {
+                const count = this.value.length;
+                charCount.textContent = `${count}/500`;
+                
+                // 超出字数限制
+                if (count > 500) {
+                    charCount.classList.add('text-brand-error');
+                    this.value = this.value.substring(0, 500);
+                    charCount.textContent = '500/500';
+                } else {
+                    charCount.classList.remove('text-brand-error');
+                }
+            });
+            
+            // 图片上传功能
+            const uploadBtn = document.getElementById('upload-btn');
+            const uploadContainer = document.getElementById('upload-container');
+            let uploadedImages = 0;
+            
+            uploadBtn.addEventListener('click', function() {
+                if (uploadedImages >= 9) {
+                    alert('最多只能上传9张图片');
+                    return;
+                }
+                
+                // 模拟文件选择和上传
+                // 实际应用中应该使用input[type=file]和文件上传API
+                simulateImageUpload();
+            });
+            
+            function simulateImageUpload() {
+                // 模拟上传成功后添加图片预览
+                const imageUrls = [
+                    'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
+                    'https://images.unsplash.com/photo-1517705008128-361805f42e86?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80',
+                    'https://images.unsplash.com/photo-1551298370-9d3d53740c72?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80'
+                ];
+                
+                const randomIndex = Math.floor(Math.random() * imageUrls.length);
+                const imageUrl = imageUrls[randomIndex];
+                
+                addImagePreview(imageUrl);
+            }
+            
+            function addImagePreview(imageUrl) {
+                const uploadItem = document.createElement('div');
+                uploadItem.className = 'upload-item';
+                uploadItem.innerHTML = `
+                    <img src="${imageUrl}" alt="上传图片">
+                    <div class="delete-btn">
+                        <i class="fas fa-times"></i>
+                    </div>
+                `;
+                
+                // 插入到上传按钮前面
+                uploadContainer.insertBefore(uploadItem, uploadBtn);
+                uploadedImages++;
+                
+                // 删除图片功能
+                const deleteBtn = uploadItem.querySelector('.delete-btn');
+                deleteBtn.addEventListener('click', function() {
+                    uploadItem.remove();
+                    uploadedImages--;
+                });
+                
+                // 如果达到最大数量，隐藏上传按钮
+                if (uploadedImages >= 9) {
+                    uploadBtn.style.display = 'none';
+                }
+            }
+            
+            // 提交评价
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.addEventListener('click', function() {
+                // 验证必填项
+                if (currentRating === 0) {
+                    alert('请为商品评分');
+                    return;
+                }
+                
+                if (!reviewContent.value.trim()) {
+                    alert('请输入评价内容');
+                    return;
+                }
+                
+                // 收集评价数据
+                const isAnonymous = document.getElementById('anonymous-switch').checked;
+                const selectedTags = Array.from(document.querySelectorAll('.tag.active')).map(tag => tag.textContent);
+                
+                const reviewData = {
+                    orderId,
+                    productId,
+                    rating: currentRating,
+                    content: reviewContent.value,
+                    tags: selectedTags,
+                    isAnonymous,
+                    imageCount: uploadedImages
+                };
+                
+                console.log('提交评价数据:', reviewData);
+                
+                // 模拟提交成功
+                alert('评价提交成功！');
+                
+                // 返回订单详情页
+                setTimeout(() => {
+                    window.location.href = `order-detail.html?id=${orderId}`;
+                }, 500);
+            });
+        });
+    </script>
+</body>
+</html> 
