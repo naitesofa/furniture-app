@@ -189,7 +189,7 @@
 
         /* 小计和价格样式优化 */
         .price {
-            color: var(--brand-primary);
+            color: var(--brand-dark);
             font-weight: 500;
         }
         
@@ -252,17 +252,6 @@
             }
         }
 
-        /* 合计金额高亮区域 */
-        .total-highlight-area {
-            background-color: rgba(42, 157, 143, 0.05);
-            transition: all 0.2s ease;
-            /* border-left: 3px solid var(--brand-primary); */
-        }
-
-        .total-highlight-area:hover {
-            background-color: rgba(42, 157, 143, 0.1);
-        }
-        
         /* 底部结算栏样式优化 */
         .bottom-bar {
             background: white;
@@ -518,7 +507,7 @@
             <div class="divider"></div>
             <div class="py-1.5 flex items-center">
                 <div class="text-sm font-medium mr-3 flex-shrink-0 text-gray-700">订单备注</div>
-                <input id="orderRemark" type="text" placeholder="250字以内" 
+                <input id="orderRemark" type="text" placeholder="备注建议提前协商" 
                     class="w-full text-sm focus:outline-none border-0 bg-transparent"
                     style="placeholder-color: #9CA3AF;"
                     maxlength="250" />
@@ -526,25 +515,25 @@
             
             <!-- 小计 -->
             <div class="divider"></div>
-            <div class="flex justify-between text-sm mb-1.5">
+            <div class="flex justify-between text-sm mb-2">
                 <div class="price-summary-label flex-1">商品金额</div>
                 <div class="price text-right">¥5,097</div>
             </div>
-            <div class="flex justify-between text-sm mb-1.5">
+            <div class="flex justify-between text-sm mb-2">
                 <div class="price-summary-label flex-1">运费</div>
-                <div class="text-right">¥0.00</div>
+                <div class="price text-right">¥0.00</div>
             </div>
-            <div class="flex justify-between text-sm mb-1.5 p-1.5 rounded-lg cursor-pointer transition-colors hover:bg-gray-50" id="couponDiscountRow" onclick="window.location.href='coupons.html?from=checkout'" style="padding-left: 0;">
+            <div class="flex justify-between text-sm mb-2 p-1.5 rounded-lg cursor-pointer transition-colors hover:bg-gray-50" id="couponDiscountRow" onclick="window.location.href='coupons.html?from=checkout'" style="padding-left: 0;">
                 <div class="price-summary-label flex-1">优惠券</div>
                 <div class="price text-right flex items-center" id="couponDiscountValueContainer">
-                    <span id="couponDiscountValue" style="color: #E53935;">-¥0.00</span>
+                    <span id="couponDiscountValue">-¥0.00</span>
                     <i class="fas fa-chevron-right text-gray-400 text-xs ml-2"></i>
                 </div>
             </div>
             <!-- <div class="divider"></div> -->
-            <div class="flex justify-between items-center p-1.5 rounded-lg total-highlight-area">
-                <div class="price-summary-highlight text-base flex-1">合计</div>
-                <div class="price total-price text-right">¥5,097</div>
+            <div class="flex justify-end items-center text-sm p-1.5">
+                <span class="price-summary-label mr-1">合计</span>
+                <span class="price text-right" id="subtotalValue">¥5,097</span>
             </div>
         </div>
         
@@ -1021,10 +1010,12 @@
 
                 if (discount > 0) {
                     couponDiscountValueElement.textContent = `-¥${discount.toFixed(2)}`;
-                    couponDiscountValueElement.classList.add('text-red-500', 'font-medium'); // Style for applied discount
+                    couponDiscountValueElement.classList.add('text-red-500', 'font-medium');
+                    couponDiscountValueElement.classList.remove('text-gray-500', 'text-xs'); // Remove gray and smaller size
                 } else {
-                    couponDiscountValueElement.textContent = `-¥0.00`;
-                    couponDiscountValueElement.classList.remove('text-red-500', 'font-medium'); // Remove style if no discount
+                    couponDiscountValueElement.textContent = `暂无可用`; 
+                    couponDiscountValueElement.classList.remove('text-red-500', 'font-medium'); 
+                    couponDiscountValueElement.classList.add('text-gray-500', 'text-xs'); // Add gray and smaller size
                 }
                 
                 // 更新总价 (always calculate, even if discount is 0)
@@ -1036,13 +1027,9 @@
 
             } else {
                 // 没有选择优惠券时的处理
-                couponDiscountValueElement.textContent = `-¥0.00`;
+                couponDiscountValueElement.textContent = `暂无可用`;
                 couponDiscountValueElement.classList.remove('text-red-500', 'font-medium');
-                 // Ensure total price is correct if no coupon was ever selected
-                const totalPriceElements = document.querySelectorAll('.total-price');
-                totalPriceElements.forEach(el => {
-                    el.textContent = `¥${subtotal.toFixed(2)}`;
-                });
+                couponDiscountValueElement.classList.add('text-gray-500', 'text-xs'); // Add gray and smaller size
             }
             
             // 处理来自优惠券页面的返回
@@ -1106,24 +1093,26 @@
             if (discount > 0) {
                 couponDiscountValueElement.textContent = `-¥${discount.toFixed(2)}`;
                 couponDiscountValueElement.classList.add('text-red-500', 'font-medium');
+                couponDiscountValueElement.classList.remove('text-gray-500', 'text-xs'); // Remove gray and smaller size
             } else {
-                couponDiscountValueElement.textContent = `-¥0.00`;
+                couponDiscountValueElement.textContent = `暂无可用`; 
                 couponDiscountValueElement.classList.remove('text-red-500', 'font-medium');
+                couponDiscountValueElement.classList.add('text-gray-500', 'text-xs'); // Add gray and smaller size
             }
 
             // 计算最终价格
             const finalTotal = total - discount;
             
-            // 更新所有总价显示
+            // 更新所有总价显示 (bottom bar and maybe others if exist)
             const totalPriceElements = document.querySelectorAll('.total-price');
             totalPriceElements.forEach(el => {
                 el.textContent = `¥${finalTotal.toFixed(2)}`;
             });
             
-            // 更新小计部分的合计金额 - 使用更精确的选择器
-            const summaryTotal = document.querySelector('.total-highlight-area .price');
-            if (summaryTotal) {
-                summaryTotal.textContent = `¥${finalTotal.toFixed(2)}`;
+            // 更新小计部分的合计金额 - Target the new element
+            const subtotalValueElement = document.getElementById('subtotalValue'); 
+            if (subtotalValueElement) {
+                subtotalValueElement.textContent = `¥${finalTotal.toFixed(2)}`;
             }
             
             // 更新暂存的商品数量，以便后续使用
