@@ -56,6 +56,23 @@
             --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
         }
 
+        /* 自定义颜色类，用于地址标签等 */
+        .bg-primary-50 {
+            background-color: rgba(42, 157, 143, 0.05);
+        }
+        
+        .bg-primary-100 {
+            background-color: rgba(42, 157, 143, 0.1);
+        }
+        
+        .text-primary-600 {
+            color: var(--brand-primary);
+        }
+        
+        .border-primary-500 {
+            border-color: var(--brand-primary);
+        }
+
         body {
             background-color: var(--bg-color);
             color: var(--brand-dark);
@@ -64,14 +81,14 @@
         .section {
             background-color: white;
             border-radius: 16px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             box-shadow: var(--shadow-sm);
         }
 
         .divider {
             height: 1px;
             background-color: var(--brand-light-dark);
-            margin: 12px 0;
+            margin: 5px 0;
         }
 
         /* 导航栏样式 */
@@ -111,7 +128,42 @@
         .product-image:hover {
             transform: scale(1.02);
         }
-
+        
+        /* 数量调整按钮触摸反馈 */
+        .quantity-btn {
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .quantity-btn:active {
+            background-color: var(--brand-primary-transparent);
+            transform: scale(0.95);
+        }
+        
+        .quantity-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(42, 157, 143, 0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.2s ease-out;
+        }
+        
+        .quantity-btn:active::after {
+            transform: translate(-50%, -50%) scale(2);
+        }
+        
+        /* 商品名称样式强化 */
+        .product-name {
+            font-weight: 500;
+            color: var(--brand-dark);
+        }
+        
         /* 配送方式样式 */
         .delivery-option {
             transition: background-color 0.3s ease;
@@ -135,31 +187,115 @@
             border-color: var(--brand-primary);
         }
 
-        /* 底部结算栏样式 */
+        /* 小计和价格样式优化 */
+        .price {
+            color: var(--brand-primary);
+            font-weight: 500;
+        }
+        
+        .price.total-price {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--brand-primary-dark);
+        }
+        
+        .price-summary-label {
+            /* font-weight: 500; */ /* Keep default weight */
+            color: #374151; /* Tailwind text-gray-700 */
+        }
+        
+        /* 价格摘要中的小标签强化 */
+        .price-summary-highlight {
+            font-weight: 600;
+            font-size: 1.05rem;
+            color: var(--brand-dark-dark);
+        }
+
+        /* 优惠券折扣视觉强化 */
+        .coupon-discount-value {
+            color: #E53935;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        /* 优惠券高亮区域 */
+        .coupon-highlight-area {
+            background-color: rgba(229, 57, 53, 0.05);
+            transition: all 0.3s ease;
+            border-left: 3px solid #E53935;
+        }
+
+        .coupon-highlight-area:hover {
+            background-color: rgba(229, 57, 53, 0.1);
+            transform: translateX(2px);
+        }
+
+        /* 优惠券应用状态样式 */
+        .applied-coupon {
+            background-color: rgba(229, 57, 53, 0.08);
+            box-shadow: 0 2px 4px rgba(229, 57, 53, 0.1);
+        }
+
+        .applied-coupon .coupon-discount-value {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.85;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* 合计金额高亮区域 */
+        .total-highlight-area {
+            background-color: rgba(42, 157, 143, 0.05);
+            transition: all 0.2s ease;
+            /* border-left: 3px solid var(--brand-primary); */
+        }
+
+        .total-highlight-area:hover {
+            background-color: rgba(42, 157, 143, 0.1);
+        }
+        
+        /* 底部结算栏样式优化 */
         .bottom-bar {
             background: white;
             border-top: 1px solid var(--brand-light-dark);
             box-shadow: var(--shadow-md);
-            z-index: 30; /* 提高z-index确保不被其他元素遮挡 */
+            z-index: 30;
+            padding: 10px 14px;
+            height: auto;
         }
 
-        .price {
-            color: var(--brand-primary);
+        /* 底部结算栏金额突出效果 */
+        .bottom-bar .total-price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #E53935;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.05);
+            letter-spacing: -0.5px;
         }
 
         .submit-btn {
             background: var(--brand-gradient-primary);
             color: white;
-            padding: 10px 32px;
+            padding: 12px 36px;
             border-radius: 24px;
             font-weight: 500;
             box-shadow: var(--shadow-highlight);
             transition: all 0.3s ease;
-            border: none; /* 添加明确的边框设置 */
-            cursor: pointer; /* 添加鼠标指针样式 */
-            position: relative; /* 添加相对定位以确保可点击 */
-            outline: none; /* 移除outline */
-            overflow: visible; /* 确保不会被裁剪 */
+            border: none;
+            cursor: pointer;
+            position: relative;
+            outline: none;
+            overflow: visible;
+            letter-spacing: 1px;
         }
 
         .submit-btn:hover {
@@ -176,22 +312,18 @@
             color: var(--brand-primary);
         }
 
-        /* 发票信息样式 */
-        .invoice-text {
-            color: var(--brand-dark-light);
-        }
-
+        /* 按钮样式 */
         .save-order-btn {
             color: var(--brand-dark-light);
             padding: 8px 12px;
             border-radius: 24px;
             transition: all 0.2s ease;
             background: var(--brand-light);
-            border: 1px solid var(--brand-light-dark); /* 添加明确的边框设置 */
-            cursor: pointer; /* 添加鼠标指针样式 */
-            position: relative; /* 添加相对定位以确保可点击 */
-            outline: none; /* 移除outline */
-            overflow: visible; /* 确保不会被裁剪 */
+            border: 1px solid var(--brand-light-dark);
+            cursor: pointer;
+            position: relative; 
+            outline: none;
+            overflow: visible;
         }
 
         .save-order-btn:hover {
@@ -201,14 +333,6 @@
 
         .save-order-btn:hover i {
             color: var(--brand-primary);
-        }
-
-        .delivery-time-option {
-            transition: background-color 0.3s ease;
-        }
-
-        .delivery-time-option:hover {
-            background-color: var(--brand-primary-transparent);
         }
 
         /* 模态框样式优化 */
@@ -263,6 +387,50 @@
         .modal-btn:active::after {
             transform: translate(-50%, -50%) scale(2);
         }
+
+        /* 备注文本域样式 */
+        .remark-textarea {
+            transition: border-color 0.2s ease;
+            background-color: var(--bg-color);
+        }
+        
+        .remark-textarea:focus {
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 2px var(--brand-primary-transparent);
+            outline: none;
+        }
+        
+        .remark-textarea::placeholder {
+            color: var(--brand-dark-light);
+            opacity: 0.6;
+        }
+
+        /* 优惠券区域悬停效果 */
+        #couponSection > div {
+            transition: background-color 0.3s ease;
+        }
+        
+        #couponSection > div:hover {
+            background-color: var(--brand-primary-transparent);
+        }
+
+        /* 优惠券折扣区域的样式 */
+        #couponDiscount {
+            transition: background-color 0.3s ease;
+        }
+        
+        #couponDiscount:hover {
+            background-color: var(--brand-primary-transparent);
+        }
+
+        /* 添加订单备注输入框的占位符样式 */
+        #orderRemark::placeholder {
+            color: #9CA3AF;
+        }
+        
+        #orderRemark:focus {
+            color: var(--brand-primary);
+        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -279,17 +447,32 @@
     </div>
     
     <!-- 主要内容区 -->
-    <div class="main-content pt-14 pb-24 px-4">
+    <div class="main-content pt-14 pb-20 px-4">
         <!-- 收货地址 -->
-        <div class="section address p-4">
-            <div class="flex items-center justify-between">
-                <div class="flex-1">
+        <div class="section address p-3" id="addressSection">
+            <div class="flex items-center justify-between cursor-pointer" onclick="showModal(document.getElementById('addressModal'))">
+                <div class="flex-1" id="addressContent">
+                    <!-- 有地址时显示 -->
+                    <div id="hasAddressContent" class="address-info" style="display: none;">
                     <div class="flex items-center">
-                        <div class="font-medium">李小明</div>
-                        <div class="text-sm text-gray-500 ml-4">13800138000</div>
+                            <div class="font-medium" id="addressName">李小明</div>
+                            <div class="text-sm text-gray-500 ml-4" id="addressPhone">13800138000</div>
+                            <div class="text-sm bg-primary-100 text-primary-600 ml-2 px-1.5 py-0.5 rounded" id="addressDefault">默认</div>
                     </div>
-                    <div class="text-sm text-gray-600 mt-1">
+                        <div class="text-sm text-gray-600 mt-1" id="addressDetail">
                         广东省深圳市南山区科技园南区A栋1001室
+                        </div>
+                    </div>
+                    
+                    <!-- 无地址时显示 -->
+                    <div id="noAddressContent" class="no-address-info">
+                        <div class="flex items-center">
+                            <i class="fas fa-map-marker-alt text-primary-600 mr-2"></i>
+                            <div class="font-medium text-gray-700">添加收货地址</div>
+                        </div>
+                        <div class="text-sm text-gray-500 mt-1">
+                            您还没有添加收货地址，点击添加
+                        </div>
                     </div>
                 </div>
                 <div class="text-gray-400">
@@ -299,82 +482,77 @@
         </div>
         
         <!-- 商品信息 -->
-        <div class="section p-4">
-            <div class="flex mt-3">
-                <div class="product-image w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
+        <div class="section p-3" style="padding-top: 1px;">
+            <div class="flex mt-2">
+                <div class="product-image w-24 h-24 bg-gray-100 rounded-md overflow-hidden">
                     <img src="https://images.unsplash.com/photo-1550581190-9c1c48d21d6c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="设计师台灯" class="w-full h-full object-cover">
                 </div>
-                <div class="ml-3 flex-1">
-                    <div class="text-sm font-medium">北欧设计师台灯</div>
+                <div class="ml-4 flex-1">
+                    <div class="product-name text-base font-medium">北欧设计师台灯</div>
                     <div class="text-xs text-gray-500 mt-1">黑色</div>
-                    <div class="flex justify-between mt-2">
-                        <div class="text-sm price font-medium">¥599</div>
-                        <div class="text-sm text-gray-500">x2</div>
+                    <div class="flex justify-between items-center mt-2">
+                        <div class="text-base price font-medium">¥599</div>
+                        <div class="flex items-center">
+                            <button class="quantity-btn w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center focus:outline-none shadow-sm" onclick="updateProductQuantity('decrease')" style="width: 25px;height: 25px;">
+                                <i class="fas fa-minus text-xs text-gray-500"></i>
+                            </button>
+                            <div class="text-base mx-4 w-6 text-center font-medium" id="productQuantity" style="margin: 0 0.5rem;">2</div>
+                            <button class="quantity-btn w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center focus:outline-none shadow-sm" onclick="updateProductQuantity('increase')" style="width: 25px;height: 25px;">
+                                <i class="fas fa-plus text-xs text-gray-500"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
             
             <!-- 配送方式 -->
             <div class="divider"></div>
-            <div class="delivery-option flex items-center justify-between p-2 rounded-lg">
-                <div class="text-sm">配送方式</div>
+            <div class="delivery-option flex items-center justify-between p-1.5 rounded-lg" style="padding-left: 0;">
+                <div class="text-sm font-medium text-gray-700">配送方式</div>
                 <div class="flex items-center">
-                    <span class="text-sm text-gray-600">快递免邮</span>
-                    <i class="fas fa-chevron-right text-gray-400 text-xs ml-2"></i>
+                    <span class="text-sm text-gray-600">物流运输</span>
                 </div>
             </div>
-            
-            <!-- 预计送达时间 -->
-            <div class="delivery-time-option flex items-center justify-between p-2 rounded-lg">
-                <div class="text-sm">预计送达</div>
-                <div class="flex items-center">
-                    <span class="text-sm text-gray-600" id="estimatedDelivery">5月20日（周一）09:00-18:00</span>
-                    <i class="fas fa-chevron-right text-gray-400 text-xs ml-2"></i>
-                </div>
-            </div>
-            
+
             <!-- 订单备注 -->
             <div class="divider"></div>
-            <div class="flex items-center justify-between">
-                <div class="text-sm">订单备注</div>
-                <div class="flex items-center">
-                    <span class="text-sm text-gray-400">选填，建议备注相关特殊需求</span>
-                    <i class="fas fa-chevron-right text-gray-400 text-xs ml-2"></i>
-                </div>
+            <div class="py-1.5 flex items-center">
+                <div class="text-sm font-medium mr-3 flex-shrink-0 text-gray-700">订单备注</div>
+                <input id="orderRemark" type="text" placeholder="250字以内" 
+                    class="w-full text-sm focus:outline-none border-0 bg-transparent"
+                    style="placeholder-color: #9CA3AF;"
+                    maxlength="250" />
             </div>
             
             <!-- 小计 -->
             <div class="divider"></div>
-            <div class="flex justify-between text-sm">
-                <div>商品金额</div>
-                <div class="price">¥5,097</div>
+            <div class="flex justify-between text-sm mb-1.5">
+                <div class="price-summary-label flex-1">商品金额</div>
+                <div class="price text-right">¥5,097</div>
             </div>
-            <div class="flex justify-between text-sm mt-2">
-                <div>运费</div>
-                <div>¥0.00</div>
+            <div class="flex justify-between text-sm mb-1.5">
+                <div class="price-summary-label flex-1">运费</div>
+                <div class="text-right">¥0.00</div>
             </div>
-            <div class="flex justify-between text-sm mt-2" id="couponDiscount" style="display: none;">
-                <div>优惠券折扣</div>
-                <div class="coupon-discount-value price">-¥0.00</div>
-            </div>
-        </div>
-        
-        <!-- 优惠券 -->
-        <div class="section p-4 flex items-center justify-between" id="couponSection">
-            <div class="text-sm">优惠券</div>
-            <div class="flex items-center">
-                <a href="coupons.html?from=checkout" class="coupon-selector">
-                    <span class="text-sm coupon-text" id="couponText">3张可用</span>
+            <div class="flex justify-between text-sm mb-1.5 p-1.5 rounded-lg cursor-pointer transition-colors hover:bg-gray-50" id="couponDiscountRow" onclick="window.location.href='coupons.html?from=checkout'" style="padding-left: 0;">
+                <div class="price-summary-label flex-1">优惠券</div>
+                <div class="price text-right flex items-center" id="couponDiscountValueContainer">
+                    <span id="couponDiscountValue" style="color: #E53935;">-¥0.00</span>
                     <i class="fas fa-chevron-right text-gray-400 text-xs ml-2"></i>
-                </a>
+                </div>
+            </div>
+            <!-- <div class="divider"></div> -->
+            <div class="flex justify-between items-center p-1.5 rounded-lg total-highlight-area">
+                <div class="price-summary-highlight text-base flex-1">合计</div>
+                <div class="price total-price text-right">¥5,097</div>
             </div>
         </div>
         
         <!-- 支付方式 -->
-        <div class="section p-4">
-            <div class="text-sm font-medium mb-3">支付方式</div>
+        <div class="section p-3">
+            <div class="text-sm font-medium mb-2">支付方式</div>
             
-            <div class="payment-method flex items-center justify-between py-2">
+            <div class="payment-method flex items-center justify-between py-1.5">
                 <div class="flex items-center">
                     <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
                         <i class="fab fa-weixin text-white text-sm"></i>
@@ -384,7 +562,7 @@
                 <input type="radio" name="payment" class="w-5 h-5" checked>
             </div>
             
-            <div class="payment-method flex items-center justify-between py-2 border-t border-gray-100">
+            <div class="payment-method flex items-center justify-between py-1.5 border-t border-gray-100">
                 <div class="flex items-center">
                     <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
                         <i class="fas fa-credit-card text-white text-sm"></i>
@@ -394,129 +572,588 @@
                 <input type="radio" name="payment" class="w-5 h-5">
             </div>
         </div>
-        
-        <!-- 发票信息 -->
-        <div class="section p-4 flex items-center justify-between">
-            <div class="text-sm">发票信息</div>
-            <div class="flex items-center">
-                <span class="text-sm invoice-text">不开发票</span>
-                <i class="fas fa-chevron-right text-gray-400 text-xs ml-2"></i>
-            </div>
-        </div>
     </div>
     
     <!-- 底部结算栏 -->
-    <div class="bottom-bar fixed bottom-0 left-0 right-0 h-16 flex items-center justify-between px-4">
-        <div class="text-sm">
-            合计：<span class="text-lg font-medium price total-price">¥5,097</span>
+    <div class="bottom-bar fixed bottom-0 left-0 right-0 flex items-center justify-between">
+        <div class="pl-2">
+            <div class="text-sm text-gray-600">合计</div>
+            <div class="price total-price text-xl font-bold">¥5,097</div>
         </div>
-        <div class="flex items-center space-x-3">
-            <button type="button" class="save-order-btn text-sm flex items-center" id="saveOrderBtn" onclick="document.getElementById('saveOrderModal').classList.remove('hidden'); showModal(document.getElementById('saveOrderModal'));">
-                <i class="far fa-star text-gray-400 mr-2"></i>
-                <span>保存常用</span>
-            </button>
-            <button type="button" class="submit-btn" id="submitOrderBtn" onclick="handleSubmitOrder()">
+        <div>
+            <button type="button" class="submit-btn text-base font-bold" id="submitOrderBtn" onclick="handleSubmitOrder()">
                 提交订单
             </button>
         </div>
     </div>
 
-    <!-- 发票模态框 -->
-    <div id="invoiceModal" class="modal-container fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+    <!-- 地址编辑模态框 -->
+    <div id="addressModal" class="modal-container fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden" style="z-index: -1;">
         <div class="modal-content bg-white rounded-xl w-11/12 max-w-md max-h-90vh overflow-y-auto">
             <div class="p-4 border-b border-gray-100 flex justify-between items-center">
-                <h3 class="font-medium">发票信息</h3>
-                <button id="closeInvoiceModal" class="text-gray-400">
+                <h3 class="font-medium">选择收货地址</h3>
+                <button id="closeAddressModal" class="text-gray-400" onclick="hideModal(document.getElementById('addressModal'))">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
-            <div class="p-4">
+            <div class="p-4 max-h-96 overflow-y-auto">
+                <!-- 现有地址列表 -->
                 <div class="mb-4">
-                    <div class="text-sm text-gray-500 mb-2">发票类型</div>
-                    <div class="flex space-x-4">
-                        <label class="flex items-center">
-                            <input type="radio" name="invoiceType" value="electronic" checked class="mr-2">
-                            <span>电子发票</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="radio" name="invoiceType" value="paper" class="mr-2">
-                            <span>纸质发票</span>
-                        </label>
-                    </div>
+                    <div class="border border-primary-500 bg-primary-50 rounded-lg p-3 mb-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="font-medium">李小明</div>
+                                <div class="text-sm text-gray-500 ml-3">13800138000</div>
+                                <div class="text-xs bg-primary-100 text-primary-600 ml-2 px-1.5 py-0.5 rounded">默认</div>
+                            </div>
+                            <div class="flex items-center">
+                                <button class="text-sm text-gray-400 mr-2" onclick="editAddress(0)">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="text-sm text-gray-600 mt-1">
+                            广东省深圳市南山区科技园南区A栋1001室
+                        </div>
+                        <div class="mt-2 flex justify-end">
+                            <button class="text-sm text-primary-600 bg-primary-50 px-3 py-1 rounded" onclick="selectAddress(0)">
+                                选择
+                            </button>
+                        </div>
                 </div>
                 
-                <div class="mb-4">
-                    <div class="text-sm text-gray-500 mb-2">发票抬头</div>
-                    <div class="flex space-x-4 mb-3">
-                        <label class="flex items-center">
-                            <input type="radio" name="invoiceTitle" value="personal" checked class="mr-2" id="personalTitle">
-                            <span>个人</span>
-                        </label>
-                        <label class="flex items-center">
-                            <input type="radio" name="invoiceTitle" value="company" class="mr-2" id="companyTitle">
-                            <span>单位</span>
-                        </label>
-                    </div>
-                    
-                    <div id="companyInfo" class="hidden">
-                        <input type="text" placeholder="单位名称" class="w-full border border-gray-200 rounded-lg p-2 mb-2">
-                        <input type="text" placeholder="纳税人识别号" class="w-full border border-gray-200 rounded-lg p-2">
-                    </div>
+                    <div class="border border-gray-200 rounded-lg p-3 mb-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="font-medium">张三</div>
+                                <div class="text-sm text-gray-500 ml-3">13911112222</div>
                 </div>
-                
-                <div class="mb-4">
-                    <div class="text-sm text-gray-500 mb-2">发票内容</div>
-                    <select class="w-full border border-gray-200 rounded-lg p-2">
-                        <option value="detail">商品明细</option>
-                        <option value="office">办公用品</option>
-                        <option value="furniture">家具用品</option>
-                        <option value="electronic">电子产品</option>
-                    </select>
-                </div>
-                
-                <div class="mb-4">
-                    <label class="flex items-center">
-                        <input type="checkbox" checked class="mr-2">
-                        <span class="text-sm">保存发票信息</span>
-                    </label>
-                </div>
+                            <div class="flex items-center">
+                                <button class="text-sm text-gray-400 mr-2" onclick="editAddress(1)">
+                                    <i class="fas fa-pen"></i>
+                                </button>
             </div>
-            <div class="p-4 border-t border-gray-100">
-                <button id="confirmInvoice" class="modal-btn w-full bg-gradient-to-r from-green-500 to-teal-500 text-white py-2 rounded-lg">
-                    确认
+                        </div>
+                        <div class="text-sm text-gray-600 mt-1">
+                            北京市朝阳区建国路88号现代城5号楼2单元801室
+                        </div>
+                        <div class="mt-2 flex justify-end">
+                            <button class="text-sm text-primary-600 bg-primary-50 px-3 py-1 rounded" onclick="selectAddress(1)">
+                                选择
                 </button>
             </div>
         </div>
     </div>
     
-    <!-- 保存常用订单模态框 -->
-    <div id="saveOrderModal" class="modal-container fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
-        <div class="modal-content bg-white rounded-xl w-11/12 max-w-md">
-            <div class="p-4 border-b border-gray-100 flex justify-between items-center">
-                <h3 class="font-medium">保存为常用订单</h3>
-                <button id="closeSaveOrderModal" class="text-gray-400">
-                    <i class="fas fa-times"></i>
+                <!-- 添加新地址按钮 -->
+                <button id="addNewAddressBtn" class="w-full border border-dashed border-gray-300 rounded-lg py-3 text-sm text-gray-500 flex items-center justify-center" onclick="showAddAddressForm()">
+                    <i class="fas fa-plus mr-2"></i> 添加新地址
                 </button>
+                
+                <!-- 添加/编辑地址表单 (初始隐藏) -->
+                <div id="addressForm" class="mt-4 hidden">
+                    <div class="mb-3">
+                        <label class="text-sm text-gray-600 mb-1 block">收货人</label>
+                        <input type="text" id="inputName" placeholder="请输入姓名" class="modal-input w-full border border-gray-200 rounded-lg p-2">
             </div>
-            <div class="p-4">
-                <div class="mb-4">
-                    <input type="text" id="orderName" placeholder="输入常用订单名称" class="modal-input w-full border border-gray-200 rounded-lg p-2">
+                    
+                    <div class="mb-3">
+                        <label class="text-sm text-gray-600 mb-1 block">手机号码</label>
+                        <input type="tel" id="inputPhone" placeholder="请输入11位手机号码" class="modal-input w-full border border-gray-200 rounded-lg p-2">
                 </div>
-                <div class="text-sm text-gray-500 mb-4">
-                    保存后可在"我的-常用订单"中查看和使用
+                    
+                    <div class="mb-3">
+                        <label class="text-sm text-gray-600 mb-1 block">所在地区</label>
+                        <div class="flex space-x-2">
+                            <select id="inputProvince" class="modal-input flex-1 border border-gray-200 rounded-lg p-2">
+                                <option value="">省份</option>
+                                <option value="广东省">广东省</option>
+                                <option value="北京市">北京市</option>
+                                <option value="上海市">上海市</option>
+                                <!-- 更多省份 -->
+                            </select>
+                            <select id="inputCity" class="modal-input flex-1 border border-gray-200 rounded-lg p-2">
+                                <option value="">城市</option>
+                                <option value="深圳市">深圳市</option>
+                                <option value="广州市">广州市</option>
+                                <option value="朝阳区">朝阳区</option>
+                                <!-- 更多城市 -->
+                            </select>
+                            <select id="inputDistrict" class="modal-input flex-1 border border-gray-200 rounded-lg p-2">
+                                <option value="">区县</option>
+                                <option value="南山区">南山区</option>
+                                <option value="福田区">福田区</option>
+                                <!-- 更多区县 -->
+                            </select>
                 </div>
             </div>
-            <div class="p-4 border-t border-gray-100">
-                <button id="confirmSaveOrder" class="modal-btn w-full bg-gradient-to-r from-green-500 to-teal-500 text-white py-2 rounded-lg">
+                    
+                    <div class="mb-3">
+                        <label class="text-sm text-gray-600 mb-1 block">详细地址</label>
+                        <textarea id="inputDetail" placeholder="请输入详细地址信息，如街道、门牌号等" class="modal-input w-full border border-gray-200 rounded-lg p-2 h-20"></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="flex items-center">
+                            <input type="checkbox" id="inputDefault" class="mr-2">
+                            <span class="text-sm">设为默认收货地址</span>
+                        </label>
+                    </div>
+                    
+                    <div class="flex space-x-3">
+                        <button id="cancelAddressBtn" class="flex-1 py-2 border border-gray-300 rounded-lg text-sm" onclick="hideAddressForm()">
+                            取消
+                        </button>
+                        <button id="saveAddressBtn" class="flex-1 py-2 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-lg text-sm" onclick="saveAddress()">
                     保存
                 </button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
+        // 地址相关全局变量和函数
+        let addresses = []; // 空数组模拟新用户没有地址的情况
+        
+        let currentEditIndex = -1; // -1表示新增，其他值表示编辑现有地址的索引
+        
+        // 显示添加地址表单
+        function showAddAddressForm() {
+            // 跳转到新增地址页面
+            const params = new URLSearchParams();
+            params.append('returnUrl', 'checkout.html');
+            window.location.href = `address-edit.html?${params.toString()}`;
+        }
+        
+        // 显示编辑地址表单
+        function editAddress(index) {
+            const address = addresses[index];
+            // 生成URL参数，跳转到address-edit.html页面
+            const params = new URLSearchParams();
+            params.append('id', address.id);
+            params.append('name', address.name);
+            params.append('phone', address.phone);
+            params.append('province', address.province);
+            params.append('city', address.city);
+            params.append('district', address.district || '');
+            params.append('address', address.detail);
+            params.append('isDefault', address.isDefault ? '1' : '0');
+            params.append('returnUrl', 'checkout.html');
+            
+            // 跳转到地址编辑页面
+            window.location.href = `address-edit.html?${params.toString()}`;
+        }
+        
+        // 隐藏地址表单
+        function hideAddressForm() {
+            document.getElementById('addressForm').classList.add('hidden');
+            document.getElementById('addNewAddressBtn').classList.remove('hidden');
+        }
+        
+        // 清空地址表单
+        function clearAddressForm() {
+            document.getElementById('inputName').value = '';
+            document.getElementById('inputPhone').value = '';
+            document.getElementById('inputProvince').value = '';
+            document.getElementById('inputCity').value = '';
+            document.getElementById('inputDistrict').value = '';
+            document.getElementById('inputDetail').value = '';
+            document.getElementById('inputDefault').checked = false;
+        }
+        
+        // 保存地址
+        function saveAddress() {
+            const name = document.getElementById('inputName').value.trim();
+            const phone = document.getElementById('inputPhone').value.trim();
+            const province = document.getElementById('inputProvince').value;
+            const city = document.getElementById('inputCity').value;
+            const district = document.getElementById('inputDistrict').value;
+            const detail = document.getElementById('inputDetail').value.trim();
+            const isDefault = document.getElementById('inputDefault').checked;
+            
+            // 简单验证
+            if (!name) {
+                alert('请输入收货人姓名');
+                return;
+            }
+            if (!phone || !/^1\d{10}$/.test(phone)) {
+                alert('请输入正确的手机号码');
+                return;
+            }
+            if (!province || !city) {
+                alert('请选择所在地区');
+                return;
+            }
+            if (!detail) {
+                alert('请输入详细地址');
+                return;
+            }
+            
+            const newAddress = {
+                id: currentEditIndex >= 0 ? addresses[currentEditIndex].id : Date.now(),
+                name,
+                phone,
+                province,
+                city,
+                district,
+                detail,
+                isDefault
+            };
+            
+            // 处理默认地址逻辑
+            if (isDefault) {
+                addresses.forEach(addr => {
+                    addr.isDefault = false;
+                });
+            }
+            
+            if (currentEditIndex >= 0) {
+                // 编辑现有地址
+                addresses[currentEditIndex] = newAddress;
+            } else {
+                // 添加新地址
+                addresses.push(newAddress);
+            }
+            
+            // 如果是默认地址，更新订单页的地址显示
+            if (isDefault) {
+                updateOrderAddress(newAddress);
+            }
+            
+            // 更新地址列表显示（实际项目中可能需要重新渲染整个列表）
+            hideAddressForm();
+            hideModal(document.getElementById('addressModal'));
+            
+            // 显示成功提示
+            const successToast = document.createElement('div');
+            successToast.className = 'fixed top-16 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+            successToast.textContent = currentEditIndex >= 0 ? '地址修改成功' : '地址添加成功';
+            document.body.appendChild(successToast);
+            
+            // 3秒后移除提示
+            setTimeout(() => {
+                successToast.remove();
+            }, 3000);
+        }
+        
+        // 选择地址并更新订单
+        function selectAddress(index) {
+            const selectedAddress = addresses[index];
+            updateOrderAddress(selectedAddress);
+            hideModal(document.getElementById('addressModal'));
+        }
+        
+        // 更新订单页面上的地址显示
+        function updateOrderAddress(address) {
+            document.getElementById('addressName').textContent = address.name;
+            document.getElementById('addressPhone').textContent = address.phone;
+            document.getElementById('addressDetail').textContent = `${address.province}${address.city}${address.district ? address.district : ''}${address.detail}`;
+            
+            // 显示或隐藏默认标签
+            const defaultTag = document.getElementById('addressDefault');
+            if (address.isDefault) {
+                defaultTag.style.display = 'block';
+            } else {
+                defaultTag.style.display = 'none';
+            }
+            
+            // 确保显示地址内容区域
+            document.getElementById('hasAddressContent').style.display = 'block';
+            document.getElementById('noAddressContent').style.display = 'none';
+            
+            // 更新订单数据中的地址信息（实际项目中可能需要同步到服务器）
+        }
+        
+        // 更新地址显示区域
+        function updateAddressDisplay() {
+            const hasAddressContent = document.getElementById('hasAddressContent');
+            const noAddressContent = document.getElementById('noAddressContent');
+            
+            if (addresses && addresses.length > 0) {
+                // 有地址，显示默认地址或第一个地址
+                let displayAddress = addresses.find(addr => addr.isDefault) || addresses[0];
+                updateOrderAddress(displayAddress);
+            } else {
+                // 无地址，显示添加地址提示
+                hasAddressContent.style.display = 'none';
+                noAddressContent.style.display = 'block';
+                
+                // 修改点击行为，直接跳转到添加地址页面而不是打开模态框
+                const addressSection = document.getElementById('addressSection');
+                if (addressSection) {
+                    addressSection.onclick = function() {
+                        showAddAddressForm();
+                    };
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化当前商品数量和价格
+            window.currentProductQuantity = 2;
+            
+            // 初始化商品金额
+            const initialQuantity = window.currentProductQuantity;
+            const unitPrice = 599;
+            const initialTotal = initialQuantity * unitPrice;
+            
+            // 更新商品金额显示
+            const productAmountElement = document.querySelector('.flex.justify-between.text-sm:nth-of-type(1) .price');
+            if (productAmountElement) {
+                productAmountElement.textContent = `¥${initialTotal.toFixed(2)}`;
+            }
+            
+            // 更新小计部分的合计金额
+            const summaryTotal = document.querySelector('.flex.justify-between.items-center .price');
+            if (summaryTotal) {
+                summaryTotal.textContent = `¥${initialTotal.toFixed(2)}`;
+            }
+            
+            // 更新总价显示
+            const totalPriceElements = document.querySelectorAll('.total-price');
+            totalPriceElements.forEach(el => {
+                el.textContent = `¥${initialTotal.toFixed(2)}`;
+            });
+            
+            console.log("页面已加载，开始执行脚本");
+            
+            // 获取URL参数
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // 初始化地址区域显示
+            updateAddressDisplay();
+            
+            // 检查是否从地址编辑页面返回，并更新地址
+            const editedAddressId = urlParams.get('addressEdited');
+            if (editedAddressId) {
+                const tempAddressKey = `temp_address_${editedAddressId}`;
+                const tempAddressJson = localStorage.getItem(tempAddressKey);
+                
+                if (tempAddressJson) {
+                    try {
+                        const editedAddress = JSON.parse(tempAddressJson);
+                        // 查找是否存在这个地址
+                        let addressIndex = -1;
+                        for (let i = 0; i < addresses.length; i++) {
+                            if (addresses[i].id == editedAddressId) {
+                                addressIndex = i;
+                                break;
+                            }
+                        }
+                        
+                        // 如果设置为默认地址，移除其他默认地址标记
+                        if (editedAddress.isDefault) {
+                            addresses.forEach(addr => {
+                                addr.isDefault = false;
+                            });
+                        }
+                        
+                        // 更新或添加地址
+                        if (addressIndex >= 0) {
+                            addresses[addressIndex] = editedAddress;
+                        } else {
+                            addresses.push(editedAddress);
+                        }
+                        
+                        // 如果是默认地址，自动更新到订单
+                        if (editedAddress.isDefault) {
+                            updateOrderAddress(editedAddress);
+                        }
+                        
+                        // 更新地址显示
+                        updateAddressDisplay();
+                        
+                        // 清理临时数据
+                        localStorage.removeItem(tempAddressKey);
+                        
+                        // 显示成功提示
+                        const successToast = document.createElement('div');
+                        successToast.className = 'fixed top-16 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+                        successToast.textContent = addressIndex >= 0 ? '地址修改成功' : '新增地址成功';
+                        document.body.appendChild(successToast);
+                        
+                        // 3秒后移除提示
+                        setTimeout(() => {
+                            successToast.remove();
+                        }, 3000);
+                    } catch (e) {
+                        console.error('解析临时地址数据失败', e);
+                    }
+                }
+                
+                // 移除URL参数，避免刷新页面时重复处理
+                const newUrl = window.location.pathname + window.location.hash;
+                history.replaceState(null, '', newUrl);
+            }
+            
+            // 确保所有模态框在页面加载时是隐藏的
+            const allModals = document.querySelectorAll('#addressModal');
+            allModals.forEach(modal => {
+                modal.classList.add('hidden');
+                modal.setAttribute('aria-hidden', 'true');
+                // 设置较低的z-index确保模态框不会阻挡其他元素
+                modal.style.zIndex = '-1';
+            });
+            
+            // 获取优惠券信息
+            const selectedCoupon = localStorage.getItem('selectedCoupon');
+            const couponDiscountRow = document.getElementById('couponDiscountRow');
+            const couponDiscountValueElement = document.getElementById('couponDiscountValue'); // Target the span inside
+            const totalPrice = document.querySelector('.total-price');
+            let subtotal = 5097; // 商品总价
+            
+            // 处理优惠券显示
+            if (selectedCoupon) {
+                const couponData = JSON.parse(selectedCoupon);
+                let discount = 0;
+                if (couponData.amount.includes('¥')) {
+                    const amount = parseInt(couponData.amount.replace('¥', ''));
+                    const condition = couponData.condition.match(/\d+/);
+                    if (condition && subtotal >= parseInt(condition[0])) {
+                        discount = amount;
+                    }
+                } else if (couponData.amount.includes('折')) {
+                    const discountRate = parseFloat(couponData.amount.replace('折', '')) / 10;
+                    discount = Math.round(subtotal * (1 - discountRate));
+                } // 免运费券 discount remains 0
+
+                if (discount > 0) {
+                    couponDiscountValueElement.textContent = `-¥${discount.toFixed(2)}`;
+                    couponDiscountValueElement.classList.add('text-red-500', 'font-medium'); // Style for applied discount
+                } else {
+                    couponDiscountValueElement.textContent = `-¥0.00`;
+                    couponDiscountValueElement.classList.remove('text-red-500', 'font-medium'); // Remove style if no discount
+                }
+                
+                // 更新总价 (always calculate, even if discount is 0)
+                const newTotal = subtotal - discount;
+                const totalPriceElements = document.querySelectorAll('.total-price');
+                totalPriceElements.forEach(el => {
+                    el.textContent = `¥${newTotal.toFixed(2)}`;
+                });
+
+            } else {
+                // 没有选择优惠券时的处理
+                couponDiscountValueElement.textContent = `-¥0.00`;
+                couponDiscountValueElement.classList.remove('text-red-500', 'font-medium');
+                 // Ensure total price is correct if no coupon was ever selected
+                const totalPriceElements = document.querySelectorAll('.total-price');
+                totalPriceElements.forEach(el => {
+                    el.textContent = `¥${subtotal.toFixed(2)}`;
+                });
+            }
+            
+            // 处理来自优惠券页面的返回
+            if (urlParams.get('coupon') === 'applied') {
+                // 刷新页面以更新优惠券信息
+                location.reload();
+            }
+            
+            console.log("页面初始化完成");
+            
+            // 初始化地址区域的点击事件
+            const addressSection = document.getElementById('addressSection');
+            if (addressSection) {
+                addressSection.style.cursor = 'pointer';
+            }
+        });
+
+        // 商品数量相关函数
+        function updateProductQuantity(action) {
+            const quantityElement = document.getElementById('productQuantity');
+            let quantity = parseInt(quantityElement.textContent);
+            
+            if (action === 'increase') {
+                quantity++;
+            } else if (action === 'decrease') {
+                quantity = Math.max(quantity - 1, 1);
+            }
+            
+            quantityElement.textContent = quantity;
+            
+            // 更新单品总价
+            const price = 599;
+            const total = quantity * price;
+            
+            // 更新商品金额显示
+            const productAmountElement = document.querySelector('.flex.justify-between.text-sm:nth-of-type(1) .price');
+            if (productAmountElement) {
+                productAmountElement.textContent = `¥${total.toFixed(2)}`;
+            }
+            
+            // 获取优惠券并计算折扣
+            const selectedCoupon = localStorage.getItem('selectedCoupon');
+            const couponDiscountValueElement = document.getElementById('couponDiscountValue'); // Target the span inside
+            let discount = 0;
+            
+            if (selectedCoupon) {
+                const couponData = JSON.parse(selectedCoupon);
+                if (couponData.amount.includes('¥')) {
+                    const amount = parseInt(couponData.amount.replace('¥', ''));
+                    const condition = couponData.condition.match(/\d+/);
+                    if (condition && total >= parseInt(condition[0])) {
+                        discount = amount;
+                    }
+                } else if (couponData.amount.includes('折')) {
+                    const discountRate = parseFloat(couponData.amount.replace('折', '')) / 10;
+                    discount = Math.round(total * (1 - discountRate));
+                }
+            }
+            
+            // Update discount text and style
+            if (discount > 0) {
+                couponDiscountValueElement.textContent = `-¥${discount.toFixed(2)}`;
+                couponDiscountValueElement.classList.add('text-red-500', 'font-medium');
+            } else {
+                couponDiscountValueElement.textContent = `-¥0.00`;
+                couponDiscountValueElement.classList.remove('text-red-500', 'font-medium');
+            }
+
+            // 计算最终价格
+            const finalTotal = total - discount;
+            
+            // 更新所有总价显示
+            const totalPriceElements = document.querySelectorAll('.total-price');
+            totalPriceElements.forEach(el => {
+                el.textContent = `¥${finalTotal.toFixed(2)}`;
+            });
+            
+            // 更新小计部分的合计金额 - 使用更精确的选择器
+            const summaryTotal = document.querySelector('.total-highlight-area .price');
+            if (summaryTotal) {
+                summaryTotal.textContent = `¥${finalTotal.toFixed(2)}`;
+            }
+            
+            // 更新暂存的商品数量，以便后续使用
+            window.currentProductQuantity = quantity;
+            
+            // 提供触觉反馈（如果支持）
+            if (navigator.vibrate) {
+                navigator.vibrate(5);
+            }
+        }
+
         // 定义全局函数，这样内联onclick事件可以直接调用
         function handleSubmitOrder() {
+            // 检查是否有收货地址
+            if (!addresses || addresses.length === 0) {
+                const errorToast = document.createElement('div');
+                errorToast.className = 'fixed top-16 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
+                errorToast.textContent = '请先添加收货地址';
+                document.body.appendChild(errorToast);
+                
+                // 3秒后移除提示
+                setTimeout(() => {
+                    errorToast.remove();
+                }, 3000);
+                
+                // 跳转到地址选择
+                showAddAddressForm();
+                return;
+            }
+            
             const submitOrderBtn = document.getElementById('submitOrderBtn');
             if (submitOrderBtn) {
                 // 显示loading效果
@@ -524,7 +1161,7 @@
                 submitOrderBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>处理中...';
                 submitOrderBtn.disabled = true;
                 
-                // 生成唯一订单号：年月日时分秒+4位随机数
+                // 生成唯一订单号
                 const now = new Date();
                 const year = now.getFullYear();
                 const month = (now.getMonth() + 1).toString().padStart(2, '0');
@@ -533,45 +1170,45 @@
                 const minute = now.getMinutes().toString().padStart(2, '0');
                 const second = now.getSeconds().toString().padStart(2, '0');
                 const random = Math.floor(1000 + Math.random() * 9000); // 4位随机数
-                
                 const orderId = `${year}${month}${day}${hour}${minute}${second}${random}`;
                 
-                // 模拟网络请求延迟
-                setTimeout(function() {
-                    // 保存订单信息到本地存储供其他页面使用
-                    const totalPrice = document.querySelector('.total-price');
-                    const estimatedDelivery = document.getElementById('estimatedDelivery');
-                    
-                    const orderData = {
-                        id: orderId,
-                        status: 'unpaid', // 未支付状态
-                        amount: totalPrice.textContent.replace('¥', ''),
-                        products: [
-                            {
-                                name: '北欧设计师台灯',
-                                variant: '黑色',
-                                price: 599,
-                                quantity: 2
-                            }
-                        ],
-                        address: {
-                            name: '李小明',
-                            phone: '13800138000',
-                            detail: '广东省深圳市南山区科技园南区A栋1001室'
-                        },
-                        estimatedDelivery: estimatedDelivery.textContent,
-                        createTime: `${year}-${month}-${day} ${hour}:${minute}:${second}`
-                    };
-                    
-                    // 存储订单数据
-                    localStorage.setItem(`order_${orderId}`, JSON.stringify(orderData));
-                    
-                    // 跳转到支付页面
-                    window.location.href = `payment.html?id=${orderId}`;
-                }, 800); // 添加800ms延迟模拟网络请求
+                // 获取备注信息
+                const remark = document.getElementById('orderRemark').value.trim();
+                
+                // 保存订单信息到本地存储供其他页面使用
+                const totalPriceElement = document.querySelector('.bottom-bar .total-price'); // More specific selector for bottom bar total
+                const amount = totalPriceElement ? totalPriceElement.textContent.replace('¥', '') : '0.00'; // Get total from bottom bar
+
+                const orderData = {
+                    id: orderId,
+                    status: 'unpaid', // 未支付状态
+                    amount: amount, // Use amount from bottom bar
+                    products: [
+                        {
+                            name: '北欧设计师台灯',
+                            variant: '黑色',
+                            price: 599,
+                            quantity: window.currentProductQuantity || 2
+                        }
+                    ],
+                    // Ensure address is selected and updated before submitting
+                    address: addresses.find(addr => addr.isDefault) || addresses[0], // Get the currently displayed/selected address
+                    remark: remark, // 添加备注字段
+                    createTime: `${year}-${month}-${day} ${hour}:${minute}:${second}`
+                };
+                
+                // 存储订单数据
+                localStorage.setItem(`order_${orderId}`, JSON.stringify(orderData));
+                
+                // --- Redirect immediately --- 
+                window.location.href = `payment.html?id=${orderId}`;
+                
+                // Note: The button state won't reset because of the redirect.
+                // If the redirect fails or is blocked, the button remains disabled.
+                // Error handling could be added here.
             }
         }
-        
+
         // 全局函数用于显示模态框
         function showModal(modal) {
             // 禁止背景滚动
@@ -579,6 +1216,8 @@
             
             modal.classList.remove('hidden');
             modal.setAttribute('aria-hidden', 'false');
+            // 设置较高的z-index使模态框显示在最上层
+            modal.style.zIndex = '50';
             
             // 添加一个微小延迟，以确保过渡效果正常运行
             setTimeout(() => {
@@ -594,7 +1233,7 @@
             // 添加ESC键关闭功能
             document.addEventListener('keydown', handleEscKey);
         }
-        
+
         // 全局函数用于隐藏模态框
         function hideModal(modal) {
             modal.classList.remove('modal-entering');
@@ -603,6 +1242,8 @@
             setTimeout(() => {
                 modal.classList.add('hidden');
                 modal.setAttribute('aria-hidden', 'true');
+                // 设置较低的z-index确保模态框不会阻挡其他元素
+                modal.style.zIndex = '-1';
                 
                 // 恢复背景滚动
                 if (!document.querySelector('.modal-container:not(.hidden)')) {
@@ -613,7 +1254,7 @@
             // 移除ESC键事件监听
             document.removeEventListener('keydown', handleEscKey);
         }
-        
+
         // 全局ESC键函数
         function handleEscKey(e) {
             if (e.key === 'Escape') {
@@ -623,241 +1264,6 @@
                 }
             }
         }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("页面已加载，开始执行脚本");
-            
-            // 确保所有模态框在页面加载时是隐藏的
-            const allModals = document.querySelectorAll('#invoiceModal, #saveOrderModal');
-            allModals.forEach(modal => {
-                modal.classList.add('hidden');
-                modal.setAttribute('aria-hidden', 'true');
-            });
-            
-            // 获取优惠券信息
-            const selectedCoupon = localStorage.getItem('selectedCoupon');
-            const couponText = document.getElementById('couponText');
-            const couponDiscount = document.getElementById('couponDiscount');
-            const couponDiscountValue = document.querySelector('.coupon-discount-value');
-            const totalPrice = document.querySelector('.total-price');
-            let subtotal = 5097; // 商品总价
-            
-            // 如果有选择的优惠券，则显示优惠券信息
-            if (selectedCoupon) {
-                const couponData = JSON.parse(selectedCoupon);
-                couponText.textContent = couponData.amount + ' ' + couponData.condition;
-                
-                // 计算优惠券折扣
-                let discount = 0;
-                if (couponData.amount.includes('¥')) {
-                    // 满减券
-                    const amount = parseInt(couponData.amount.replace('¥', ''));
-                    const condition = couponData.condition.match(/\d+/);
-                    if (condition && subtotal >= parseInt(condition[0])) {
-                        discount = amount;
-                    } else {
-                        couponText.innerHTML = `<span class="text-sm text-gray-400">${couponData.amount} ${couponData.condition}(不满足条件)</span>`;
-                    }
-                } else if (couponData.amount.includes('折')) {
-                    // 折扣券
-                    const discountRate = parseFloat(couponData.amount.replace('折', '')) / 10;
-                    discount = Math.round(subtotal * (1 - discountRate));
-                } else if (couponData.amount.includes('免运费')) {
-                    // 运费券
-                    // 这里假设运费为0，所以没有额外折扣
-                    discount = 0;
-                }
-                
-                // 显示折扣金额
-                if (discount > 0) {
-                    couponDiscount.style.display = 'flex';
-                    couponDiscountValue.textContent = `-¥${discount.toFixed(2)}`;
-                    
-                    // 更新总价
-                    const newTotal = subtotal - discount;
-                    totalPrice.textContent = `¥${newTotal.toFixed(2)}`;
-                }
-            }
-            
-            // 处理来自优惠券页面的返回
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('coupon') === 'applied') {
-                // 刷新页面以更新优惠券信息
-                location.reload();
-            }
-            
-            // 生成预计送达时间
-            const generateDeliveryTime = () => {
-                const now = new Date();
-                const deliveryDate = new Date(now.setDate(now.getDate() + 3)); // 假设3天后送达
-                
-                const month = deliveryDate.getMonth() + 1;
-                const date = deliveryDate.getDate();
-                
-                // 获取周几
-                const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
-                const weekday = weekdays[deliveryDate.getDay()];
-                
-                return `${month}月${date}日（周${weekday}）09:00-18:00`;
-            };
-            
-            // 设置送达时间
-            const estimatedDelivery = document.getElementById('estimatedDelivery');
-            if (estimatedDelivery) {
-                estimatedDelivery.textContent = generateDeliveryTime();
-            }
-            
-            // 发票模态框相关
-            const invoiceSection = document.querySelector('.section.p-4.flex.items-center.justify-between:last-of-type');
-            const invoiceModal = document.getElementById('invoiceModal');
-            const closeInvoiceModal = document.getElementById('closeInvoiceModal');
-            const confirmInvoice = document.getElementById('confirmInvoice');
-            const invoiceText = document.querySelector('.invoice-text');
-            const personalTitle = document.getElementById('personalTitle');
-            const companyTitle = document.getElementById('companyTitle');
-            const companyInfo = document.getElementById('companyInfo');
-            
-            if (invoiceSection && invoiceModal) {
-                invoiceSection.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    showModal(invoiceModal);
-                    console.log("打开发票模态框");
-                });
-                
-                // 添加点击背景关闭模态框
-                invoiceModal.addEventListener('click', function(e) {
-                    if (e.target === invoiceModal) {
-                        hideModal(invoiceModal);
-                    }
-                });
-            }
-            
-            if (closeInvoiceModal) {
-                closeInvoiceModal.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    hideModal(invoiceModal);
-                });
-            }
-            
-            if (confirmInvoice) {
-                confirmInvoice.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    // 获取发票类型
-                    const invoiceType = document.querySelector('input[name="invoiceType"]:checked').value;
-                    const invoiceTitle = document.querySelector('input[name="invoiceTitle"]:checked').value;
-                    
-                    // 更新发票文本
-                    if (invoiceTitle === 'personal') {
-                        invoiceText.textContent = invoiceType === 'electronic' ? '电子发票 - 个人' : '纸质发票 - 个人';
-                    } else {
-                        invoiceText.textContent = invoiceType === 'electronic' ? '电子发票 - 单位' : '纸质发票 - 单位';
-                    }
-                    
-                    hideModal(invoiceModal);
-                });
-            }
-            
-            // 切换发票抬头
-            if (personalTitle && companyTitle && companyInfo) {
-                personalTitle.addEventListener('change', function() {
-                    if (this.checked) {
-                        companyInfo.classList.add('hidden');
-                    }
-                });
-                
-                companyTitle.addEventListener('change', function() {
-                    if (this.checked) {
-                        companyInfo.classList.remove('hidden');
-                    }
-                });
-            }
-            
-            // 保存常用订单模态框相关
-            const saveOrderBtn = document.getElementById('saveOrderBtn');
-            const saveOrderModal = document.getElementById('saveOrderModal');
-            const closeSaveOrderModal = document.getElementById('closeSaveOrderModal');
-            const confirmSaveOrder = document.getElementById('confirmSaveOrder');
-            
-            if (saveOrderBtn && saveOrderModal) {
-                saveOrderBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    console.log("保存常用订单按钮被点击");
-                    showModal(saveOrderModal);
-                });
-                
-                // 添加点击背景关闭模态框
-                saveOrderModal.addEventListener('click', function(e) {
-                    if (e.target === saveOrderModal) {
-                        hideModal(saveOrderModal);
-                    }
-                });
-            }
-            
-            if (closeSaveOrderModal) {
-                closeSaveOrderModal.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    hideModal(saveOrderModal);
-                });
-            }
-            
-            if (confirmSaveOrder) {
-                confirmSaveOrder.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const orderName = document.getElementById('orderName').value.trim();
-                    if (!orderName) {
-                        alert('请输入常用订单名称');
-                        return;
-                    }
-                    
-                    // 构建常用订单数据
-                    const orderData = {
-                        name: orderName,
-                        products: [
-                            {
-                                name: '北欧设计师台灯',
-                                variant: '黑色',
-                                price: 599,
-                                quantity: 2
-                            }
-                        ],
-                        address: {
-                            name: '李小明',
-                            phone: '13800138000',
-                            detail: '广东省深圳市南山区科技园南区A栋1001室'
-                        },
-                        totalPrice: totalPrice.textContent.replace('¥', ''),
-                        createdAt: new Date().toISOString()
-                    };
-                    
-                    // 保存到本地存储
-                    let savedOrders = JSON.parse(localStorage.getItem('savedOrders') || '[]');
-                    savedOrders.push(orderData);
-                    localStorage.setItem('savedOrders', JSON.stringify(savedOrders));
-                    
-                    // 关闭模态框并提示
-                    hideModal(saveOrderModal);
-                    
-                    // 显示成功提示
-                    const successToast = document.createElement('div');
-                    successToast.className = 'fixed top-16 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50';
-                    successToast.textContent = '已成功保存为常用订单';
-                    document.body.appendChild(successToast);
-                    
-                    // 3秒后移除提示
-                    setTimeout(() => {
-                        successToast.remove();
-                    }, 3000);
-                });
-            }
-            
-            // 确保所有的可点击元素都有正确的鼠标样式
-            const clickableElements = document.querySelectorAll('button, .section.address, .delivery-option, .delivery-time-option, .payment-method, #couponSection');
-            clickableElements.forEach(element => {
-                element.style.cursor = 'pointer';
-            });
-            
-            console.log("页面初始化完成");
-        });
     </script>
 </body>
 </html> 
