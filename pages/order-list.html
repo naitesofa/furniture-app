@@ -78,19 +78,30 @@
 
         /* 标签栏样式 */
         .tab-group {
-            background: white;
-            border-radius: 8px;
+            position: sticky;
+            top: 48px;
+            z-index: 5;
+            background-color: var(--bg-color);
+            padding: 8px 16px;
+            margin: 0;
+            display: flex;
+            justify-content: space-between;
+            border-radius: 16px;
             box-shadow: var(--shadow-sm);
+            margin-bottom: 16px;
+            margin-top: 8px;
         }
 
         .tab {
             position: relative;
             transition: all 0.3s ease;
+            padding: 10px 0;
+            font-size: 14px;
         }
 
         .tab.active {
             color: var(--brand-primary);
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .tab.active::after {
@@ -104,54 +115,208 @@
             border-radius: 3px;
         }
 
+        /* 订单头部样式 */
+        .order-header {
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .order-id-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .status-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .status-badge {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        /* 搜索框样式 */
+        .search-container {
+            position: relative;
+            margin-left: 0;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 16px 8px 36px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 24px;
+            background-color: white;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--brand-primary-light);
+            box-shadow: var(--shadow-md);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--brand-dark-light);
+        }
+
+        .clear-search-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--brand-dark-light);
+            cursor: pointer;
+            display: none;
+            background: none;
+            border: none;
+        }
+
+        .clear-search-btn.visible {
+            display: block;
+        }
+
         /* 订单卡片样式 */
         .order-card {
             background: white;
-            border-radius: 12px;
-            box-shadow: var(--shadow-sm);
-            transition: transform 0.3s ease;
+            border-radius: 16px;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            overflow: hidden;
+            margin-bottom: 16px;
+            border: 1px solid rgba(0,0,0,0.03);
         }
 
         .order-card:hover {
             transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-lg);
         }
 
         .product-image {
             border: 1px solid var(--brand-light-dark);
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
             transition: transform 0.3s ease;
         }
 
-        .product-image:hover {
-            transform: scale(1.02);
+        .order-card .p-4 {
+            padding: 16px;
         }
 
-        /* 按钮样式 */
+        .order-card .border-b {
+            border-color: rgba(0,0,0,0.05);
+        }
+
+        .order-card .border-t {
+            border-color: rgba(0,0,0,0.05);
+        }
+
+        .order-card .bg-gray-50 {
+            background-color: var(--brand-primary-transparent);
+            border: none;
+        }
+
+        /* 按钮样式优化 */
         .btn {
             transition: all 0.3s ease;
             border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
         }
 
         .btn-primary {
             background: var(--brand-gradient-primary);
             color: white;
             box-shadow: var(--shadow-highlight);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-lg);
+            border: none;
         }
 
         .btn-outline {
-            border: 1px solid var(--brand-dark-light);
-            color: var(--brand-dark);
+            border: 1px solid var(--brand-primary-light);
+            color: var(--brand-primary);
+            background-color: white;
         }
 
         .btn-outline:hover {
-            background-color: var(--brand-light-dark);
+            background-color: var(--brand-primary-transparent);
+            color: var(--brand-primary-dark);
+        }
+
+        /* 状态标签样式 */
+        .order-card .text-brand-warning {
+            font-weight: 600;
+        }
+
+        .order-card .text-brand-error {
+            font-weight: 600;
+        }
+
+        .order-card .text-brand-info {
+            font-weight: 600;
+        }
+
+        .order-card .text-brand-success {
+            font-weight: 600;
+        }
+
+        /* 预计发货标签样式 */
+        .expected-ship-date {
+            background-color: var(--brand-primary-transparent);
+            color: var(--brand-primary-dark);
+            border-radius: 20px;
+            padding: 4px 10px;
+            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            margin-top: 4px;
+        }
+
+        .expected-ship-date i {
+            margin-right: 4px;
+            font-size: 12px;
+        }
+
+        /* 订单号样式 */
+        .order-id-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .order-id-text {
+            font-family: monospace;
+            letter-spacing: 0.5px;
+        }
+
+        .copy-order-id-btn {
+            color: var(--brand-primary-light);
+            padding: 2px;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .copy-order-id-btn:hover {
+            background-color: var(--brand-primary-transparent);
+            color: var(--brand-primary);
         }
 
         /* 底部导航 */
@@ -203,14 +368,19 @@
 
         /* 空状态样式 */
         .empty-state {
-            display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 40px 20px;
             color: var(--brand-dark-light);
+            margin-bottom: 16px;
         }
-
+        
+        /* 仅在空状态可见时应用 flex 布局 */
+        .empty-state:not(.hidden) {
+            display: flex;
+        }
+        
         .empty-icon {
             font-size: 48px;
             color: var(--brand-light-dark);
@@ -327,22 +497,29 @@
     <!-- 顶部导航栏 -->
     <div class="nav-bar fixed top-0 left-0 right-0 z-10">
         <div class="flex items-center justify-between px-4 h-12">
-            <div class="flex items-center">
+            <div class="flex items-center flex-shrink-0">
                 <a href="profile.html" class="text-gray-500 mr-3">
                     <i class="fas fa-arrow-left"></i>
                 </a>
-                <div class="text-lg font-medium">我的订单</div>
             </div>
-            <div class="flex items-center">
-                <a href="#" class="text-gray-500 ml-3">
-                    <i class="fas fa-search"></i>
-                </a>
+            <!-- 将搜索框集成到导航栏 -->
+            <div class="flex-grow ml-3" style="margin-left: 0px;">
+                 <div class="search-container">
+                    <input type="text" id="orderSearchInput" placeholder="商品名称或订单号" class="search-input">
+                    <div class="search-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <button id="clearSearchBtn" class="clear-search-btn">
+                        <i class="fas fa-times-circle"></i>
+                    </button>
+                </div>
             </div>
+            <!-- 原右侧内容移除 -->
         </div>
     </div>
     
     <!-- 标签栏 -->
-    <div class="tab-group mt-14 mx-4 flex justify-between">
+    <div class="tab-group mx-4 flex justify-between">
         <div class="tab active flex-1 text-center py-3">全部</div>
         <div class="tab flex-1 text-center py-3">待付款</div>
         <div class="tab flex-1 text-center py-3">待发货</div>
@@ -351,14 +528,17 @@
     </div>
     
     <!-- 订单列表 -->
-    <div class="order-list mt-4 px-4 pb-24">
+    <div class="order-list px-4 pb-24">
         <!-- 订单卡片 1 - 待付款 -->
-        <div class="order-card mb-4 overflow-hidden">
+        <div class="order-card mb-4 overflow-hidden" style="margin-top: 46px;">
             <!-- 订单头部 -->
             <div class="p-4 flex justify-between items-center border-b border-gray-100">
                 <div class="flex items-center">
                     <div class="text-xs text-gray-500">订单号：</div>
-                    <div class="text-xs">2023112309876</div>
+                    <div class="text-xs order-id-text">2023112309876</div>
+                    <button class="ml-2 text-gray-400 hover:text-brand-primary focus:outline-none copy-order-id-btn" title="复制订单号">
+                        <i class="far fa-copy text-xs"></i>
+                    </button>
                 </div>
                 <div class="text-sm font-medium text-brand-error">待付款</div>
             </div>
@@ -414,26 +594,35 @@
         <!-- 订单卡片 2 - 待发货 -->
         <div class="order-card mb-4 overflow-hidden">
             <!-- 订单头部 -->
-            <div class="p-4 flex justify-between items-center border-b border-gray-100">
-                <div class="flex items-center">
+            <div class="order-header">
+                <div class="order-id-group">
                     <div class="text-xs text-gray-500">订单号：</div>
-                    <div class="text-xs">2023112208765</div>
+                    <div class="text-xs order-id-text">2023112208765</div>
+                    <button class="copy-order-id-btn" title="复制订单号">
+                        <i class="far fa-copy text-xs"></i>
+                    </button>
                 </div>
-                <div class="text-sm font-medium text-brand-warning">待发货</div>
+                <div class="status-group">
+                    <div class="status-badge text-brand-warning">待发货</div>
+                    <div class="expected-ship-date">
+                        <i class="fas fa-calendar-alt"></i>
+                        预计发货：2023-11-25
+                    </div>
+                </div>
             </div>
             
             <!-- 订单商品 -->
             <div class="p-4">
                 <div class="flex">
-                    <div class="product-image w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
+                    <div class="product-image w-20 h-20 bg-gray-100 rounded-md overflow-hidden shadow-sm">
                         <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="现代简约书桌" class="w-full h-full object-cover">
                     </div>
                     <div class="ml-3 flex-1">
-                        <div class="text-sm font-medium">现代简约书桌</div>
-                        <div class="text-xs text-gray-500 mt-1">原木色</div>
-                        <div class="flex justify-between mt-2">
-                            <div class="text-sm font-medium">¥1,299</div>
-                            <div class="text-sm text-gray-500">x1</div>
+                        <div class="text-sm font-medium text-gray-800">现代简约书桌</div>
+                        <div class="text-xs text-gray-500 mt-1 inline-block bg-gray-100 px-2 py-0.5 rounded-full">原木色</div>
+                        <div class="flex justify-between mt-2 items-end">
+                            <div class="text-sm font-medium text-brand-primary">¥1,299</div>
+                            <div class="text-xs text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full">x1</div>
                         </div>
                     </div>
                 </div>
@@ -441,17 +630,22 @@
             
             <!-- 订单金额 -->
             <div class="px-4 py-3 bg-gray-50 flex justify-between items-center">
-                <div class="text-xs text-gray-500">共1件商品</div>
+                <div class="text-xs text-gray-600 flex items-center">
+                    <i class="fas fa-box-open mr-1"></i>
+                    共1件商品
+                </div>
                 <div class="flex items-center">
-                    <div class="text-xs text-gray-500 mr-1">实付：</div>
-                    <div class="text-sm font-medium text-brand-primary">¥1,299</div>
+                    <div class="text-xs text-gray-600 mr-1">实付：</div>
+                    <div class="text-base font-medium text-brand-primary">¥1,299</div>
                 </div>
             </div>
             
             <!-- 订单操作 -->
             <div class="p-3 flex justify-end space-x-3 border-t border-gray-100">
-                <a href="order-detail.html?id=2023112208765" class="btn btn-outline text-xs px-4 py-1.5 view-detail-btn">查看详情</a>
-                <button class="btn btn-outline text-xs px-4 py-1.5">提醒发货</button>
+                <a href="order-detail.html?id=2023112208765" class="btn btn-outline text-xs px-4 py-1.5 view-detail-btn flex items-center">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    查看详情
+                </a>
             </div>
         </div>
         
@@ -461,7 +655,10 @@
             <div class="p-4 flex justify-between items-center border-b border-gray-100">
                 <div class="flex items-center">
                     <div class="text-xs text-gray-500">订单号：</div>
-                    <div class="text-xs">2023112107654</div>
+                    <div class="text-xs order-id-text">2023112107654</div>
+                    <button class="ml-2 text-gray-400 hover:text-brand-primary focus:outline-none copy-order-id-btn" title="复制订单号">
+                        <i class="far fa-copy text-xs"></i>
+                    </button>
                 </div>
                 <div class="text-sm font-medium text-brand-info">待收货</div>
             </div>
@@ -514,7 +711,10 @@
             <div class="p-4 flex justify-between items-center border-b border-gray-100">
                 <div class="flex items-center">
                     <div class="text-xs text-gray-500">订单号：</div>
-                    <div class="text-xs">2023112006543</div>
+                    <div class="text-xs order-id-text">2023112006543</div>
+                    <button class="ml-2 text-gray-400 hover:text-brand-primary focus:outline-none copy-order-id-btn" title="复制订单号">
+                        <i class="far fa-copy text-xs"></i>
+                    </button>
                 </div>
                 <div class="text-sm font-medium text-brand-success">待评价</div>
             </div>
@@ -547,9 +747,8 @@
             
             <!-- 订单操作 -->
             <div class="p-3 flex justify-end space-x-3 border-t border-gray-100">
-                <a href="order-detail.html?id=2023112006543" class="btn btn-outline text-xs px-4 py-1.5">查看详情</a>
-                <a href="review.html?orderId=2023112006543&productId=10001" class="btn btn-primary text-xs px-4 py-1.5">评价晒单</a>
                 <a href="after-sale.html?id=2023112006543" class="btn btn-outline text-xs px-4 py-1.5 after-sale-btn">申请售后</a>
+                <a href="review.html?orderId=2023112006543&productId=10001" class="btn btn-primary text-xs px-4 py-1.5">评价晒单</a>
             </div>
         </div>
         
@@ -559,7 +758,10 @@
             <div class="p-4 flex justify-between items-center border-b border-gray-100">
                 <div class="flex items-center">
                     <div class="text-xs text-gray-500">订单号：</div>
-                    <div class="text-xs">2023111905432</div>
+                    <div class="text-xs order-id-text">2023111905432</div>
+                    <button class="ml-2 text-gray-400 hover:text-brand-primary focus:outline-none copy-order-id-btn" title="复制订单号">
+                        <i class="far fa-copy text-xs"></i>
+                    </button>
                 </div>
                 <div class="text-sm text-gray-500">已完成</div>
             </div>
@@ -592,7 +794,7 @@
             
             <!-- 订单操作 -->
             <div class="p-3 flex justify-end space-x-3 border-t border-gray-100">
-                <button class="btn btn-outline text-xs px-4 py-1.5">再次购买</button>
+                <button class="btn btn-outline text-xs px-4 py-1.5 buy-again-btn">再次购买</button>
                 <a href="after-sale.html?id=2023111905432" class="btn btn-outline text-xs px-4 py-1.5 after-sale-btn">申请售后</a>
             </div>
         </div>
@@ -611,7 +813,7 @@
     </div>
     
     <!-- 底部导航 -->
-    <div class="tab-bar">
+    <!-- <div class="tab-bar">
         <a href="home.html" class="tab-item btn-press">
             <div class="tab-icon tab-inactive"><i class="fas fa-home"></i></div>
             <div class="tab-label tab-inactive">首页</div>
@@ -628,7 +830,7 @@
             <div class="tab-icon tab-active"><i class="fas fa-user"></i></div>
             <div class="tab-label tab-active">我的</div>
         </a>
-    </div>
+    </div> -->
     
     <!-- 自定义模态框 -->
     <div class="modal-overlay" id="confirmModal">
@@ -648,14 +850,15 @@
     </div>
     
     <!-- 加载状态 -->
-    <div id="loading" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.7); display: none; justify-content: center; align-items: center; z-index: 1500;">
+    <div id="loading" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.7); display: flex; justify-content: center; align-items: center; z-index: 1500;">
         <div><i class="fas fa-spinner fa-spin" style="font-size: 24px; color: var(--brand-primary);"></i></div>
     </div>
     
     <script>
         // 全局变量
         let currentTab = '全部';
-        
+        let currentSearchTerm = ''; // 新增：存储当前搜索关键词
+
         document.addEventListener('DOMContentLoaded', function() {
             // 初始化页面
             initPage();
@@ -677,8 +880,11 @@
             // 设置选项卡切换事件
             setupTabs();
             
-            // 根据当前选项卡过滤订单
-            filterOrders(currentTab);
+            // 设置搜索框行为
+            setupSearch();
+            
+            // 根据当前选项卡和搜索词过滤订单
+            filterOrders(currentTab, currentSearchTerm);
             
             // 设置按钮行为
             setupButtonActions();
@@ -701,12 +907,18 @@
                     
                     // 获取订单ID
                     const orderId = this.getAttribute('data-order-id');
+
                     if (orderId) {
-                        // 跳转到订单详情页面
-                        window.location.href = `order-detail.html?id=${orderId}&from=${currentTab}`;
+                        // 跳转到订单详情页面，只传递 ID
+                        const detailUrl = `order-detail.html?id=${orderId}`;
+                        console.log('即将跳转到:', detailUrl); // 在跳转前打印 URL，方便调试
+                        window.location.href = detailUrl; 
                     }
                 });
             });
+
+            // 最后隐藏初始加载状态
+            document.getElementById('loading').style.display = 'none';
         }
 
         function getActiveTab() {
@@ -714,8 +926,10 @@
             const urlParams = new URLSearchParams(window.location.search);
             let tab = urlParams.get('status');
             
-            if (!tab) {
-                tab = '全部';
+            // 规范化 tab 值，处理 null 或无效值
+            const validTabs = Array.from(document.querySelectorAll('.tab')).map(t => t.textContent.trim());
+            if (!tab || !validTabs.includes(tab)) {
+                tab = '全部'; // 默认或回退到 '全部'
             }
             
             // 设置对应的选项卡为激活状态
@@ -742,18 +956,54 @@
                     // 设置当前选项卡为激活状态
                     this.classList.add('active');
                     
+                    // 显示加载状态
+                    document.getElementById('loading').style.display = 'flex';
+                    
                     // 更新当前选项卡状态
                     currentTab = this.textContent.trim();
                     
-                    // 根据选项卡过滤订单
-                    filterOrders(currentTab);
+                    // 根据选项卡和搜索词过滤订单
+                    filterOrders(currentTab, currentSearchTerm);
                     
-                    // 更新URL，不刷新页面
-                    const url = new URL(window.location.href);
-                    url.searchParams.set('status', currentTab);
-                    window.history.pushState({}, '', url.toString());
+                    // 隐藏加载状态 (因为 filterOrders 目前是同步的)
+                    // 如果 filterOrders 变为异步加载数据，则应在数据加载完成后隐藏
+                    document.getElementById('loading').style.display = 'none';
                 });
             });
+        }
+
+        // 新增：设置搜索框事件
+        function setupSearch() {
+            const searchInput = document.getElementById('orderSearchInput');
+            const clearBtn = document.getElementById('clearSearchBtn');
+
+            searchInput.addEventListener('input', function() {
+                currentSearchTerm = this.value.trim().toLowerCase();
+                filterOrders(currentTab, currentSearchTerm);
+
+                // 控制清除按钮的显示/隐藏
+                if (currentSearchTerm) {
+                    clearBtn.classList.add('visible');
+                } else {
+                    clearBtn.classList.remove('visible');
+                }
+            });
+
+            clearBtn.addEventListener('click', function() {
+                searchInput.value = '';
+                currentSearchTerm = '';
+                filterOrders(currentTab, currentSearchTerm);
+                clearBtn.classList.remove('visible');
+                searchInput.focus(); // 清除后重新聚焦
+            });
+
+            // 可选：按 Enter 键也触发一次过滤（如果需要非实时搜索）
+            // searchInput.addEventListener('keydown', function(e) {
+            //     if (e.key === 'Enter') {
+            //         currentSearchTerm = this.value.trim().toLowerCase();
+            //         filterOrders(currentTab, currentSearchTerm);
+            //     }
+            // });
         }
 
         // 为所有订单卡片内的按钮添加通用的事件处理函数
@@ -776,12 +1026,71 @@
                 });
             });
 
-            // 设置取消订单按钮事件
+            // 设置取消订单按钮事件 (修改)
             document.querySelectorAll('.cancel-order-btn').forEach(btn => {
                 btn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const orderId = this.closest('.order-card').getAttribute('data-order-id');
-                    window.location.href = `order-cancel.html?id=${orderId}&from=${currentTab}`;
+                    e.preventDefault(); // 阻止默认跳转
+                    const orderCard = this.closest('.order-card');
+                    const orderId = orderCard.getAttribute('data-order-id');
+                    const statusElement = orderCard.querySelector('.text-sm.font-medium.text-brand-error'); // 定位待付款状态
+
+                    // 仅当状态为"待付款"时才使用模态框
+                    if (statusElement && statusElement.textContent.trim() === '待付款') {
+                        const modal = document.getElementById('confirmModal');
+                        const modalTitle = modal.querySelector('.modal-title');
+                        const modalContent = modal.querySelector('.modal-content');
+                        const confirmBtn = document.getElementById('modalConfirmBtn');
+                        const cancelBtn = document.getElementById('modalCancelBtn');
+
+                        // 设置模态框内容
+                        modalTitle.textContent = '取消订单';
+                        modalContent.textContent = '您确定要取消此订单吗？';
+
+                        // 清理可能存在的旧事件监听器 (非常重要)
+                        confirmBtn.replaceWith(confirmBtn.cloneNode(true));
+                        cancelBtn.replaceWith(cancelBtn.cloneNode(true));
+                        // 重新获取按钮引用
+                        const newConfirmBtn = document.getElementById('modalConfirmBtn');
+                        const newCancelBtn = document.getElementById('modalCancelBtn');
+
+                        // 确认取消按钮点击事件
+                        const confirmCancelHandler = () => {
+                            document.getElementById('loading').style.display = 'flex'; // 显示加载
+                            modal.classList.remove('active');
+
+                            // 模拟API请求 (增加错误处理)
+                            setTimeout(() => {
+                                document.getElementById('loading').style.display = 'none'; // 隐藏加载
+                                if (Math.random() > 0.2) { // 模拟成功
+                                    // 移除订单卡片
+                                    orderCard.remove();
+                                    showToast('订单已取消');
+                                    filterOrders(currentTab, currentSearchTerm); // 重新过滤
+                                } else { // 模拟失败
+                                    showToast('取消失败，请稍后重试');
+                                    // 无需恢复按钮，因为模态框已关闭
+                                }
+                            }, 1000);
+                        };
+
+                        // 取消按钮点击事件
+                        const cancelCancelHandler = () => {
+                            modal.classList.remove('active');
+                        };
+
+                        // 绑定新事件
+                        newConfirmBtn.addEventListener('click', confirmCancelHandler, { once: true }); // 使用 once 确保只触发一次
+                        newCancelBtn.addEventListener('click', cancelCancelHandler, { once: true });
+
+                        // 显示模态框
+                        modal.classList.add('active');
+
+                    } else {
+                        // 对于非"待付款"状态的取消按钮（如果存在），可以保留原跳转逻辑或禁用
+                        console.warn('取消订单按钮仅应对"待付款"状态有效');
+                        // 如果需要跳转到通用取消页面，可以在这里添加
+                        // window.location.href = `order-cancel.html?id=${orderId}&from=${currentTab}`;
+                    }
                 });
             });
 
@@ -826,62 +1135,67 @@
                     
                     // 确认按钮点击事件
                     const confirmHandler = function() {
-                        // 显示加载状态
-                        document.getElementById('loading').style.display = 'flex';
+                        document.getElementById('loading').style.display = 'flex'; // 显示加载
                         
-                        // 移除之前的事件监听
-                        confirmBtn.removeEventListener('click', confirmHandler);
-                        cancelBtn.removeEventListener('click', cancelHandler);
-                        
-                        // 关闭模态框
+                        // 移除之前的事件监听 (保持在显示加载之后，隐藏加载之前)
+                        const currentConfirmBtn = document.getElementById('modalConfirmBtn');
+                        const currentCancelBtn = document.getElementById('modalCancelBtn');
+                        currentConfirmBtn.replaceWith(currentConfirmBtn.cloneNode(true));
+                        currentCancelBtn.replaceWith(currentCancelBtn.cloneNode(true));
+
                         modal.classList.remove('active');
                         
-                        // 模拟API请求延迟
+                        // 模拟API请求延迟 (增加错误处理)
                         setTimeout(() => {
-                            // 隐藏加载状态
-                            document.getElementById('loading').style.display = 'none';
-                            
-                            // 更新订单状态为"待评价"
-                            const statusElem = orderCard.querySelector('.text-sm.font-medium') || orderCard.querySelector('.text-sm');
-                            if (statusElem) {
-                                statusElem.textContent = '待评价';
-                                statusElem.className = 'text-sm font-medium text-brand-success';
-                            }
-                            
-                            // 隐藏物流信息
-                            const logisticsInfo = orderCard.querySelector('.px-4.py-3.bg-gray-50.border-t.border-b');
-                            if (logisticsInfo) {
-                                logisticsInfo.style.display = 'none';
-                            }
-                            
-                            // 更新底部按钮
-                            const bottomBtnContainer = orderCard.querySelector('.p-3.flex.justify-end.space-x-3.border-t.border-gray-100');
-                            if (bottomBtnContainer) {
-                                bottomBtnContainer.innerHTML = `
-                                    <a href="order-detail.html?id=${orderId}" class="btn btn-outline text-xs px-4 py-1.5 view-detail-btn">查看详情</a>
-                                    <a href="review.html?orderId=${orderId}" class="btn btn-primary text-xs px-4 py-1.5">去评价</a>
-                                `;
-                            }
-                            
-                            // 检查当前是否在"待收货"选项卡
-                            if (currentTab === '待收货') {
-                                // 将订单移至"待评价"选项卡，或者重新应用过滤器
-                                const waitReviewTab = Array.from(document.querySelectorAll('.tab')).find(tab => tab.textContent.trim() === '待评价');
-                                if (waitReviewTab) {
-                                    waitReviewTab.click();
-                                } else {
-                                    filterOrders(currentTab);
+                             document.getElementById('loading').style.display = 'none'; // 隐藏加载
+                             
+                             if (Math.random() > 0.2) { // 模拟成功
+                                // 更新订单状态为"待评价"
+                                const statusElem = orderCard.querySelector('.text-sm.font-medium, .text-sm.text-gray-500'); // 调整选择器以匹配各种状态元素
+                                if (statusElem) {
+                                    statusElem.textContent = '待评价';
+                                    statusElem.className = 'text-sm font-medium text-brand-success';
                                 }
-                            } else {
-                                // 在其他选项卡中，重新应用当前过滤器
-                                filterOrders(currentTab);
-                            }
-                            
-                            // 显示成功提示
-                            showToast('确认收货成功');
-                            
-                            // 重新绑定按钮事件
-                            setupButtonActions();
+                                
+                                // 隐藏物流信息
+                                const logisticsInfo = orderCard.querySelector('.px-4.py-3.bg-gray-50.border-t.border-b');
+                                if (logisticsInfo) {
+                                    logisticsInfo.style.display = 'none';
+                                }
+                                
+                                // 更新底部按钮
+                                const bottomBtnContainer = orderCard.querySelector('.p-3.flex.justify-end.space-x-3.border-t.border-gray-100');
+                                if (bottomBtnContainer) {
+                                    bottomBtnContainer.innerHTML = `
+                                        <a href="order-detail.html?id=${orderId}" class="btn btn-outline text-xs px-4 py-1.5 view-detail-btn">查看详情</a>
+                                        <a href="review.html?orderId=${orderId}" class="btn btn-primary text-xs px-4 py-1.5">去评价</a>
+                                    `;
+                                }
+                                
+                                // 检查当前是否在"待收货"选项卡
+                                if (currentTab === '待收货') {
+                                    // 将订单移至"待评价"选项卡，或者重新应用过滤器
+                                    const waitReviewTab = Array.from(document.querySelectorAll('.tab')).find(tab => tab.textContent.trim() === '待评价');
+                                    if (waitReviewTab) {
+                                        waitReviewTab.click();
+                                    } else {
+                                        filterOrders(currentTab, currentSearchTerm);
+                                    }
+                                } else {
+                                    // 在其他选项卡中，重新应用当前过滤器
+                                    filterOrders(currentTab, currentSearchTerm);
+                                }
+                                
+                                // 显示成功提示
+                                showToast('确认收货成功');
+                                // 重新绑定按钮事件 (确保新按钮有事件)
+                                setupButtonActions(); 
+                             } else { // 模拟失败
+                                showToast('确认收货失败，请稍后重试');
+                                // 需要重新为按钮绑定事件，因为之前的克隆操作移除了旧监听器
+                                // 但按钮本身状态未变，重新执行setupButtonActions即可
+                                setupButtonActions(); 
+                             }
                         }, 1000);
                     };
                     
@@ -895,6 +1209,78 @@
                     // 绑定事件
                     confirmBtn.addEventListener('click', confirmHandler);
                     cancelBtn.addEventListener('click', cancelHandler);
+                });
+            });
+
+            // 设置再次购买按钮事件 (新增)
+            document.querySelectorAll('.buy-again-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const orderCard = this.closest('.order-card');
+                    const orderId = orderCard.getAttribute('data-order-id');
+                    
+                    // 显示加载状态
+                    document.getElementById('loading').style.display = 'flex';
+                    // 禁用按钮防止重复点击 (可选)
+                    this.disabled = true;
+                    this.classList.add('opacity-50', 'cursor-not-allowed');
+
+                    // 模拟API调用 (增加错误处理)
+                    setTimeout(() => {
+                        document.getElementById('loading').style.display = 'none'; // 隐藏加载
+                        
+                        if (Math.random() > 0.2) { // 模拟成功
+                             // 恢复按钮
+                             this.disabled = false;
+                             this.classList.remove('opacity-50', 'cursor-not-allowed');
+                            // 显示成功提示
+                            showToast('商品已添加至购物车');
+                            // 可选：跳转到购物车页面
+                            // window.location.href = 'cart.html';
+                        } else { // 模拟失败
+                            showToast('添加购物车失败，请稍后重试');
+                            // 恢复按钮
+                            this.disabled = false;
+                            this.classList.remove('opacity-50', 'cursor-not-allowed');
+                        }
+                    }, 1000); // 模拟网络延迟
+                });
+            });
+
+            // 设置复制订单号按钮事件 (新增)
+            document.querySelectorAll('.copy-order-id-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation(); // 阻止事件冒泡到卡片点击事件
+                    
+                    const orderIdElement = this.previousElementSibling; // 按钮的前一个兄弟元素就是订单号
+                    if (orderIdElement && orderIdElement.classList.contains('order-id-text')) {
+                        const orderId = orderIdElement.textContent.trim();
+                        
+                        if (navigator.clipboard) {
+                            navigator.clipboard.writeText(orderId).then(() => {
+                                showToast('订单号已复制');
+                            }).catch(err => {
+                                console.error('无法复制订单号: ', err);
+                                showToast('复制失败');
+                            });
+                        } else {
+                            // 备选方案（兼容旧浏览器或非 HTTPS 环境）
+                            try {
+                                const tempInput = document.createElement('input');
+                                tempInput.value = orderId;
+                                document.body.appendChild(tempInput);
+                                tempInput.select();
+                                document.execCommand('copy');
+                                document.body.removeChild(tempInput);
+                                showToast('订单号已复制');
+                            } catch (err) {
+                                console.error('无法使用备选方案复制订单号: ', err);
+                                showToast('复制失败');
+                            }
+                        }
+                    } else {
+                        console.error('无法找到订单号元素');
+                        showToast('复制失败');
+                    }
                 });
             });
         }
@@ -912,8 +1298,8 @@
             }, 2000);
         }
         
-        // 筛选订单的函数
-        function filterOrders(status) {
+        // 修改：筛选订单的函数，增加搜索参数
+        function filterOrders(status, searchTerm = '') {
             const orderCards = document.querySelectorAll('.order-card');
             const emptyState = document.querySelector('.empty-state');
             let visibleCount = 0;
@@ -929,30 +1315,94 @@
             };
                 
                 orderCards.forEach(card => {
+                let isVisible = false;
+                const statusElement = card.querySelector('.text-sm.font-medium, .text-sm.text-gray-500'); // 调整选择器以匹配"已完成"
+                const statusText = statusElement ? statusElement.textContent.trim() : '';
+
+                // 1. 检查状态是否匹配
+                let statusMatch = false;
                 if (status === '全部') {
-                    // 全部分类显示所有订单
+                    statusMatch = true;
+                } else {
+                    // 检查状态文本是否与 Tab 文本完全匹配
+                    if (statusText === status) {
+                         statusMatch = true;
+                    } else {
+                        // 兼容之前的 class 匹配逻辑 (可选，如果状态文本足够可靠，可以移除)
+                        const statusClass = statusElement ? statusElement.className : '';
+                        if (statusClass.includes(orderStatusMap[status])) {
+                           statusMatch = true;
+                        }
+                    }
+                }
+
+                // 2. 如果状态匹配，再检查搜索关键词是否匹配
+                let searchMatch = false;
+                if (!searchTerm) {
+                    searchMatch = true; // 没有搜索词，则认为匹配
+                } else {
+                    // 从卡片中提取信息进行搜索
+                    const orderIdElement = card.querySelector('div.text-xs:not(.text-gray-500)');
+                    const orderId = orderIdElement ? orderIdElement.textContent.trim() : '';
+                    const productTitles = Array.from(card.querySelectorAll('.text-sm.font-medium:not([class*="text-brand-"]) , .text-sm.font-medium:not(.text-gray-500)')); // 排除价格和状态显示
+
+                    // 检查订单号
+                    if (orderId.includes(searchTerm)) {
+                        searchMatch = true;
+                    }
+                    // 检查商品标题
+                    if (!searchMatch) {
+                         productTitles.forEach(titleElem => {
+                            // 进一步排除非商品标题的元素（例如订单状态、价格）
+                            const parentClasses = titleElem.parentElement.className;
+                            const nextSiblingClasses = titleElem.nextElementSibling ? titleElem.nextElementSibling.className : '';
+                            const textContent = titleElem.textContent.trim().toLowerCase();
+                            // 简单的排除逻辑：如果父元素是订单头部，或者下一个兄弟元素包含价格/数量信息，则可能是商品标题
+                            const isLikelyProductTitle = parentClasses.includes('ml-3') || (nextSiblingClasses.includes('text-xs') && nextSiblingClasses.includes('text-gray-500'));
+
+                            if (isLikelyProductTitle && textContent.includes(searchTerm)) {
+                                searchMatch = true;
+                            }
+                        });
+                    }
+                }
+
+                // 最终决定是否显示
+                isVisible = statusMatch && searchMatch;
+
+                if (isVisible) {
                     card.classList.remove('hidden');
                     visibleCount++;
                 } else {
-                    const statusElement = card.querySelector('.text-sm.font-medium') || card.querySelector('.text-sm');
-                    const statusClass = statusElement ? statusElement.className : '';
-                    const statusText = statusElement ? statusElement.textContent.trim() : '';
-                    
-                    // 使用文本内容匹配更准确
-                    if (statusText === status || statusClass.includes(orderStatusMap[status])) {
-                        card.classList.remove('hidden');
-                        visibleCount++;
-                    } else {
-                        card.classList.add('hidden');
-                    }
-                    }
-                });
-                
-                // 如果没有符合条件的订单，显示空状态
-                if (visibleCount === 0) {
-                    emptyState.classList.remove('hidden');
-                } else {
-                    emptyState.classList.add('hidden');
+                    card.classList.add('hidden');
+                }
+            });
+            
+            // 如果没有符合条件的订单，显示空状态
+            if (visibleCount === 0) {
+                const emptyTitle = emptyState.querySelector('.text-base');
+                const emptyDescription = emptyState.querySelector('.text-sm.text-gray-500');
+
+                // 定义不同状态下的空提示信息
+                const emptyMessages = {
+                    '全部': { title: '暂无相关订单', description: '去逛逛，挑选心仪的商品吧' },
+                    '待付款': { title: '暂无待付款订单', description: '快去下单吧，好物不等人哦' },
+                    '待发货': { title: '暂无待发货订单', description: '您的订单正在快马加鞭处理中' },
+                    '待收货': { title: '暂无待收货订单', description: '耐心等待，宝贝在路上啦' },
+                    '待评价': { title: '暂无待评价订单', description: '快来分享您的购物体验吧' },
+                    // 可以为已完成或其他可能状态添加
+                };
+
+                // 获取当前状态对应的消息，如果未定义则使用"全部"作为默认
+                const message = emptyMessages[status] || emptyMessages['全部'];
+
+                // 更新空状态的文本
+                if (emptyTitle) emptyTitle.textContent = message.title;
+                if (emptyDescription) emptyDescription.textContent = message.description;
+
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
             }
             
             // 每次过滤后重新绑定按钮事件
