@@ -274,5 +274,116 @@
         `;
         document.head.appendChild(style);
     </script>
+
+    <script>
+        // 添加点击地址卡片的事件，用于从结账页面跳转过来的情况
+        document.addEventListener('DOMContentLoaded', function() {
+            // 删除地址确认弹窗
+            function showDeleteConfirm(addressId) {
+                return confirm('确认要删除这个收货地址吗？');
+            }
+    
+            // 删除地址
+            function deleteAddress(addressId) {
+                if (showDeleteConfirm(addressId)) {
+                    // 这里可以添加与后端API的通信代码
+                    // 目前模拟删除效果
+                    const addressCard = document.querySelector(`[data-address-id="${addressId}"]`);
+                    if (addressCard) {
+                        addressCard.style.animation = 'fadeOut 0.3s ease';
+                        setTimeout(() => {
+                            addressCard.remove();
+                        }, 300);
+                    }
+                }
+            }
+    
+            // 为所有删除按钮添加点击事件
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    // 阻止事件冒泡，避免触发地址卡片的点击事件
+                    e.stopPropagation();
+                    
+                    const addressCard = this.closest('.address-card');
+                    const addressId = addressCard.getAttribute('data-address-id');
+                    deleteAddress(addressId);
+                });
+            });
+            
+            // 同样阻止编辑按钮的冒泡
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            });
+    
+            // 检查是否来自结账页面
+            const urlParams = new URLSearchParams(window.location.search);
+            const fromCheckout = urlParams.get('from') === 'checkout';
+            
+            if (fromCheckout) {
+                // 为所有地址卡片添加点击事件
+                document.querySelectorAll('.address-card').forEach(card => {
+                    card.style.cursor = 'pointer';
+                    
+                    // 排除删除和编辑按钮的点击
+                    card.addEventListener('click', function(e) {
+                        if (!e.target.closest('.action-btn')) {
+                            // 获取地址信息
+                            const name = this.querySelector('.font-medium').textContent;
+                            const phone = this.querySelector('.text-gray-500').textContent;
+                            const address = this.querySelector('.text-gray-600').textContent.trim();
+                            
+                            // 保存选择的地址到本地存储
+                            localStorage.setItem('selectedAddress', JSON.stringify({
+                                name: name,
+                                phone: phone,
+                                address: address,
+                                isDefault: this.classList.contains('default')
+                            }));
+                            
+                            // 返回结账页面
+                            window.location.href = 'mycheckoutnew.html';
+                        }
+                    });
+                });
+                
+                // 显示返回提示
+                const toast = document.createElement('div');
+                toast.style.cssText = `
+                    position: fixed;
+                    bottom: 80px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background-color: rgba(0, 0, 0, 0.7);
+                    color: white;
+                    padding: 8px 16px;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    z-index: 1000;
+                `;
+                toast.textContent = '点击地址卡片选择该地址';
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transition = 'opacity 0.3s ease';
+                    setTimeout(() => {
+                        toast.remove();
+                    }, 300);
+                }, 3000);
+            }
+            
+            // 添加淡出动画样式
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeOut {
+                    from { opacity: 1; transform: translateY(0); }
+                    to { opacity: 0; transform: translateY(-10px); }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
 </body>
 </html> 

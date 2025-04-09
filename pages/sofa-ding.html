@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>沙发定制</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome 图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 自定义CSS -->
+    <link rel="stylesheet" href="../css/sofa-ding.css">
+</head>
+<body class="bg-gray-50">
+    <div class="container mx-auto px-2 py-3 max-w-lg">
+        <!-- 顶部标题和简化预览区域 -->
+        <header class="bg-white rounded-lg shadow-sm p-3 mb-3 sticky top-0 z-30">
+            <div class="flex items-center justify-between">
+                <h1 class="text-xl font-bold text-gray-800">沙发定制</h1>
+                <div class="text-lg font-bold">
+                    总价: <span id="total-price-mini">¥0</span>
+                </div>
+            </div>
+            <!-- 预览图和当前配置的迷你版本 -->
+            <div id="preview-mini" class="mt-2 flex items-center relative">
+                <img id="sofa-preview" src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=120&h=80&q=80" 
+                    alt="沙发预览" class="w-20 h-14 object-cover rounded-md">
+                <div class="ml-3 text-sm">
+                    <p><span id="selected-model-mini">未选型号</span></p>
+                    <p><span id="selected-fabric-mini">未选面料</span></p>
+                </div>
+                <button id="toggle-preview" class="absolute right-0 top-0 text-blue-600 p-1">
+                    <i class="fas fa-expand-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- 展开的详细预览区域 - 默认隐藏 -->
+        <div id="preview-detailed" class="bg-white rounded-lg shadow-md p-4 mb-4 hidden">
+            <div class="flex items-center justify-between mb-2">
+                <h2 class="text-lg font-semibold">当前配置详情</h2>
+                <button id="close-preview" class="text-gray-500">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <img id="sofa-preview-large" src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=200&q=80" 
+                        alt="沙发预览" class="w-full h-auto rounded-lg">
+                </div>
+                <div class="space-y-1 text-sm">
+                    <p><span class="font-medium">型号:</span> <span id="selected-model">未选择</span></p>
+                    <p><span class="font-medium">面料:</span> <span id="selected-fabric">未选择</span></p>
+                    <p><span class="font-medium">尺寸:</span> <span id="selected-size">标准尺寸</span></p>
+                    <p><span class="font-medium">生产要求:</span> <span id="selected-priority">一般</span></p>
+                    <p><span class="font-medium">茶几:</span> <span id="selected-table">无</span></p>
+                    <p><span class="font-medium">数量:</span> <span id="selected-quantity">1</span></p>
+                    <p class="font-medium">总价: <span id="total-price">¥0</span></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 步骤指示器 -->
+        <div class="bg-white rounded-lg shadow-sm p-3 mb-3 sticky top-24 z-20">
+            <div class="flex justify-between items-center">
+                <div class="steps-indicator flex items-center justify-between w-full">
+                    <div class="step active" data-step="1">
+                        <div class="step-circle">1</div>
+                        <div class="step-label">型号</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" data-step="2">
+                        <div class="step-circle">2</div>
+                        <div class="step-label">面料</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" data-step="3">
+                        <div class="step-circle">3</div>
+                        <div class="step-label">尺寸</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" data-step="4">
+                        <div class="step-circle">4</div>
+                        <div class="step-label">选配</div>
+                    </div>
+                    <div class="step-line"></div>
+                    <div class="step" data-step="5">
+                        <div class="step-circle">5</div>
+                        <div class="step-label">完成</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 步骤内容滑动区域 -->
+        <div id="steps-container" class="relative">
+            <div id="steps-slider" class="flex transition-transform duration-300">
+                <!-- 步骤1: 型号选择 -->
+                <div class="step-content w-full flex-shrink-0" data-step="1">
+                    <section class="bg-white rounded-lg shadow-md p-4 mb-3">
+                        <h2 class="text-lg font-semibold mb-3 flex items-center">
+                            <i class="fas fa-couch mr-2 text-blue-600"></i>
+                            型号选择 <span class="text-red-500 ml-1">*</span>
+                        </h2>
+                        <div class="space-y-3">
+                            <div class="border border-gray-200 rounded-lg p-3 hover:border-blue-500 cursor-pointer model-category" data-category="XK">
+                                <h3 class="font-medium mb-1">功能沙发 (XK系列)</h3>
+                                <p class="text-xs text-gray-600 mb-2">型号范围: XK-901 ~ XK-978</p>
+                                <div>
+                                    <select class="model-select w-full p-2 border border-gray-300 rounded-md" data-prefix="XK">
+                                        <option value="">请选择型号</option>
+                                        <!-- JS动态生成选项 -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="border border-gray-200 rounded-lg p-3 hover:border-blue-500 cursor-pointer model-category" data-category="L">
+                                <h3 class="font-medium mb-1">拉床沙发 (L系列)</h3>
+                                <p class="text-xs text-gray-600 mb-2">型号范围: L-301 ~ L-396</p>
+                                <div>
+                                    <select class="model-select w-full p-2 border border-gray-300 rounded-md" data-prefix="L">
+                                        <option value="">请选择型号</option>
+                                        <!-- JS动态生成选项 -->
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="border border-gray-200 rounded-lg p-3 hover:border-blue-500 cursor-pointer model-category" data-category="HM">
+                                <h3 class="font-medium mb-1">压缩沙发 (HM系列)</h3>
+                                <p class="text-xs text-gray-600 mb-2">型号范围: HM-01 ~ HM-98</p>
+                                <div>
+                                    <select class="model-select w-full p-2 border border-gray-300 rounded-md" data-prefix="HM">
+                                        <option value="">请选择型号</option>
+                                        <!-- JS动态生成选项 -->
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="flex justify-end">
+                        <button type="button" class="next-step bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg" data-to-step="2" disabled>
+                            下一步: 选择面料 <i class="fas fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 步骤2: 面料选择 -->
+                <div class="step-content w-full flex-shrink-0" data-step="2">
+                    <section class="bg-white rounded-lg shadow-md p-4 mb-3">
+                        <h2 class="text-lg font-semibold mb-3 flex items-center">
+                            <i class="fas fa-swatch mr-2 text-blue-600"></i>
+                            面料选择 <span class="text-red-500 ml-1">*</span>
+                        </h2>
+                        <div class="mb-3">
+                            <h3 class="font-medium mb-2">面料材质</h3>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="fabric-option border border-gray-200 rounded-lg p-2 hover:border-blue-500 cursor-pointer" data-fabric="leather">
+                                    <img src="https://images.unsplash.com/photo-1620230874645-09063cafcc4d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=100&q=80" alt="天然皮革" class="w-full h-20 object-cover rounded-md mb-1">
+                                    <p class="font-medium text-center text-sm">天然皮革</p>
+                                    <p class="text-xs text-gray-600 text-center">高端质感，触感柔软</p>
+                                </div>
+                                <div class="fabric-option border border-gray-200 rounded-lg p-2 hover:border-blue-500 cursor-pointer" data-fabric="velvet">
+                                    <img src="https://images.unsplash.com/photo-1618781377242-bdcce2b2a5db?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=100&q=80" alt="丝绒" class="w-full h-20 object-cover rounded-md mb-1">
+                                    <p class="font-medium text-center text-sm">丝绒</p>
+                                    <p class="text-xs text-gray-600 text-center">奢华质感，柔软舒适</p>
+                                </div>
+                                <div class="fabric-option border border-gray-200 rounded-lg p-2 hover:border-blue-500 cursor-pointer" data-fabric="linen">
+                                    <img src="https://images.unsplash.com/photo-1579171141001-46dd1c7b2633?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=100&q=80" alt="亚麻" class="w-full h-20 object-cover rounded-md mb-1">
+                                    <p class="font-medium text-center text-sm">亚麻</p>
+                                    <p class="text-xs text-gray-600 text-center">天然透气，适合四季</p>
+                                </div>
+                                <div class="fabric-option border border-gray-200 rounded-lg p-2 hover:border-blue-500 cursor-pointer" data-fabric="microfiber">
+                                    <img src="https://images.unsplash.com/photo-1615874959474-d609969a20ed?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=100&q=80" alt="超细纤维" class="w-full h-20 object-cover rounded-md mb-1">
+                                    <p class="font-medium text-center text-sm">超细纤维</p>
+                                    <p class="text-xs text-gray-600 text-center">耐用易清洁，适合家庭</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 hidden" id="color-selection">
+                            <h3 class="font-medium mb-2">颜色选择</h3>
+                            <div class="grid grid-cols-3 gap-2">
+                                <div class="color-option border border-gray-200 rounded-lg p-2 hover:border-blue-500 cursor-pointer" data-color="beige">
+                                    <div class="w-full h-12 bg-yellow-100 rounded-md mb-1"></div>
+                                    <p class="text-xs text-center">米色</p>
+                                </div>
+                                <div class="color-option border border-gray-200 rounded-lg p-2 hover:border-blue-500 cursor-pointer" data-color="brown">
+                                    <div class="w-full h-12 bg-yellow-800 rounded-md mb-1"></div>
+                                    <p class="text-xs text-center">棕色</p>
+                                </div>
+                                <div class="color-option border border-gray-200 rounded-lg p-2 hover:border-blue-500 cursor-pointer" data-color="gray">
+                                    <div class="w-full h-12 bg-gray-400 rounded-md mb-1"></div>
+                                    <p class="text-xs text-center">灰色</p>
+                                </div>
+                                <div class="color-option border border-gray-200 rounded-lg p-2 hover:border-blue-500 cursor-pointer" data-color="blue">
+                                    <div class="w-full h-12 bg-blue-600 rounded-md mb-1"></div>
+                                    <p class="text-xs text-center">蓝色</p>
+                                </div>
+                                <div class="color-option border border-gray-200 rounded-lg p-2 hover:border-blue-500 cursor-pointer" data-color="green">
+                                    <div class="w-full h-12 bg-green-600 rounded-md mb-1"></div>
+                                    <p class="text-xs text-center">绿色</p>
+                                </div>
+                                <div class="color-option border border-gray-200 rounded-lg p-2 hover:border-blue-500 cursor-pointer" data-color="black">
+                                    <div class="w-full h-12 bg-black rounded-md mb-1"></div>
+                                    <p class="text-xs text-center">黑色</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-2">
+                            <button type="button" id="request-sample" class="text-blue-600 hover:text-blue-800 text-sm flex items-center">
+                                <i class="fas fa-truck-fast mr-1"></i> 申请寄送皮样
+                            </button>
+                        </div>
+                    </section>
+                    <div class="flex justify-between">
+                        <button type="button" class="prev-step bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg" data-to-step="1">
+                            <i class="fas fa-arrow-left mr-1"></i> 上一步
+                        </button>
+                        <button type="button" class="next-step bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg" data-to-step="3" disabled>
+                            下一步: 规格尺寸 <i class="fas fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 步骤3: 规格尺寸 -->
+                <div class="step-content w-full flex-shrink-0" data-step="3">
+                    <section class="bg-white rounded-lg shadow-md p-4 mb-3">
+                        <h2 class="text-lg font-semibold mb-3 flex items-center">
+                            <i class="fas fa-ruler-combined mr-2 text-blue-600"></i>
+                            规格尺寸 <span class="text-red-500 ml-1">*</span>
+                        </h2>
+                        <div class="space-y-3">
+                            <div class="flex items-center">
+                                <input type="radio" id="standard-size" name="size-type" value="standard" checked class="h-4 w-4 text-blue-600">
+                                <label for="standard-size" class="ml-2 text-gray-800">标准尺寸</label>
+                            </div>
+                            <div id="standard-size-info" class="ml-6 p-3 bg-gray-50 rounded-md">
+                                <p class="text-sm text-gray-600">标准尺寸将根据您选择的型号自动匹配</p>
+                                <p id="default-size" class="text-sm font-medium mt-1">请先选择沙发型号</p>
+                            </div>
+
+                            <div class="flex items-center">
+                                <input type="radio" id="custom-size" name="size-type" value="custom" class="h-4 w-4 text-blue-600">
+                                <label for="custom-size" class="ml-2 text-gray-800">自定义尺寸</label>
+                            </div>
+                            <div id="custom-size-inputs" class="ml-6 p-3 bg-gray-50 rounded-md hidden">
+                                <p class="text-xs text-gray-600 mb-2">10CM以内的增减免费，超过10CM增减每增10cm加100元</p>
+                                <div class="grid grid-cols-3 gap-2">
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-700 mb-1">长度 (cm)</label>
+                                        <input type="number" id="length-input" class="w-full p-2 border border-gray-300 rounded-md text-sm" min="1" max="500" placeholder="长度">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-700 mb-1">宽度 (cm)</label>
+                                        <input type="number" id="width-input" class="w-full p-2 border border-gray-300 rounded-md text-sm" min="1" max="500" placeholder="宽度">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-gray-700 mb-1">高度 (cm)</label>
+                                        <input type="number" id="height-input" class="w-full p-2 border border-gray-300 rounded-md text-sm" min="1" max="500" placeholder="高度">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <div class="flex justify-between">
+                        <button type="button" class="prev-step bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg" data-to-step="2">
+                            <i class="fas fa-arrow-left mr-1"></i> 上一步
+                        </button>
+                        <button type="button" class="next-step bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg" data-to-step="4">
+                            下一步: 选配项目 <i class="fas fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 步骤4: 选配项目 -->
+                <div class="step-content w-full flex-shrink-0" data-step="4">
+                    <section class="bg-white rounded-lg shadow-md p-4 mb-3">
+                        <h2 class="text-lg font-semibold mb-3 flex items-center">
+                            <i class="fas fa-industry mr-2 text-blue-600"></i>
+                            生产要求
+                        </h2>
+                        <div class="flex space-x-4">
+                            <div class="flex items-center">
+                                <input type="radio" id="normal-priority" name="priority" value="normal" checked class="h-4 w-4 text-blue-600">
+                                <label for="normal-priority" class="ml-2 text-gray-800 text-sm">一般</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="radio" id="urgent-priority" name="priority" value="urgent" class="h-4 w-4 text-blue-600">
+                                <label for="urgent-priority" class="ml-2 text-gray-800 text-sm">加急 (+¥200)</label>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="bg-white rounded-lg shadow-md p-4 mb-3">
+                        <h2 class="text-lg font-semibold mb-3 flex items-center">
+                            <i class="fas fa-pen-fancy mr-2 text-blue-600"></i>
+                            定制字样
+                        </h2>
+                        <div>
+                            <input type="text" id="custom-text" class="w-full p-2 border border-gray-300 rounded-md" placeholder="请输入您想在沙发上添加的定制字样">
+                            <p class="text-xs text-gray-500 mt-1">例如：姓名、祝福语或特殊标记</p>
+                        </div>
+                    </section>
+
+                    <section class="bg-white rounded-lg shadow-md p-4 mb-3">
+                        <h2 class="text-lg font-semibold mb-3 flex items-center">
+                            <i class="fas fa-table mr-2 text-blue-600"></i>
+                            茶几选择
+                        </h2>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="table-option border border-gray-200 rounded-lg p-2 hover:border-blue-500 cursor-pointer active" data-table="none">
+                                <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=80&q=60" alt="无茶几" class="w-full h-16 object-cover rounded-md mb-1">
+                                <p class="font-medium text-center text-xs">无茶几</p>
+                            </div>
+                            <div class="table-option border border-gray-200 rounded-lg p-2 hover:border-blue-500 cursor-pointer" data-table="wood">
+                                <img src="https://images.unsplash.com/photo-1611486212557-88be5ff6f941?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=80&q=60" alt="水曲柳茶几" class="w-full h-16 object-cover rounded-md mb-1">
+                                <p class="font-medium text-center text-xs">水曲柳茶几</p>
+                            </div>
+                            <div class="table-option border border-gray-200 rounded-lg p-2 hover:border-blue-500 cursor-pointer" data-table="marble">
+                                <img src="https://images.unsplash.com/photo-1533090161767-e6ffed986c88?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=80&q=60" alt="白理石茶几" class="w-full h-16 object-cover rounded-md mb-1">
+                                <p class="font-medium text-center text-xs">白理石茶几</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="flex justify-between">
+                        <button type="button" class="prev-step bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg" data-to-step="3">
+                            <i class="fas fa-arrow-left mr-1"></i> 上一步
+                        </button>
+                        <button type="button" class="next-step bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg" data-to-step="5">
+                            下一步: 确认订单 <i class="fas fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 步骤5: 确认订单 -->
+                <div class="step-content w-full flex-shrink-0" data-step="5">
+                    <section class="bg-white rounded-lg shadow-md p-4 mb-3">
+                        <h2 class="text-lg font-semibold mb-3 flex items-center">
+                            <i class="fas fa-hashtag mr-2 text-blue-600"></i>
+                            数量
+                        </h2>
+                        <div class="flex items-center">
+                            <button type="button" id="decrease-quantity" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-3 rounded-l">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="number" id="quantity" value="1" min="1" class="w-16 py-2 px-3 text-center border-t border-b border-gray-300">
+                            <button type="button" id="increase-quantity" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-3 rounded-r">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </section>
+
+                    <section class="bg-white rounded-lg shadow-md p-4 mb-3">
+                        <h2 class="text-lg font-semibold mb-3 flex items-center">
+                            <i class="fas fa-comment-alt mr-2 text-blue-600"></i>
+                            备注
+                        </h2>
+                        <textarea id="remarks" class="w-full p-2 border border-gray-300 rounded-md" rows="2" placeholder="请输入订单备注信息"></textarea>
+                    </section>
+
+                    <section class="bg-white rounded-lg shadow-md p-4 mb-3">
+                        <h2 class="text-lg font-semibold mb-3 flex items-center">
+                            <i class="fas fa-user-tie mr-2 text-blue-600"></i>
+                            跟单员
+                        </h2>
+                        <div class="flex items-center">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=50&h=50&q=80" alt="跟单员" class="w-10 h-10 rounded-full">
+                            <div class="ml-3">
+                                <p class="font-medium text-sm">冯志明</p>
+                                <p class="text-xs text-gray-600">订单付款后可联系</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="bg-white rounded-lg shadow-md p-4 mb-3">
+                        <h2 class="text-lg font-semibold mb-3">订单摘要</h2>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between">
+                                <span>沙发型号</span>
+                                <span id="summary-model">未选择</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>面料</span>
+                                <span id="summary-fabric">未选择</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>尺寸</span>
+                                <span id="summary-size">标准尺寸</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>生产要求</span>
+                                <span id="summary-priority">一般</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>定制字样</span>
+                                <span id="summary-text">无</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>茶几</span>
+                                <span id="summary-table">无</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>数量</span>
+                                <span id="summary-quantity">1</span>
+                            </div>
+                            <div class="border-t border-gray-200 pt-2 mt-2">
+                                <div class="flex justify-between font-bold">
+                                    <span>总价</span>
+                                    <span id="summary-price">¥0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="flex justify-between">
+                        <button type="button" class="prev-step bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded-lg" data-to-step="4">
+                            <i class="fas fa-arrow-left mr-1"></i> 上一步
+                        </button>
+                        <button type="submit" id="submit-order" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg">
+                            提交订单
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 申请样品弹窗 -->
+    <div id="sample-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-4 max-w-sm w-full mx-3">
+            <h2 class="text-lg font-semibold mb-3">申请寄送皮样</h2>
+            <form id="sample-form" class="space-y-3">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">联系人</label>
+                    <input type="text" name="name" class="w-full p-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">联系电话</label>
+                    <input type="tel" name="phone" class="w-full p-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">收件地址</label>
+                    <input type="text" name="address" class="w-full p-2 border border-gray-300 rounded-md" required>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">选择样品</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="sample-leather" name="samples" value="leather" class="h-4 w-4 text-blue-600">
+                            <label for="sample-leather" class="ml-2 text-gray-800 text-sm">天然皮革</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="sample-velvet" name="samples" value="velvet" class="h-4 w-4 text-blue-600">
+                            <label for="sample-velvet" class="ml-2 text-gray-800 text-sm">丝绒</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="sample-linen" name="samples" value="linen" class="h-4 w-4 text-blue-600">
+                            <label for="sample-linen" class="ml-2 text-gray-800 text-sm">亚麻</label>
+                        </div>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="sample-microfiber" name="samples" value="microfiber" class="h-4 w-4 text-blue-600">
+                            <label for="sample-microfiber" class="ml-2 text-gray-800 text-sm">超细纤维</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-3 pt-2">
+                    <button type="button" id="close-sample-modal" class="px-3 py-1.5 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100 text-sm">
+                        取消
+                    </button>
+                    <button type="submit" class="px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm">
+                        提交申请
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 引入JavaScript文件 -->
+    <script src="../js/sofa-ding.js"></script>
+</body>
+</html> 

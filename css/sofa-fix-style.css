@@ -1,0 +1,182 @@
+/* 修复沙发尺寸选择卡片中文本颜色太浅的问题 */
+
+/* 全局色彩变量重写 - 引入更加协调的色彩体系 */
+:root {
+    /* 主色调优化 - 使用更和谐的青绿色 */
+    --brand-primary: #2A9D8F !important;
+    --brand-primary-light: #3FB0A3 !important;
+    --brand-primary-dark: #227F74 !important;
+    --brand-primary-transparent: rgba(42, 157, 143, 0.08) !important;
+    
+    /* 辅助色调优化 */
+    --brand-secondary: #E9C46A !important;
+    --brand-secondary-light: #F2D68B !important;
+    --brand-dark: #264653 !important;
+    
+    /* 中性色优化 */
+    --brand-light: #F9F9F9 !important;
+    --brand-light-dark: #E8EFF0 !important;
+    --brand-grey: #7A8C97 !important;
+    --brand-grey-light: #B8C4C9 !important;
+    
+    /* 背景色优化 */
+    --bg-color: #F5F9FA !important;
+    
+    /* 状态色彩 */
+    --success-color: #43AA8B !important;
+    --warning-color: #F8BD5A !important;
+    --error-color: #F94144 !important;
+}
+
+/* 页面主体优化 */
+body {
+    background-color: var(--bg-color) !important;
+    color: var(--brand-dark) !important;
+}
+
+/* 标题和步骤指示器优化 */
+.steps-indicator .step.active .step-circle {
+    background: var(--brand-primary) !important;
+    box-shadow: 0 2px 6px rgba(42, 157, 143, 0.3) !important;
+}
+
+.steps-indicator .step.completed .step-circle {
+    background: var(--brand-primary-light) !important;
+}
+
+.section-title {
+    color: var(--brand-dark) !important;
+}
+
+/* 按钮样式优化 */
+.btn-next {
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-dark)) !important;
+    box-shadow: 0 2px 6px rgba(42, 157, 143, 0.3) !important;
+}
+
+.btn-prev {
+    border: 1px solid var(--brand-grey-light) !important;
+    color: var(--brand-grey) !important;
+}
+
+/* 更美观的座位数量标记样式 */
+.seat-count {
+    background-color: rgba(42, 157, 143, 0.12) !important; /* 降低透明度，更加柔和 */
+    color: var(--brand-dark) !important;
+    font-weight: 600 !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important; /* 减轻阴影 */
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 12px !important;
+    border: 1px solid rgba(42, 157, 143, 0.25) !important; /* 边框更微妙 */
+    border-radius: 50% !important; /* 确保是圆形 */
+}
+
+/* 沙发卡片整体优化 */
+.sofa-type-card {
+    background-color: white !important;
+    border: 1px solid var(--brand-light-dark) !important;
+    border-radius: 12px !important;
+    transition: all 0.3s ease !important;
+}
+
+.sofa-card-title {
+    color: var(--brand-dark) !important;
+    font-weight: 500 !important;
+}
+
+.sofa-card-size {
+    color: var(--brand-grey) !important;
+}
+
+/* 加深适用场景的文本颜色 */
+.sofa-card-scene {
+    color: var(--brand-grey) !important; /* 降低对比度 */
+    font-weight: 500 !important;
+    background-color: var(--brand-light) !important; /* 更淡的背景 */
+    padding: 3px 8px !important;
+    border-radius: 12px !important; /* 更圆润的角 */
+    border: 1px solid var(--brand-light-dark) !important; /* 微妙的边框 */
+    font-size: 11px !important;
+}
+
+/* 调整sofa-type-card悬停和选中状态时的样式 */
+.sofa-type-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06) !important;
+    transform: translateY(-2px) !important;
+    border-color: rgba(42, 157, 143, 0.2) !important;
+}
+
+/* 选中状态整体样式 */
+.sofa-type-card.active {
+    border: 2px solid var(--brand-primary) !important;
+    background-color: rgba(42, 157, 143, 0.04) !important; /* 极淡的背景色 */
+    box-shadow: 0 4px 10px rgba(42, 157, 143, 0.15) !important;
+}
+
+/* 选中状态的座位数样式 */
+.sofa-type-card.active .seat-count {
+    background-color: var(--brand-primary-light) !important;
+    color: white !important; /* 选中状态文本为白色，增加对比 */
+    border-color: var(--brand-primary-light) !important;
+    box-shadow: 0 1px 3px rgba(42, 157, 143, 0.3) !important;
+}
+
+.sofa-type-card.active .sofa-card-scene {
+    background-color: rgba(42, 157, 143, 0.1) !important;
+    color: var(--brand-primary-dark) !important; /* 选中状态文字颜色更深 */
+    font-weight: 600 !important;
+    border-color: rgba(42, 157, 143, 0.2) !important;
+}
+
+/* 沙发图标样式优化 */
+.sofa-card-icon i {
+    color: var(--brand-grey) !important; /* 更柔和的图标颜色 */
+    font-size: 22px !important;
+    transition: all 0.3s ease !important;
+}
+
+.sofa-type-card.active .sofa-card-icon i {
+    color: var(--brand-primary) !important; /* 选中状态下图标颜色更深 */
+}
+
+/* 尺寸标签优化 */
+.dimension-marker .marker-label {
+    background-color: white !important;
+    border: 1px solid rgba(42, 157, 143, 0.2) !important;
+    color: var(--brand-dark) !important;
+    font-weight: 500 !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06) !important;
+}
+
+/* 当前尺寸显示区域优化 */
+.current-size-display {
+    background: linear-gradient(to right, rgba(42, 157, 143, 0.06), rgba(42, 157, 143, 0.1)) !important;
+    border: 1px solid rgba(42, 157, 143, 0.15) !important;
+}
+
+.current-size-display i {
+    color: var(--brand-primary) !important;
+    background-color: white !important;
+}
+
+/* 页面底部导航优化 */
+.bottom-nav {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(10px) !important; /* 磨砂玻璃效果 */
+    border-top: 1px solid rgba(42, 157, 143, 0.1) !important;
+}
+
+/* 确保在小屏幕设备上也有良好的可见度 */
+@media (max-width: 360px) {
+    .seat-count {
+        font-size: 11px !important;
+        width: 18px !important;
+        height: 18px !important;
+    }
+    
+    .sofa-card-scene {
+        font-size: 10px !important;
+        padding: 2px 6px !important;
+    }
+} 

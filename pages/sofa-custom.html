@@ -8,824 +8,919 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="../css/common.css" rel="stylesheet">
     <link href="../css/scrollbar.css" rel="stylesheet">
+    <link href="../css/sofa-custom.css" rel="stylesheet">
+    <link href="../css/sofa-fix-style.css" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #2A9D8F;
-            --secondary-color: #E9C46A;
-            --accent-color: #F4A261;
-            --dark-color: #264653;
-            --light-color: #F8F9FA;
-            --bg-color: #F5F7F8;
-            
-            --brand-primary: #2A9D8F;
-            --brand-primary-light: #4DB6A9;
-            --brand-primary-dark: #1F7A70;
-            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
-            
-            --brand-secondary: #E9C46A;
-            --brand-secondary-light: #F2D68B;
-            --brand-secondary-dark: #D4A93B;
-            
-            --brand-accent: #F4A261;
-            --brand-accent-light: #F7BE8C;
-            --brand-accent-dark: #E68940;
-            
-            --brand-dark: #264653;
-            --brand-dark-light: #3A6A7E;
-            --brand-dark-dark: #1A323C;
-            
-            --brand-light: #F8F9FA;
-            --brand-light-dark: #E9ECEF;
-            
-            --brand-success: #38B2AC;
-            --brand-warning: #F59E0B;
-            --brand-error: #EF4444;
-            --brand-info: #3B82F6;
-            
-            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
-            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
-            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
-            
-            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
-            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
-            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
-            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+    /* 优化当前尺寸显示区域 - 一行显示 */
+    .current-size-display {
+        display: flex;
+        align-items: center;
+        padding: 10px 15px;
+        background: linear-gradient(to right, #f3f8f6, #e9f5f1);
+        border-radius: 12px;
+        /* margin-bottom: 12px; */
+        box-shadow: 0 2px 8px rgba(74, 173, 146, 0.1);
+        border: 1px solid rgba(74, 173, 146, 0.15);
+        transition: all 0.3s ease;
+    }
+    
+    .current-size-display i {
+        color: #4aad92;
+        font-size: 1.2rem;
+        margin-right: 8px;
+        background-color: rgba(74, 173, 146, 0.1);
+        padding: 6px;
+        border-radius: 50%;
+        box-shadow: 0 2px 5px rgba(74, 173, 146, 0.2);
+    }
+    
+    .current-size-display .sofa-name {
+        margin-right: 6px;
+        position: relative;
+        padding-right: 6px;
+    }
+    
+    .current-size-display .sofa-name::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+        height: 12px;
+        width: 1px;
+        background-color: rgba(74, 173, 146, 0.3);
+    }
+    
+    .current-size-display #size-dimensions {
+        color: #4d5b66;
+        font-size: 0.95rem;
+    }
+    
+    /* 适配移动设备 */
+    @media (max-width: 480px) {
+        .current-size-display {
+            padding: 8px 12px;
         }
-
-        /* 全局样式 */
-        body {
-            background-color: var(--bg-color);
-            color: var(--brand-dark);
-            overflow-x: hidden;
+        
+        .current-size-display i {
+            font-size: 1rem;
+            padding: 5px;
         }
-
-        /* 导航栏样式 */
-        .nav-bar {
-            background: white;
-            box-shadow: var(--shadow-sm);
+        
+        .current-size-display .font-medium {
+            font-size: 0.9rem;
         }
-
-        /* 切换按钮组样式 */
-        .tab-group {
-            display: flex;
-            gap: 16px;
-            padding: 16px;
-            background: white;
-            border-radius: 16px;
-            box-shadow: var(--shadow-sm);
-            position: sticky;
-            top: 60px;
-            z-index: 10;
+    }
+    
+    /* 保留之前的尺寸标记样式 */
+    .sofa-preview-image {
+        position: relative;
+        min-height: 100px; /* 确保预览区域有足够的高度 */
+    }
+    
+    .dimension-marker {
+        position: absolute;
+        z-index: 2;
+        transition: all 0.3s ease-out; /* 平滑过渡效果 */
+    }
+    
+    .dimension-marker .marker-line {
+        position: absolute;
+        background-color: rgba(74, 173, 146, 0.6);
+    }
+    
+    .dimension-marker .marker-label {
+        position: absolute;
+        background-color: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(74, 173, 146, 0.3);
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-weight: 500;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        white-space: nowrap;
+        z-index: 3;
+        transition: all 0.3s ease;
+    }
+    
+    /* 步骤4: 配件选择相关样式 */
+    .accessory-preview-container {
+        background: linear-gradient(to right, #f3f8f6, #e9f5f1);
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 8px rgba(74, 173, 146, 0.1);
+        border: 1px solid rgba(74, 173, 146, 0.15);
+    }
+    
+    .current-accessory-display {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    
+    .current-accessory-display i {
+        color: #4aad92;
+        font-size: 1.2rem;
+        margin-right: 8px;
+        background-color: rgba(74, 173, 146, 0.1);
+        padding: 6px;
+        border-radius: 50%;
+        box-shadow: 0 2px 5px rgba(74, 173, 146, 0.2);
+    }
+    
+    .accessory-preview-image {
+        text-align: center;
+        padding: 15px 0;
+    }
+    
+    .accessory-preview-image img {
+        max-width: 100%;
+        height: auto;
+        max-height: 180px;
+    }
+    
+    .accessory-section {
+        margin-bottom: 15px;
+    }
+    
+    .config-label {
+        font-size: 1rem;
+        font-weight: 500;
+        margin-bottom: 10px;
+        color: #36454f;
+        display: flex;
+        align-items: center;
+    }
+    
+    /* 修复配件选项网格布局 */
+    .accessory-options-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .accessory-option {
+        display: flex;
+        align-items: center;
+        padding: 12px;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        background-color: #fff;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 2px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+    
+    .accessory-option.active {
+        border-color: #4aad92;
+        background-color: rgba(74, 173, 146, 0.05);
+        box-shadow: 0 2px 10px rgba(74, 173, 146, 0.15);
+    }
+    
+    /* 改进配件选项内部结构样式 */
+    .accessory-option-img {
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+        overflow: hidden;
+        margin-right: 10px;
+        background-color: #f4f4f4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0; /* 防止图片被挤压 */
+    }
+    
+    .accessory-option-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .accessory-option-img i {
+        font-size: 24px;
+        color: #888;
+    }
+    
+    .accessory-option.active .accessory-option-img i {
+        color: #4aad92;
+    }
+    
+    .accessory-option-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 0; /* 防止文本溢出 */
+    }
+    
+    .accessory-option-name {
+        font-weight: 500;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .accessory-option-price {
+        font-size: 0.9rem;
+        color: #4aad92;
+    }
+    
+    /* 价格汇总样式优化 */
+    .price-summary {
+        background-color: #f7f9fa;
+        border-radius: 12px;
+        padding: 15px;
+        margin-top: 20px;
+        margin-bottom: 15px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .price-summary-content {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .price-detail {
+        margin-bottom: 10px;
+    }
+    
+    .price-detail-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px dashed #e0e0e0;
+    }
+    
+    .price-detail-item:last-child {
+        border-bottom: none;
+    }
+    
+    .price-detail-label {
+        color: #555;
+        font-weight: 400;
+    }
+    
+    .price-detail-value {
+        font-weight: 500;
+        color: #333;
+    }
+    
+    .price-total {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 12px;
+        border-top: 2px solid #e0e0e0;
+        margin-top: 5px;
+    }
+    
+    .price-total-label {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .price-total-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #4aad92;
+    }
+    
+    /* 改进的响应式布局 */
+    @media (max-width: 480px) {
+        .accessory-options-grid {
+            grid-template-columns: 1fr;
+            gap: 10px;
         }
-
-        .tab-btn {
-            flex: 1;
-            padding: 12px;
-            text-align: center;
-            border-radius: 12px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            background: var(--brand-light);
-            color: var(--brand-dark-light);
+        
+        .accessory-option {
+            padding: 10px;
         }
-
-        .tab-btn.active {
-            background: var(--brand-gradient-primary);
-            color: white;
-            box-shadow: var(--shadow-highlight);
+        
+        .accessory-option-img {
+            width: 50px;
+            height: 50px;
         }
-
-        /* 定制模块样式 */
-        .custom-section {
-            background: white;
-            border-radius: 16px;
-            margin: 16px 0;
-            padding: 20px;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.3s ease;
-        }
-
-        .section-title {
-            font-size: 18px;
-            font-weight: 500;
-            color: var(--brand-dark);
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-        }
-
-        .section-title i {
-            margin-right: 8px;
-            color: var(--brand-primary);
-        }
-
-        /* 型号选择网格 */
-        .model-grid {
-            display: grid;
+    }
+    
+    @media (min-width: 481px) and (max-width: 768px) {
+        .accessory-options-grid {
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            padding: 4px;
+            gap: 10px;
         }
-
-        .model-item {
-            background: var(--brand-light);
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-height: 180px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            scroll-snap-align: start;
+    }
+    
+    @media (min-width: 769px) {
+        .accessory-options-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
         }
+    }
+    
+    /* 功能图标特殊样式 */
+    .function-icon {
+        background: linear-gradient(135deg, #f0f7f4, #e6f2ed);
+    }
+    
+    .function-icon i {
+        font-size: 28px;
+    }
+    
+    .accessory-option.active .function-icon {
+        background: linear-gradient(135deg, #e6f2ed, #d9ebde);
+    }
+    
+    .accessory-option.active .function-icon i {
+        color: #4aad92;
+        text-shadow: 0 2px 4px rgba(74, 173, 146, 0.2);
+    }
 
-        .model-item:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
+    /* 步骤5：确认配置页样式 */
+    .confirmation-container {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 20px;
+    }
 
-        .model-item.selected {
-            background: var(--brand-primary-transparent);
-            border: 2px solid var(--brand-primary);
-        }
-
-        .model-item img {
-            width: 100%;
-            height: auto;
-            margin-bottom: 8px;
-        }
-
-        /* 规格选择下拉菜单 */
-        .spec-select {
-            display: none; /* 隐藏原下拉菜单 */
-        }
-
-        /* 横向滑动选择器 */
-        .spec-scroll {
-            display: flex;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            gap: 12px;
-            padding: 4px 0;
-            margin-bottom: 16px;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .spec-card {
-            flex: 0 0 auto;
-            min-width: 120px;
-            padding: 12px;
-            border-radius: 12px;
-            background: var(--brand-light);
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            scroll-snap-align: start;
-        }
-
-        .spec-card.selected {
-            background: var(--brand-primary-transparent);
-            border: 2px solid var(--brand-primary);
-        }
-
-        /* 尺寸滑块 */
-        .size-slider {
-            width: 100%;
-            margin: 20px 0;
-            padding: 0 10px;
-        }
-
-        .size-slider input[type="range"] {
-            width: 100%;
-            height: 6px;
-            -webkit-appearance: none;
-            background: var(--brand-primary-transparent);
-            border-radius: 3px;
-            outline: none;
-            margin: 10px 0;
-        }
-
-        .size-slider input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: var(--brand-primary);
-            cursor: pointer;
-            box-shadow: var(--shadow-sm);
-        }
-
-        /* 智能定制区域 */
-        .ai-custom {
-            display: none;
-        }
-
-        .ai-custom.active {
-            display: block;
-        }
-
-        /* 拖拽上传区域 */
-        .upload-zone {
-            border: 2px dashed var(--brand-primary-transparent);
-            border-radius: 16px;
-            padding: 32px;
-            text-align: center;
-            background: var(--brand-light);
-            transition: all 0.3s ease;
-        }
-
-        .upload-zone:hover {
-            border-color: var(--brand-primary);
-            background: var(--brand-primary-transparent);
-        }
-
-        /* 翻转动画 */
-        .flip-container {
-            perspective: 1000px;
-        }
-
-        .flipper {
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-
-        .flipper.flipped {
-            transform: rotateY(180deg);
-        }
-
-        .standard-custom, .ai-custom {
-            backface-visibility: hidden;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-        }
-
-        .ai-custom {
-            transform: rotateY(180deg);
-        }
-
-        /* 材质定制区域 */
-        .fabric-section {
-            position: relative;
-            display: flex;
-            gap: 20px;
-            margin-top: 20px;
-            flex-direction: column;
-        }
-
-        .fabric-preview {
-            flex: 1;
-            aspect-ratio: 4/3;
-            background: var(--brand-light);
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-            margin-bottom: 16px;
-            box-shadow: var(--shadow-md);
-        }
-
-        .fabric-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .fabric-options {
-            width: 100%;
-            display: flex;
+    @media (min-width: 768px) {
+        .confirmation-container {
             flex-direction: row;
-            gap: 12px;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            padding: 4px 0;
         }
+    }
 
-        .fabric-item {
-            flex: 0 0 auto;
-            width: 80px;
-            aspect-ratio: 1;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-            scroll-snap-align: start;
-        }
+    /* 沙发预览区样式 */
+    .sofa-confirmation-preview {
+        flex: 1;
+        background-color: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        border: 1px solid #eaeaea;
+    }
 
-        .fabric-item:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
+    .preview-header {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        background: linear-gradient(to right, #f3f8f6, #e9f5f1);
+        border-bottom: 1px solid rgba(74, 173, 146, 0.15);
+    }
 
-        .fabric-item.selected {
-            border-color: var(--brand-primary);
-        }
+    .preview-header i {
+        color: #4aad92;
+        font-size: 1.2rem;
+        margin-right: 10px;
+    }
 
-        .fabric-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 6px;
-        }
+    .preview-header span {
+        font-weight: 500;
+        color: #36454f;
+    }
 
-        /* 字样定制 */
-        .text-custom {
-            margin-top: 20px;
-        }
+    .preview-image-container {
+        position: relative;
+        padding: 20px;
+        min-height: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #fafafa;
+    }
 
-        .font-selector {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 16px;
-            overflow-x: auto;
-            padding-bottom: 8px;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-        }
+    .preview-image-container img {
+        max-width: 100%;
+        max-height: 180px;
+    }
 
-        .font-item {
-            padding: 8px 16px;
-            border-radius: 20px;
-            background: var(--brand-light);
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.3s ease;
-            scroll-snap-align: start;
-            min-height: 40px;
-            min-width: 80px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    .sofa-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background-color: rgba(74, 173, 146, 0.9);
+        color: white;
+        font-size: 0.8rem;
+        padding: 3px 8px;
+        border-radius: 12px;
+        font-weight: 500;
+    }
 
-        .font-item:hover {
-            background: var(--brand-primary-transparent);
-        }
+    .dimensions-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 15px;
+        border-top: 1px solid #eaeaea;
+        background-color: #f8f8f8;
+    }
 
-        .font-item.selected {
-            background: var(--brand-primary);
-            color: white;
-        }
+    .dimension-tag {
+        display: inline-flex;
+        align-items: center;
+        background-color: white;
+        padding: 5px 10px;
+        border-radius: 6px;
+        border: 1px solid #e0e0e0;
+        font-size: 0.9rem;
+        color: #555;
+    }
 
-        .text-position {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+    .dimension-tag i {
+        color: #4aad92;
+        margin-right: 5px;
+        font-size: 0.85rem;
+    }
+
+    /* 配置信息卡片样式 */
+    .configuration-summary {
+        flex: 1;
+        background-color: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        border: 1px solid #eaeaea;
+    }
+
+    .summary-header {
+        padding: 15px;
+        background: linear-gradient(to right, #f3f8f6, #e9f5f1);
+        border-bottom: 1px solid rgba(74, 173, 146, 0.15);
+    }
+
+    .summary-title {
+        font-weight: 500;
+        color: #36454f;
+    }
+
+    .summary-content {
+        padding: 10px 0;
+    }
+
+    .summary-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .summary-item:last-child {
+        border-bottom: none;
+    }
+
+    .item-label {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        color: #555;
+    }
+
+    .item-label i {
+        color: #4aad92;
+        margin-right: 8px;
+        font-size: 0.9rem;
+    }
+
+    .item-value {
+        font-weight: 500;
+        color: #333;
+        display: flex;
+        align-items: center;
+    }
+
+    .fabric-sample {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        margin-left: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    /* 价格明细卡片样式 */
+    .price-details-card {
+        background-color: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        border: 1px solid #eaeaea;
+        margin-bottom: 20px;
+    }
+
+    .price-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .price-item.discount {
+        background-color: #fff9f9;
+    }
+
+    .price-item.discount .price-value {
+        color: #ff4d4f;
+    }
+
+    .price-label {
+        color: #555;
+    }
+
+    .price-value {
+        font-weight: 500;
+        color: #333;
+    }
+
+    .price-total {
+        display: flex;
+        justify-content: space-between;
+        padding: 15px;
+        background-color: #f8f8f8;
+        border-top: 1px solid #eaeaea;
+    }
+
+    .total-label {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .total-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #4aad92;
+    }
+
+    /* 配送信息卡片样式 */
+    .delivery-info-card {
+        background-color: #fff;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        border: 1px solid #eaeaea;
+        padding: 15px;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .section-header span {
+        font-weight: 500;
+        color: #333;
+    }
+
+    .edit-btn {
+        color: #4aad92;
+        font-size: 0.9rem;
+        text-decoration: none;
+    }
+
+    .default-address {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        padding: 12px;
+        border: 1px dashed #ddd;
+    }
+
+    .address-user {
+        margin-bottom: 5px;
+        font-weight: 500;
+    }
+
+    .phone-number {
+        color: #666;
+        margin-left: 10px;
+        font-weight: normal;
+    }
+
+    .address-detail {
+        color: #555;
+        line-height: 1.4;
+    }
+
+    .delivery-time-section {
+        margin-top: 15px;
+    }
+
+    .delivery-options {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .delivery-option {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .delivery-option input {
+        margin-right: 8px;
+    }
+
+    .option-text {
+        color: #555;
+    }
+
+    /* 下单按钮容器样式 */
+    .order-action-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #fff;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+        margin-bottom: 30px;
+    }
+
+    .total-display {
+        font-size: 1.1rem;
+    }
+
+    .total-label {
+        color: #555;
+    }
+
+    .total-price {
+        font-weight: 700;
+        color: #ff4d4f;
+        font-size: 1.2rem;
+    }
+
+    .place-order-btn {
+        background: linear-gradient(to right, #4aad92, #2c9678);
+        color: white;
+        font-weight: 600;
+        padding: 12px 25px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .place-order-btn:hover {
+        background: linear-gradient(to right, #3d9c83, #1d8769);
+        box-shadow: 0 4px 12px rgba(74, 173, 146, 0.3);
+    }
+    
+    .sofa-categories {
+        margin-bottom: 20px;
+    }
+    
+    /* 两行两列网格布局 */
+    .sofa-categories-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 10px;
+    }
+    
+    /* 沙发分类按钮样式 - 保持原样式 */
+    .category-btn {
+        background-color: #F3F4F6;
+        border: none;
+        padding: 15px;
+        border-radius: 8px;
+        font-weight: 500;
+        color: #4B5563;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+    
+    .category-btn i {
+        font-size: 14px;
+    }
+    
+    .category-btn:hover {
+        background-color: #E5E7EB;
+    }
+    
+    .category-btn.active {
+        background-color: #4F46E5;
+        color: white;
+    }
+    
+    /* 沙发型号网格和卡片样式 */
+    .hot-models-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #374151;
+        margin-top: 20px;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .hot-models-title i {
+        color: #EF4444;
+        margin-right: 8px;
+        font-size: 20px;
+    }
+    
+    .model-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .model-item {
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        position: relative;
+        border: 2px solid transparent;
+    }
+    
+    .model-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .model-item.selected {
+        border-color: #4F46E5;
+    }
+    
+    .model-image-container {
+        position: relative;
+        overflow: hidden;
+        height: 120px;
+    }
+    
+    .model-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+    
+    .model-item:hover .model-image {
+        transform: scale(1.05);
+    }
+    
+    .model-hover-info {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 8px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+        opacity: 0;
+        transform: translateY(10px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    
+    .model-item:hover .model-hover-info {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    
+    .model-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-bottom: 8px;
+    }
+    
+    /* .feature-tag {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 100px;
+        backdrop-filter: blur(4px);
+    } */
+    
+    .view-details-btn {
+        background-color: #4F46E5;
+        color: white;
+        border: none;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        width: 100%;
+    }
+    
+    .view-details-btn:hover {
+        background-color: #4338CA;
+    }
+    
+    .model-stock-badge {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        padding: 2px 6px;
+        border-radius: 100px;
+        font-size: 10px;
+        font-weight: 500;
+        color: white;
+        z-index: 1;
+    }
+    
+    .model-stock-badge.in-stock {
+        background-color: #10B981;
+    }
+    
+    .model-stock-badge.low-stock {
+        background-color: #F59E0B;
+    }
+    
+    .model-stock-badge.out-of-stock {
+        background-color: #EF4444;
+    }
+    
+    .model-info {
+        padding: 8px 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .model-name {
+        font-size: 14px;
+        font-weight: 500;
+        color: #374151;
+    }
+    
+    .model-price {
+        font-size: 14px;
+        font-weight: 600;
+        color: #4F46E5;
+    }
+    
+    /* 移动端适配 */
+    @media (max-width: 480px) {
+        .sofa-categories-grid {
             gap: 8px;
-            margin-top: 12px;
         }
-
-        .position-btn {
-            padding: 8px;
-            text-align: center;
-            border: 1px solid var(--brand-light-dark);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        
+        @media (min-width: 640px) {
+            .model-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+            
+            .model-image-container {
+                height: 150px;
+            }
         }
-
-        .position-btn:hover {
-            background: var(--brand-primary-transparent);
-        }
-
-        .position-btn.selected {
-            background: var(--brand-primary);
-            color: white;
-            border-color: var(--brand-primary);
-        }
-
-        /* 配件选择 */
-        .accessory-grid {
-            display: grid;
-            grid-template-columns: repeat(1, 1fr);
-            gap: 16px;
-            margin-top: 20px;
-        }
-
-        .accessory-item {
-            background: white;
-            border-radius: 12px;
-            padding: 12px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid var(--brand-light-dark);
-            min-height: 80px;
-        }
-
-        .accessory-item:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .accessory-item.selected {
-            border-color: var(--brand-primary);
-            background: var(--brand-primary-transparent);
-        }
-
-        .accessory-img {
-            width: 60px;
-            height: 60px;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .accessory-img img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .accessory-info {
-            flex: 1;
-        }
-
-        .accessory-name {
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-
-        .accessory-price {
-            color: var(--brand-primary);
-            font-size: 14px;
-        }
-
-        /* 数量和价格 */
-        .quantity-price {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .quantity-input {
-            display: flex;
-            align-items: center;
-            border: 1px solid var(--brand-light-dark);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .quantity-btn {
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--brand-light);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .quantity-btn:hover {
-            background: var(--brand-primary-transparent);
-        }
-
-        .quantity-value {
-            width: 60px;
-            height: 48px;
-            text-align: center;
-            border: none;
-            border-left: 1px solid var(--brand-light-dark);
-            border-right: 1px solid var(--brand-light-dark);
-            font-size: 14px;
-        }
-
-        .total-price {
-            font-size: 18px;
-            font-weight: 500;
-            color: var(--brand-primary);
-        }
-
-        /* 备注区域 */
-        .remark-section {
-            margin-top: 20px;
-        }
-
-        .voice-input {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .voice-btn {
-            width: 48px;
-            height: 48px;
-            border-radius: 24px;
-            background: var(--brand-gradient-primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .voice-btn:hover {
-            transform: scale(1.05);
-            box-shadow: var(--shadow-highlight);
-        }
-
-        .image-upload {
-            display: flex;
-            gap: 12px;
-            margin-top: 12px;
-            flex-wrap: wrap;
-        }
-
-        .upload-btn {
-            width: 100px;
-            height: 100px;
-            border-radius: 12px;
-            border: 2px dashed var(--brand-primary-transparent);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .upload-btn:hover {
-            border-color: var(--brand-primary);
-            background: var(--brand-primary-transparent);
-        }
-
-        .upload-preview {
-            width: 100px;
-            height: 100px;
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .upload-preview img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .upload-preview .remove-btn {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            width: 20px;
-            height: 20px;
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        /* 步骤指示器 */
-        .steps-indicator {
-            display: flex;
-            justify-content: space-between;
-            margin: 20px 0;
-            position: relative;
-        }
-
-        .steps-indicator::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: var(--brand-light-dark);
-            transform: translateY(-50%);
-            z-index: 1;
-        }
-
-        .step {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: white;
-            border: 2px solid var(--brand-light-dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 500;
-            position: relative;
-            z-index: 2;
-        }
-
-        .step.active {
-            background: var(--brand-primary);
-            color: white;
-            border-color: var(--brand-primary);
-        }
-
-        .step.completed {
-            background: var(--brand-success);
-            color: white;
-            border-color: var(--brand-success);
-        }
-
-        /* 分步内容区域 */
-        .step-content {
-            display: none;
-        }
-
-        .step-content.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* 底部导航 */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            padding: 12px 16px;
-            display: flex;
-            justify-content: space-between;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
-            z-index: 100;
-        }
-
-        .nav-btn {
-            padding: 12px 24px;
-            border-radius: 24px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .btn-prev {
-            background: var(--brand-light);
-            color: var(--brand-dark);
-        }
-
-        .btn-next {
-            background: var(--brand-gradient-primary);
-            color: white;
-        }
-
-        /* 3D预览控制 */
-        .preview-controls {
-            display: flex;
-            justify-content: center;
-            gap: 16px;
-            margin-top: 12px;
-        }
-
-        .preview-btn {
-            width: 48px;
-            height: 48px;
-            border-radius: 24px;
-            background: var(--brand-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .preview-btn:hover {
-            background: var(--brand-primary-transparent);
-        }
-
-        /* 社交分享 */
-        .share-section {
-            display: flex;
-            gap: 12px;
-            margin-top: 16px;
-        }
-
-        .share-btn {
-            width: 48px;
-            height: 48px;
-            border-radius: 24px;
-            background: var(--brand-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--brand-dark);
-        }
-
-        .share-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        /* 热门推荐 */
-        .popular-combinations {
-            margin-top: 20px;
-        }
-
-        .combination-scroll {
-            display: flex;
-            gap: 16px;
-            overflow-x: auto;
-            padding: 4px 0 16px;
-            scroll-snap-type: x mandatory;
-        }
-
-        .combination-card {
-            flex: 0 0 auto;
-            width: 200px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            scroll-snap-align: start;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .combination-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .combination-img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-        }
-
-        .combination-info {
-            padding: 12px;
-        }
-
-        .combination-title {
-            font-weight: 500;
-            margin-bottom: 4px;
-        }
-
-        .combination-meta {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: var(--brand-dark-light);
-        }
-
-        /* 表单输入样式统一 */
-        .form-input {
-            width: 100%;
-            padding: 14px;
-            border: 1px solid var(--brand-light-dark);
-            border-radius: 8px;
-            margin-bottom: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .form-input:focus {
-            border-color: var(--brand-primary);
-            box-shadow: 0 0 0 2px var(--brand-primary-transparent);
-            outline: none;
-        }
+    }
     </style>
 </head>
 <body>
     <!-- 顶部导航栏 -->
     <div class="nav-bar fixed top-0 left-0 right-0 z-10">
-        <div class="flex items-center justify-between px-4 h-12">
-            <div class="flex items-center">
-                <a href="javascript:history.back()" class="text-gray-500 mr-3">
-                    <i class="fas fa-arrow-left"></i>
-                </a>
-                <div class="text-lg font-medium">沙发定制</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 主要内容区 -->
-    <div class="main-content pt-14 pb-32 px-4">
+        <div class="flex items-center px-4 h-full">
+            <a href="javascript:history.back()" class="text-gray-500">
+                <i class="fas fa-arrow-left text-lg"></i>
+            </a>
         <!-- 切换按钮组 -->
-        <div class="tab-group">
+            <div class="tab-group flex-1 mx-4">
             <button class="tab-btn active" data-tab="standard">标准定制</button>
             <button class="tab-btn" data-tab="ai">智能定制</button>
+            </div>
+            <div class="w-5"></div><!-- 占位元素，平衡布局 -->
+        </div>
         </div>
 
+    <!-- 主要内容区 -->
+    <div class="main-content pb-32 px-4">
         <!-- 步骤指示器 -->
         <div class="steps-indicator">
-            <div class="step active" data-step="1">1</div>
-            <div class="step" data-step="2">2</div>
-            <div class="step" data-step="3">3</div>
-            <div class="step" data-step="4">4</div>
-            <div class="step" data-step="5">5</div>
+            <div class="step active" data-step="1">
+                <div class="step-circle">1</div>
+                <div class="step-label">选择型号</div>
+            </div>
+            <div class="step" data-step="2">
+                <div class="step-circle">2</div>
+                <div class="step-label">选择面料</div>
+            </div>
+            <div class="step" data-step="3">
+                <div class="step-circle">3</div>
+                <div class="step-label">选择尺寸</div>
+            </div>
+            <div class="step" data-step="4">
+                <div class="step-circle">4</div>
+                <div class="step-label">选择配件</div>
+            </div>
+            <div class="step" data-step="5">
+                <div class="step-circle">5</div>
+                <div class="step-label">确认配置</div>
+            </div>
         </div>
 
         <!-- 翻转容器 -->
@@ -839,215 +934,404 @@
                             <div class="section-title">
                                 <i class="fas fa-couch"></i>型号选择
                             </div>
+                            
+                            <!-- 沙发分类按钮 -->
+                            <div class="sofa-categories">
+                                <div class="sofa-categories-grid">
+                                    <button class="category-btn" data-category="XK"><i class="fas fa-couch"></i>功能沙发</button>
+                                    <button class="category-btn" data-category="L"><i class="fas fa-bed"></i>拉床沙发</button>
+                                    <button class="category-btn" data-category="HM"><i class="fas fa-compress-alt"></i>智能沙发</button>
+                                    <button class="category-btn" data-category="JY"><i class="fas fa-tachometer-alt"></i>压缩沙发</button>
+                                </div>
+                            </div>
+                            
+                            <!-- 热门款式标题 -->
+                            <div class="hot-models-title" id="models-title">
+                                <i class="fas fa-fire"></i> 热门推荐
+                            </div>
+                            
+                            <!-- 沙发型号网格 -->
                             <div class="model-grid">
-                                <div class="model-item">
-                                    <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&auto=format" alt="现代简约沙发">
-                                    <div class="font-medium">现代简约沙发</div>
-                                    <div class="text-sm text-green-500">库存充足</div>
-                                </div>
-                                <div class="model-item">
-                                    <img src="https://images.unsplash.com/photo-1550254478-ead40cc54513?w=500&auto=format" alt="北欧风格沙发">
-                                    <div class="font-medium">北欧风格沙发</div>
-                                    <div class="text-sm text-orange-500">库存紧张</div>
-                                </div>
-                                <div class="model-item">
-                                    <img src="https://images.unsplash.com/photo-1567016376408-0226e4d0c1ea?w=500&auto=format" alt="轻奢布艺沙发">
-                                    <div class="font-medium">轻奢布艺沙发</div>
-                                    <div class="text-sm text-green-500">库存充足</div>
-                                </div>
-                                <div class="model-item">
-                                    <img src="https://images.unsplash.com/photo-1577979749830-f1d742b96791?w=500&auto=format" alt="功能沙发">
-                                    <div class="font-medium">多功能沙发</div>
-                                    <div class="text-sm text-red-500">预定</div>
-                                </div>
+                                <!-- 沙发型号将动态生成 -->
                             </div>
-                        </div>
-                        
-                        <!-- 热门推荐 -->
-                        <div class="custom-section">
-                            <div class="section-title">
-                                <i class="fas fa-fire"></i>热门推荐
-                            </div>
-                            <div class="combination-scroll">
-                                <div class="combination-card">
-                                    <img src="https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=500&auto=format" class="combination-img" alt="北欧风客厅">
-                                    <div class="combination-info">
-                                        <div class="combination-title">北欧风客厅</div>
-                                        <div class="combination-meta">
-                                            <span>已有128人选择</span>
-                                            <span>4.9分</span>
+                            
+                            <!-- 沙发型号模板 -->
+                            <template id="model-template">
+                                <div class="model-item">
+                                    <div class="model-image-container">
+                                        <img src="" alt="" class="model-image">
+                                        <div class="model-hover-info">
+                                            <div class="model-features">
+                                                <!-- 功能标签会被动态添加 -->
+                                            </div>
+                                            <button class="view-details-btn">查看详情</button>
                                         </div>
+                                        <div class="model-stock-badge"></div>
+                                    </div>
+                                    <div class="model-info">
+                                        <div class="model-name font-medium"></div>
+                                        <div class="model-price"></div>
                                     </div>
                                 </div>
-                                <div class="combination-card">
-                                    <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=500&auto=format" class="combination-img" alt="现代简约">
-                                    <div class="combination-info">
-                                        <div class="combination-title">现代简约</div>
-                                        <div class="combination-meta">
-                                            <span>已有98人选择</span>
-                                            <span>4.8分</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="combination-card">
-                                    <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=500&auto=format" class="combination-img" alt="轻奢风格">
-                                    <div class="combination-info">
-                                        <div class="combination-title">轻奢风格</div>
-                                        <div class="combination-meta">
-                                            <span>已有76人选择</span>
-                                            <span>4.7分</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            </template>
                         </div>
                     </div>
 
-                    <!-- 步骤2: 规格选择 -->
+                    <!-- 步骤2: 面料选择 -->
                     <div class="step-content" data-step="2">
-                        <div class="custom-section">
+                        <div class="custom-section" style="margin-top: 10px;">
                             <div class="section-title">
-                                <i class="fas fa-sliders-h"></i>规格选择
+                                <i class="fas fa-palette"></i>面料选择
                             </div>
                             
-                            <div class="mb-4">
-                                <div class="text-sm font-medium mb-2">系列</div>
-                                <div class="spec-scroll">
-                                    <div class="spec-card selected">轻奢系列</div>
-                                    <div class="spec-card">简约系列</div>
-                                    <div class="spec-card">复古系列</div>
-                                    <div class="spec-card">北欧系列</div>
-                                </div>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <div class="text-sm font-medium mb-2">风格</div>
-                                <div class="spec-scroll">
-                                    <div class="spec-card selected">现代风格</div>
-                                    <div class="spec-card">北欧风格</div>
-                                    <div class="spec-card">工业风格</div>
-                                    <div class="spec-card">日式风格</div>
+                            <!-- 快速搜索和编码输入 -->
+                            <div class="fabric-search mb-4">
+                                <div class="relative">
+                                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                    <input type="text" class="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg" placeholder="输入面料编码，如TC-001-BLUE">
+                                    <!-- <button class="absolute right-2 top-1/2 transform -translate-y-1/2 text-primary">
+                                        <i class="fas fa-barcode"></i>
+                                    </button> -->
                                 </div>
                             </div>
                             
-                            <div class="mb-4">
-                                <div class="text-sm font-medium mb-2">功能</div>
-                                <div class="spec-scroll">
-                                    <div class="spec-card selected">普通款</div>
-                                    <div class="spec-card">多功能收纳</div>
-                                    <div class="spec-card">电动调节</div>
-                                    <div class="spec-card">沙发床</div>
+                            <!-- 面料分类选择 -->
+                            <div class="fabric-categories mb-4">
+                                <div class="flex overflow-x-auto pb-2 hide-scrollbar">
+                               
+                                    <button class="category-chip">真皮</button>
+                                    <button class="category-chip">科技布</button>
+            
                                 </div>
                             </div>
-                        </div>
-
-                        <!-- 尺寸选择 -->
-                        <div class="custom-section">
-                            <div class="section-title">
-                                <i class="fas fa-ruler-combined"></i>尺寸选择
-                            </div>
-                            <div class="size-slider">
-                                <input type="range" min="180" max="360" step="10" value="240">
-                                <div class="flex justify-between text-sm text-gray-500 mt-2">
-                                    <span>180cm</span>
-                                    <span>当前: 240cm</span>
-                                    <span>360cm</span>
-                                </div>
-                            </div>
-                            <div class="text-sm text-gray-500 mt-4">
-                                <i class="fas fa-info-circle mr-1"></i>
-                                推荐尺寸：15㎡以上客厅选择240cm以上
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 步骤3: 材质定制 -->
-                    <div class="step-content" data-step="3">
-                        <div class="custom-section">
-                            <div class="section-title">
-                                <i class="fas fa-palette"></i>材质定制
-                            </div>
-                            <div class="fabric-section">
-                                <div class="fabric-preview">
-                                    <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&auto=format" alt="沙发预览">
-                                    <div class="preview-controls">
-                                        <div class="preview-btn" title="旋转左侧">
-                                            <i class="fas fa-undo"></i>
+                            
+                            <!-- 面料卡片网格 -->
+                            <div class="fabric-grid">
+                                <!-- 面料卡片1 -->
+                                <div class="fabric-card">
+                                    <div class="fabric-img-container">
+                                 
+                                        <div class="fabric-carousel">
+                                            <div class="carousel-inner">
+                                                <img src="https://images.unsplash.com/photo-1615529162924-f8605388461d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="灰色麻质" class="fabric-img active">
+                                                <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="灰色麻质沙发" class="fabric-img">
+                                            </div>
+                                            <div class="carousel-nav">
+                                                <span class="carousel-dot active" data-index="0"></span>
+                                                <span class="carousel-dot" data-index="1"></span>
+                                            </div>
                                         </div>
-                                        <div class="preview-btn" title="旋转右侧">
-                                            <i class="fas fa-redo"></i>
+                                    </div>
+                                    <div class="fabric-info">
+                                        <div class="fabric-header">
+                                            <div class="fabric-model">立特8967</div>
+                                            <div class="fabric-price">15元/尺</div>
                                         </div>
-                                        <div class="preview-btn" title="放大">
-                                            <i class="fas fa-search-plus"></i>
-                                        </div>
-                                        <div class="preview-btn" title="AR预览">
-                                            <i class="fas fa-vr-cardboard"></i>
+                                        <div class="fabric-features">
+                                            <span class="feature-tag premium">头层牛皮</span>
+                                            <span class="feature-tag">耐磨</span>
+                                            <span class="feature-tag">防水</span>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="fabric-options">
-                                    <div class="fabric-item selected">
-                                        <img src="https://images.unsplash.com/photo-1615529162924-f8605388461d?w=200&auto=format" alt="灰色麻质">
+                                
+                                <!-- 面料卡片2 -->
+                                <div class="fabric-card">
+                                    <div class="fabric-img-container">
+                                    
+                                        <div class="fabric-carousel">
+                                            <div class="carousel-inner">
+                                                <img src="https://images.unsplash.com/photo-1620222053918-6edb898f0e51?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="米白色绒布" class="fabric-img active">
+                                                <img src="https://images.unsplash.com/photo-1560448204-603b3fc33ddc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="米白色绒布沙发" class="fabric-img">
+                                            </div>
+                                            <div class="carousel-nav">
+                                                <span class="carousel-dot active" data-index="0"></span>
+                                                <span class="carousel-dot" data-index="1"></span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="fabric-item">
-                                        <img src="https://images.unsplash.com/photo-1620222053918-6edb898f0e51?w=200&auto=format" alt="米白色绒布">
-                                    </div>
-                                    <div class="fabric-item">
-                                        <img src="https://images.unsplash.com/photo-1620222052419-d131a14fc06e?w=200&auto=format" alt="深蓝色皮质">
-                                    </div>
-                                    <div class="fabric-item">
-                                        <img src="https://images.unsplash.com/photo-1631280340909-a7b5bc3c3d7c?w=200&auto=format" alt="浅绿色麻布">
-                                    </div>
-                                    <div class="fabric-item">
-                                        <img src="https://images.unsplash.com/photo-1629392554711-1b3a44423770?w=200&auto=format" alt="棕色皮质">
+                                    <div class="fabric-info">
+                                        <div class="fabric-header">
+                                            <div class="fabric-model">绒典7512</div>
+                                            <div class="fabric-price">22元/尺</div>
+                                        </div>
+                                        <div class="fabric-features">
+                                            <span class="feature-tag premium">高级绒面</span>
+                                            <span class="feature-tag">柔软</span>
+                                            <span class="feature-tag">可拆洗</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="text-custom">
-                                <div class="font-selector">
-                                    <div class="font-item selected">默认字体</div>
-                                    <div class="font-item">雅黑</div>
-                                    <div class="font-item">宋体</div>
-                                    <div class="font-item">楷体</div>
-                                    <div class="font-item">圆体</div>
+                                
+                                <!-- 面料卡片3 -->
+                                <div class="fabric-card">
+                                    <div class="fabric-img-container">
+                                 
+                                        <div class="fabric-carousel">
+                                            <div class="carousel-inner">
+                                                <img src="https://images.unsplash.com/photo-1620222052419-d131a14fc06e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="深蓝色皮质" class="fabric-img active">
+                                                <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="深蓝色皮质沙发" class="fabric-img">
+                                            </div>
+                                            <div class="carousel-nav">
+                                                <span class="carousel-dot active" data-index="0"></span>
+                                                <span class="carousel-dot" data-index="1"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fabric-info">
+                                        <div class="fabric-header">
+                                            <div class="fabric-model">海格3305</div>
+                                            <div class="fabric-price">32元/尺</div>
+                                        </div>
+                                        <div class="fabric-features">
+                                            <span class="feature-tag premium">头层牛皮</span>
+                                            <span class="feature-tag">高档</span>
+                                            <span class="feature-tag">耐用</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <input type="text" class="form-input" placeholder="请输入定制文字（选填）">
-                                <div class="text-position">
-                                    <div class="position-btn">左上</div>
-                                    <div class="position-btn">中上</div>
-                                    <div class="position-btn">右上</div>
-                                    <div class="position-btn">左中</div>
-                                    <div class="position-btn selected">正中</div>
-                                    <div class="position-btn">右中</div>
-                                    <div class="position-btn">左下</div>
-                                    <div class="position-btn">中下</div>
-                                    <div class="position-btn">右下</div>
+                                
+                                <!-- 面料卡片4 -->
+                                <div class="fabric-card">
+                                    <div class="fabric-img-container">
+                                   
+                                        <div class="fabric-carousel">
+                                            <div class="carousel-inner">
+                                                <img src="https://images.unsplash.com/photo-1631280340909-a7b5bc3c3d7c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="浅绿色麻布" class="fabric-img active">
+                                                <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="浅绿色麻布沙发" class="fabric-img">
+                                            </div>
+                                            <div class="carousel-nav">
+                                                <span class="carousel-dot active" data-index="0"></span>
+                                                <span class="carousel-dot" data-index="1"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="fabric-info">
+                                        <div class="fabric-header">
+                                            <div class="fabric-model">生态6281</div>
+                                            <div class="fabric-price">18元/尺</div>
+                                        </div>
+                                        <div class="fabric-features">
+                                            <span class="feature-tag premium">亚麻面料</span>
+                                            <span class="feature-tag">环保</span>
+                                            <span class="feature-tag">透气</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         
-                        <!-- 社交分享 -->
-                        <div class="custom-section">
+                        <!-- 面料预览与色卡 -->
+                        <div class="custom-section mt-4" style="display: none;">
+                            <!-- 隐藏原来的预览区域，但保留结构以避免JS错误 -->
+                            <div class="preview-container" style="display: none;">
+                                <div class="preview-window">
+                                    <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="沙发预览" class="preview-img">
+                                </div>
+                                
+                                <div class="color-palette" style="display: none;">
+                                    <div class="color-swatches">
+                                        <div class="color-swatch active" data-color="gray" style="background-color: #b0b0b0;" title="TC-001-GRAY">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 步骤3: 规格选择 -->
+                    <div class="step-content" data-step="3">
+                        <!-- <div class="custom-section">
                             <div class="section-title">
-                                <i class="fas fa-share-alt"></i>分享设计
+                                <i class="fas fa-couch"></i>选择尺寸
                             </div>
-                            <div class="share-section">
-                                <div class="share-btn">
-                                    <i class="fab fa-weixin"></i>
+                        </div> -->
+
+                        <!-- 紧凑型沙发预览区域 -->
+                        <div class="compact-preview-container" style="margin-top: 5px;">
+                            <div class="current-size-display">
+                                <i class="fas fa-couch"></i>
+                                <span class="font-medium sofa-name" style="width: 60px;">三人位沙发</span>
+                                <span id="size-dimensions" class="font-medium">（180 × 90 × 45 cm）</span>
+                            </div>
+                            
+                            <div class="sofa-preview-image">
+                                <img src="../img/sofa-types/triple-seats.svg" alt="沙发预览图" id="sofaTypeImage">
+                                
+                                <div class="dimension-marker width-marker">
+                                    <!-- <div class="marker-line"></div> -->
+                                    <div class="marker-label"><span>L: </span><span id="vizLength">180</span> cm</div>
                                 </div>
-                                <div class="share-btn">
-                                    <i class="fab fa-weibo"></i>
+                                
+                                <div class="dimension-marker depth-marker">
+                                    <!-- <div class="marker-line"></div> -->
+                                    <div class="marker-label"><span>W: </span><span id="vizDepth">90</span> cm</div>
                                 </div>
-                                <div class="share-btn">
-                                    <i class="fas fa-link"></i>
-                                </div>
-                                <div class="share-btn">
-                                    <i class="fas fa-user-friends"></i>
+                                
+                                <div class="dimension-marker height-marker">
+                                    <!-- <div class="marker-line"></div> -->
+                                    <div class="marker-label"><span>H: </span><span id="vizHeight">45</span> cm</div>
                                 </div>
                             </div>
-                            <div class="mt-4 text-sm text-gray-500">
-                                <i class="fas fa-info-circle mr-1"></i>
-                                分享您的设计获取好友意见，还可获得积分奖励
+                        </div>
+                                
+                        <!-- 沙发尺寸选择 -->
+                        <div class="config-label">沙发尺寸选择</div>
+                        <div class="sofa-type-cards">
+                            <div class="sofa-type-card" data-type="single" data-size="180" data-name="单人位">
+                                <div class="sofa-card-icon">
+                                    <i class="fas fa-couch"></i>
+                                    <span class="seat-count">1</span>
+                                </div>
+                                <div class="sofa-card-info">
+                                    <div class="sofa-card-title">单人位</div>
+                                    <div class="sofa-card-size">长度: 90cm</div>
+                                </div>
+                                <div class="sofa-card-scene">适合小户型/书房</div>
+                            </div>
+                            <div class="sofa-type-card active" data-type="double" data-size="210" data-name="二人位">
+                                <div class="sofa-card-icon">
+                                    <i class="fas fa-couch"></i>
+                                    <span class="seat-count">2</span>
+                                </div>
+                                <div class="sofa-card-info">
+                                    <div class="sofa-card-title">二人位</div>
+                                    <div class="sofa-card-size">长度: 180cm</div>
+                                </div>
+                                <div class="sofa-card-scene">适合15-20㎡客厅</div>
+                            </div>
+                            <div class="sofa-type-card" data-type="triple" data-size="240" data-name="三人位">
+                                <div class="sofa-card-icon">
+                                    <i class="fas fa-couch"></i>
+                                    <span class="seat-count">3</span>
+                                </div>
+                                <div class="sofa-card-info">
+                                    <div class="sofa-card-title">三人位</div>
+                                    <div class="sofa-card-size">长度: 210cm</div>
+                                </div>
+                                <div class="sofa-card-scene">适合20-25㎡客厅</div>
+                            </div>
+                            <div class="sofa-type-card" data-type="quad" data-size="270" data-name="四人位">
+                                <div class="sofa-card-icon">
+                                    <i class="fas fa-couch"></i>
+                                    <span class="seat-count">4</span>
+                                </div>
+                                <div class="sofa-card-info">
+                                    <div class="sofa-card-title">四人位</div>
+                                    <div class="sofa-card-size">长度: 240cm</div>
+                                </div>
+                                <div class="sofa-card-scene">适合25㎡以上客厅</div>
+                            </div>
+                            <div class="sofa-type-card" data-type="triple-left" data-size="300" data-name="3+左妃">
+                                <div class="sofa-card-icon">
+                                    <i class="fas fa-couch"></i>
+                                    <span class="seat-count">3+</span>
+                                </div>
+                                <div class="sofa-card-info">
+                                    <div class="sofa-card-title">3+左妃</div>
+                                    <div class="sofa-card-size">长度: 270cm</div>
+                                </div>
+                                <div class="sofa-card-scene">适合L型空间</div>
+                            </div>
+                            <div class="sofa-type-card" data-type="triple-right" data-size="330" data-name="3+右妃">
+                                <div class="sofa-card-icon">
+                                    <i class="fas fa-couch"></i>
+                                    <span class="seat-count">3+</span>
+                                </div>
+                                <div class="sofa-card-info">
+                                    <div class="sofa-card-title">3+右妃</div>
+                                    <div class="sofa-card-size">长度: 270cm</div>
+                                </div>
+                                <div class="sofa-card-scene">适合L型空间</div>
+                            </div>
+                        </div>
+                            
+                        <!-- 简化的尺寸调整区域 -->
+                        <div class="dimensions-fold-container mt-4">
+                            <div class="adjust-link-container">
+                                <a href="javascript:void(0)" id="dimensions-fold-btn" class="dimensions-fold-btn" style="margin-top: 5px;">
+                                    <span class="fold-btn-content">
+                                        <i class="fas fa-sliders-h"></i>
+                                        <span>点击调整具体尺寸</span>
+                                    </span>
+                                    <i class="fas fa-chevron-down fold-icon"></i>
+                                </a>
+                            </div>
+                            
+                            <div id="dimensions-content" class="dimensions-content">
+                                <!-- 沙发主要尺寸调整 -->
+                                <div class="dimension-row">
+                                    <div class="dimension-label-container">
+                                        <div class="config-label">总长度</div>
+                                        <div class="dimension-controls">
+                                            <button class="dimension-btn minus" data-dimension="length">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <div class="current-value"><span id="length-value">180</span> 厘米</div>
+                                            <button class="dimension-btn plus" data-dimension="length">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="dimension-tip">标准双人位沙发长度为180厘米</div>
+                                </div>
+                                
+                                <!-- 座深调整 -->
+                                <div class="dimension-row">
+                                    <div class="dimension-label-container">
+                                        <div class="config-label">座位深度</div>
+                                        <div class="dimension-controls">
+                                            <button class="dimension-btn minus" data-dimension="depth">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <div class="current-value"><span id="depth-value">90</span> 厘米</div>
+                                            <button class="dimension-btn plus" data-dimension="depth">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="dimension-tip">较深的座位更适合休闲和躺卧</div>
+                                </div>
+                                
+                                <!-- 座高调整 -->
+                                <div class="dimension-row">
+                                    <div class="dimension-label-container">
+                                        <div class="config-label">座位高度</div>
+                                        <div class="dimension-controls">
+                                            <button class="dimension-btn minus" data-dimension="height">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                            <div class="current-value"><span id="height-value">45</span> 厘米</div>
+                                            <button class="dimension-btn plus" data-dimension="height">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="dimension-tip">标准高度适合大多数人</div>
+                                </div>
+                                
+                                <!-- 恢复默认值按钮 -->
+                                <div class="reset-dimension-container">
+                                    <button class="reset-dimension-btn">
+                                        <i class="fas fa-undo"></i> 恢复默认尺寸
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                                
+                        <!-- 适用场景推荐 -->
+                        <div class="scene-recommendation mt-4">
+                            <div class="recommendation-card">
+                                <div class="recommendation-icon">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
+                                <div class="recommendation-content">
+                                    <div class="recommendation-title">空间搭配建议</div>
+                                    <div class="recommendation-text" id="spaceRecommendation">
+                                        二人位沙发适合15-20㎡的客厅空间，建议搭配一个茶几和一个小边几，保持通道宽度至少70cm。
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1058,74 +1342,216 @@
                             <div class="section-title">
                                 <i class="fas fa-puzzle-piece"></i>配件选择
                             </div>
-                            <div class="accessory-grid">
-                                <div class="accessory-item">
-                                    <div class="accessory-img">
-                                        <img src="https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?w=200&auto=format" alt="现代简约茶几">
+                            
+                            <!-- 茶几选择 -->
+                            <div class="accessory-section">
+                                <div class="config-label">茶几选择</div>
+                                <div class="accessory-options-grid">
+                                    <div class="accessory-option active" data-accessory="no-table" data-price="0" data-name="无">
+                                        <div class="accessory-option-img">
+                                            <i class="fas fa-ban"></i>
+                                        </div>
+                                        <div class="accessory-option-info">
+                                            <div class="accessory-option-name">无</div>
+                                            <div class="accessory-option-price">免费</div>
+                                        </div>
                                     </div>
-                                    <div class="accessory-info">
-                                        <div class="accessory-name">现代简约茶几</div>
-                                        <div class="accessory-price">¥899</div>
+                                    <div class="accessory-option" data-accessory="ash" data-price="150" data-name="水曲柳">
+                                        <div class="accessory-option-img">
+                                            <img src="https://images.unsplash.com/photo-1554295405-abb8fd54f153?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="水曲柳茶几">
+                                        </div>
+                                        <div class="accessory-option-info">
+                                            <div class="accessory-option-name">水曲柳</div>
+                                            <div class="accessory-option-price">+¥150</div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="accessory-item">
-                                    <div class="accessory-img">
-                                        <img src="https://images.unsplash.com/photo-1499933374294-4584851497cc?w=200&auto=format" alt="北欧实木茶几">
+                                    <div class="accessory-option" data-accessory="white-marble" data-price="150" data-name="白理石">
+                                        <div class="accessory-option-img">
+                                            <img src="https://images.unsplash.com/photo-1533090481720-856c6e3c1fdc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="白理石茶几">
+                                        </div>
+                                        <div class="accessory-option-info">
+                                            <div class="accessory-option-name">白理石</div>
+                                            <div class="accessory-option-price">+¥150</div>
+                                        </div>
                                     </div>
-                                    <div class="accessory-info">
-                                        <div class="accessory-name">北欧实木茶几</div>
-                                        <div class="accessory-price">¥1299</div>
-                                    </div>
-                                </div>
-                                <div class="accessory-item">
-                                    <div class="accessory-img">
-                                        <img src="https://images.unsplash.com/photo-1551298370-9d3d53740c72?w=200&auto=format" alt="玻璃边几">
-                                    </div>
-                                    <div class="accessory-info">
-                                        <div class="accessory-name">玻璃边几</div>
-                                        <div class="accessory-price">¥599</div>
-                                    </div>
-                                </div>
-                                <div class="accessory-item">
-                                    <div class="accessory-img">
-                                        <img src="https://images.unsplash.com/photo-1540574573343-bdd23b70c48b?w=200&auto=format" alt="地毯">
-                                    </div>
-                                    <div class="accessory-info">
-                                        <div class="accessory-name">北欧风地毯</div>
-                                        <div class="accessory-price">¥799</div>
+                                    <div class="accessory-option" data-accessory="black-walnut" data-price="150" data-name="黑胡桃">
+                                        <div class="accessory-option-img">
+                                            <img src="https://images.unsplash.com/photo-1596162954151-cdcb4c0f70a8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="黑胡桃茶几">
+                                        </div>
+                                        <div class="accessory-option-info">
+                                            <div class="accessory-option-name">黑胡桃</div>
+                                            <div class="accessory-option-price">+¥150</div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="quantity-price">
-                                <div class="quantity-input">
-                                    <div class="quantity-btn">-</div>
-                                    <input type="text" class="quantity-value" value="1">
-                                    <div class="quantity-btn">+</div>
+                            
+                            <!-- 功能位选择 -->
+                            <div class="accessory-section mt-5">
+                                <div class="config-label">功能位选择</div>
+                                <div class="accessory-options-grid">
+                                    <div class="accessory-option active" data-accessory="no-function" data-price="0" data-name="无">
+                                        <div class="accessory-option-img function-icon">
+                                            <i class="fas fa-ban"></i>
+                                        </div>
+                                        <div class="accessory-option-info">
+                                            <div class="accessory-option-name">无</div>
+                                            <div class="accessory-option-price">免费</div>
+                                        </div>
+                                    </div>
+                                    <div class="accessory-option" data-accessory="one-touch" data-price="150" data-name="一键启动">
+                                        <div class="accessory-option-img function-icon">
+                                            <i class="fas fa-power-off"></i>
+                                        </div>
+                                        <div class="accessory-option-info">
+                                            <div class="accessory-option-name">一键启动</div>
+                                            <div class="accessory-option-price">+¥150</div>
+                                        </div>
+                                    </div>
+                                    <div class="accessory-option" data-accessory="button-control" data-price="150" data-name="按键启动">
+                                        <div class="accessory-option-img function-icon">
+                                            <i class="fas fa-sliders-h"></i>
+                                        </div>
+                                        <div class="accessory-option-info">
+                                            <div class="accessory-option-name">按键启动</div>
+                                            <div class="accessory-option-price">+¥150</div>
+                                        </div>
+                                    </div>
+                                    <div class="accessory-option" data-accessory="manual" data-price="80" data-name="手动">
+                                        <div class="accessory-option-img function-icon">
+                                            <i class="fas fa-hand-paper"></i>
+                                        </div>
+                                        <div class="accessory-option-info">
+                                            <div class="accessory-option-name">手动</div>
+                                            <div class="accessory-option-price">+¥80</div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="total-price">总价：¥4999</div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- 步骤5: 备注信息 -->
+                    <!-- 步骤5: 确认配置 -->
                     <div class="step-content" data-step="5">
+                        <!-- 沙发预览和配置摘要 -->
+                        <div class="custom-section">
+                            <div class="section-title">
+                                <i class="fas fa-check-circle"></i>确认您的沙发配置
+                            </div>
+                            
+                            <!-- 沙发预览和配置概览卡片 -->
+                            <div class="confirmation-container">
+                                <!-- 沙发预览区 -->
+                                <div class="sofa-confirmation-preview">
+                                    <div class="preview-header">
+                                        <i class="fas fa-couch"></i>
+                                        <span id="confirm-sofa-name">现代简约沙发</span>
+                                    </div>
+                                    <div class="preview-image-container">
+                                        <img src="../img/sofa-types/double-seats.svg" alt="沙发预览" id="confirm-sofa-image">
+                                        <div class="sofa-badge" id="confirm-sofa-type">二人位</div>
+                                    </div>
+                                    
+                                    <!-- 尺寸标签 -->
+                                    <div class="dimensions-tags">
+                                        <div class="dimension-tag">
+                                            <i class="fas fa-arrows-alt-h"></i>
+                                            <span>长: <span id="confirm-sofa-length">180</span> cm</span>
+                                        </div>
+                                        <div class="dimension-tag">
+                                            <i class="fas fa-arrows-alt"></i>
+                                            <span>宽: <span id="confirm-sofa-depth">90</span> cm</span>
+                                        </div>
+                                        <div class="dimension-tag">
+                                            <i class="fas fa-arrows-alt-v"></i>
+                                            <span>高: <span id="confirm-sofa-height">45</span> cm</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 配置信息卡片 -->
+                                <div class="configuration-summary">
+                                    <div class="summary-header">
+                                        <div class="summary-title">配置详情</div>
+                                    </div>
+                                    <div class="summary-content">
+                                        <div class="summary-item">
+                                            <div class="item-label"><i class="fas fa-tag"></i> 型号</div>
+                                            <div class="item-value" id="confirm-model-name">现代简约沙发</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="item-label"><i class="fas fa-couch"></i> 沙发类型</div>
+                                            <div class="item-value" id="confirm-sofa-type-text">二人位沙发</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="item-label"><i class="fas fa-ruler-combined"></i> 尺寸规格</div>
+                                            <div class="item-value" id="confirm-dimensions">180 × 90 × 45 cm</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="item-label"><i class="fas fa-palette"></i> 面料材质</div>
+                                            <div class="item-value" id="confirm-fabric">
+                                                <span id="confirm-fabric-name">灰色麻质</span>
+                                                <div class="fabric-sample" id="confirm-fabric-color" style="background-color: #b0b0b0;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="item-label"><i class="fas fa-coffee"></i> 茶几选择</div>
+                                            <div class="item-value" id="confirm-table">无</div>
+                                        </div>
+                                        <div class="summary-item">
+                                            <div class="item-label"><i class="fas fa-cogs"></i> 功能配置</div>
+                                            <div class="item-value" id="confirm-function">无</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 价格明细 -->
+                        <div class="custom-section">
+                            <div class="section-title">
+                                <i class="fas fa-receipt"></i>价格明细
+                            </div>
+                            <div class="price-details-card">
+                                <div class="price-item">
+                                    <div class="price-label">基础价格</div>
+                                    <div class="price-value" id="confirm-base-price">¥2,999</div>
+                                </div>
+                                <div class="price-item">
+                                    <div class="price-label">面料选择</div>
+                                    <div class="price-value" id="confirm-fabric-price">¥0</div>
+                                </div>
+                                <div class="price-item" id="table-price-item">
+                                    <div class="price-label">茶几选项</div>
+                                    <div class="price-value" id="confirm-table-price">¥0</div>
+                                </div>
+                                <div class="price-item" id="function-price-item">
+                                    <div class="price-label">功能选项</div>
+                                    <div class="price-value" id="confirm-function-price">¥0</div>
+                                </div>
+                                <div class="price-item discount" id="discount-item" style="display: none;">
+                                    <div class="price-label">折扣</div>
+                                    <div class="price-value" id="confirm-discount">-¥0</div>
+                                </div>
+                                <div class="price-total">
+                                    <div class="total-label">总价</div>
+                                    <div class="total-value" id="confirm-total-price">¥2,999</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 备注和要求 -->
                         <div class="custom-section">
                             <div class="section-title">
                                 <i class="fas fa-comment-alt"></i>备注信息
                             </div>
-                            <div class="voice-input">
-                                <div class="voice-btn">
-                                    <i class="fas fa-microphone"></i>
-                                </div>
-                                <input type="text" class="form-input" placeholder="点击左侧按钮开始语音输入">
-                            </div>
-                            <textarea class="form-input" rows="4" placeholder="请输入其他要求或建议"></textarea>
-                            <div class="image-upload">
+                            <textarea class="form-input" rows="3" placeholder="请输入其他要求或建议" id="order-remarks"></textarea>
+                            <div class="image-upload mt-3">
                                 <div class="upload-btn">
                                     <i class="fas fa-plus"></i>
                                 </div>
                                 <div class="upload-preview">
-                                    <img src="https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=200&auto=format" alt="参考图">
+                                    <img src="https://images.unsplash.com/photo-1484101403633-562f891dc89a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="参考图">
                                     <div class="remove-btn">
                                         <i class="fas fa-times"></i>
                                     </div>
@@ -1133,42 +1559,52 @@
                             </div>
                         </div>
                         
-                        <!-- 订单摘要 -->
+                        <!-- 配送信息 -->
                         <div class="custom-section">
                             <div class="section-title">
-                                <i class="fas fa-clipboard-list"></i>订单摘要
+                                <i class="fas fa-truck"></i>配送信息
                             </div>
-                            <div class="p-4 bg-gray-50 rounded-lg">
-                                <div class="flex justify-between mb-2">
-                                    <span>型号</span>
-                                    <span>现代简约沙发</span>
+                            <div class="delivery-info-card">
+                                <div class="address-section">
+                                    <div class="section-header">
+                                        <span>收货地址</span>
+                                        <a href="javascript:void(0)" class="edit-btn"><i class="fas fa-edit"></i> 修改</a>
+                                    </div>
+                                    <div class="default-address">
+                                        <div class="address-user">张三 <span class="phone-number">138****1234</span></div>
+                                        <div class="address-detail">北京市朝阳区某某路123号某某小区A座3单元501室</div>
+                                    </div>
                                 </div>
-                                <div class="flex justify-between mb-2">
-                                    <span>规格</span>
-                                    <span>轻奢系列 / 现代风格 / 普通款</span>
-                                </div>
-                                <div class="flex justify-between mb-2">
-                                    <span>尺寸</span>
-                                    <span>240cm</span>
-                                </div>
-                                <div class="flex justify-between mb-2">
-                                    <span>材质</span>
-                                    <span>灰色麻质</span>
-                                </div>
-                                <div class="flex justify-between mb-2">
-                                    <span>配件</span>
-                                    <span>现代简约茶几</span>
-                                </div>
-                                <div class="flex justify-between mb-2">
-                                    <span>数量</span>
-                                    <span>1</span>
-                                </div>
-                                <div class="flex justify-between font-medium text-lg mt-4">
-                                    <span>总价</span>
-                                    <span class="text-primary">¥5898</span>
+                                
+                                <div class="delivery-time-section mt-3">
+                                    <div class="section-header">
+                                        <span>配送时间</span>
+                                    </div>
+                                    <div class="delivery-options">
+                                        <label class="delivery-option">
+                                            <input type="radio" name="delivery-time" checked>
+                                            <span class="option-text">工作日送货（周一至周五）</span>
+                                        </label>
+                                        <label class="delivery-option">
+                                            <input type="radio" name="delivery-time">
+                                            <span class="option-text">双休日送货（周六至周日）</span>
+                                        </label>
+                                        <label class="delivery-option">
+                                            <input type="radio" name="delivery-time">
+                                            <span class="option-text">不限送货时间</span>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
-                            <button class="w-full mt-4 py-3 bg-gradient-to-r from-primary to-success text-white rounded-lg font-medium">
+                        </div>
+                        
+                        <!-- 下单按钮 -->
+                        <div class="order-action-container">
+                            <div class="total-display">
+                                <span class="total-label">应付总额：</span>
+                                <span class="total-price" id="bottom-total-price">¥2,999</span>
+                            </div>
+                            <button class="place-order-btn">
                                 确认下单
                             </button>
                         </div>
@@ -1207,326 +1643,816 @@
         </div>
     </div>
 
-    <script>
-        // 切换标准/智能定制
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                // 更新按钮状态
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-
-                // 执行翻转动画
-                const flipper = document.querySelector('.flipper');
-                if (this.dataset.tab === 'ai') {
-                    flipper.classList.add('flipped');
-                } else {
-                    flipper.classList.remove('flipped');
-                }
-            });
-        });
-
-        // 型号选择
-        document.querySelectorAll('.model-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.model-item').forEach(i => i.classList.remove('selected'));
-                this.classList.add('selected');
-            });
-        });
-
-        // 尺寸滑块
-        const sizeSlider = document.querySelector('input[type="range"]');
-        const sizeValue = document.querySelector('.size-slider .flex span:nth-child(2)');
-        sizeSlider.addEventListener('input', function() {
-            sizeValue.textContent = `当前: ${this.value}cm`;
-        });
-
-        // 图片拖拽上传
-        const uploadZone = document.querySelector('.upload-zone');
+    <!-- 沙发选择模态框 -->
+    <div class="sofa-modal" id="sofaModal">
+        <div class="modal-header">
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="sofaSearch" placeholder="搜索沙发型号" class="search-input">
+                <button id="clearSearch" class="clear-search"><i class="fas fa-times"></i></button>
+            </div>
+            <button class="close-modal">&times;</button>
+        </div>
         
-        uploadZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadZone.style.borderColor = 'var(--brand-primary)';
-            uploadZone.style.background = 'var(--brand-primary-transparent)';
-        });
-
-        uploadZone.addEventListener('dragleave', (e) => {
-            e.preventDefault();
-            uploadZone.style.borderColor = 'var(--brand-primary-transparent)';
-            uploadZone.style.background = 'var(--brand-light)';
-        });
-
-        uploadZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadZone.style.borderColor = 'var(--brand-primary-transparent)';
-            uploadZone.style.background = 'var(--brand-light)';
-            
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                // 处理上传的图片
-                console.log('Uploaded files:', files);
-            }
-        });
-
-        // 支持粘贴上传
-        document.addEventListener('paste', (e) => {
-            const items = e.clipboardData.items;
-            for (let item of items) {
-                if (item.type.indexOf('image') !== -1) {
-                    const file = item.getAsFile();
-                    console.log('Pasted image:', file);
-                }
-            }
-        });
-
-        // 材质选择
-        document.querySelectorAll('.fabric-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.fabric-item').forEach(i => i.classList.remove('selected'));
-                this.classList.add('selected');
-                // 更新预览图
-                const previewImg = document.querySelector('.fabric-preview img');
-                const fabricImg = this.querySelector('img');
-                if (previewImg && fabricImg) {
-                    // 这里可以添加面料预览的逻辑
-                }
-            });
-        });
-
-        // 字体选择
-        document.querySelectorAll('.font-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.font-item').forEach(i => i.classList.remove('selected'));
-                this.classList.add('selected');
-            });
-        });
-
-        // 文字位置选择
-        document.querySelectorAll('.position-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.position-btn').forEach(b => b.classList.remove('selected'));
-                this.classList.add('selected');
-            });
-        });
-
-        // 配件选择
-        document.querySelectorAll('.accessory-item').forEach(item => {
-            item.addEventListener('click', function() {
-                this.classList.toggle('selected');
-                updateTotalPrice();
-            });
-        });
-
-        // 数量调整
-        const quantityBtns = document.querySelectorAll('.quantity-btn');
-        const quantityInput = document.querySelector('.quantity-value');
-
-        quantityBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                let value = parseInt(quantityInput.value);
-                if (this.textContent === '+') {
-                    value = Math.min(value + 1, 99);
-                } else {
-                    value = Math.max(value - 1, 1);
-                }
-                quantityInput.value = value;
-                updateTotalPrice();
-            });
-        });
-
-        // 更新总价
-        function updateTotalPrice() {
-            const basePrice = 4999;
-            const quantity = parseInt(document.querySelector('.quantity-value').value);
-            let accessoryPrice = 0;
-            
-            document.querySelectorAll('.accessory-item.selected').forEach(item => {
-                const price = parseInt(item.querySelector('.accessory-price').textContent.replace('¥', ''));
-                accessoryPrice += price;
-            });
-
-            const totalPrice = (basePrice + accessoryPrice) * quantity;
-            document.querySelector('.total-price').textContent = `总价：¥${totalPrice}`;
-        }
-
-        // 语音输入
-        const voiceBtn = document.querySelector('.voice-btn');
-        let isRecording = false;
-
-        voiceBtn.addEventListener('click', function() {
-            isRecording = !isRecording;
-            this.innerHTML = isRecording ? 
-                '<i class="fas fa-stop"></i>' : 
-                '<i class="fas fa-microphone"></i>';
-            // 这里可以添加语音识别的逻辑
-        });
-
-        // 图片上传预览
-        document.querySelector('.upload-btn').addEventListener('click', function() {
-            // 触发文件选择
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = 'image/*';
-            input.onchange = function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        addImagePreview(e.target.result);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            };
-            input.click();
-        });
-
-        // 添加图片预览
-        function addImagePreview(src) {
-            const preview = document.createElement('div');
-            preview.className = 'upload-preview';
-            preview.innerHTML = `
-                <img src="${src}" alt="上传预览">
-                <div class="remove-btn">
-                    <i class="fas fa-times"></i>
+        <div class="modal-body" >
+            <div class="sofa-list" id="sofaList">
+                <!-- 示例沙发项目结构 -->
+                <div class="sofa-item">
+                    <div class="sofa-img-container">
+                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="现代简约沙发" class="sofa-img">
+                    </div>
+                    <div class="sofa-details">
+                        <div class="sofa-info">
+                            <div class="sofa-name">CS-101 现代简约沙发</div>
+                            <div class="sofa-price">¥<span class="price-value">2,999</span> <span class="price-unit">起</span></div>
+                        </div>
+                        <div class="sofa-scenario">
+                            <i class="fas fa-home"></i> 适用：小户型客厅、书房
+                        </div>
+                        <div class="sofa-features">
+                            <div class="feature-tag"><i class="fas fa-tint-slash"></i>可拆洗</div>
+                            <div class="feature-tag"><i class="fas fa-box"></i>带收纳</div>
+                            <div class="feature-tag"><i class="fas fa-sync-alt"></i>可调节</div>
+                            <div class="feature-tag"><i class="fas fa-bed"></i>沙发床</div>
+                        </div>
+                    </div>
                 </div>
-            `;
-            
-            preview.querySelector('.remove-btn').addEventListener('click', function() {
-                preview.remove();
-            });
-            
-            document.querySelector('.image-upload').insertBefore(
-                preview,
-                document.querySelector('.upload-btn').nextSibling
-            );
-        }
-
-        // 规格卡片选择
-        document.querySelectorAll('.spec-card').forEach(card => {
-            card.addEventListener('click', function() {
-                // 只在同一组内切换选中状态
-                const parent = this.parentElement;
-                parent.querySelectorAll('.spec-card').forEach(c => c.classList.remove('selected'));
-                this.classList.add('selected');
-            });
-        });
-
-        // 步骤导航
-        const steps = document.querySelectorAll('.step');
-        const stepContents = document.querySelectorAll('.step-content');
-        const prevBtn = document.getElementById('prevStep');
-        const nextBtn = document.getElementById('nextStep');
-        let currentStep = 1;
-
-        // 更新步骤显示
-        function updateSteps() {
-            // 更新步骤指示器
-            steps.forEach(step => {
-                const stepNum = parseInt(step.dataset.step);
-                step.classList.remove('active', 'completed');
                 
-                if (stepNum < currentStep) {
-                    step.classList.add('completed');
-                } else if (stepNum === currentStep) {
-                    step.classList.add('active');
-                }
-            });
+                <!-- 动态生成的沙发项会添加到这里 -->
+                </div>
+        </div>
+    </div>
+    
+    <!-- 模态框背景遮罩 -->
+    <div class="modal-overlay" id="modalOverlay"></div>
 
-            // 更新内容显示
-            stepContents.forEach(content => {
-                content.classList.remove('active');
-                if (parseInt(content.dataset.step) === currentStep) {
-                    content.classList.add('active');
-                }
-            });
+    <!-- 面料预览模态框 -->
+    <div class="fabric-modal" id="fabricModal">
+        <div class="modal-header">
+            <div class="modal-title">面料预览</div>
+            <button class="close-modal">&times;</button>
+        </div>
+        
+        <div class="modal-body">
+            <!-- 面料预览 -->
+            <div class="preview-container" style="margin-top: 0;">
+                <div class="preview-window">
+                    <img src="" alt="面料预览" class="preview-img" id="modalPreviewImg">
+                </div>
+                
+                <!-- 色卡工具条 -->
+                <div class="color-palette mt-3">
+                    <div class="color-title">可选颜色</div>
+                    <div class="color-swatches" id="modalColorSwatches">
+                        <div class="color-swatch active" data-color="gray" style="background-color: #b0b0b0;">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="color-swatch" data-color="beige" style="background-color: #e8dcc1;"></div>
+                        <div class="color-swatch" data-color="blue" style="background-color: #143b70;"></div>
+                        <div class="color-swatch" data-color="green" style="background-color: #7cb082;"></div>
+                        <div class="color-swatch" data-color="brown" style="background-color: #75523c;"></div>
+                        <div class="color-swatch" data-color="red" style="background-color: #a93e3e;"></div>
+                        <div class="color-swatch" data-color="black" style="background-color: #323232;"></div>
+                    </div>
+                </div>
+                
+                <!-- 面料详情 -->
+                <div class="fabric-details mt-3">
+                    <div class="detail-cards">
+                        <div class="detail-card">
+                            <div class="detail-card-title">
+                                <i class="fas fa-tag"></i> 基本信息
+                            </div>
+                            <div class="detail-card-content">
+                                <div class="detail-row">
+                                    <span class="detail-label">型号:</span>
+                                    <span class="detail-value truncate-text" id="fabricModel">立特8967</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">类别:</span>
+                                    <span class="detail-value truncate-text" id="fabricCategory">头层牛皮</span>
+                                </div>
+                                <div class="detail-row highlight-row">
+                                    <span class="detail-label">价格:</span>
+                                    <span class="detail-value price-value" id="fabricPrice">15元/尺</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-card">
+                            <div class="detail-card-title">
+                                <i class="fas fa-info-circle"></i> 材质详情
+                            </div>
+                            <div class="detail-card-content">
+                                <div class="detail-row">
+                                    <span class="detail-label">材质:</span>
+                                    <span class="detail-value truncate-text" id="fabricMaterial">黄牛皮</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">颜色:</span>
+                                    <span class="detail-value truncate-text" id="fabricColor">灰色</span>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label">特性:</span>
+                                    <div class="detail-tags" id="fabricFeatures">
+                                        <span class="detail-tag">耐磨</span>
+                                        <span class="detail-tag">防水</span>
+                                    </div>
+                                </div>
+                                <div class="detail-row expandable">
+                                    <span class="detail-label">描述:</span>
+                                    <span class="detail-value truncate-text">选用高品质黄牛皮，经过特殊工艺处理，柔软舒适，透气性强，使用寿命长。</span>
+                                    <span class="expandable-indicator"><i class="fas fa-plus"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-card">
+                            <div class="detail-card-title">
+                                <i class="fas fa-home"></i> 适用场景
+                            </div>
+                            <div class="detail-card-content">
+                                <div class="detail-row mb-2">
+                                    <span class="detail-label">推荐:</span>
+                                    <span class="detail-value truncate-text">家庭客厅、儿童房、宠物家庭</span>
+                                </div>
+                                <div class="scene-tags" id="fabricScenes">
+                                    <div class="scene-tag">
+                                        <i class="fas fa-couch"></i>
+                                        <span>客厅沙发</span>
+                                    </div>
+                                    <div class="scene-tag">
+                                        <i class="fas fa-child"></i>
+                                        <span>儿童房家具</span>
+                                    </div>
+                                    <div class="scene-tag">
+                                        <i class="fas fa-paw"></i>
+                                        <span>宠物友好型</span>
+                                    </div>
+                                </div>
+                                <div class="detail-row mt-3 expandable">
+                                    <span class="detail-value-full truncate-text">适合追求高品质生活的家庭，特别适用于有孩子和宠物的家庭，耐脏耐磨，清洁方便。也适合小户型和开放式客厅。</span>
+                                    <span class="expandable-indicator"><i class="fas fa-plus"></i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 按钮组固定在底部 -->
+        <div class="modal-footer">
+            <button class="send-sample-btn">
+                <i class="fas fa-paper-plane"></i> 寄送皮样
+            </button>
+            <button class="add-to-custom-btn">
+                <i class="fas fa-check-circle"></i> 选择此面料
+            </button>
+        </div>
+    </div>
+    
+    <!-- 模态框背景遮罩 -->
+    <div class="modal-overlay" id="fabricModalOverlay"></div>
 
-            // 更新按钮状态
-            prevBtn.disabled = currentStep === 1;
-            prevBtn.style.opacity = currentStep === 1 ? '0.5' : '1';
+    <!-- 寄送皮样表单模态窗口 -->
+    <div id="sampleFormModal" class="sample-form-modal">
+        <div class="modal-header">
+            <h3 class="modal-title">申请面料样品</h3>
+            <button id="closeSampleForm" class="close-modal"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+            <!-- 样品信息改为横向卡片样式 -->
+            <div class="sample-card mb-4">
+                <div class="sample-image">
+                    <img id="sampleImage" src="" alt="面料样品">
+                </div>
+                <div class="sample-details">
+                    <h4 class="sample-title">样品信息</h4>
+                    <p id="sampleDetail" class="sample-model">立特8967 (灰色)</p>
+                    <div class="sample-features">
+                        <span class="sample-feature">高级面料</span>
+                        <span class="sample-feature">耐磨</span>
+                        <span class="sample-feature">防水</span>
+                    </div>
+                </div>
+            </div>
             
-            nextBtn.textContent = currentStep === 5 ? '确认下单' : '下一步';
-        }
+            <!-- 地址管理部分 -->
+            <div class="address-management mb-4">
+                <!-- <h4 class="text-lg font-medium mb-2">收货地址</h4> -->
+                
+                <!-- 地址选择器 -->
+                <div class="address-selector mb-3">
+                    <button id="showAddressList" class="address-list-btn"><i class="fas fa-address-book mr-1"></i> 选择地址</button>
+                    <button id="showAddressForm" class="address-form-btn ml-2"><i class="fas fa-pen mr-1"></i> 手动填写</button>
+                </div>
+                
+                <!-- 地址列表弹出层 -->
+                <div id="addressListDropdown" class="address-list-dropdown hidden">
+                    <div class="address-list-header">
+                        <h4>选择收货地址</h4>
+                        <button id="closeAddressList" class="close-dropdown"><i class="fas fa-times"></i></button>
+                    </div>
+                    <div class="address-list-body">
+                        <!-- 地址项 -->
+                        <div class="address-item" data-id="1">
+                            <div class="address-item-content">
+                                <div class="recipient-info">
+                                    <span class="name">张三</span>
+                                    <span class="phone">138****1234</span>
+                                    <span class="default-tag">默认</span>
+                                </div>
+                                <div class="address-text">北京市朝阳区某某路123号某某小区A座3单元501室</div>
+                            </div>
+                            <div class="address-select-btn">选择</div>
+                        </div>
+                        
+                        <div class="address-item" data-id="2">
+                            <div class="address-item-content">
+                                <div class="recipient-info">
+                                    <span class="name">张三</span>
+                                    <span class="phone">139****5678</span>
+                                </div>
+                                <div class="address-text">上海市浦东新区陆家嘴世纪大道1号环球金融中心88层</div>
+                            </div>
+                            <div class="address-select-btn">选择</div>
+                        </div>
+                        
+                        <div class="address-item" data-id="3">
+                            <div class="address-item-content">
+                                <div class="recipient-info">
+                                    <span class="name">李四</span>
+                                    <span class="phone">137****9876</span>
+                                </div>
+                                <div class="address-text">广州市天河区天河路385号太古汇商场4楼</div>
+                            </div>
+                            <div class="address-select-btn">选择</div>
+                        </div>
+                        
+                        <!-- 没有地址时显示 -->
+                        <div id="noAddressMessage" class="no-address-message hidden">
+                            <div class="empty-icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div class="empty-text">您还没有保存的地址</div>
+                            <button id="emptyFormBtn" class="empty-form-btn">手动填写</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 已选择的地址卡片 -->
+                <div id="selectedAddressCard" class="selected-address-card mb-3">
+                    <div class="address-card-content">
+                        <div class="recipient-info">
+                            <span id="selectedName" class="name">张三</span>
+                            <span id="selectedPhone" class="phone">138****1234</span>
+                            <span id="defaultTag" class="default-tag">默认</span>
+                        </div>
+                        <div id="selectedAddress" class="address-text">北京市朝阳区某某路123号某某小区A座3单元501室</div>
+                    </div>
+                    <button id="changeAddressBtn" class="change-address-btn">
+                        <i class="fas fa-exchange-alt"></i> 更换
+                    </button>
+                </div>
+                
+                <!-- 已选择地址时的备注和提交按钮 -->
+                <div id="selectedAddressActions" class="mb-4">
+                    <div class="form-group mb-3">
+                        <label for="selectedAddressRemark" class="form-label">备注信息（选填）</label>
+                        <textarea id="selectedAddressRemark" class="form-input h-20" placeholder="如有特殊要求，请在此说明"></textarea>
+                    </div>
+                    <div class="address-form-actions">
+                        <button id="submitSelectedAddress" class="submit-sample-btn-inline w-full"><i class="fas fa-paper-plane mr-1"></i> 提交申请</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 地址表单 -->
+            <div id="addressForm" class="hidden">
+                <div class="form-group mb-3">
+                    <label for="recipientName" class="form-label">收件人姓名 <span class="required-mark">*</span></label>
+                    <input type="text" id="recipientName" class="form-input" placeholder="请输入收件人姓名">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="recipientPhone" class="form-label">联系电话 <span class="required-mark">*</span></label>
+                    <input type="tel" id="recipientPhone" class="form-input" placeholder="请输入联系电话">
+                </div>
+                <div class="form-group mb-3">
+                    <label for="addressDetail" class="form-label">详细地址 <span class="required-mark">*</span></label>
+                    <textarea id="addressDetail" class="form-input h-20" placeholder="请输入详细地址"></textarea>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label for="sampleRemark" class="form-label">备注信息（选填）</label>
+                    <textarea id="sampleRemark" class="form-input h-20" placeholder="如有特殊要求，请在此说明"></textarea>
+                </div>
+                
+                <!-- 取消和提交按钮在同一行 -->
+                <div class="address-form-actions">
+                    <button id="cancelAddressForm" class="cancel-btn"><i class="fas fa-times mr-1"></i> 取消</button>
+                    <button id="submitSampleApplication" class="submit-sample-btn-inline"><i class="fas fa-paper-plane mr-1"></i> 提交申请</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 样品申请模态窗口遮罩层 -->
+    <div id="sampleFormOverlay" class="sample-form-overlay"></div>
+    
+    <!-- 样品申请成功提示 -->
+    <div class="toast-notification" id="sampleToast">
+        <div class="toast-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <div class="toast-message">皮样申请已提交，我们会尽快为您寄送！</div>
+    </div>
 
-        // 下一步
-        nextBtn.addEventListener('click', function() {
-            if (currentStep < 5) {
-                currentStep++;
-                updateSteps();
-                // 滚动到顶部
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
+    <script>
+    // 沙发定制页面主要脚本
+    document.addEventListener('DOMContentLoaded', function() {
+        // 获取所有沙发类型卡片
+        const sofaTypeCards = document.querySelectorAll('.sofa-type-card');
+        
+        // 初始化价格信息
+        let basePrice = 3999;
+        let tablePrice = 0;
+        let functionPrice = 0;
+        
+        // 获取价格显示元素
+        const basePriceEl = document.getElementById('sofa-base-price');
+        const tablePriceEl = document.getElementById('table-price');
+        const functionPriceEl = document.getElementById('function-price');
+        const totalPriceEl = document.getElementById('total-price');
+        
+        // 获取所有茶几选项
+        const tableOptions = document.querySelectorAll('.accessory-section:nth-child(2) .accessory-option');
+        
+        // 获取所有功能位选项
+        const functionOptions = document.querySelectorAll('.accessory-section:nth-child(3) .accessory-option');
+        
+        // 更新沙发尺寸显示的函数
+        function updateSofaDisplay(card) {
+            // 获取当前选中沙发的名称和尺寸
+            const sofaName = card.getAttribute('data-name');
+            const sofaType = card.getAttribute('data-type');
+            
+            // 更新预览区标题 - 调整为新的布局结构
+            const nameElement = document.querySelector('.current-size-display .sofa-name');
+            if (nameElement) {
+                nameElement.textContent = sofaName;
             } else {
-                // 最后一步，提交订单
-                alert('订单已提交，感谢您的定制！');
+                // 兼容旧布局，以防HTML结构未完全更新
+                const oldElement = document.querySelector('.current-size-display .font-medium');
+                if (oldElement) {
+                    oldElement.textContent = sofaName;
+                }
             }
-        });
-
-        // 上一步
-        prevBtn.addEventListener('click', function() {
-            if (currentStep > 1) {
-                currentStep--;
-                updateSteps();
-                // 滚动到顶部
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
+            
+            // 根据不同沙发类型更新尺寸
+            let width, depth, height;
+            
+            // 直接从沙发卡片中获取宽度信息
+            const cardSizeText = card.querySelector('.sofa-card-size').textContent;
+            const widthMatch = cardSizeText.match(/\d+/);
+            if (widthMatch) {
+                width = parseInt(widthMatch[0]);
             }
-        });
-
-        // 点击步骤指示器直接跳转
-        steps.forEach(step => {
-            step.addEventListener('click', function() {
-                const stepNum = parseInt(this.dataset.step);
-                if (stepNum <= Math.max(currentStep, 2)) { // 只允许跳转到已完成的步骤或下一步
-                    currentStep = stepNum;
-                    updateSteps();
+            
+            switch(sofaType) {
+                case 'single':
+                    width = width || 90;
+                    depth = 90;
+                    height = 45;
+                    break;
+                case 'double':
+                    width = width || 180;
+                    depth = 90;
+                    height = 45;
+                    break;
+                case 'triple':
+                    width = width || 210; // 三人位沙发宽度
+                    depth = 90;
+                    height = 45;
+                    break;
+                case 'quad':
+                    width = width || 240;
+                    depth = 90;
+                    height = 45;
+                    break;
+                case 'triple-left':
+                case 'triple-right':
+                    width = width || 270;
+                    depth = 90;
+                    height = 45;
+                    break;
+                default:
+                    width = width || 180;
+                    depth = 90;
+                    height = 45;
+            }
+            
+            // 更新尺寸显示
+            const vizLengthEls = document.querySelectorAll('#vizLength');
+            const vizDepthEls = document.querySelectorAll('#vizDepth');
+            const vizHeightEls = document.querySelectorAll('#vizHeight');
+            
+            vizLengthEls.forEach(el => el.textContent = width);
+            vizDepthEls.forEach(el => el.textContent = depth);
+            vizHeightEls.forEach(el => el.textContent = height);
+            
+            // 更新顶部尺寸概览
+            const sizeDisplayEls = document.querySelectorAll('#size-dimensions, #preview-dimensions');
+            sizeDisplayEls.forEach(el => {
+                if (el) el.textContent = `（${width} × ${depth} × ${height} cm）`;
+            });
+            
+            // 更新沙发图片
+            const sofaImages = document.querySelectorAll('#sofaTypeImage');
+            sofaImages.forEach(img => {
+                if (img) {
+                    if (sofaType === 'triple-left' || sofaType === 'triple-right') {
+                        img.src = `../img/sofa-types/${sofaType}.svg`;
+                    } else {
+                        img.src = `../img/sofa-types/${sofaType}-seats.svg`;
+                    }
                 }
             });
-        });
-
-        // 3D预览控制
-        const previewBtns = document.querySelectorAll('.preview-btn');
-        let rotationDegree = 0;
-        let scale = 1;
-
-        previewBtns.forEach(btn => {
-            btn.addEventListener('click', function() {
-                const previewImg = document.querySelector('.fabric-preview img');
+            
+            // 同步更新空间推荐文字
+            updateSpaceRecommendation(sofaName, width);
+            
+            // 调整尺寸标记的位置
+            adjustDimensionMarkers(width, depth, height, sofaType);
+            
+            // 更新基础价格 - 根据沙发尺寸或类型设置不同价格
+            let newBasePrice = 2999;
+            if (sofaType === 'single') {
+                newBasePrice = 1999;
+            } else if (sofaType === 'double') {
+                newBasePrice = 2999;
+            } else if (sofaType === 'triple') {
+                newBasePrice = 3999;
+            } else if (sofaType === 'quad') {
+                newBasePrice = 4999;
+            } else if (sofaType === 'triple-left' || sofaType === 'triple-right') {
+                newBasePrice = 5999;
+            }
+            
+            // 更新价格显示
+            updatePriceDisplay(newBasePrice);
+            
+            // 更新订单摘要中的沙发信息
+            updateSofaSummary(sofaName, width);
+        }
+        
+        // 调整尺寸标记的位置函数
+        function adjustDimensionMarkers(width, depth, height, sofaType) {
+            const widthMarkers = document.querySelectorAll('.width-marker');
+            const depthMarkers = document.querySelectorAll('.depth-marker');
+            
+            // 根据沙发宽度调整长度标记的位置
+            widthMarkers.forEach(widthMarker => {
+                if (width >= 240) { // 四人位或更大
+                    widthMarker.style.top = '65%';
+                    widthMarker.style.width = '100%';
+                    
+                    // 文字位置向上移动避免重叠
+                    const widthLabel = widthMarker.querySelector('.marker-label');
+                    if (widthLabel) widthLabel.style.top = '-25px';
+                } else if (width >= 210) { // 三人位
+                    widthMarker.style.top = '65%';
+                    widthMarker.style.width = '95%';
+                    
+                    const widthLabel = widthMarker.querySelector('.marker-label');
+                    if (widthLabel) widthLabel.style.top = '-5px';
+                } else { // 二人位或更小
+                    widthMarker.style.top = '65%';
+                    widthMarker.style.width = '90%';
+                    
+                    const widthLabel = widthMarker.querySelector('.marker-label');
+                    if (widthLabel) widthLabel.style.top = '0';
+                }
+            });
+            
+            // 3+妃类型的特殊处理
+            depthMarkers.forEach(depthMarker => {
+                if (sofaType === 'triple-left' || sofaType === 'triple-right') {
+                    depthMarker.style.right = '15%';
+                    depthMarker.style.width = '25%';
+                } else {
+                    depthMarker.style.right = '5%';
+                    depthMarker.style.width = '30%';
+                }
+            });
+        }
+        
+        // 更新空间推荐文字
+        function updateSpaceRecommendation(sofaName, width) {
+            const recommendationEl = document.getElementById('spaceRecommendation');
+            if (recommendationEl) {
+                switch(sofaName) {
+                    case '单人位':
+                        recommendationEl.textContent = `单人位沙发适合小户型或书房，建议搭配一个小茶几，保持通道宽度至少60cm。`;
+                        break;
+                    case '二人位':
+                        recommendationEl.textContent = `二人位沙发适合15-20㎡的客厅空间，建议搭配一个茶几和一个小边几，保持通道宽度至少70cm。`;
+                        break;
+                    case '三人位':
+                        recommendationEl.textContent = `三人位沙发适合20-25㎡的客厅空间，宽度${width}cm，建议与墙面保持至少30cm的距离，搭配一个长方形茶几。`;
+                        break;
+                    case '四人位':
+                        recommendationEl.textContent = `四人位沙发适合25㎡以上的客厅空间，宽度${width}cm，建议搭配一个大茶几和两个边几，营造舒适的会客区。`;
+                        break;
+                    case '3+左妃':
+                    case '3+右妃':
+                        recommendationEl.textContent = `${sofaName}沙发适合L型空间，宽度${width}cm，建议放置在客厅拐角处，搭配一个圆形或方形茶几。`;
+                        break;
+                    default:
+                        recommendationEl.textContent = `该款沙发宽度${width}cm，建议根据您的空间大小选择合适的摆放位置。`;
+                }
+            }
+        }
+        
+        // 更新订单摘要中的沙发信息
+        function updateSofaSummary(sofaName, width) {
+            // 查找订单摘要中的尺寸元素
+            const sizeElement = document.querySelector('.step-content[data-step="5"] .flex.justify-between:nth-child(3) span:nth-child(2)');
+            if (sizeElement) {
+                sizeElement.textContent = `${width}cm`;
+            }
+        }
+        
+        // 更新价格显示函数
+        function updatePriceDisplay(base = null) {
+            if (base !== null) {
+                basePrice = base;
+                if (basePriceEl) {
+                    basePriceEl.textContent = `¥${basePrice}`;
+                }
+            }
+            
+            if (tablePriceEl) {
+                tablePriceEl.textContent = `¥${tablePrice}`;
+            }
+            
+            if (functionPriceEl) {
+                functionPriceEl.textContent = `¥${functionPrice}`;
+            }
+            
+            if (totalPriceEl) {
+                const totalPrice = basePrice + tablePrice + functionPrice;
+                totalPriceEl.textContent = `¥${totalPrice}`;
                 
-                if (this.title === '旋转左侧') {
-                    rotationDegree -= 45;
-                    previewImg.style.transform = `rotate(${rotationDegree}deg) scale(${scale})`;
-                } else if (this.title === '旋转右侧') {
-                    rotationDegree += 45;
-                    previewImg.style.transform = `rotate(${rotationDegree}deg) scale(${scale})`;
-                } else if (this.title === '放大') {
-                    scale = scale === 1 ? 1.5 : 1;
-                    previewImg.style.transform = `rotate(${rotationDegree}deg) scale(${scale})`;
-                } else if (this.title === 'AR预览') {
-                    alert('AR预览功能即将上线，敬请期待！');
+                // 更新订单摘要的总价
+                const orderTotalElement = document.querySelector('.step-content[data-step="5"] .flex.justify-between.font-medium.text-lg.mt-4 span:nth-child(2)');
+                if (orderTotalElement) {
+                    orderTotalElement.textContent = `¥${totalPrice}`;
+                }
+            }
+        }
+        
+        // 更新订单摘要中的配件信息
+        function updateOrderSummary() {
+            // 找到订单摘要中的配件元素
+            const summaryAccessories = document.querySelector('.step-content[data-step="5"] .flex.justify-between:nth-child(5) span:nth-child(2)');
+            
+            if (summaryAccessories) {
+                // 获取当前选中的茶几和功能位
+                const selectedTable = document.querySelector('.accessory-section:nth-child(2) .accessory-option.active');
+                const selectedFunction = document.querySelector('.accessory-section:nth-child(3) .accessory-option.active');
+                
+                let accessoryText = '';
+                
+                // 添加茶几信息
+                if (selectedTable) {
+                    const tableName = selectedTable.getAttribute('data-name');
+                    if (tableName !== '无') {
+                        accessoryText += tableName + '茶几';
+                    }
+                }
+                
+                // 添加功能位信息
+                if (selectedFunction) {
+                    const functionName = selectedFunction.getAttribute('data-name');
+                    if (functionName !== '无') {
+                        if (accessoryText) {
+                            accessoryText += '，';
+                        }
+                        accessoryText += functionName;
+                    }
+                }
+                
+                // 如果没有选择任何配件
+                if (!accessoryText) {
+                    accessoryText = '无';
+                }
+                
+                // 更新订单摘要
+                summaryAccessories.textContent = accessoryText;
+            }
+        }
+        
+        // 为茶几选项添加点击事件
+        if (tableOptions && tableOptions.length > 0) {
+            tableOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除其他选项的active类
+                    tableOptions.forEach(opt => opt.classList.remove('active'));
+                    
+                    // 给当前选项添加active类
+                    this.classList.add('active');
+                    
+                    // 更新价格
+                    tablePrice = parseInt(this.getAttribute('data-price')) || 0;
+                    updatePriceDisplay();
+                    
+                    // 更新订单摘要中的配件信息
+                    updateOrderSummary();
+                });
+            });
+        }
+        
+        // 为功能位选项添加点击事件
+        if (functionOptions && functionOptions.length > 0) {
+            functionOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // 移除其他选项的active类
+                    functionOptions.forEach(opt => opt.classList.remove('active'));
+                    
+                    // 给当前选项添加active类
+                    this.classList.add('active');
+                    
+                    // 更新价格
+                    functionPrice = parseInt(this.getAttribute('data-price')) || 0;
+                    updatePriceDisplay();
+                    
+                    // 更新订单摘要中的配件信息
+                    updateOrderSummary();
+                });
+            });
+        }
+        
+        // 为每个沙发卡片添加点击事件
+        sofaTypeCards.forEach(card => {
+            card.addEventListener('click', function() {
+                // 移除其他卡片的active类
+                sofaTypeCards.forEach(c => c.classList.remove('active'));
+                
+                // 添加当前卡片的active类
+                this.classList.add('active');
+                
+                // 更新显示
+                updateSofaDisplay(this);
+            });
+        });
+        
+        // 初始化：页面加载时根据当前选中的沙发更新显示
+        const activeCard = document.querySelector('.sofa-type-card.active');
+        if (activeCard) {
+            updateSofaDisplay(activeCard);
+        } else {
+            // 如果没有选中任何卡片，默认选中二人位
+            const doubleCard = document.querySelector('.sofa-type-card[data-type="double"]');
+            if (doubleCard) {
+                doubleCard.classList.add('active');
+                updateSofaDisplay(doubleCard);
+            }
+        }
+        
+        // 初始化价格显示和订单摘要
+        updatePriceDisplay();
+        updateOrderSummary();
+    });
+    
+    // 修复沙发类型切换和尺寸标记位置问题的其他脚本
+    
+    // 步骤5：确认配置页数据更新函数
+    document.addEventListener('DOMContentLoaded', function() {
+        // 当用户进入确认配置页面时更新数据
+        const stepsIndicator = document.querySelector('.steps-indicator');
+        const step5 = stepsIndicator.querySelector('[data-step="5"]');
+        
+        if (step5) {
+            step5.addEventListener('click', updateConfirmationPage);
+        }
+        
+        // 当用户点击"下一步"按钮并到达确认配置页面时也更新数据
+        const nextButton = document.getElementById('nextStep');
+        if (nextButton) {
+            nextButton.addEventListener('click', function() {
+                const activeStep = document.querySelector('.step-content.active');
+                if (activeStep && activeStep.getAttribute('data-step') === '4') {
+                    // 如果当前是第4步，下一步就是确认配置页
+                    setTimeout(updateConfirmationPage, 100); // 给页面一点时间切换
                 }
             });
-        });
-
-        // 社交分享
-        document.querySelectorAll('.share-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                alert('分享功能即将上线，敬请期待！');
-            });
-        });
-
-        // 热门组合选择
-        document.querySelectorAll('.combination-card').forEach(card => {
-            card.addEventListener('click', function() {
-                alert('已选择该热门组合，将为您自动填充相关配置！');
-                // 这里可以添加自动填充配置的逻辑
-            });
-        });
-
-        // 初始化
-        updateSteps();
+        }
+        
+        // 更新确认配置页面的所有信息
+        function updateConfirmationPage() {
+            // 获取已选择的沙发信息
+            const activeCard = document.querySelector('.sofa-type-card.active');
+            if (!activeCard) return;
+            
+            const sofaType = activeCard.getAttribute('data-type');
+            const sofaName = activeCard.getAttribute('data-name');
+            
+            // 获取尺寸信息
+            const lengthValue = document.getElementById('length-value')?.textContent || '180';
+            const depthValue = document.getElementById('depth-value')?.textContent || '90';
+            const heightValue = document.getElementById('height-value')?.textContent || '45';
+            
+            // 获取面料信息
+            const fabricCard = document.querySelector('.fabric-card');
+            const fabricModel = fabricCard ? fabricCard.querySelector('.fabric-model')?.textContent || '默认面料' : '默认面料';
+            const fabricColor = '#b0b0b0'; // 这里应该从选择的面料中获取颜色
+            
+            // 获取配件信息
+            const selectedTable = document.querySelector('.accessory-section:nth-child(2) .accessory-option.active');
+            const selectedFunction = document.querySelector('.accessory-section:nth-child(3) .accessory-option.active');
+            
+            const tableName = selectedTable ? selectedTable.getAttribute('data-name') : '无';
+            const tablePrice = selectedTable ? parseInt(selectedTable.getAttribute('data-price')) || 0 : 0;
+            
+            const functionName = selectedFunction ? selectedFunction.getAttribute('data-name') : '无';
+            const functionPrice = selectedFunction ? parseInt(selectedFunction.getAttribute('data-price')) || 0 : 0;
+            
+            // 获取基础价格（基于沙发类型）
+            let basePrice = 2999;
+            if (sofaType === 'single') {
+                basePrice = 1999;
+            } else if (sofaType === 'double') {
+                basePrice = 2999;
+            } else if (sofaType === 'triple') {
+                basePrice = 3999;
+            } else if (sofaType === 'quad') {
+                basePrice = 4999;
+            } else if (sofaType === 'triple-left' || sofaType === 'triple-right') {
+                basePrice = 5999;
+            }
+            
+            // 计算总价
+            const fabricPrice = 0; // 如果面料有额外价格，应该添加
+            const totalPrice = basePrice + fabricPrice + tablePrice + functionPrice;
+            
+            // 更新沙发预览信息
+            document.getElementById('confirm-sofa-name').textContent = `${sofaName}沙发`;
+            document.getElementById('confirm-sofa-type').textContent = sofaName;
+            
+            // 更新沙发图片
+            const confirmSofaImage = document.getElementById('confirm-sofa-image');
+            if (confirmSofaImage) {
+                if (sofaType === 'triple-left' || sofaType === 'triple-right') {
+                    confirmSofaImage.src = `../img/sofa-types/${sofaType}.svg`;
+                } else {
+                    confirmSofaImage.src = `../img/sofa-types/${sofaType}-seats.svg`;
+                }
+            }
+            
+            // 更新尺寸信息
+            document.getElementById('confirm-sofa-length').textContent = lengthValue;
+            document.getElementById('confirm-sofa-depth').textContent = depthValue;
+            document.getElementById('confirm-sofa-height').textContent = heightValue;
+            
+            // 更新配置详情
+            document.getElementById('confirm-model-name').textContent = "现代简约沙发"; // 这里应该是真实选择的型号
+            document.getElementById('confirm-sofa-type-text').textContent = `${sofaName}沙发`;
+            document.getElementById('confirm-dimensions').textContent = `${lengthValue} × ${depthValue} × ${heightValue} cm`;
+            document.getElementById('confirm-fabric-name').textContent = fabricModel;
+            
+            // 更新面料颜色样块
+            const fabricColorEl = document.getElementById('confirm-fabric-color');
+            if (fabricColorEl) {
+                fabricColorEl.style.backgroundColor = fabricColor;
+            }
+            
+            // 更新配件信息
+            document.getElementById('confirm-table').textContent = tableName !== '无' ? `${tableName}茶几` : '无';
+            document.getElementById('confirm-function').textContent = functionName;
+            
+            // 更新价格信息
+            document.getElementById('confirm-base-price').textContent = `¥${basePrice.toLocaleString()}`;
+            document.getElementById('confirm-fabric-price').textContent = `¥${fabricPrice.toLocaleString()}`;
+            document.getElementById('confirm-table-price').textContent = `¥${tablePrice.toLocaleString()}`;
+            document.getElementById('confirm-function-price').textContent = `¥${functionPrice.toLocaleString()}`;
+            document.getElementById('confirm-total-price').textContent = `¥${totalPrice.toLocaleString()}`;
+            document.getElementById('bottom-total-price').textContent = `¥${totalPrice.toLocaleString()}`;
+            
+            // 根据是否选择茶几和功能来显示或隐藏对应的价格项
+            const tablePriceItem = document.getElementById('table-price-item');
+            if (tablePriceItem) {
+                tablePriceItem.style.display = tablePrice > 0 ? 'flex' : 'none';
+            }
+            
+            const functionPriceItem = document.getElementById('function-price-item');
+            if (functionPriceItem) {
+                functionPriceItem.style.display = functionPrice > 0 ? 'flex' : 'none';
+            }
+        }
+    });
     </script>
+
+    <script src="../js/sofa-custom.js"></script>
+    <script src="../js/sofa-fix.js"></script>
+    <script src="../js/sofa-models.js"></script>
 </body>
 </html> 

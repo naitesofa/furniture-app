@@ -73,17 +73,22 @@
         }
         
         .header-container {
-            background: linear-gradient(to bottom, var(--brand-primary), var(--brand-primary-dark));
+            background: linear-gradient(to bottom, white, var(--brand-light-dark));
             padding: 15px 15px 15px;
-            color: white;
             position: relative;
             box-shadow: var(--shadow-md);
+            border-radius: 0 0 24px 24px;
+            z-index: 10;
         }
         
         .header-title {
             font-size: 18px;
             font-weight: 600;
             text-align: center;
+            color: var(--brand-dark);
+            background: linear-gradient(to right, var(--brand-dark), var(--brand-primary-dark));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .back-button {
@@ -92,6 +97,15 @@
             top: 50%;
             transform: translateY(-50%);
             font-size: 18px;
+            color: var(--brand-dark);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
         }
         
         .empty-state {
@@ -101,12 +115,17 @@
             justify-content: center;
             padding: 60px 20px;
             text-align: center;
+            background-color: white;
+            margin: 15px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
         }
         
         .empty-icon {
             font-size: 60px;
-            color: var(--brand-light-dark);
+            color: var(--brand-primary-light);
             margin-bottom: 20px;
+            opacity: 0.7;
         }
         
         .empty-text {
@@ -116,7 +135,7 @@
         }
         
         .go-shopping {
-            background: var(--brand-gradient-primary);
+            background: var(--brand-primary);
             color: white;
             padding: 10px 20px;
             border-radius: var(--radius-md);
@@ -128,12 +147,13 @@
         .go-shopping:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-md);
+            filter: var(--state-hover);
         }
         
         .product-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            gap: 15px;
             padding: 15px;
         }
         
@@ -149,7 +169,7 @@
         
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-highlight);
             border-color: var(--brand-primary-light);
         }
         
@@ -181,7 +201,7 @@
         .product-price {
             font-size: 16px;
             font-weight: 700;
-            color: var(--brand-primary-dark);
+            color: var(--brand-primary);
             margin-bottom: 8px;
         }
         
@@ -194,42 +214,51 @@
         .add-to-cart {
             background-color: var(--brand-primary);
             color: white;
-            padding: 6px 10px;
-            border-radius: 4px;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
             font-size: 12px;
             transition: all 0.3s ease;
             flex: 1;
             text-align: center;
             margin-right: 8px;
+            box-shadow: var(--shadow-sm);
         }
         
         .add-to-cart:hover {
             background-color: var(--brand-primary-dark);
             transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .add-to-cart.clicked {
+            background-color: var(--brand-success);
         }
         
         .remove-favorite {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
-            background-color: var(--brand-light-dark);
+            background-color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--brand-dark);
+            color: var(--brand-primary);
             transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--brand-primary-transparent);
         }
         
         .remove-favorite:hover {
             background-color: var(--brand-error);
             color: white;
+            box-shadow: var(--shadow-md);
         }
         
         .favorite-badge {
             position: absolute;
             top: 8px;
             left: 8px;
-            background-color: var(--brand-accent);
+            background: var(--brand-gradient-secondary);
             color: white;
             border-radius: var(--radius-full);
             padding: 3px 8px;
@@ -243,26 +272,34 @@
             justify-content: space-between;
             padding: 15px;
             align-items: center;
+            background-color: white;
+            margin: 0 0 5px 0;
+            box-shadow: var(--shadow-sm);
         }
         
         .favorite-count {
             font-size: 14px;
-            color: var(--brand-dark-light);
+            color: var(--brand-dark);
+            font-weight: 500;
         }
         
         .clear-all {
-            background-color: transparent;
-            color: var(--brand-dark-light);
-            padding: 5px 10px;
-            border: 1px solid var(--brand-dark-light);
-            border-radius: var(--radius-sm);
+            background-color: var(--brand-light);
+            color: var(--brand-dark);
+            padding: 6px 12px;
+            border: 1px solid var(--brand-light-dark);
+            border-radius: var(--radius-md);
             font-size: 12px;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         
         .clear-all:hover {
-            background-color: var(--brand-dark-light);
-            color: white;
+            background-color: #fcefef;
+            color: var(--brand-error);
+            border-color: var(--brand-error);
         }
         
         .tab-bar {
@@ -343,10 +380,19 @@
             transform: scale(1);
         }
         
+        .cart-badge.pulse {
+            animation: badge-pulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        @keyframes badge-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+        
         .filter-bar {
             display: flex;
             overflow-x: auto;
-            padding: 10px 15px;
+            padding: 15px;
             background-color: white;
             box-shadow: var(--shadow-sm);
             scrollbar-width: none;
@@ -359,10 +405,10 @@
         }
         
         .filter-item {
-            padding: 6px 14px;
+            padding: 8px 16px;
             background: var(--brand-light);
             border: 1px solid var(--brand-light-dark);
-            border-radius: 20px;
+            border-radius: var(--radius-full);
             font-size: 13px;
             font-weight: 500;
             color: var(--brand-dark);
@@ -374,6 +420,7 @@
             background: var(--brand-primary);
             color: white;
             border-color: var(--brand-primary);
+            box-shadow: var(--shadow-highlight);
         }
     </style>
 </head>
@@ -409,8 +456,8 @@
             <i class="far fa-heart"></i>
         </div>
         <div class="empty-text">您还没有收藏任何商品</div>
-        <a href="category.html" class="go-shopping">
-            去逛逛
+        <a href="categorynew.html" class="go-shopping btn-press">
+            去逛逛 <i class="fas fa-arrow-right ml-1"></i>
         </a>
     </div>
     
@@ -575,37 +622,76 @@
                 
                 // 检查是否有收藏商品
                 if (favorites.length === 0) {
-                    emptyState.style.display = 'flex';
-                    favoriteContainer.style.display = 'none';
+                    showEmptyState();
                 } else {
-                    emptyState.style.display = 'none';
-                    favoriteContainer.style.display = 'grid';
+                    hideEmptyState();
                     
                     // 渲染收藏商品
                     renderFavorites(favorites, favoriteContainer);
                 }
                 
                 // 从localStorage获取购物车数量
-                const cartCount = localStorage.getItem('cartCount');
-                if (cartCount && parseInt(cartCount) > 0) {
+                updateCartBadgeFromStorage();
+                
+                // 绑定清空收藏按钮事件
+                bindClearAllEvent();
+            }
+
+            // 显示空状态
+            function showEmptyState() {
+                emptyState.style.display = 'flex';
+                favoriteContainer.style.display = 'none';
+            }
+
+            // 隐藏空状态
+            function hideEmptyState() {
+                emptyState.style.display = 'none';
+                favoriteContainer.style.display = 'grid';
+            }
+
+            // 更新购物车徽章从本地存储
+            function updateCartBadgeFromStorage() {
+                const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
+                const cartCount = cartItems.length;
+                
+                if (cartCount > 0) {
                     cartBadge.textContent = cartCount;
                     cartBadge.classList.add('show');
                 }
-                
-                // 绑定清空收藏按钮事件
+            }
+
+            // 绑定清空收藏按钮事件
+            function bindClearAllEvent() {
                 if (clearAllBtn) {
                     clearAllBtn.addEventListener('click', function() {
+                        // 增加视觉反馈
+                        this.classList.add('clicked');
+                        
                         // 确认是否要清空收藏
                         if (confirm('确定要清空所有收藏商品吗？')) {
-                            localStorage.setItem('favorites', '[]');
+                            // 创建一个淡出动画效果
+                            const cards = document.querySelectorAll('.product-card');
+                            cards.forEach((card, index) => {
+                                setTimeout(() => {
+                                    card.style.transition = 'all 0.3s ease';
+                                    card.style.transform = 'scale(0.8)';
+                                    card.style.opacity = '0';
+                                }, index * 50); // 错开动画时间
+                            });
                             
-                            // 显示空状态
-                            emptyState.style.display = 'flex';
-                            favoriteContainer.style.display = 'none';
-                            
-                            // 更新收藏计数
-                            document.getElementById('favorite-number').textContent = '0';
+                            // 等待动画完成后清空存储并显示空状态
+                            setTimeout(() => {
+                                localStorage.setItem('favorites', '[]');
+                                showEmptyState();
+                                // 更新收藏计数
+                                document.getElementById('favorite-number').textContent = '0';
+                            }, cards.length * 50 + 300);
                         }
+                        
+                        // 恢复按钮状态
+                        setTimeout(() => {
+                            this.classList.remove('clicked');
+                        }, 300);
                     });
                 }
             }
@@ -658,7 +744,18 @@
                         </div>
                     `;
                     
+                    // 添加进入动画
+                    productCard.style.opacity = '0';
+                    productCard.style.transform = 'translateY(20px)';
+                    
                     container.appendChild(productCard);
+                    
+                    // 触发进入动画
+                    setTimeout(() => {
+                        productCard.style.transition = 'all 0.5s ease';
+                        productCard.style.opacity = '1';
+                        productCard.style.transform = 'translateY(0)';
+                    }, 50);
                 });
                 
                 // 更新收藏数量
@@ -687,16 +784,36 @@
                 if (category === '全部收藏') {
                     cards.forEach(card => {
                         card.style.display = 'block';
+                        // 添加动画效果
+                        animateCardShow(card);
                     });
                 } else {
                     cards.forEach(card => {
                         const cardCategory = card.getAttribute('data-category');
-                        card.style.display = (cardCategory === category) ? 'block' : 'none';
+                        if (cardCategory === category) {
+                            card.style.display = 'block';
+                            // 添加动画效果
+                            animateCardShow(card);
+                        } else {
+                            card.style.display = 'none';
+                        }
                     });
                 }
                 
                 // 更新计数
                 updateFavoriteCount();
+            }
+            
+            // 卡片显示动画
+            function animateCardShow(card) {
+                card.style.opacity = '0';
+                card.style.transform = 'scale(0.9)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.3s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'scale(1)';
+                }, 50);
             }
             
             // 绑定事件
@@ -772,7 +889,7 @@
                         
                         // 添加删除动画
                         card.style.transition = 'all 0.3s ease';
-                        card.style.transform = 'translateX(100%)';
+                        card.style.transform = 'translateX(100%) scale(0.8)';
                         card.style.opacity = '0';
                         
                         // 动画结束后移除元素
@@ -781,9 +898,8 @@
                             updateFavoriteCount();
                             
                             // 如果没有收藏商品，显示空状态
-                            if (document.querySelectorAll('.product-card').length === 0) {
-                                document.getElementById('empty-state').style.display = 'flex';
-                                document.getElementById('favorite-container').style.display = 'none';
+                            if (document.querySelectorAll('.product-card:not([style*="display: none"])').length === 0) {
+                                showEmptyState();
                             }
                         }, 300);
                     });

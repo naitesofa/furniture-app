@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="100" viewBox="0 0 200 100">
+  <rect width="200" height="100" fill="#f7f9fc" rx="5" ry="5"/>
+  <path d="M50,70 L150,70 C160,70 170,65 170,55 L170,50 C170,45 165,40 160,40 L40,40 C35,40 30,45 30,50 L30,55 C30,65 40,70 50,70 Z" fill="#29a89c" opacity="0.7"/>
+  <path d="M65,70 L135,70 L135,60 L65,60 Z" fill="#29a89c" opacity="0.9"/>
+  <text x="100" y="30" font-family="Arial" font-size="12" text-anchor="middle" fill="#555">沙发预览</text>
+</svg> 

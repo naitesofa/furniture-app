@@ -1,0 +1,4531 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品详情 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        /* 主题颜色变量 - 与首页保持一致 */
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+            
+            /* 渐变色 */
+            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
+            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
+            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
+            
+            /* 阴影 */
+            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
+            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
+            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
+            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background-color: #F5F7F8;
+        }
+
+        /* 页面结构层级关系修复 */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 30;
+            height: 48px;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .quick-nav {
+            position: fixed;
+            top: 48px;
+            left: 0;
+            right: 0;
+            z-index: 20;
+            background-color: white;
+            height: 50px; /* 减小高度 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            transform: translateY(-100%); /* 初始状态隐藏 */
+            transition: transform 0.3s ease; /* 添加过渡效果 */
+            opacity: 0;
+        }
+        
+        .quick-nav.visible {
+            transform: translateY(0); /* 显示状态 */
+            opacity: 1;
+        }
+        
+        .main-content {
+            position: relative;
+            z-index: 5;
+            margin-top: 48px !important; /* 只考虑顶部导航栏高度，因为快速导航初始隐藏 */
+            padding-bottom: 60px;
+            min-height: calc(100vh - 48px);
+            background-color: #F5F7F8;
+            display: block !important;
+            visibility: visible !important;
+        }
+        
+        /* 滚动锚点偏移量修正 */
+        .section-anchor {
+            scroll-margin-top: 100px;
+        }
+        
+        /* 评价模态框样式 */
+        .reviews-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .reviews-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        /* 背景遮罩 */
+        .backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 50;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .backdrop.visible {
+            display: block;
+            opacity: 1;
+        }
+        
+        .reviews-modal-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            max-height: 85vh;
+            background-color: white;
+            border-radius: 20px 20px 0 0;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .reviews-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            background-color: white;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .reviews-modal-header button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .reviews-modal-body {
+            padding: 16px 20px;
+            overflow-y: auto;
+            flex: 1;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        /* 评价标签筛选样式 */
+        .filter-tag {
+            padding: 6px 12px;
+            background-color: #f8f9fa;
+            border-radius: 16px;
+            font-size: 13px;
+            color: #666;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .filter-tag.active {
+            background-color: var(--brand-primary);
+            color: white;
+        }
+        
+        /* 核心信息区域样式 */
+        .product-gallery {
+            height: 80vw; /* 使用视窗宽度确保正方形展示 */
+            max-height: 500px; /* 限制最大高度 */
+            background: #fafafa;
+            border-radius: 0 0 24px 24px; /* 底部圆角提升精致感 */
+            position: relative;
+            overflow: hidden;
+            touch-action: none; /* 防止移动端滑动冲突 */
+        }
+        .gallery-indicator {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            background: rgba(0,0,0,0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+        }
+        .gallery-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            transition: all 0.3s ease;
+        }
+        .gallery-dot.active {
+            width: 20px;
+            border-radius: 4px;
+            background: white;
+        }
+        
+        /* 价格区域样式 */
+        .price-section {
+            background: linear-gradient(135deg, #fff5f5, #fff);
+            /* margin:  */
+            padding: 8px;
+            border-radius: 12px;
+        }
+        .original-price {
+            text-decoration: line-through;
+            color: #999;
+        }
+        .current-price {
+            color: var(--brand-primary);
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .price-tag {
+            background: var(--brand-primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        /* 规格选择区域样式优化 */
+        .spec-section {
+            margin-bottom: 16px;
+        }
+        .spec-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .spec-title {
+            font-size: 15px;
+            font-weight: 500;
+            color: #333;
+        }
+        .spec-actions {
+            font-size: 13px;
+            color: #666;
+        }
+        .spec-action {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .spec-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .spec-option {
+            cursor: pointer;
+            padding: 8px 16px;
+            background: #f5f5f5;
+            border-radius: 16px;
+            font-size: 13px;
+            transition: all 0.3s ease;
+            position: relative;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 80px;
+        }
+        .spec-option:hover {
+            background: #f0f0f0;
+        }
+        .spec-option.active {
+            background: #fff5f5;
+            color: var(--brand-primary);
+            border-color: var(--brand-primary);
+        }
+        .size-info {
+            font-size: 12px;
+            color: #999;
+            margin-left: 4px;
+        }
+
+        /* 已选规格汇总样式 */
+        .selected-summary {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-top: 16px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+        }
+        .selected-summary-title {
+            font-size: 14px;
+            color: #666;
+            margin-right: 12px;
+            white-space: nowrap;
+        }
+        .selected-summary-content {
+            font-size: 14px;
+            color: #333;
+            flex: 1;
+        }
+        
+        /* 商品信息选项卡样式 */
+        .info-tabs {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .tab-item {
+            padding: 12px 24px;
+            font-size: 14px;
+            color: #666;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        .tab-item.active {
+            color: var(--brand-primary);
+            font-weight: 500;
+        }
+        .tab-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 24px;
+            height: 3px;
+            background: var(--brand-primary);
+            border-radius: 1.5px;
+        }
+        
+        /* 底部操作栏样式 */
+        .action-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 101; /* 确保高于快速导航 */
+        }
+        .action-button {
+            flex: 1;
+            padding: 10px;
+            border-radius: 24px;
+            text-align: center;
+            font-size: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .add-cart {
+            background: var(--brand-primary-transparent);
+            color: var(--brand-primary);
+            margin-right: 8px;
+        }
+        .buy-now {
+            background: var(--brand-gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-highlight);
+        }
+        
+        /* 服务标签样式 */
+        .service-tags {
+            display: flex;
+            gap: 16px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .service-tag {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: #666;
+        }
+        .service-tag i {
+            color: var(--brand-primary);
+            margin-right: 4px;
+            font-size: 14px;
+        }
+        
+        /* 快速导航栏样式 - 重新设计 */
+        .quick-nav {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 60px;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            padding: 8px 0;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.05);
+            border-top: 1px solid rgba(0, 0, 0, 0.03);
+        }
+        .quick-nav-item {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: #666;
+            background: white;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .quick-nav-item i {
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+        .quick-nav-item:hover {
+            background: #fff5f5;
+            color: #ff4d4d;
+            transform: translateY(-2px);
+        }
+        .quick-nav-item.active {
+            background: #ff4d4d;
+            color: white;
+        }
+        /* 去掉原来的tooltip样式，使用底部标签 */
+        .quick-nav-label {
+            font-size: 10px;
+            white-space: nowrap;
+        }
+        
+        /* 内容区域锚点样式 */
+        .section-anchor {
+            scroll-margin-top: 60px;
+        }
+        
+        /* 规格对比弹窗样式美化 - 修复显示问题 */
+        .spec-compare-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .spec-compare-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        .spec-compare-content {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            max-height: 85vh;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            box-shadow: 0 -5px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .spec-compare-modal.active .spec-compare-content {
+            transform: translateY(0);
+        }
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed; /* 固定表格布局 */
+        }
+        .compare-table th, .compare-table td {
+            word-break: break-word; /* 允许在单词内换行 */
+            hyphens: auto; /* 自动连字符 */
+        }
+        .compare-table th {
+            background: #f8f9fa;
+            padding: 14px 10px;
+            text-align: left;
+            font-weight: 500;
+            color: #333;
+            position: sticky;
+            top: 0;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+            font-size: 13px;
+        }
+        .compare-table td {
+            padding: 14px 10px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 13px;
+        }
+        .compare-table tr:last-child td {
+            border-bottom: none;
+        }
+        .compare-table tr:nth-child(even) {
+            background-color: #f9fafb;
+        }
+        .compare-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            background: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .compare-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--brand-dark);
+        }
+        .compare-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f8f9fa;
+            color: #666;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .compare-close:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+        .compare-body {
+            padding: 0;
+            max-height: calc(85vh - 70px);
+            overflow-y: auto;
+            overflow-x: hidden; /* 防止水平滚动 */
+            -webkit-overflow-scrolling: touch; /* 优化移动端滚动 */
+        }
+        .highlight-col {
+            background-color: var(--brand-primary-transparent) !important;
+            color: var(--brand-primary);
+            font-weight: 500;
+        }
+        
+        /* 3D预览样式 */
+        .size-preview {
+            position: relative;
+            height: 200px;
+            background: #f8f8f8;
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 12px 0;
+            display: none;
+        }
+        .size-preview.active {
+            display: block;
+        }
+        .size-preview canvas {
+            width: 100%;
+            height: 100%;
+        }
+        .preview-controls {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            display: flex;
+            gap: 8px;
+        }
+        .preview-control {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .dimension-tags {
+            position: absolute;
+            pointer-events: none;
+        }
+        .dimension-tag {
+            position: absolute;
+            background: var(--brand-primary-transparent);
+            border: 1px solid var(--brand-primary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+            color: var(--brand-primary);
+        }
+        
+        /* 规格选择增强 */
+        .spec-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .spec-actions {
+            display: flex;
+            gap: 12px;
+        }
+        .spec-action {
+            font-size: 12px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .spec-action i {
+            font-size: 14px;
+        }
+        
+        /* 360度展示相关样式 */
+        .gallery-container {
+            position: relative;
+            height: 100%;
+            user-select: none;
+        }
+        .gallery-wrapper {
+            position: relative;
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+        .product-image {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .product-image.active {
+            opacity: 1;
+        }
+        .rotate-hint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            pointer-events: none;
+            opacity: 0;
+            animation: fadeInOut 3s ease-in-out;
+        }
+        .rotate-hint i {
+            animation: rotate 2s linear infinite;
+        }
+        .gallery-controls {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            gap: 8px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2), transparent);
+            padding: 16px;
+            width: 100%;
+            justify-content: space-between; /* 控制按钮分散两端 */
+        }
+        .gallery-control {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .gallery-control:hover {
+            background: white;
+            color: #ff4d4d;
+        }
+        .gallery-control.active {
+            background: #ff4d4d;
+            color: white;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 0; }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        /* 回到顶部按钮样式 */
+        .back-to-top {
+            position: fixed;
+            right: 16px;
+            bottom: 80px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .back-to-top:hover {
+            background: var(--brand-primary);
+            color: white;
+        }
+
+        /* 关键信息悬浮样式 */
+        .floating-info {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 8px 16px;
+            transform: translateY(-100%);
+            transition: transform 0.3s ease;
+            z-index: 99;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .floating-info.visible {
+            transform: translateY(48px);
+        }
+        .floating-info-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .floating-info-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .floating-info-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+        .floating-info-price {
+            color: var(--brand-primary);
+            font-weight: 600;
+        }
+
+        /* 咨询功能样式 */
+        .consult-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .consult-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        .consult-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 16px 16px 0 0;
+            padding: 20px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        .consult-modal.active .consult-content {
+            transform: translateY(0);
+        }
+        .consult-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .consult-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .consult-option {
+            background: #f8f8f8;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+        .consult-option:hover {
+            background: #fff5f5;
+            color: #ff4d4d;
+        }
+        .consult-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--brand-primary);
+            font-size: 20px;
+        }
+        .consult-info h4 {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+        }
+        .consult-info p {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* 核心信息布局优化 */
+        .info-section {
+            margin: -24px 16px 0;
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 1;
+        }
+
+        .product-title {
+            font-size: 20px;
+            line-height: 1.4;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        /* 内容卡片样式 */
+        .content-card {
+            background: white;
+            border-radius: 16px;
+            margin: 12px 16px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        /* 标题样式统一 */
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 4px;
+            height: 16px;
+            background: var(--brand-primary);
+            border-radius: 2px;
+        }
+
+        /* 按钮交互优化 */
+        .action-button {
+            transform: translateY(0);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .action-button:active {
+            transform: translateY(2px);
+        }
+
+        .buy-now {
+            background: var(--brand-gradient-primary);
+            box-shadow: var(--shadow-highlight);
+        }
+
+        /* 点击波纹效果 */
+        .ripple {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ripple::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.2);
+            opacity: 0;
+            transform: scale(2);
+            transition: opacity 0.4s, transform 0.6s;
+        }
+
+        .ripple:active::after {
+            opacity: 1;
+            transform: scale(0);
+            transition: 0s;
+        }
+
+        /* 加载状态动画 */
+        .loading-skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            from { background-position: 200% 0; }
+            to { background-position: -200% 0; }
+        }
+
+        /* 页面切换动画 */
+        .page-transition {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 响应式优化 */
+        @media (min-width: 768px) {
+            .product-gallery {
+                height: 60vh;
+                border-radius: 0 0 32px 32px;
+            }
+            
+            .info-section {
+                max-width: 800px;
+                margin: -32px auto 0;
+                padding: 32px;
+            }
+            
+            .spec-options {
+                gap: 16px;
+            }
+        }
+
+        /* 选项卡导航样式优化 */
+        .tab-nav {
+            display: flex;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+        }
+
+        .tab-item {
+            padding: 16px 0;
+            margin: 0 16px;
+            font-size: 15px;
+            color: #666;
+            position: relative;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .tab-item:first-child {
+            margin-left: 16px;
+        }
+
+        .tab-item:last-child {
+            margin-right: 16px;
+        }
+
+        .tab-item.active {
+            color: var(--brand-primary);
+            font-weight: 500;
+        }
+
+        .tab-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--brand-primary);
+            border-radius: 1.5px;
+        }
+
+        /* 内容区域样式 */
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        /* 商品详情样式 */
+        .detail-section {
+            padding: 16px;
+        }
+
+        .feature-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .feature-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .feature-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .feature-icon {
+            width: 24px;
+            height: 24px;
+            background: #fff5f5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff4d4d;
+        }
+
+        /* 规格参数样式 */
+        .specs-section {
+            padding: 16px;
+        }
+
+        .specs-group {
+            margin-bottom: 24px;
+        }
+
+        .specs-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        .specs-table {
+            background: #f8f8f8;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .specs-row {
+            display: flex;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .specs-row:last-child {
+            border-bottom: none;
+        }
+
+        .specs-label {
+            width: 100px;
+            padding: 12px 16px;
+            background: #f4f4f4;
+            color: #666;
+        }
+
+        .specs-value {
+            flex: 1;
+            padding: 12px 16px;
+            color: #333;
+        }
+
+        /* 购买须知样式 */
+        .guide-section {
+            padding: 16px;
+        }
+
+        .guide-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            gap: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .guide-icon {
+            width: 40px;
+            height: 40px;
+            background: #fff5f5;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff4d4d;
+            font-size: 20px;
+        }
+
+        .guide-content h3 {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .guide-list {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .guide-list li {
+            position: relative;
+            padding-left: 12px;
+            margin-bottom: 8px;
+        }
+
+        .guide-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            width: 4px;
+            height: 4px;
+            background: #ff4d4d;
+            border-radius: 50%;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 尺寸规格样式优化 */
+        .size-specs {
+            margin: 24px 0;
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .size-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .size-card {
+            background: var(--brand-light);
+            border-radius: 16px;
+            padding: 24px;
+            display: flex;
+            gap: 32px;
+            border: 1px solid var(--brand-light-dark);
+            transition: all 0.3s ease;
+        }
+
+        .size-visual {
+            width: 140px;
+            text-align: center;
+            padding: 16px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sofa-icon {
+            width: 100%;
+            height: 80px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .seat-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .seat-dots span {
+            width: 8px;
+            height: 8px;
+            background: var(--brand-primary);
+            border-radius: 50%;
+            opacity: 0.6;
+        }
+
+        .size-label {
+            font-size: 15px;
+            color: var(--brand-dark);
+            font-weight: 500;
+            padding: 6px 16px;
+            background: var(--brand-light);
+            border-radius: 20px;
+        }
+
+        .size-info {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            align-content: start;
+        }
+
+        .dimension-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--brand-dark-light);
+            background: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .dimension-item i {
+            color: var(--brand-primary);
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .extra-info {
+            grid-column: 1 / -1;
+            color: var(--brand-primary);
+            font-size: 14px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            background: var(--brand-primary-transparent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .extra-info::before {
+            content: '\f058';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+        }
+
+        /* 响应式优化 */
+        @media (max-width: 480px) {
+            .size-card {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+                padding: 16px;
+            }
+
+            .size-info {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* 动画效果 */
+        .size-card {
+            cursor: pointer;
+        }
+
+        .size-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+        }
+
+        .seat-dots span {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        /* 收藏按钮动画 */
+        .favorite-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        .favorite-btn i {
+            transition: all 0.3s ease;
+        }
+        .favorite-btn.active i {
+            color: #ff4d4d;
+            transform: scale(1.2);
+        }
+        .favorite-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 77, 77, 0.15);
+            border-radius: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+        }
+        .favorite-btn.active::after {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        /* 购物车相关样式 */
+        .cart-count {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 18px;
+            height: 18px;
+            background: #ff4d4d;
+            color: white;
+            font-size: 10px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: translate(30%, -30%);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        .cart-count.visible {
+            opacity: 1;
+        }
+        
+        /* 加入购物车动画 */
+        .cart-animation {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            background-image: url(../images/sofa_360_1.jpg);
+            background-size: cover;
+            border-radius: 50%;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            pointer-events: none;
+        }
+        
+        /* 购物车按钮样式 */
+        .cart-button {
+            position: relative;
+        }
+        
+        /* 数量选择器样式 */
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .quantity-title {
+            font-size: 14px;
+            color: #666;
+        }
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            border: 1px solid #e5e5e5;
+            border-radius: 24px;
+            overflow: hidden;
+        }
+        .quantity-btn {
+            width: 36px;
+            height: 36px;
+            background: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .quantity-btn:hover {
+            background: #f5f5f5;
+        }
+        .quantity-btn:disabled {
+            color: #ccc;
+            cursor: not-allowed;
+        }
+        .quantity-input {
+            width: 40px;
+            height: 36px;
+            border: none;
+            text-align: center;
+            font-size: 14px;
+            background: transparent;
+            -moz-appearance: textfield;
+        }
+        .quantity-input::-webkit-outer-spin-button,
+        .quantity-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        /* 加入购物车成功弹窗 */
+        .cart-success-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            width: 90%;
+            max-width: 320px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 300;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+        }
+        .cart-success-modal.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .success-icon {
+            width: 60px;
+            height: 60px;
+            background: #f0f9f8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            color: var(--brand-primary);
+            font-size: 24px;
+        }
+        .cart-success-title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .cart-success-desc {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .cart-success-actions {
+            display: flex;
+            gap: 12px;
+        }
+        .cart-success-actions button {
+            flex: 1;
+            height: 44px;
+            border-radius: 22px;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .continue-btn {
+            background: #f5f5f5;
+            color: #666;
+        }
+        .continue-btn:hover {
+            background: #ebebeb;
+        }
+        .view-cart-btn {
+            background: var(--brand-primary);
+            color: white;
+        }
+        .view-cart-btn:hover {
+            background: var(--brand-primary-dark);
+        }
+        
+        /* 遮罩层 */
+        .backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 199;  /* 确保z-index低于弹窗的z-index */
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            pointer-events: auto; /* 确保遮罩层可以接收点击事件 */
+        }
+        .backdrop.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* 底部按钮图标样式 */
+        .action-icon {
+            position: relative;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        
+        /* 购物车相关样式修复 */
+        .cart-button {
+            position: relative;
+        }
+
+        /* 规格选择弹窗样式优化 */
+        .spec-select-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .spec-select-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .spec-select-content {
+            background: white;
+            border-radius: 16px 16px 0 0;
+            width: 100%;
+            max-height: 80vh;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .spec-select-modal.active .spec-select-content {
+            transform: translateY(0);
+        }
+        .spec-select-header {
+            padding: 20px;
+            position: relative;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .spec-select-close {
+            position: absolute;
+            right: 16px;
+            top: 16px;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            border: none;
+            z-index: 1;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .spec-product-info {
+            display: flex;
+            gap: 16px;
+        }
+        .spec-product-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid #f0f0f0;
+        }
+        .spec-product-price {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--brand-primary);
+            margin-bottom: 4px;
+        }
+        .spec-product-title {
+            font-size: 16px;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        .spec-product-selected {
+            font-size: 13px;
+            color: #666;
+        }
+        .spec-select-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        .spec-select-section {
+            margin-bottom: 24px;
+        }
+        .spec-select-section:last-child {
+            margin-bottom: 0;
+        }
+        .spec-select-section-title {
+            font-size: 15px;
+            color: #333;
+            margin-bottom: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .spec-select-section-title::before {
+            content: '';
+            display: block;
+            width: 4px;
+            height: 16px;
+            background: var(--brand-primary);
+            border-radius: 2px;
+        }
+        .spec-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .spec-option {
+            padding: 8px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            background: #f5f5f5;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            min-width: 60px;
+            text-align: center;
+        }
+        .spec-option:hover {
+            background: var(--brand-light);
+        }
+        .spec-option.active {
+            background: var(--brand-primary-transparent);
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+            font-weight: 500;
+        }
+        .spec-select-footer {
+            padding: 16px 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+        .spec-select-footer-actions {
+            display: flex;
+            gap: 12px;
+        }
+        .spec-confirm-btn {
+            flex: 1;
+            height: 44px;
+            border-radius: 22px;
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .spec-confirm-btn.cart-btn {
+            background: white;
+            color: var(--brand-primary);
+            border: 1px solid var(--brand-primary);
+        }
+        .spec-confirm-btn.buy-btn {
+            background: var(--brand-primary);
+            color: white;
+        }
+
+        /* 评论区样式 */
+        .filter-tag {
+            padding: 6px 12px;
+            background: #f5f5f5;
+            border-radius: 16px;
+            font-size: 12px;
+            color: #666;
+            transition: all 0.2s ease;
+        }
+        
+        .filter-tag:hover, .filter-tag.active {
+            background: var(--brand-primary-transparent);
+            color: var(--brand-primary);
+        }
+        
+        .review-images img:hover {
+            transform: scale(1.02);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        
+        /* 视频模式样式 */
+        .gallery-control.video-mode {
+            display: none; /* 隐藏视频模式按钮 */
+        }
+
+        /* 增强选项卡内容区域样式 */
+        .tab-content {
+            position: relative;
+            min-height: 300px;
+        }
+
+        .tab-pane {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tab-pane.active {
+            display: block;
+            opacity: 1;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* 修复选项卡在移动设备上的显示 */
+        @media (max-width: 576px) {
+            .tab-nav {
+                padding: 0;
+            }
+
+            .tab-item {
+                padding: 12px 0;
+                margin: 0 12px;
+                font-size: 14px;
+            }
+            
+            .tab-item:first-child {
+                margin-left: 12px;
+            }
+            
+            .tab-item.active::after {
+                height: 2px;
+            }
+        }
+        /* 型号选择按钮样式 */
+        .model-select-btn {
+            width: 100%;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border: none;
+            border-radius: 0;
+            margin: 0;
+            padding: 16px;
+            cursor: default;
+            box-shadow: none;
+        }
+        .model-select-btn:hover {
+            background: white;
+        }
+        .spec-preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .spec-preview-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .spec-preview-content {
+            background: var(--brand-light);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+        .spec-preview-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .spec-preview-item:last-child {
+            margin-bottom: 0;
+        }
+        .spec-preview-label {
+            color: #666;
+            font-size: 14px;
+            width: 60px;
+            flex-shrink: 0;
+        }
+        .spec-preview-value {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+        .spec-preview-action {
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .spec-compare-link {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--brand-primary);
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .spec-select-link {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--brand-primary-transparent);
+            color: var(--brand-primary);
+            font-size: 14px;
+            padding: 6px 12px;
+            border-radius: 16px;
+            cursor: pointer;
+        }
+        .spec-select-link:hover {
+            background: var(--brand-primary-light);
+        }
+
+        /* 规格选择按钮样式 - 参考图片的风格 */
+        .spec-action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 16px 0;
+            width: 100%;
+            border: none;
+            cursor: pointer;
+        }
+        .spec-action-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .spec-action-icon {
+            color: var(--brand-primary);
+            font-size: 16px;
+        }
+        .spec-action-text {
+            color: #333;
+            font-size: 14px;
+        }
+        .spec-action-value {
+            color: #999;
+            font-size: 13px;
+            margin-right: 4px;
+        }
+        .spec-action-arrow {
+            color: #ccc;
+            font-size: 12px;
+        }
+        
+        /* 规格按钮容器 */
+        .spec-btns-container {
+            display: flex;
+            gap: 10px;
+            margin: 16px 0;
+        }
+        .spec-btn {
+            flex: 1;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .spec-select-btn {
+            background: var(--brand-primary);
+            color: white;
+            border: none;
+        }
+        .spec-select-btn:active {
+            background: var(--brand-primary-dark);
+        }
+        .spec-compare-btn {
+            background: white;
+            color: var(--brand-primary);
+            border: 1px solid var(--brand-primary);
+        }
+        .spec-compare-btn:active {
+            background: var(--brand-light);
+        }
+
+        /* 温馨提示区域样式 */
+        .warm-tips {
+            margin-top: 16px;
+            padding: 12px 16px;
+            background: #FFF5E6;
+            border-radius: 8px;
+            border-left: 3px solid #FFB74D;
+        }
+        .warm-tips-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #FF9800;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        .warm-tips-content {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+        .warm-tips-content p {
+            margin-bottom: 6px;
+        }
+        .warm-tips-content p:last-child {
+            margin-bottom: 0;
+        }
+        .custom-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--brand-primary);
+            font-weight: 500;
+            margin-top: 8px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .custom-link-icon {
+            font-size: 12px;
+        }
+        /* 配送信息区域样式 - 重新设计 */
+        .shipping-info {
+            margin-bottom: 12px;
+            padding: 12px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+        }
+        .shipping-info:active {
+            background: #f9f9f9;
+        }
+        .shipping-content {
+            flex: 1;
+            overflow: hidden;
+        }
+        .shipping-address-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+        .shipping-label {
+            font-size: 14px;
+            color: #666;
+            margin-right: 8px;
+            white-space: nowrap;
+        }
+        .shipping-address {
+            flex: 1;
+            font-size: 13px;
+            color: #333;
+            line-height: 1.5;
+            display: flex;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .shipping-icon {
+            color: #666;
+            font-size: 14px;
+            margin-right: 4px;
+            margin-top: 2px;
+        }
+        .shipping-address-text {
+            flex: 1;
+            word-break: break-all;
+        }
+        .shipping-fee-value {
+            font-size: 12px;
+            color: var(--brand-primary);
+            font-weight: 500;
+            white-space: nowrap;
+            margin-left: 8px;
+        }
+        .shipping-arrow {
+            color: #ccc;
+            display: flex;
+            align-items: center;
+        }
+        /* 地址选择模态框样式优化 */
+        .address-select-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        .address-select-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .address-select-content {
+            background: white;
+            border-radius: 16px 16px 0 0;
+            width: 100%;
+            max-height: 70vh;
+            transform: translateY(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+        }
+        .address-select-modal.active .address-select-content {
+            transform: translateY(0);
+        }
+        .address-select-header {
+            padding: 16px 20px;
+            position: relative;
+            border-bottom: 1px solid #f0f0f0;
+            text-align: center;
+        }
+        .address-select-title {
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+        }
+        .address-select-close {
+            position: absolute;
+            right: 16px;
+            top: 14px;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            border: none;
+            z-index: 1;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .address-select-body {
+            padding: 0;
+            overflow-y: auto;
+            max-height: calc(70vh - 120px);
+        }
+        .address-list {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        .address-item {
+            padding: 16px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .address-item:hover, .address-item.active {
+            background: #f9f9f9;
+        }
+        .address-item.active {
+            border-left: 3px solid var(--brand-primary);
+        }
+        .address-main {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .address-name {
+            font-weight: 500;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .address-tag {
+            background: #e6f7ff;
+            color: #1890ff;
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .address-detail {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+        }
+        .address-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .address-btn {
+            border: none;
+            background: white;
+            color: #666;
+            font-size: 13px;
+            padding: 4px 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .address-btn.edit {
+            color: var(--brand-primary);
+        }
+        .address-btn.delete {
+            color: var(--brand-error);
+        }
+        .address-footer {
+            padding: 16px 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+        .add-address-btn {
+            width: 100%;
+            height: 44px;
+            border-radius: 22px;
+            background: var(--brand-primary);
+            color: white;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        /* 弹幕评论样式 */
+        .danmu-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40%; /* 减少弹幕容器高度，从70%降到40% */
+            z-index: 5;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        
+        .danmu {
+            position: absolute;
+            white-space: nowrap;
+            font-size: 12px; /* 减小字体大小 */
+            color: #333;
+            padding: 3px 8px; /* 减小padding */
+            border-radius: 12px; /* 适当减小圆角 */
+            background-color: rgba(255, 250, 230, 0.5);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15); /* 减小阴影 */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            transform: translateX(-100%);
+            pointer-events: auto;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+        
+        .danmu.fixed {
+            animation-play-state: paused !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            background-color: rgba(255, 250, 230, 0.8);
+            z-index: 6;
+        }
+        
+        .danmu .emoji {
+            margin-right: 3px; /* 减小间距 */
+            font-size: 14px; /* 适当减小表情大小 */
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .danmu.positive {
+            background-color: rgba(225, 245, 254, 0.5);
+            border-color: rgba(179, 229, 252, 0.5);
+        }
+        
+        .danmu.negative {
+            background-color: rgba(255, 243, 224, 0.5);
+            border-color: rgba(255, 224, 178, 0.5);
+        }
+        
+        @keyframes danmuMove {
+            0% {
+                transform: translateX(100%);
+                opacity: 1;
+            }
+            80% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+        }
+
+        /* 温馨提示区域样式 */
+        .warm-tips {
+            margin-top: 16px;
+            padding: 12px 16px;
+            background: #FFF5E6;
+            border-radius: 8px;
+            border-left: 3px solid #FFB74D;
+        }
+        .warm-tips-title {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #FF9800;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+        .warm-tips-content {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+        .warm-tips-content p {
+            margin-bottom: 6px;
+        }
+        .warm-tips-content p:last-child {
+            margin-bottom: 0;
+        }
+        .custom-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--brand-primary);
+            font-weight: 500;
+            margin-top: 8px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .custom-link-icon {
+            font-size: 12px;
+        }
+
+        /* 规格选择模态框中的温馨提示样式 */
+        .spec-warm-tips {
+            margin: 20px 0 10px;
+            border-left: 3px solid #FFB74D;
+            background: #FFF5E6;
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+        }
+        .spec-warm-tips .warm-tips-title {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .spec-warm-tips .warm-tips-content {
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        .spec-warm-tips .custom-link {
+            margin-top: 5px;
+            font-size: 12px;
+        }
+
+        /* 为快速导航添加样式 */
+        .quick-nav .flex {
+            height: 100%;
+            align-items: center;
+        }
+        
+        .quick-nav-item {
+            cursor: pointer;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quick-nav-item .rounded-full {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid #f0f0f0;
+            width: 35px; /* 减小尺寸 */
+            height: 35px; /* 减小尺寸 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .quick-nav-label {
+            font-size: 12px; /* 减小字体大小 */
+            font-weight: 500;
+        }
+        
+        .quick-nav-item.active .rounded-full {
+            background-color: #FF4D4D !important;
+            color: white !important;
+            border: none;
+            transform: scale(1.05);
+        }
+        
+        .quick-nav-item:not(.active) .rounded-full {
+            background-color: white !important;
+            color: #666 !important;
+        }
+
+        /* 配送和规格信息统一样式 - 新的更精简设计 */
+        .info-row {
+            cursor: pointer;
+            /* border-bottom: 1px solid rgba(229, 231, 235, 0.6); */
+            transition: all 0.25s ease;
+            margin: 0;
+            padding: 10px 2px;
+        }
+
+        .info-row:hover {
+            background-color: rgba(249, 250, 251, 0.6);
+        }
+
+        .info-row:hover .fas.fa-chevron-right {
+            transform: translateX(2px);
+            color: var(--primary-600) !important;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .info-text {
+            line-height: 1.4;
+        }
+
+        .tag-text {
+            font-size: 12px;
+            background-color: rgba(42, 157, 143, 0.08);
+            color: var(--primary-600);
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航 -->
+    <div class="nav-bar bg-white fixed top-0 left-0 right-0 z-30">
+        <div class="flex items-center justify-between px-4 h-12">
+            <button onclick="history.back()" class="text-gray-600">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="text-lg font-medium">商品详情</div>
+            <button class="text-gray-600">
+                <i class="fas fa-share-alt"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 快速导航栏 - 移到顶部 -->
+    <div class="quick-nav fixed top-12 left-0 right-0 bg-white z-20 shadow-sm">
+        <div class="flex justify-center gap-6">
+            <div class="quick-nav-item active" onclick="scrollToSection('gallery')">
+                <div class="rounded-full flex items-center justify-center bg-red-500 text-white">
+                    <span class="quick-nav-label">商品</span>
+                </div>
+            </div>
+            <div class="quick-nav-item" onclick="scrollToSection('reviews')">
+                <div class="rounded-full flex items-center justify-center bg-white">
+                    <span class="quick-nav-label">评价</span>
+                </div>
+            </div>
+            <div class="quick-nav-item" onclick="scrollToSection('detail')">
+                <div class="rounded-full flex items-center justify-center bg-white">
+                    <span class="quick-nav-label">详情</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主要内容区 -->
+    <div class="main-content" style="position: relative; z-index: 5; background-color: #F5F7F8; min-height: calc(100vh - 48px); margin-top: 48px; display: block !important; visibility: visible !important; overflow-y: auto; padding-bottom: 60px; transition: margin-top 0.3s ease;">
+        
+        <!-- 第一部分：商品信息区域 -->
+        <div id="gallery" class="section-anchor">
+            <!-- 商品图片轮播 -->
+            <div class="product-gallery">
+                <div class="gallery-container">
+                    <div class="danmu-container" id="danmuContainer"></div>
+                    <div class="gallery-wrapper">
+                        <!-- 360度展示图片 -->
+                        <img src="../images/sofa_360_1.jpg" class="product-image active" alt="北欧简约风真皮沙发-视角1" data-index="1">
+                        <img src="../images/sofa_360_2.jpg" class="product-image" alt="北欧简约风真皮沙发-视角2" data-index="2">
+                        <img src="../images/sofa_360_3.jpg" class="product-image" alt="北欧简约风真皮沙发-视角3" data-index="3">
+                        <img src="../images/sofa_360_4.jpg" class="product-image" alt="北欧简约风真皮沙发-视角4" data-index="4">
+                        <img src="../images/sofa_360_5.jpg" class="product-image" alt="北欧简约风真皮沙发-视角5" data-index="5">
+                        <img src="../images/sofa_360_6.jpg" class="product-image" alt="北欧简约风真皮沙发-视角6" data-index="6">
+                        <img src="../images/sofa_360_7.jpg" class="product-image" alt="北欧简约风真皮沙发-视角7" data-index="7">
+                        <img src="../images/sofa_360_8.jpg" class="product-image" alt="北欧简约风真皮沙发-视角8" data-index="8">
+                    </div>
+                    <div class="rotate-hint">
+                        <i class="fas fa-sync-alt"></i>
+                        <span>左右拖动可360°旋转查看</span>
+                    </div>
+                </div>
+                <div class="gallery-controls">
+                    <button class="gallery-control" onclick="toggleViewMode('normal')">
+                        <i class="fas fa-images"></i>
+                    </button>
+                    <button class="gallery-control" onclick="toggleViewMode('360')" title="360°旋转">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                <div class="gallery-indicator">
+                    <div class="gallery-dot active"></div>
+                    <div class="gallery-dot"></div>
+                    <div class="gallery-dot"></div>
+                    <div class="gallery-dot"></div>
+                </div>
+            </div>
+
+            <!-- 商品核心信息 -->
+            <div class="p-4 bg-white" style="margin-bottom: 0.3rem;">
+                <!-- 价格区域 -->
+                <div class="price-section section-anchor">
+                    <div class="flex items-baseline gap-2">
+                        <span class="current-price">¥3,899</span>
+                        <span class="original-price">¥4,599</span>
+                        <span class="price-tag">限时优惠</span>
+                    </div>
+                    <div class="text-xs text-gray-400 mt-2">
+                        <span class="mr-4">月销 1263</span>
+                        <span>收藏 2.1万</span>
+                    </div>
+                </div>
+
+                <!-- 商品标题 --> 
+                <div class="text-lg font-medium leading-tight my-3">
+                    北欧简约风真皮沙发 三人座 可拆洗
+                </div>
+                
+                <!-- 服务标签 -->
+                <div class="service-tags flex space-x-4 my-4" style="margin-bottom: 0rem;margin-top: 0rem;">
+                    <div class="service-tag flex items-center">
+                        <i class="fas fa-shield-alt text-primary-600 mr-2"></i>
+                        <span class="text-sm">正品保证</span>
+                    </div>
+                    <div class="service-tag flex items-center">
+                        <i class="fas fa-truck text-primary-600 mr-2"></i>
+                        <span class="text-sm">免费配送</span>
+                    </div>
+                    <div class="service-tag flex items-center">
+                        <i class="fas fa-undo text-primary-600 mr-2"></i>
+                        <span class="text-sm">7天退换</span>
+                    </div>
+                </div>
+
+                <!-- 配送信息区域 - 精简设计 -->
+                <div class="info-row flex justify-between items-center my-1" onclick="openAddressModal()">
+                    <div class="info-row-left flex items-center">
+                        <span class="info-label mr-3 min-w-[42px]">配送</span>
+                        <div class="info-content flex items-center text-gray-700">
+                            <i class="fas fa-map-marker-alt text-primary-500 mr-2 text-xs"></i>
+                            <span class="info-text text-sm">浙江省杭州市西湖区文三路553号</span>
+                        </div>
+                    </div>
+                    <div class="info-row-right flex items-center">
+    
+                        <i class="fas fa-chevron-right text-gray-300 text-xs transition-transform duration-200"></i>
+                    </div>
+                </div>
+
+                <!-- 规格选择区域 - 精简设计 -->
+                <div class="info-row flex justify-between items-center my-1" onclick="openSpecSelectModal('select')">
+                    <div class="info-row-left flex items-center">
+                        <span class="info-label mr-3 min-w-[42px]">规格</span>
+                   
+                    </div>
+                    <div class="info-row-right flex items-center">
+                        <i class="fas fa-chevron-right text-gray-300 text-xs transition-transform duration-200"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第二部分：评价区域 -->
+        <div id="reviews" class="reviews-section mt-3 section-anchor">
+            <div class="p-4 bg-white">
+                <div class="info-row flex justify-between items-center my-1" id="openReviewBtn">
+                    <div class="info-row-left flex items-center">
+                        <span class="info-label mr-3 min-w-[42px]">评价</span>
+                        <!-- <div class="info-content flex items-center">
+                            <i class="fas fa-comment-alt text-primary-500 mr-2 text-xs"></i>
+                            <span class="text-primary-600 text-sm font-medium">好评率 98%</span>
+                        </div> -->
+                    </div>
+                    <div class="info-row-right flex items-center">
+                        <i class="fas fa-chevron-right text-gray-300 text-xs transition-transform duration-200"></i>
+                    </div>
+                </div>
+                
+                <!-- 评价列表预览（只显示2条） -->
+                <div class="review-list">
+                    <!-- 评价项1 -->
+                    <div class="review-item bg-white rounded-lg p-4 mb-4 border-b border-gray-100">
+                        <div class="flex items-center mb-3">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="用户头像" class="w-10 h-10 rounded-full mr-3">
+                            <div>
+                                <div class="font-medium">李**</div>
+                                <div class="text-xs text-gray-500">2023-03-15</div>
+                            </div>
+                        </div>
+                        <div class="flex text-yellow-400 text-sm mb-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="text-sm mb-3">质量挺好的，比我在实体店看的便宜不少。唯一不满意的是物流有点慢，等了差不多一周才到。</div>
+                        <div class="text-xs text-gray-500">规格：深灰色 双人座 头层牛皮</div>
+                    </div>
+
+                    <!-- 评价项2 -->
+                    <div class="review-item bg-white rounded-lg p-4 mb-4">
+                        <div class="flex items-center mb-3">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="用户头像" class="w-10 h-10 rounded-full mr-3">
+                            <div>
+                                <div class="font-medium">王**</div>
+                                <div class="text-xs text-gray-500">2023-03-10</div>
+                            </div>
+                        </div>
+                        <div class="flex text-yellow-400 text-sm mb-2">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                        <div class="text-sm mb-3">沙发很漂亮，皮质也不错，就是味道有点大，通风两天才减轻。整体还是很满意的，性价比高。</div>
+                        <div class="review-images grid grid-cols-3 gap-2 mb-3">
+                            <img src="../images/sofa_360_7.jpg" alt="评价图片" class="w-full h-24 object-cover rounded">
+                        </div>
+                        <div class="text-xs text-gray-500">规格：米白色 三人座 头层牛皮</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 评价模态框 -->
+        <div class="reviews-modal" id="reviewsModal">
+            <div class="reviews-modal-content">
+                <div class="reviews-modal-header">
+                    <h3 class="text-lg font-medium">用户评价</h3>
+                    <button class="reviews-modal-close text-gray-400">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="reviews-modal-body">
+                    <!-- 评价标签筛选 -->
+                    <div class="review-filters flex space-x-2 mb-4 overflow-x-auto py-1">
+                        <div class="filter-tag active">全部(1263)</div>
+                        <div class="filter-tag">好评(1205)</div>
+                        <div class="filter-tag">中评(45)</div>
+                        <div class="filter-tag">差评(13)</div>
+                        <div class="filter-tag">有图(632)</div>
+                        <div class="filter-tag">视频(89)</div>
+                    </div>
+                    
+                    <!-- 完整评价列表 -->
+                    <div class="reviews-list">
+                        <!-- 评价项1 -->
+                        <div class="review-item border-b border-gray-100 pb-4 mb-4">
+                            <div class="flex items-center mb-3">
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="用户头像" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <div class="font-medium">李**</div>
+                                    <div class="text-xs text-gray-500">2023-03-15</div>
+                                </div>
+                            </div>
+                            <div class="flex text-yellow-400 text-sm mb-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="text-sm mb-3">质量挺好的，比我在实体店看的便宜不少。唯一不满意的是物流有点慢，等了差不多一周才到。</div>
+                            <div class="text-xs text-gray-500">规格：深灰色 双人座 头层牛皮</div>
+                        </div>
+
+                        <!-- 评价项2 -->
+                        <div class="review-item border-b border-gray-100 pb-4 mb-4">
+                            <div class="flex items-center mb-3">
+                                <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="用户头像" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <div class="font-medium">王**</div>
+                                    <div class="text-xs text-gray-500">2023-03-10</div>
+                                </div>
+                            </div>
+                            <div class="flex text-yellow-400 text-sm mb-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <div class="text-sm mb-3">沙发很漂亮，皮质也不错，就是味道有点大，通风两天才减轻。整体还是很满意的，性价比高。</div>
+                            <div class="review-images grid grid-cols-3 gap-2 mb-3">
+                                <img src="https://images.unsplash.com/photo-1628012129428-13d9fa917bc3?q=80&w=1228&auto=format&fit=crop" alt="评价图片" class="w-full h-24 object-cover rounded">
+                            </div>
+                            <div class="text-xs text-gray-500">规格：米白色 三人座 头层牛皮</div>
+                        </div>
+                        
+                        <!-- 评价项3 -->
+                        <div class="review-item border-b border-gray-100 pb-4 mb-4">
+                            <div class="flex items-center mb-3">
+                                <img src="https://randomuser.me/api/portraits/women/42.jpg" alt="用户头像" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <div class="font-medium">张**</div>
+                                    <div class="text-xs text-gray-500">2023-03-05</div>
+                                </div>
+                            </div>
+                            <div class="flex text-yellow-400 text-sm mb-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <div class="text-sm mb-3">沙发质量非常好，皮质摸起来很舒服，坐上去也很舒适，不会太软也不会太硬。颜色和图片一样，很漂亮。安装师傅也很专业，整体非常满意！</div>
+                            <div class="review-images grid grid-cols-3 gap-2 mb-3">
+                                <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?q=80&w=1170&auto=format&fit=crop" alt="评价图片" class="w-full h-24 object-cover rounded">
+                                <img src="https://images.unsplash.com/photo-1484101403633-562f891dc89a?q=80&w=1174&auto=format&fit=crop" alt="评价图片" class="w-full h-24 object-cover rounded">
+                                <img src="https://images.unsplash.com/photo-1550254478-ead40cc54513?q=80&w=1169&auto=format&fit=crop" alt="评价图片" class="w-full h-24 object-cover rounded">
+                            </div>
+                            <div class="text-xs text-gray-500">规格：浅灰色 三人座 头层牛皮</div>
+                        </div>
+                        
+                        <!-- 评价项4 -->
+                        <div class="review-item border-b border-gray-100 pb-4 mb-4">
+                            <div class="flex items-center mb-3">
+                                <img src="https://randomuser.me/api/portraits/men/22.jpg" alt="用户头像" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <div class="font-medium">周**</div>
+                                    <div class="text-xs text-gray-500">2023-02-28</div>
+                                </div>
+                            </div>
+                            <div class="flex text-yellow-400 text-sm mb-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <i class="far fa-star"></i>
+                            </div>
+                            <div class="text-sm mb-3">沙发收到了，做工还可以，就是坐垫有点硬，希望用久了会软一些。</div>
+                            <div class="text-xs text-gray-500">规格：深灰色 三人座 二层牛皮</div>
+                        </div>
+                        
+                        <!-- 评价项5 -->
+                        <div class="review-item">
+                            <div class="flex items-center mb-3">
+                                <img src="https://randomuser.me/api/portraits/women/28.jpg" alt="用户头像" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <div class="font-medium">刘**</div>
+                                    <div class="text-xs text-gray-500">2023-02-25</div>
+                                </div>
+                            </div>
+                            <div class="flex text-yellow-400 text-sm mb-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="text-sm mb-3">很喜欢这款沙发，简约大气，皮质也很好，放在客厅很有格调。给五星！</div>
+                            <div class="review-images grid grid-cols-3 gap-2 mb-3">
+                                <img src="https://images.unsplash.com/photo-1630585308572-f53438fc684f?q=80&w=1287&auto=format&fit=crop" alt="评价图片" class="w-full h-24 object-cover rounded">
+                                <img src="https://images.unsplash.com/photo-1540574163026-643ea20ade25?q=80&w=1170&auto=format&fit=crop" alt="评价图片" class="w-full h-24 object-cover rounded">
+                            </div>
+                            <div class="text-xs text-gray-500">规格：米白色 双人座 头层牛皮</div>
+                        </div>
+                        
+                        <!-- 评价项6 - 新增 -->
+                        <div class="review-item border-b border-gray-100 pb-4 mb-4">
+                            <div class="flex items-center mb-3">
+                                <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="用户头像" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <div class="font-medium">赵**</div>
+                                    <div class="text-xs text-gray-500">2023-02-20</div>
+                                </div>
+                            </div>
+                            <div class="flex text-yellow-400 text-sm mb-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="text-sm mb-3">这是我购买的第二套家逸沙发，质量依然如此稳定。舒适度很好，朋友来家里做都很喜欢。物流也很快，五星好评！</div>
+                            <div class="review-images grid grid-cols-3 gap-2 mb-3">
+                                <img src="https://images.unsplash.com/photo-1567016432779-094069958ea5?q=80&w=1180&auto=format&fit=crop" alt="评价图片" class="w-full h-24 object-cover rounded">
+                                <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=1558&auto=format&fit=crop" alt="评价图片" class="w-full h-24 object-cover rounded">
+                                <img src="https://images.unsplash.com/photo-1558211583-d26f610c1eb1?q=80&w=1287&auto=format&fit=crop" alt="评价图片" class="w-full h-24 object-cover rounded">
+                            </div>
+                            <div class="text-xs text-gray-500">规格：深蓝色 三人座 头层牛皮</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 遮罩层 -->
+        <div class="backdrop" id="backdrop" onclick="closeAllModals()"></div>
+
+        <!-- 第三部分：商品详情区域 -->
+        <div id="detail" class="product-detail-section mt-3 section-anchor">
+            <!-- 规格参数内容 -->
+            <div class="p-4 bg-white mb-3">
+                <!-- <h3 class="text-lg font-medium mb-4">规格参数</h3> -->
+                <div class="specs-section">
+                    <div class="specs-group">
+                        <h3 class="specs-title text-base font-medium text-gray-700 mb-2">基本信息</h3>
+                        <div class="specs-table">
+                            <div class="specs-row flex border-b border-gray-100 py-2">
+                                <div class="specs-label w-1/3 text-gray-500">品牌</div>
+                                <div class="specs-value w-2/3">家逸生活</div>
+                            </div>
+                            <div class="specs-row flex border-b border-gray-100 py-2">
+                                <div class="specs-label w-1/3 text-gray-500">产地</div>
+                                <div class="specs-value w-2/3">浙江省</div>
+                            </div>
+                            <div class="specs-row flex border-b border-gray-100 py-2">
+                                <div class="specs-label w-1/3 text-gray-500">材质</div>
+                                <div class="specs-value w-2/3">头层牛皮</div>
+                            </div>
+                            <div class="specs-row flex py-2">
+                                <div class="specs-label w-1/3 text-gray-500">尺寸</div>
+                                <div class="specs-value w-2/3">220×90×85cm（三人座）</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 商品详情内容 -->
+            <div class="p-4 bg-white mb-3">
+                <h3 class="text-lg font-medium mb-4">商品详情</h3>
+                <div class="product-detail-content">
+                    <img src="../images/sofa_360_1.jpg" alt="商品详情图1" class="w-full mb-3">
+                    <img src="../images/sofa_360_2.jpg" alt="商品详情图2" class="w-full mb-3">
+                    <img src="../images/sofa_360_3.jpg" alt="商品详情图3" class="w-full">
+                    <img src="../images/sofa_360_4.jpg" alt="商品详情图3" class="w-full">
+                </div>
+            </div>
+
+            <!-- 购买须知内容 -->
+    
+        </div>
+    </div>
+
+    <!-- 回到顶部按钮 -->
+    <div class="back-to-top" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+
+
+    <!-- 咨询功能弹窗 -->
+    <div class="consult-modal" id="consultModal">
+        <div class="consult-content">
+            <div class="consult-header">
+                <h3 class="text-lg font-medium">在线咨询</h3>
+                <button onclick="toggleConsult()" class="text-gray-400">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="consult-options">
+                <div class="consult-option" onclick="startAIChat()">
+                    <div class="consult-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="consult-info">
+                        <h4>智能客服</h4>
+                        <p>24小时在线解答</p>
+                    </div>
+                </div>
+                <div class="consult-option" onclick="consultDesigner()">
+                    <div class="consult-icon">
+                        <i class="fas fa-paint-brush"></i>
+                    </div>
+                    <div class="consult-info">
+                        <h4>设计师咨询</h4>
+                        <p>专业家居搭配建议</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部操作栏 -->
+    <div class="action-bar">
+        <div class="flex items-center">
+            <button class="action-icon favorite-btn" onclick="toggleFavorite(this)">
+                <i class="far fa-heart"></i>
+            </button>
+            <button class="action-icon cart-button" onclick="viewCart()">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-count" id="cart-count"></span>
+            </button>
+            <button class="action-icon" onclick="toggleConsult()">
+                <i class="far fa-comment"></i>
+            </button>
+        </div>
+        <div class="flex flex-1">
+            <button class="action-button add-cart ripple" onclick="addToCart()" style="cursor:pointer;">加入购物车</button>
+            <button class="action-button buy-now ripple" onclick="buyNow()" style="cursor:pointer;">立即购买</button>
+        </div>
+    </div>
+
+    <!-- 加入购物车成功弹窗 -->
+    <div class="cart-success-modal" id="cartSuccessModal">
+        <div class="success-icon">
+            <i class="fas fa-check"></i>
+        </div>
+        <div class="cart-success-title">已成功加入购物车</div>
+        <div class="cart-success-desc">您的商品已加入购物车，可前往购物车结算</div>
+        <div class="cart-success-actions">
+            <button class="continue-btn" onclick="closeCartSuccess()">继续购物</button>
+            <button class="view-cart-btn" onclick="viewCart()">查看购物车</button>
+        </div>
+    </div>
+
+    <!-- 规格选择弹窗 -->
+    <div class="spec-select-modal" id="specSelectModal">
+        <div class="spec-select-content">
+            <div class="spec-select-header">
+                <button class="spec-select-close" onclick="closeSpecSelect()">
+                    <i class="fas fa-times"></i>
+                </button>
+                <div class="spec-product-info">
+                    <img src="../images/sofa_360_1.jpg" class="spec-product-image" alt="商品图片" id="specProductImage">
+                    <div>
+                        <div class="spec-product-price" id="specProductPrice">¥3,899</div>
+                        <div class="spec-product-title">北欧简约风真皮沙发</div>
+                        <div class="spec-product-selected" id="specProductSelected">已选：浅灰色、三人座、头层牛皮、1件</div>
+                    </div>
+                </div>
+            </div>
+            <div class="spec-select-body">
+                <!-- 颜色选择 -->
+                <div class="spec-select-section">
+                    <div class="spec-select-section-title">颜色</div>
+                    <div class="spec-options">
+                        <div class="spec-option active" data-color="浅灰色" onclick="selectSpec(this, 'color')">浅灰色</div>
+                        <div class="spec-option" data-color="深灰色" onclick="selectSpec(this, 'color')">深灰色</div>
+                        <div class="spec-option" data-color="米白色" onclick="selectSpec(this, 'color')">米白色</div>
+                    </div>
+                </div>
+                
+                <!-- 尺寸选择 -->
+                <div class="spec-select-section">
+                    <div class="spec-select-section-title">尺寸</div>
+                    <div class="spec-options">
+                        <div class="spec-option active" data-size="三人座" data-price="3899" onclick="selectSpec(this, 'size')">三人座<span class="size-info">220cm</span></div>
+                        <div class="spec-option" data-size="双人座" data-price="2899" onclick="selectSpec(this, 'size')">双人座<span class="size-info">180cm</span></div>
+                        <div class="spec-option" data-size="单人座" data-price="1899" onclick="selectSpec(this, 'size')">单人座<span class="size-info">90cm</span></div>
+                    </div>
+                </div>
+                
+                <!-- 材质选择 -->
+                <div class="spec-select-section">
+                    <div class="spec-select-section-title">材质</div>
+                    <div class="spec-options">
+                        <div class="spec-option active" data-material="头层牛皮" onclick="selectSpec(this, 'material')">头层牛皮</div>
+                        <div class="spec-option" data-material="二层牛皮" onclick="selectSpec(this, 'material')">二层牛皮</div>
+                        <div class="spec-option" data-material="仿皮" onclick="selectSpec(this, 'material')">仿皮</div>
+                    </div>
+                </div>
+                
+                <!-- 数量选择 -->
+                <div class="spec-select-section">
+                    <div class="spec-select-section-title">数量</div>
+                    <div class="quantity-selector">
+                        <div class="quantity-controls">
+                            <button class="quantity-btn minus-btn" onclick="updateSpecQuantity(-1)" disabled>
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="number" class="quantity-input" id="spec-quantity" value="1" min="1" max="10" onchange="validateSpecQuantity()">
+                            <button class="quantity-btn plus-btn" onclick="updateSpecQuantity(1)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 温馨提示区域 -->
+                <div class="warm-tips spec-warm-tips">
+                    <div class="warm-tips-title">
+                        <i class="fas fa-info-circle"></i>
+                        <span>温馨提示</span>
+                    </div>
+                    <div class="warm-tips-content">
+                        <p>尺寸增减10cm以内免费，下单时清楚备注或联系客服人员帮忙备注即可。</p>
+                        <p>如需要选择其他面料、指定面料，更改配置请使用定制功能</p>
+                        <a href="sofa-custom.html" class="custom-link">
+                            <span>前往定制页面</span>
+                            <i class="fas fa-arrow-right custom-link-icon"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="spec-select-footer">
+                <div class="spec-select-footer-actions">
+                    <button class="spec-confirm-btn cart-btn" onclick="confirmAddToCart('cart')">加入购物车</button>
+                    <button class="spec-confirm-btn buy-btn" onclick="confirmAddToCart('buy')">立即购买</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 地址选择模态框 -->
+    <div class="address-select-modal" id="addressSelectModal">
+        <div class="address-select-content">
+            <div class="address-select-header">
+                <div class="address-select-title">选择收货地址</div>
+                <button class="address-select-close" onclick="closeAddressModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="address-select-body">
+                <ul class="address-list">
+                    <li class="address-item active" onclick="selectAddress(this, '浙江省杭州市西湖区文三路553号')">
+                        <div class="address-main">
+                            <div class="address-name">
+                                <span>张三</span>
+                                <span>13812345678</span>
+                                <span class="address-tag">默认</span>
+                            </div>
+                        </div>
+                        <div class="address-detail">浙江省杭州市西湖区文三路553号</div>
+                        <div class="address-actions">
+                            <button class="address-btn edit">
+                                <i class="fas fa-edit"></i>
+                                <span>编辑</span>
+                            </button>
+                            <button class="address-btn delete">
+                                <i class="fas fa-trash"></i>
+                                <span>删除</span>
+                            </button>
+                        </div>
+                    </li>
+                    <li class="address-item" onclick="selectAddress(this, '浙江省杭州市滨江区江南大道3888号')">
+                        <div class="address-main">
+                            <div class="address-name">
+                                <span>李四</span>
+                                <span>13987654321</span>
+                            </div>
+                        </div>
+                        <div class="address-detail">浙江省杭州市滨江区江南大道3888号</div>
+                        <div class="address-actions">
+                            <button class="address-btn edit">
+                                <i class="fas fa-edit"></i>
+                                <span>编辑</span>
+                            </button>
+                            <button class="address-btn delete">
+                                <i class="fas fa-trash"></i>
+                                <span>删除</span>
+                            </button>
+                        </div>
+                    </li>
+                    <li class="address-item" onclick="selectAddress(this, '上海市浦东新区陆家嘴环路1000号')">
+                        <div class="address-main">
+                            <div class="address-name">
+                                <span>王五</span>
+                                <span>13567891234</span>
+                            </div>
+                        </div>
+                        <div class="address-detail">上海市浦东新区陆家嘴环路1000号</div>
+                        <div class="address-actions">
+                            <button class="address-btn edit">
+                                <i class="fas fa-edit"></i>
+                                <span>编辑</span>
+                            </button>
+                            <button class="address-btn delete">
+                                <i class="fas fa-trash"></i>
+                                <span>删除</span>
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="address-footer">
+                <button class="add-address-btn">
+                    <i class="fas fa-plus"></i>
+                    <span>新增收货地址</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 图片轮播
+        let currentSlide = 0;
+        const dots = document.querySelectorAll('.gallery-dot');
+        
+        function updateSlide(index) {
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[index].classList.add('active');
+            currentSlide = index;
+        }
+        
+        // 规格选择
+        document.querySelectorAll('.spec-option').forEach(option => {
+            option.addEventListener('click', function() {
+                const parent = this.parentElement;
+                parent.querySelector('.active').classList.remove('active');
+                this.classList.add('active');
+                
+                // 更新已选规格汇总
+                updateSelectedSummary();
+                
+                // 如果选择的是尺寸，更新价格显示
+                if (this.hasAttribute('data-price')) {
+                    updateProductPrice(this.getAttribute('data-price'));
+                }
+            });
+        });
+        
+        // 页面滚动处理
+        window.addEventListener('scroll', function() {
+            const tabs = document.querySelector('.info-tabs');
+            if (window.scrollY > 400) {
+                tabs.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)';
+            } else {
+                tabs.style.boxShadow = 'none';
+            }
+        });
+
+        // 快速导航功能
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                // 计算滚动位置，考虑顶部导航和快速导航的高度
+                const navHeight = 48; // 顶部导航高度
+                const quickNavHeight = 60; // 快速导航高度，固定值
+                const totalOffset = navHeight + quickNavHeight + 2; // 加2px缓冲
+                
+                // 获取元素相对于文档顶部的偏移量，减去导航高度
+                const offsetTop = section.getBoundingClientRect().top + window.pageYOffset - totalOffset;
+                
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+                
+                // 更新导航激活状态
+                updateNavItem(sectionId);
+            }
+        }
+        
+        // 更新导航激活状态
+        function updateNavItem(activeId) {
+            const navItems = document.querySelectorAll('.quick-nav-item');
+            navItems.forEach(item => {
+                const targetId = item.getAttribute('onclick').match(/'([^']+)'/)[1];
+                if (targetId === activeId) {
+                    item.classList.add('active');
+                } else {
+                    item.classList.remove('active');
+                }
+            });
+        }
+        
+        // 根据滚动位置更新导航激活状态
+        function updateNavActiveState() {
+            const scrollPosition = window.scrollY;
+            const navHeight = document.querySelector('.nav-bar').offsetHeight;
+            const quickNavHeight = document.querySelector('.quick-nav').offsetHeight;
+            const totalOffset = navHeight + quickNavHeight;
+            
+            // 获取所有区域
+            const sections = [
+                document.getElementById('gallery'),
+                document.getElementById('reviews'),
+                document.getElementById('detail')
+            ];
+            
+            // 找出当前滚动位置对应的区域
+            let currentSection = sections[0].id;
+            
+            for (let i = 0; i < sections.length; i++) {
+                if (sections[i] && sections[i].offsetTop - totalOffset - 50 <= scrollPosition) {
+                    currentSection = sections[i].id;
+                }
+            }
+            
+            // 更新导航激活状态
+            updateNavItem(currentSection);
+        }
+
+        // 视频模式切换
+        function toggleViewMode(mode) {
+            const galleryWrapper = document.querySelector('.gallery-wrapper');
+            const controls = document.querySelectorAll('.gallery-control');
+            
+            // 重置所有控制按钮状态
+            controls.forEach(control => control.classList.remove('active'));
+            
+            // 设置当前模式
+            if (mode === 'normal') {
+                // 普通图片模式
+                galleryWrapper.style.display = 'block';
+                controls[0].classList.add('active');
+            } else if (mode === '360') {
+                // 360度旋转模式
+                galleryWrapper.style.display = 'block';
+                controls[1].classList.add('active');
+                
+                // 显示旋转提示
+                const rotateHint = document.querySelector('.rotate-hint');
+                if (rotateHint) {
+                    rotateHint.style.opacity = '1';
+                    setTimeout(() => {
+                        rotateHint.style.opacity = '0';
+                    }, 3000);
+                }
+            }
+            // 视频模式已移除
+        }
+
+        // 显示旋转提示
+        function showRotateHint() {
+            const rotateHint = document.querySelector('.rotate-hint');
+            if (rotateHint) {
+                rotateHint.style.opacity = '1';
+                setTimeout(() => {
+                    rotateHint.style.opacity = '0';
+                }, 3000);
+            }
+        }
+        
+        // 关闭视频模式
+        function closeVideoMode() {
+            const videoElement = document.getElementById('productVideo');
+            const video = videoElement.querySelector('video');
+            
+            // 暂停视频
+            if (video) video.pause();
+            
+            // 切换回普通模式
+            toggleViewMode('normal');
+        }
+
+        // 评价标签筛选
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterTags = document.querySelectorAll('.filter-tag');
+            
+            filterTags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    // 移除其他标签的active状态
+                    filterTags.forEach(t => t.classList.remove('active'));
+                    
+                    // 添加当前标签的active状态
+                    this.classList.add('active');
+                    
+                    // 这里可以添加实际的筛选逻辑
+                    console.log('筛选评价:', this.textContent.trim());
+                });
+            });
+        });
+
+        // 修复选项卡切换功能
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('初始化选项卡功能');
+            
+            const tabItems = document.querySelectorAll('.tab-nav .tab-item');
+            const tabPanes = document.querySelectorAll('.tab-content .tab-pane');
+            
+            if (tabItems.length > 0 && tabPanes.length > 0) {
+                console.log(`找到${tabItems.length}个选项卡和${tabPanes.length}个内容面板`);
+                
+                // 初始化选中第一个选项卡和内容面板
+                tabItems[0].classList.add('active');
+                tabPanes[0].classList.add('active');
+                
+                // 为每个选项卡添加点击事件
+                tabItems.forEach(tab => {
+                    tab.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        console.log(`点击了选项卡: ${this.textContent}`);
+                        
+                        // 移除所有选项卡和内容面板的活动状态
+                        tabItems.forEach(item => item.classList.remove('active'));
+                        tabPanes.forEach(pane => pane.classList.remove('active'));
+                        
+                        // 激活当前选项卡
+                this.classList.add('active');
+                        
+                        // 激活对应的内容面板
+                const tabId = this.getAttribute('data-tab');
+                        const targetPane = document.getElementById(tabId);
+                        
+                        if (targetPane) {
+                            targetPane.classList.add('active');
+                            console.log(`激活内容面板: ${tabId}`);
+                        } else {
+                            console.error(`未找到ID为${tabId}的内容面板`);
+                        }
+            });
+        });
+            } else {
+                console.error('未找到选项卡或内容面板元素');
+            }
+        });
+
+        // 页面加载完成后自动播放视频
+        document.addEventListener('DOMContentLoaded', function() {
+            // 等待DOM完全加载后2秒自动切换到视频模式
+            setTimeout(() => {
+                toggleViewMode('video');
+            }, 2000);
+        });
+
+        // 规格对比功能修复
+        function toggleSpecCompare() {
+            // 已移除规格对比功能
+        }
+
+        // 加入购物车功能修复
+        function addToCart() {
+            console.log("加入购物车功能被触发");
+            // 打开规格选择模态框，设置模式为"cart"
+            openSpecSelectModal('cart');
+        }
+
+        // 立即购买功能修复
+        function buyNow() {
+            console.log("立即购买功能被触发");
+            // 打开规格选择模态框，设置模式为"buy"
+            openSpecSelectModal('buy');
+        }
+
+        // 打开规格选择模态框
+        function openSpecSelectModal(mode) {
+            const modal = document.getElementById('specSelectModal');
+            const backdrop = document.getElementById('backdrop');
+            
+            if (!modal || !backdrop) {
+                console.error("未找到模态框元素");
+                return;
+            }
+                
+            // 记录当前操作模式（购物车或购买）
+            modal.setAttribute('data-mode', mode);
+            
+            // 更新底部按钮
+            const actionsContainer = modal.querySelector('.spec-select-footer-actions');
+            if (actionsContainer) {
+                if (mode === 'select') {
+                    // 只显示一个确认按钮
+                    actionsContainer.innerHTML = `
+                        <button class="spec-confirm-btn buy-btn" onclick="confirmSpecSelect()">确定</button>
+                    `;
+                } else {
+                    // 显示购物车和购买按钮
+                    actionsContainer.innerHTML = `
+                        <button class="spec-confirm-btn cart-btn" onclick="confirmAddToCart('cart')">加入购物车</button>
+                        <button class="spec-confirm-btn buy-btn" onclick="confirmAddToCart('buy')">立即购买</button>
+                    `;
+                }
+            }
+            
+            // 从主界面获取当前选中的规格信息，并在模态框中选中相同选项
+            updateModalSelections();
+            
+            // 显示模态框和背景遮罩
+            modal.classList.add('active');
+            backdrop.classList.add('visible');
+            
+            // 禁止背景滚动
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // 确认规格选择（仅选择模式）
+        function confirmSpecSelect() {
+            // 更新主页面上的规格显示
+            updateSelectedSpecFromModal();
+            
+            // 关闭模态框
+            closeSpecSelect();
+        }
+        
+        // 从主界面同步规格选择到模态框
+        function updateModalSelections() {
+            // 在新布局中，主界面上没有规格选择区域，所以我们只需初始化一些默认值
+            
+            // 在模态框中选中默认选项
+            const modalColorOptions = document.querySelectorAll('.spec-select-body .spec-select-section:nth-of-type(1) .spec-option');
+            const modalSizeOptions = document.querySelectorAll('.spec-select-body .spec-select-section:nth-of-type(2) .spec-option');
+            const modalMaterialOptions = document.querySelectorAll('.spec-select-body .spec-select-section:nth-of-type(3) .spec-option');
+            
+            // 选中第一个选项（如果存在）
+            if (modalColorOptions.length > 0) modalColorOptions[0].click();
+            if (modalSizeOptions.length > 0) modalSizeOptions[0].click();
+            if (modalMaterialOptions.length > 0) modalMaterialOptions[0].click();
+            
+            // 更新显示的信息
+            updateSpecProductInfo();
+        }
+        
+        // 更新模态框中的商品价格和已选信息
+        function updateSpecProductInfo() {
+            const sizeOption = document.querySelector('.spec-select-body .spec-select-section:nth-of-type(2) .spec-option.active');
+            if (!sizeOption) return;
+            
+            const priceElement = document.getElementById('specProductPrice');
+            if (priceElement && sizeOption.hasAttribute('data-price')) {
+                const price = sizeOption.getAttribute('data-price');
+                priceElement.textContent = `¥${Number(price).toLocaleString()}`;
+            }
+            
+            // 更新已选信息
+            updateSpecSelectedInfo();
+        }
+        
+        // 更新已选规格信息
+        function updateSpecSelectedInfo() {
+            const colorOption = document.querySelector('.spec-select-body .spec-select-section:nth-of-type(1) .spec-option.active');
+            const sizeOption = document.querySelector('.spec-select-body .spec-select-section:nth-of-type(2) .spec-option.active');
+            const materialOption = document.querySelector('.spec-select-body .spec-select-section:nth-of-type(3) .spec-option.active');
+            const quantityInput = document.getElementById('spec-quantity');
+            
+            if (!colorOption || !sizeOption || !materialOption || !quantityInput) {
+                return;
+            }
+            
+            const selectedColor = colorOption.getAttribute('data-color') || colorOption.textContent.trim();
+            const selectedSize = sizeOption.getAttribute('data-size') || sizeOption.textContent.trim().split(/\s+/)[0];
+            const selectedMaterial = materialOption.getAttribute('data-material') || materialOption.textContent.trim();
+            const quantity = quantityInput.value;
+            
+            const selectedInfo = document.getElementById('specProductSelected');
+            if (selectedInfo) {
+                selectedInfo.textContent = `已选：${selectedColor}、${selectedSize}、${selectedMaterial}、${quantity}件`;
+            }
+        }
+        
+        // 规格选择
+        function selectSpec(element, type) {
+            if (!element) return;
+            
+            // 取消当前选中的选项
+            const parent = element.parentElement;
+            if (!parent) return;
+            
+            const activeOption = parent.querySelector('.active');
+            if (activeOption) {
+                activeOption.classList.remove('active');
+            }
+            
+            // 设置新选中的选项
+            element.classList.add('active');
+                
+            // 更新商品信息显示
+            updateSpecProductInfo();
+            
+            // 更新主界面上的规格显示
+            updateSelectedSpecFromModal();
+        }
+        
+        // 更新规格数量
+        function updateSpecQuantity(change) {
+            const quantityInput = document.getElementById('spec-quantity');
+            if (!quantityInput) return;
+            
+            let quantity = parseInt(quantityInput.value) || 1;
+            quantity += change;
+            
+            // 限制数量范围
+            if (quantity < 1) quantity = 1;
+            if (quantity > 10) quantity = 10;
+            
+            quantityInput.value = quantity;
+            
+            // 更新按钮状态
+            const minusBtn = document.querySelector('.minus-btn');
+            if (minusBtn) {
+                minusBtn.disabled = quantity <= 1;
+            }
+            
+            const plusBtn = document.querySelector('.plus-btn');
+            if (plusBtn) {
+                plusBtn.disabled = quantity >= 10;
+            }
+            
+            // 更新已选信息
+            updateSpecSelectedInfo();
+        }
+        
+        // 验证输入的数量
+        function validateSpecQuantity() {
+            const quantityInput = document.getElementById('spec-quantity');
+            if (!quantityInput) return;
+            
+            let quantity = parseInt(quantityInput.value) || 1;
+            
+            // 限制数量范围
+            if (quantity < 1) quantity = 1;
+            if (quantity > 10) quantity = 10;
+            
+            quantityInput.value = quantity;
+            
+            // 更新按钮状态
+            const minusBtn = document.querySelector('.minus-btn');
+            if (minusBtn) {
+                minusBtn.disabled = quantity <= 1;
+            }
+            
+            const plusBtn = document.querySelector('.plus-btn');
+            if (plusBtn) {
+                plusBtn.disabled = quantity >= 10;
+            }
+                
+                // 更新已选信息
+            updateSpecSelectedInfo();
+        }
+        
+        // 确认添加购物车或立即购买
+        function confirmAddToCart(mode) {
+                const modal = document.getElementById('specSelectModal');
+            if (!modal) return;
+            
+            // 如果没有传入mode参数，则使用模态框上的mode属性
+            if (!mode) {
+                mode = modal.getAttribute('data-mode') || 'cart';
+            }
+            
+            // 获取选中的规格信息
+            const colorOption = document.querySelector('.spec-select-body .spec-select-section:nth-of-type(1) .spec-option.active');
+            const sizeOption = document.querySelector('.spec-select-body .spec-select-section:nth-of-type(2) .spec-option.active');
+            const materialOption = document.querySelector('.spec-select-body .spec-select-section:nth-of-type(3) .spec-option.active');
+            const quantityInput = document.getElementById('spec-quantity');
+            
+            if (!colorOption || !sizeOption || !materialOption || !quantityInput) {
+                    alert("请选择完整的商品规格");
+                    return;
+                }
+                
+            const selectedColor = colorOption.getAttribute('data-color') || colorOption.textContent.trim();
+            const selectedSize = sizeOption.getAttribute('data-size') || sizeOption.textContent.trim().split(/\s+/)[0];
+            const selectedPrice = sizeOption.getAttribute('data-price') || "3899";
+            const selectedMaterial = materialOption.getAttribute('data-material') || materialOption.textContent.trim();
+            const quantity = parseInt(quantityInput.value) || 1;
+            
+            // 关闭模态框
+            closeSpecSelect();
+            
+            // 更新页面上的选项显示
+            updateSelectedSpecFromModal();
+            
+            if (mode === 'cart') {
+                // 显示加入购物车成功提示
+                const cartSuccessModal = document.getElementById('cartSuccessModal');
+                if (cartSuccessModal) {
+                    cartSuccessModal.classList.add('active');
+                    setTimeout(() => {
+                        cartSuccessModal.classList.remove('active');
+                    }, 3000); // 3秒后自动关闭
+                } else {
+                    alert(`已成功将 ${selectedColor} ${selectedSize} ${selectedMaterial} ${quantity}件 加入购物车！`);
+                }
+                
+                // 更新购物车图标上的数量标记
+                const cartCount = document.getElementById('cart-count');
+                if (cartCount) {
+                    cartCount.textContent = quantity;
+                    cartCount.classList.add('visible');
+                }
+                } else {
+                // 立即购买流程
+                alert(`正在购买: ${selectedColor} ${selectedSize} ${selectedMaterial} ${quantity}件，即将跳转到结算页面`);
+                
+                // 实际应用中这里会跳转到结算页面
+                // window.location.href = "checkout.html";
+            }
+        }
+        
+        // 更新主页面上的规格显示
+        function updateSelectedSpecFromModal() {
+            // 获取规格模态框中选中的规格
+            const colorOption = document.querySelector('.spec-options div[data-color].active');
+            const sizeOption = document.querySelector('.spec-options div[data-size].active');
+            const materialOption = document.querySelector('.spec-options div[data-material].active');
+            
+            if (!colorOption || !sizeOption || !materialOption) return;
+            
+            const selectedColor = colorOption.getAttribute('data-color');
+            const selectedSize = sizeOption.getAttribute('data-size');
+            const selectedMaterial = materialOption.getAttribute('data-material');
+            
+            // 更新主界面上的已选规格显示
+            const selectedSpecElements = document.querySelectorAll('.info-row .info-text');
+            // 第二个info-text是规格内容
+            if (selectedSpecElements && selectedSpecElements.length > 1) {
+                const specElement = selectedSpecElements[1];
+                specElement.innerHTML = `<span class="font-medium">${selectedColor}</span> <span class="mx-1">|</span> <span class="font-medium">${selectedSize}</span> <span class="mx-1">|</span> <span>${selectedMaterial}</span>`;
+            }
+            
+            // 更新规格模态框中的已选信息
+            const specProductSelected = document.getElementById('specProductSelected');
+            const quantity = document.getElementById('spec-quantity') ? document.getElementById('spec-quantity').value : '1';
+            
+            if (specProductSelected) {
+                specProductSelected.textContent = `已选：${selectedColor}、${selectedSize}、${selectedMaterial}、${quantity}件`;
+            }
+        }
+        
+        // 在主页面上选择规格的函数，现在只用于规格对比功能
+        function selectMainSpec(element, type) {
+            if (!element) return;
+            
+            // 仅在规格对比功能点击时使用
+            if (type === 'size') {
+                const size = element.getAttribute('data-size') || element.textContent.trim();
+                updateHighlightColumn(size);
+            }
+        }
+        
+        // 关闭规格选择模态框
+        function closeSpecSelect() {
+            const modal = document.getElementById('specSelectModal');
+                const backdrop = document.getElementById('backdrop');
+                
+            if (!modal) return;
+            
+            // 隐藏模态框
+                        modal.classList.remove('active');
+            
+            // 隐藏背景遮罩
+            if (backdrop) {
+                backdrop.classList.remove('visible');
+            }
+            
+            // 恢复背景滚动
+            document.body.style.overflow = '';
+        }
+        
+        // 关闭所有模态框
+        function closeAllModals() {
+            // 关闭规格选择模态框
+            closeSpecSelect();
+            
+            // 关闭地址选择模态框
+            closeAddressModal();
+            
+            // 关闭购物车成功提示
+            const cartSuccessModal = document.getElementById('cartSuccessModal');
+            if (cartSuccessModal) {
+                cartSuccessModal.classList.remove('active');
+            }
+            
+            // 关闭咨询模态框
+            const consultModal = document.getElementById('consultModal');
+            if (consultModal) {
+                consultModal.classList.remove('active');
+            }
+            
+            // 恢复背景滚动
+            document.body.style.overflow = '';
+        }
+        
+        // 关闭购物车成功提示
+        function closeCartSuccess() {
+            const cartSuccessModal = document.getElementById('cartSuccessModal');
+            if (cartSuccessModal) {
+                cartSuccessModal.classList.remove('active');
+            }
+        }
+
+        // 更新已选规格汇总功能修复
+        function updateSelectedSummary() {
+            const colorOption = document.querySelector('.spec-select-body .spec-select-section:nth-of-type(1) .spec-option.active');
+            const sizeOption = document.querySelector('.spec-select-body .spec-select-section:nth-of-type(2) .spec-option.active');
+            const materialOption = document.querySelector('.spec-select-body .spec-select-section:nth-of-type(3) .spec-option.active');
+            const quantityInput = document.getElementById('spec-quantity');
+            
+            if (!colorOption || !sizeOption || !materialOption || !quantityInput) {
+                    return;
+                }
+                
+            const selectedColor = colorOption.getAttribute('data-color') || colorOption.textContent.trim();
+            const selectedSize = sizeOption.getAttribute('data-size') || sizeOption.textContent.trim().split(/\s+/)[0];
+            const selectedMaterial = materialOption.getAttribute('data-material') || materialOption.textContent.trim();
+            const quantity = quantityInput.value;
+            
+            // 更新模态框内的汇总信息
+            const summaryElement = document.getElementById('specProductSelected');
+            if (summaryElement) {
+                summaryElement.textContent = `已选：${selectedColor}、${selectedSize}、${selectedMaterial}、${quantity}件`;
+            }
+            
+            // 更新按钮上的简要汇总
+            const shortSummaryElement = document.getElementById('selectedSpecsSummaryShort');
+            if (shortSummaryElement) {
+                shortSummaryElement.textContent = `${selectedColor}、${selectedSize}`;
+            }
+            
+            // 更新新规格区域的规格文本
+            const selectedSpecText = document.querySelector('.selected-spec-text');
+            if (selectedSpecText) {
+                selectedSpecText.textContent = `${selectedColor} ${selectedSize} ${selectedMaterial}`;
+            }
+        }
+
+        // 更新对比表格高亮列函数修复
+        function updateHighlightColumn(size) {
+            console.log("更新高亮列:", size);
+            const table = document.querySelector('.compare-table');
+            if (!table) {
+                console.error("找不到对比表格");
+                    return;
+                }
+                
+            const headerRow = table.querySelector('tr');
+            if (!headerRow) {
+                console.error("找不到表格头行");
+                    return;
+                }
+                
+            const headerCells = headerRow.querySelectorAll('th');
+            
+            // 移除所有高亮
+            table.querySelectorAll('.highlight-col').forEach(cell => {
+                cell.classList.remove('highlight-col');
+            });
+            
+            // 找到对应的列索引
+            let colIndex = -1;
+            headerCells.forEach((cell, index) => {
+                if (cell.textContent.includes(size)) {
+                    colIndex = index;
+                }
+            });
+            
+            console.log("找到列索引:", colIndex);
+            
+            // 如果找到了，添加高亮
+            if (colIndex > 0) { // 跳过第一列
+                // 高亮表头
+                headerCells[colIndex].classList.add('highlight-col');
+                
+                // 高亮数据列
+                const rows = table.querySelectorAll('tr');
+                rows.forEach(row => {
+                    const cells = row.querySelectorAll('td, th');
+                    if (cells.length > colIndex) {
+                        cells[colIndex].classList.add('highlight-col');
+                    }
+                });
+            }
+        }
+
+        // 对比表格排序功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const specsTables = document.querySelectorAll('.specs-group table');
+            
+            specsTables.forEach(table => {
+                if (!table) return;
+                
+                const headers = table.querySelectorAll('th[data-sort]');
+                
+                headers.forEach(header => {
+                    header.addEventListener('click', function() {
+                        const column = header.cellIndex;
+                        const sortType = header.getAttribute('data-sort') || 'text';
+                        const currentDir = header.getAttribute('data-dir') || 'asc';
+                        const newDir = currentDir === 'asc' ? 'desc' : 'asc';
+                        
+                        // 重置所有表头方向指示器
+                        headers.forEach(h => h.setAttribute('data-dir', ''));
+                        
+                        // 设置当前表头方向
+                        header.setAttribute('data-dir', newDir);
+                        
+                        // 对表格进行排序
+                        sortTable(table, column, sortType, newDir);
+                    });
+                });
+            });
+        });
+
+        // 打开地址选择模态框
+        function openAddressModal() {
+            const modal = document.getElementById('addressSelectModal');
+            const backdrop = document.getElementById('backdrop');
+            
+            if (!modal || !backdrop) {
+                console.error("未找到地址选择模态框元素");
+                    return;
+                }
+                
+            // 显示模态框和背景遮罩
+            modal.classList.add('active');
+            backdrop.classList.add('visible');
+            
+            // 禁止背景滚动
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // 关闭地址选择模态框
+        function closeAddressModal() {
+            const modal = document.getElementById('addressSelectModal');
+            const backdrop = document.getElementById('backdrop');
+            
+            if (!modal) return;
+            
+            // 隐藏模态框
+            modal.classList.remove('active');
+            
+            // 隐藏背景遮罩（如果没有其他模态框开启）
+            if (backdrop && !document.querySelector('.spec-select-modal.active') && 
+                !document.querySelector('.spec-compare-modal.active')) {
+                backdrop.classList.remove('visible');
+            }
+            
+            // 恢复背景滚动（如果没有其他模态框开启）
+            if (!document.querySelector('.spec-select-modal.active') && 
+                !document.querySelector('.spec-compare-modal.active')) {
+                document.body.style.overflow = '';
+            }
+        }
+        
+        // 选择地址
+        function selectAddress(element, address) {
+            if (!element) return;
+            
+            // 移除之前选中的样式
+            document.querySelectorAll('.address-list .address-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 添加选中样式
+            element.classList.add('active');
+            
+            // 更新主界面上的地址显示
+            const addressElement = document.querySelector('.info-text');
+            if (addressElement) {
+                addressElement.textContent = address;
+            }
+            
+            // 关闭模态框
+            closeAddressModal();
+        }
+        
+        // 根据地址更新运费
+        function updateShippingFee(address) {
+            const shippingFeeElement = document.querySelector('.shipping-fee-value');
+            if (!shippingFeeElement) return;
+            
+            // 这里可以根据不同地址设置不同的运费，示例中用简单逻辑
+            if (address.includes('杭州')) {
+                shippingFeeElement.textContent = '免运费';
+            } else if (address.includes('上海')) {
+                shippingFeeElement.textContent = '¥20';
+            } else {
+                shippingFeeElement.textContent = '¥30';
+            }
+        }
+        
+        // 更新关闭所有模态框函数，确保也能关闭地址选择模态框
+        function closeAllModals() {
+            // 关闭规格选择模态框
+            closeSpecSelect();
+            
+            // 关闭地址选择模态框
+            closeAddressModal();
+            
+            // 关闭购物车成功提示
+            const cartSuccessModal = document.getElementById('cartSuccessModal');
+            if (cartSuccessModal) {
+                cartSuccessModal.classList.remove('active');
+            }
+            
+            // 关闭咨询模态框
+            const consultModal = document.getElementById('consultModal');
+            if (consultModal) {
+                consultModal.classList.remove('active');
+            }
+            
+            // 恢复背景滚动
+            document.body.style.overflow = '';
+        }
+
+        // 弹幕评论相关代码
+        const danmuComments = [
+            { text: "沙发质量非常好，手感很舒服", type: "positive", emoji: "😊" },
+            { text: "颜色比图片上看起来要深一些", type: "normal", emoji: "🙂" },
+            { text: "尺寸刚好适合我家客厅", type: "positive", emoji: "👍" },
+            { text: "客服很耐心解答了我的问题", type: "positive", emoji: "😄" },
+            { text: "物流速度快，包装完好无损", type: "positive", emoji: "🚚" },
+            { text: "安装简单，不需要专业工具", type: "positive", emoji: "🔧" },
+            { text: "坐感比较硬，需要时间适应", type: "negative", emoji: "🤔" },
+            { text: "真皮材质很上档次", type: "positive", emoji: "✨" },
+            { text: "做工精致，线条流畅", type: "positive", emoji: "👌" },
+            { text: "和家里其他家具很搭配", type: "positive", emoji: "🏠" },
+            { text: "价格有点小贵，但质量对得起这个价", type: "normal", emoji: "💰" },
+            { text: "收到货比想象中要大一些", type: "normal", emoji: "📏" },
+            { text: "退货流程很简单，客服态度好", type: "positive", emoji: "👐" },
+            { text: "沙发有点味道，需要通风几天", type: "negative", emoji: "🌬️" },
+            { text: "配色和图片一致，很满意", type: "positive", emoji: "🎨" }
+        ];
+
+        let danmuPaused = false;
+        let activeDanmus = [];
+        const maxDanmuCount = 8;
+        const danmuContainer = document.getElementById('danmuContainer');
+        const danmuRows = [0, 1]; // 两行弹幕
+        
+        // 跟踪每一行的最后一个弹幕
+        const lastDanmuInRow = [null, null];
+        // 跟踪最后一次生成弹幕的时间
+        let lastDanmuTime = 0;
+
+        function initDanmu() {
+            if (!danmuContainer) return;
+            
+            // 初始化几条弹幕
+                setTimeout(() => {
+                createRandomDanmu();
+                // 使用更精确的时间间隔控制
+                setInterval(checkAndCreateDanmu, 500);
+            }, 1000);
+        }
+        
+        function checkAndCreateDanmu() {
+            if (danmuPaused) return;
+            
+            const now = Date.now();
+            // 确保与上一条弹幕之间至少有一定的时间间隔
+            if (now - lastDanmuTime >= 2000) {
+                createRandomDanmu();
+                lastDanmuTime = now;
+            }
+        }
+
+        function createRandomDanmu() {
+            if (danmuPaused) return;
+            
+            // 控制最大同时显示的弹幕数量
+            if (activeDanmus.length >= maxDanmuCount) {
+                const oldestDanmu = activeDanmus.shift();
+                oldestDanmu.remove();
+            }
+            
+            const randomIndex = Math.floor(Math.random() * danmuComments.length);
+            const comment = danmuComments[randomIndex];
+            
+            // 选择一个相对空闲的行来放置新弹幕
+            const rowIndex = selectBestRow();
+            createDanmu(comment.text, comment.type, comment.emoji, rowIndex);
+        }
+        
+        function selectBestRow() {
+            // 选择当前活跃弹幕较少的行
+            const row0Count = activeDanmus.filter(d => 
+                parseFloat(d.style.top) < 20).length;
+            const row1Count = activeDanmus.filter(d => 
+                parseFloat(d.style.top) >= 20).length;
+            
+            return row0Count <= row1Count ? 0 : 1;
+        }
+
+        function createDanmu(text, type = 'normal', emoji = '🙂', rowIndex = 0) {
+            const danmu = document.createElement('div');
+            danmu.className = `danmu ${type}`;
+            
+            // 添加表情图标和文本
+            const emojiSpan = document.createElement('span');
+            emojiSpan.className = 'emoji';
+            emojiSpan.textContent = emoji;
+            
+            const textSpan = document.createElement('span');
+            textSpan.textContent = text;
+            
+            danmu.appendChild(emojiSpan);
+            danmu.appendChild(textSpan);
+            
+            // 在指定行放置弹幕
+            const row = danmuRows[rowIndex];
+            
+            // 基础位置，确保每个弹幕在各自的行
+            // 第一行在顶部 5% 位置，第二行在 30% 位置，确保两行弹幕有足够的间距
+            const baseTop = (rowIndex === 0) ? 5 : 30;
+            
+            // 设置弹幕顶部位置，不添加额外的垂直偏移
+            danmu.style.top = `${baseTop}%`;
+            
+            // 设置横向间距：使用延迟来防止弹幕重叠
+            const lastDanmu = lastDanmuInRow[rowIndex];
+            let delay = 0;
+            
+            if (lastDanmu) {
+                // 获取上一条弹幕的宽度
+                const lastWidth = lastDanmu.offsetWidth;
+                const containerWidth = danmuContainer.clientWidth || 375;
+                
+                // 计算需要的延迟时间，以确保至少 20px 的间距
+                const lastDuration = parseFloat(lastDanmu.getAttribute('data-duration') || 10);
+                const pixelsPerSecond = containerWidth / lastDuration;
+                
+                // 为了创建足够的间距，计算需要的延迟时间
+                delay = (lastWidth + 20) / pixelsPerSecond; // 增加最小间距为20px
+                
+                // 限制延迟时间，确保有足够的间隔
+                delay = Math.max(0.5, Math.min(delay, 2.0)); // 调整延迟时间范围
+            }
+            
+            // 根据文字长度设置动画时间
+            const duration = Math.max(10, Math.min(text.length * 0.5, 15));
+            danmu.style.animation = `danmuMove ${duration}s linear forwards`;
+            danmu.setAttribute('data-duration', duration);
+            
+            // 设置动画延迟
+            danmu.style.animationDelay = `${delay}s`;
+            
+            // 更新该行的最后一个弹幕
+            lastDanmuInRow[rowIndex] = danmu;
+            
+            // 点击固定弹幕
+            danmu.addEventListener('click', function() {
+                this.classList.toggle('fixed');
+            });
+            
+            // 动画结束后移除弹幕
+            danmu.addEventListener('animationend', function() {
+                this.remove();
+                const index = activeDanmus.indexOf(this);
+                if (index > -1) {
+                    activeDanmus.splice(index, 1);
+                }
+                
+                // 如果这是该行的最后一个弹幕，清除引用
+                if (lastDanmuInRow[rowIndex] === this) {
+                    lastDanmuInRow[rowIndex] = null;
+                }
+            });
+            
+            danmuContainer.appendChild(danmu);
+            activeDanmus.push(danmu);
+        }
+
+        // 暂停/继续所有弹幕
+        function toggleDanmuPause() {
+            danmuPaused = !danmuPaused;
+            
+            const danmus = document.querySelectorAll('.danmu');
+            const toggleBtn = document.getElementById('toggleDanmuBtn');
+            
+            if (danmuPaused) {
+                danmus.forEach(danmu => {
+                    danmu.style.animationPlayState = 'paused';
+                });
+                toggleBtn.innerHTML = '<i class="fas fa-comment"></i>';
+            } else {
+                danmus.forEach(danmu => {
+                    if (!danmu.classList.contains('fixed')) {
+                        danmu.style.animationPlayState = 'running';
+                    }
+                });
+                toggleBtn.innerHTML = '<i class="fas fa-comment-slash"></i>';
+            }
+        }
+
+        // 页面加载后初始化弹幕
+        document.addEventListener('DOMContentLoaded', function() {
+            initDanmu();
+            
+            // 监听滚动事件，更新导航激活状态
+            window.addEventListener('scroll', updateNavActiveState);
+            
+            // 确保主要内容区域可见
+            setTimeout(function() {
+                const mainContent = document.querySelector('.main-content');
+                const navBar = document.querySelector('.nav-bar');
+                const quickNav = document.querySelector('.quick-nav');
+                
+                if (mainContent && navBar && quickNav) {
+                    // 获取导航栏的高度
+                    const navHeight = navBar.offsetHeight;
+                    
+                    // 调整主内容区域的上边距
+                    mainContent.style.marginTop = navHeight + 'px';
+                    
+                    mainContent.style.display = 'block';
+                    mainContent.style.visibility = 'visible';
+                    
+                    // 初始状态下隐藏快速导航
+                    quickNav.classList.remove('visible');
+                    
+                    // 强制重新计算布局
+                    mainContent.offsetHeight;
+                    
+                    // 初始化调用一次更新导航状态，以正确设置初始快速导航状态
+                    updateNavActiveState();
+                    
+                    console.log('页面初始化完成，主内容区域上边距设置为:', mainContent.style.marginTop);
+                }
+            }, 100);
+            
+            // 初始化评价模态框相关事件
+            // 为评价区域的箭头添加点击事件
+            const openReviewBtn = document.getElementById('openReviewBtn');
+            if (openReviewBtn) {
+                console.log('找到评价区域箭头按钮，添加点击事件');
+                openReviewBtn.addEventListener('click', function() {
+                    console.log('点击了评价区域箭头按钮');
+                    openReviewsModal();
+                });
+            } else {
+                console.warn('未找到评价区域箭头按钮');
+            }
+            
+            // 为评价模态框关闭按钮添加点击事件
+            const closeReviewBtn = document.querySelector('.reviews-modal-close');
+            if (closeReviewBtn) {
+                closeReviewBtn.addEventListener('click', function() {
+                    closeReviewsModal();
+                });
+            }
+            
+            // 初始化评价标签点击事件
+            initFilterTags();
+            
+            // 为评价模态框背景添加点击关闭事件
+            const reviewsModal = document.getElementById('reviewsModal');
+            if (reviewsModal) {
+                reviewsModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeReviewsModal();
+                    }
+                });
+            }
+        });
+
+        // 监听滚动事件，控制快速导航显示和更新导航激活状态
+        function updateNavActiveState() {
+            const scrollPosition = window.scrollY;
+            const navBar = document.querySelector('.nav-bar');
+            const quickNav = document.querySelector('.quick-nav');
+            const mainContent = document.querySelector('.main-content');
+            const navHeight = navBar ? navBar.offsetHeight : 48;
+            const quickNavHeight = quickNav ? quickNav.offsetHeight : 50;
+            
+            // 获取各个部分的位置
+            const gallerySection = document.getElementById('gallery');
+            const reviewsSection = document.getElementById('reviews');
+            const detailSection = document.getElementById('detail');
+            
+            if (!gallerySection || !reviewsSection || !detailSection || !mainContent) return;
+            
+            const galleryTop = gallerySection.getBoundingClientRect().top + window.pageYOffset;
+            const reviewsTop = reviewsSection.getBoundingClientRect().top + window.pageYOffset;
+            const detailTop = detailSection.getBoundingClientRect().top + window.pageYOffset;
+            
+            // 获取快速导航项目
+            const galleryNavItem = document.querySelector('.quick-nav-item[onclick*="gallery"]');
+            const reviewsNavItem = document.querySelector('.quick-nav-item[onclick*="reviews"]');
+            const detailNavItem = document.querySelector('.quick-nav-item[onclick*="detail"]');
+            
+            // 控制快速导航的显示和隐藏
+            // 当滚动超过第一部分（商品信息区域）进入评价部分时显示快速导航
+            if (scrollPosition > reviewsTop - navHeight - 100) {
+                if (!quickNav.classList.contains('visible')) {
+                    quickNav.classList.add('visible');
+                    // 调整内容区域的上边距，避免内容跳动
+                    mainContent.style.marginTop = (navHeight + quickNavHeight) + 'px';
+                }
+            } else {
+                if (quickNav.classList.contains('visible')) {
+                    quickNav.classList.remove('visible');
+                    // 恢复内容区域的上边距
+                    mainContent.style.marginTop = navHeight + 'px';
+                }
+            }
+            
+            // 更新导航激活状态
+            if (scrollPosition >= detailTop - navHeight - 50) {
+                updateActiveNavItem(detailNavItem);
+            } else if (scrollPosition >= reviewsTop - navHeight - 50) {
+                updateActiveNavItem(reviewsNavItem);
+            } else {
+                updateActiveNavItem(galleryNavItem);
+            }
+        }
+        
+        // 更新激活的导航项
+        function updateActiveNavItem(activeItem) {
+            if (!activeItem) return;
+            
+            // 移除所有激活状态
+            document.querySelectorAll('.quick-nav-item').forEach(item => {
+                item.classList.remove('active');
+                const roundedElement = item.querySelector('.rounded-full');
+                roundedElement.classList.remove('bg-red-500');
+                roundedElement.classList.remove('text-white');
+                roundedElement.classList.add('bg-white');
+            });
+            
+            // 添加激活状态
+            activeItem.classList.add('active');
+            const roundedElement = activeItem.querySelector('.rounded-full');
+            roundedElement.classList.add('bg-red-500');
+            roundedElement.classList.add('text-white');
+            roundedElement.classList.remove('bg-white');
+        }
+        
+        // 滚动到指定部分
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                // 计算滚动位置，考虑顶部导航高度
+                const navBar = document.querySelector('.nav-bar');
+                const quickNav = document.querySelector('.quick-nav');
+                const navHeight = navBar ? navBar.offsetHeight : 48;
+                const quickNavHeight = quickNav && quickNav.classList.contains('visible') ? quickNav.offsetHeight : 0;
+                const totalOffset = navHeight + quickNavHeight + 10; // 添加额外间距
+                
+                // 获取元素相对于文档顶部的偏移量，减去导航高度
+                const offsetTop = section.getBoundingClientRect().top + window.pageYOffset - totalOffset;
+                
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+                
+                // 更新导航激活状态
+                const navItem = document.querySelector(`.quick-nav-item[onclick*="${sectionId}"]`);
+                if (navItem) {
+                    updateActiveNavItem(navItem);
+                }
+            }
+        }
+
+        // 页面加载后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 监听滚动事件，更新导航激活状态
+            window.addEventListener('scroll', updateNavActiveState);
+            
+            // 确保主要内容区域可见
+            setTimeout(function() {
+                const mainContent = document.querySelector('.main-content');
+                const navBar = document.querySelector('.nav-bar');
+                const quickNav = document.querySelector('.quick-nav');
+                
+                if (mainContent && navBar) {
+                    // 获取导航栏的高度
+                    const navHeight = navBar.offsetHeight;
+                    
+                    // 调整主内容区域的上边距
+                    mainContent.style.marginTop = navHeight + 'px';
+                    
+                    // 确保内容可见
+                    mainContent.style.display = 'block';
+                    mainContent.style.visibility = 'visible';
+                    
+                    // 初始状态下隐藏快速导航
+                    if (quickNav) {
+                        quickNav.classList.remove('visible');
+                    }
+                    
+                    // 初始化调用一次更新导航状态
+                    updateNavActiveState();
+                    
+                    console.log('页面初始化完成');
+                }
+            }, 100);
+
+            // 初始化规格选择区域的显示
+            updateSelectedSpecFromModal();
+            
+            // 如果页面上存在spec-text元素，但没有正确的内容，设置一个默认值
+            const selectedSpecText = document.querySelector('.info-text:not(:first-child)');
+            if (selectedSpecText && !selectedSpecText.textContent.trim()) {
+                selectedSpecText.innerHTML = '<span class="font-medium">浅灰色</span> <span class="mx-1">|</span> <span class="font-medium">三人座</span> <span class="mx-1">|</span> <span>头层牛皮</span>';
+            }
+
+            // 初始化评价标签点击事件
+            initFilterTags();
+            
+            // 为评价区域的箭头添加点击事件
+            const openReviewBtn = document.getElementById('openReviewBtn');
+            if (openReviewBtn) {
+                console.log('找到评价区域箭头按钮，添加点击事件');
+                openReviewBtn.addEventListener('click', function() {
+                    console.log('点击了评价区域箭头按钮');
+                    openReviewsModal();
+                });
+            } else {
+                console.warn('未找到评价区域箭头按钮');
+            }
+            
+            // 为评价模态框关闭按钮添加点击事件
+            const closeReviewBtn = document.querySelector('.reviews-modal-close');
+            if (closeReviewBtn) {
+                closeReviewBtn.addEventListener('click', function() {
+                    closeReviewsModal();
+                });
+            }
+            
+            // 为评价模态框背景添加点击关闭事件
+            const reviewsModal = document.getElementById('reviewsModal');
+            if (reviewsModal) {
+                reviewsModal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeReviewsModal();
+                    }
+                });
+            }
+        });
+
+        // 打开评价模态框
+        function openReviewsModal() {
+            const modal = document.getElementById('reviewsModal');
+            if (modal) {
+                modal.classList.add('active');
+                
+                // 获取评价模态框中的内容区域，让它移动到可见位置
+                const content = modal.querySelector('.reviews-modal-content');
+                if (content) {
+                    content.style.transform = 'translateY(0)';
+                }
+                
+                // 禁止背景滚动
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        
+        // 关闭评价模态框
+        function closeReviewsModal() {
+            const modal = document.getElementById('reviewsModal');
+            if (modal) {
+                modal.classList.remove('active');
+                
+                // 获取评价模态框中的内容区域，让它回到原始位置（底部）
+                const content = modal.querySelector('.reviews-modal-content');
+                if (content) {
+                    content.style.transform = 'translateY(100%)';
+                }
+                
+                // 恢复背景滚动
+                document.body.style.overflow = '';
+            }
+        }
+        
+        // 初始化评价标签点击事件
+        function initFilterTags() {
+            const filterTags = document.querySelectorAll('.reviews-modal .filter-tag');
+            
+            filterTags.forEach(tag => {
+                tag.addEventListener('click', function() {
+                    // 移除其他标签的active状态
+                    filterTags.forEach(t => t.classList.remove('active'));
+                    
+                    // 添加当前标签的active状态
+                    this.classList.add('active');
+                    
+                    // 这里可以添加实际的筛选逻辑
+                    console.log('筛选评价:', this.textContent.trim());
+                });
+            });
+        }
+        
+        // 监听滚动事件，控制快速导航显示和更新导航激活状态
+        function updateNavActiveState() {
+            const scrollPosition = window.scrollY;
+            const navBar = document.querySelector('.nav-bar');
+            const quickNav = document.querySelector('.quick-nav');
+            const mainContent = document.querySelector('.main-content');
+            const navHeight = navBar ? navBar.offsetHeight : 48;
+            const quickNavHeight = quickNav ? quickNav.offsetHeight : 50;
+            
+            // 获取各个部分的位置
+            const gallerySection = document.getElementById('gallery');
+            const reviewsSection = document.getElementById('reviews');
+            const detailSection = document.getElementById('detail');
+            
+            if (!gallerySection || !reviewsSection || !detailSection || !mainContent) return;
+            
+            const galleryTop = gallerySection.getBoundingClientRect().top + window.pageYOffset;
+            const reviewsTop = reviewsSection.getBoundingClientRect().top + window.pageYOffset;
+            const detailTop = detailSection.getBoundingClientRect().top + window.pageYOffset;
+            
+            // 获取快速导航项目
+            const galleryNavItem = document.querySelector('.quick-nav-item[onclick*="gallery"]');
+            const reviewsNavItem = document.querySelector('.quick-nav-item[onclick*="reviews"]');
+            const detailNavItem = document.querySelector('.quick-nav-item[onclick*="detail"]');
+            
+            // 控制快速导航的显示和隐藏
+            // 当滚动超过第一部分（商品信息区域）进入评价部分时显示快速导航
+            if (scrollPosition > reviewsTop - navHeight - 100) {
+                if (!quickNav.classList.contains('visible')) {
+                    quickNav.classList.add('visible');
+                    // 调整内容区域的上边距，避免内容跳动
+                    mainContent.style.marginTop = (navHeight + quickNavHeight) + 'px';
+                }
+            } else {
+                if (quickNav.classList.contains('visible')) {
+                    quickNav.classList.remove('visible');
+                    // 恢复内容区域的上边距
+                    mainContent.style.marginTop = navHeight + 'px';
+                }
+            }
+            
+            // 更新导航激活状态
+            if (scrollPosition >= detailTop - navHeight - 50) {
+                updateActiveNavItem(detailNavItem);
+            } else if (scrollPosition >= reviewsTop - navHeight - 50) {
+                updateActiveNavItem(reviewsNavItem);
+            } else {
+                updateActiveNavItem(galleryNavItem);
+            }
+        }
+
+        // 为评价区域的箭头添加点击事件
+        const openReviewBtn = document.getElementById('openReviewBtn');
+        if (openReviewBtn) {
+            openReviewBtn.addEventListener('click', function() {
+                openReviewsModal();
+            });
+        }
+        
+        // 为评价模态框关闭按钮添加点击事件
+        const closeReviewBtn = document.querySelector('.reviews-modal-close');
+        if (closeReviewBtn) {
+            closeReviewBtn.addEventListener('click', function() {
+                closeReviewsModal();
+            });
+        }
+        
+        // 初始化评价标签点击事件
+        initFilterTags();
+        
+        // 为评价模态框背景添加点击关闭事件
+        const reviewsModal = document.getElementById('reviewsModal');
+        if (reviewsModal) {
+            reviewsModal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeReviewsModal();
+                }
+            });
+        }
+
+        // 初始化页面，设置默认规格信息
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化规格选择区域的显示
+            updateSelectedSpecFromModal();
+            
+            // 如果页面上存在spec-text元素，但没有正确的内容，设置一个默认值
+            const selectedSpecText = document.querySelector('.info-text:not(:first-child)');
+            if (selectedSpecText && !selectedSpecText.textContent.trim()) {
+                selectedSpecText.innerHTML = '<span class="font-medium">浅灰色</span> <span class="mx-1">|</span> <span class="font-medium">三人座</span> <span class="mx-1">|</span> <span>头层牛皮</span>';
+            }
+        });
+
+        // 更新主界面上显示的已选规格
+        function updateSelectedSpecFromModal() {
+            // 获取规格模态框中选中的规格
+            const colorOption = document.querySelector('.spec-options div[data-color].active');
+            const sizeOption = document.querySelector('.spec-options div[data-size].active');
+            const materialOption = document.querySelector('.spec-options div[data-material].active');
+            
+            if (!colorOption || !sizeOption || !materialOption) return;
+            
+            const selectedColor = colorOption.getAttribute('data-color');
+            const selectedSize = sizeOption.getAttribute('data-size');
+            const selectedMaterial = materialOption.getAttribute('data-material');
+            
+            // 更新主界面上的已选规格显示
+            const selectedSpecElements = document.querySelectorAll('.info-row .info-text');
+            // 第二个info-text是规格内容
+            if (selectedSpecElements && selectedSpecElements.length > 1) {
+                const specElement = selectedSpecElements[1];
+                specElement.innerHTML = `<span class="font-medium">${selectedColor}</span> <span class="mx-1">|</span> <span class="font-medium">${selectedSize}</span> <span class="mx-1">|</span> <span>${selectedMaterial}</span>`;
+            }
+            
+            // 更新规格模态框中的已选信息
+            const specProductSelected = document.getElementById('specProductSelected');
+            const quantity = document.getElementById('spec-quantity') ? document.getElementById('spec-quantity').value : '1';
+            
+            if (specProductSelected) {
+                specProductSelected.textContent = `已选：${selectedColor}、${selectedSize}、${selectedMaterial}、${quantity}件`;
+            }
+        }
+    </script>
+</body>
+</html> 

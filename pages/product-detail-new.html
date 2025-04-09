@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品详情 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <!-- 引入优化后的独立CSS文件 -->
+    <link href="../css/product-detail.css" rel="stylesheet">
+    <!-- 规格选择弹窗样式优化 -->
+    <style>
+        /* 规格选择弹窗优化 */
+        .spec-select-modal {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        .spec-select-content {
+            max-height: 80vh;
+            border-radius: 16px 16px 0 0;
+        }
+        
+        /* 头部优化 */
+        .spec-select-header {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .spec-product-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        
+        .spec-product-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .spec-product-details {
+            flex: 1;
+        }
+        
+        .spec-product-price {
+            font-size: 18px;
+            color: var(--brand-primary);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .spec-product-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 4px;
+            color: var(--text-dark);
+        }
+        
+        .spec-product-selected {
+            font-size: 12px;
+            color: var(--text-medium);
+        }
+        
+        /* 主体内容优化 */
+        .spec-select-body {
+            padding: 16px;
+            overflow-y: auto;
+        }
+        
+        .spec-select-section {
+            margin-bottom: 20px;
+        }
+        
+        .spec-select-section-title {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+        }
+        
+        /* 选项网格布局 */
+        .spec-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .spec-option {
+            text-align: center;
+            padding: 8px 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .spec-option.active {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary);
+            background-color: var(--brand-primary-transparent);
+        }
+        
+        /* 数量选择器优化 */
+        .quantity-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .quantity-selector {
+            margin-top: 0;
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .quantity-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f5f5;
+            color: var(--text-dark);
+        }
+        
+        .quantity-input {
+            width: 40px;
+            height: 36px;
+            border: none;
+            border-left: 1px solid #e0e0e0;
+            border-right: 1px solid #e0e0e0;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        /* 温馨提示区域优化 */
+        .warm-tips-section {
+            margin-top: 24px;
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        
+        .tips-title {
+            color: var(--text-medium);
+            margin-bottom: 8px;
+        }
+        
+        .warm-tips-content p {
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text-medium);
+            margin-bottom: 6px;
+        }
+        
+        .custom-link {
+            font-size: 13px;
+            color: var(--brand-primary);
+            display: flex;
+            align-items: center;
+            margin-top: 6px;
+        }
+        
+        .custom-link-icon {
+            font-size: 12px;
+            margin-left: 4px;
+        }
+        
+        /* 底部按钮优化 */
+        .spec-select-footer {
+            padding: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .spec-select-footer-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .spec-confirm-btn {
+            flex: 1;
+            height: 44px;
+            border-radius: 22px;
+            font-size: 16px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .cart-btn {
+            background-color: var(--brand-primary-transparent);
+            color: var(--brand-primary);
+        }
+        
+        .buy-btn {
+            background: var(--brand-gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-highlight);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 pb-16">
+    <!-- 新增标签导航 -->
+    <div class="tab-navigation" id="tabNavigation">
+        <div class="tab-nav-item active" data-section="top">商品</div>
+        <div class="tab-nav-item" data-section="reviews">评价</div>
+        <div class="tab-nav-item" data-section="detail">详情</div>
+    </div>
+
+    <!-- 顶部导航 -->
+    <div class="nav-bar">
+        <div class="nav-bar-inner">
+            <button class="nav-button back-button">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="nav-title">商品详情</div>
+            <button class="nav-button share-button">
+                <i class="fas fa-share-alt"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- 主要内容区 -->
+    <div class="main-content mt-12">
+        <!-- 商品图片轮播 等其他内容... -->
+        
+        <!-- 重点：规格选择弹窗 - 优化后的结构 -->
+        <div class="spec-select-modal" id="specSelectModal">
+            <div class="spec-select-content">
+                <!-- 头部信息 - 优化布局 -->
+                <div class="spec-select-header">
+                    <button class="spec-select-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div class="spec-product-info">
+                        <img src="../images/sofa_360_1.jpg" class="spec-product-image" alt="商品图片">
+                        <div class="spec-product-details">
+                            <div class="spec-product-price">¥3,899</div>
+                            <div class="spec-product-title">北欧简约风真皮沙发</div>
+                            <div class="spec-product-selected">已选：浅灰色、三人座</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 主体内容 - 优化间距与视觉分组 -->
+                <div class="spec-select-body">
+                    <!-- 颜色选择 - 使用网格布局 -->
+                    <div class="spec-select-section">
+                        <div class="spec-select-section-title">颜色</div>
+                        <div class="spec-options color-options">
+                            <div class="spec-option color-option active">浅灰色</div>
+                            <div class="spec-option color-option">深灰色</div>
+                            <div class="spec-option color-option">米白色</div>
+                            <div class="spec-option color-option">青绿色</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 规格选择 - 使用网格布局 -->
+                    <div class="spec-select-section">
+                        <div class="spec-select-section-title">规格</div>
+                        <div class="spec-options size-options">
+                            <div class="spec-option size-option active">三人座</div>
+                            <div class="spec-option size-option">双人座</div>
+                            <div class="spec-option size-option">单人座</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 数量选择 - 改进对齐方式 -->
+                    <div class="spec-select-section quantity-section">
+                        <div class="spec-select-section-title">数量</div>
+                        <div class="quantity-selector">
+                            <div class="quantity-controls">
+                                <button class="quantity-btn minus-btn" disabled>
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" class="quantity-input" value="1" min="1" max="99">
+                                <button class="quantity-btn plus-btn">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 温馨提示区域 - 增加视觉区分 -->
+                    <div class="warm-tips-section">
+                        <div class="spec-select-section-title tips-title">
+                            <i class="fas fa-info-circle"></i>
+                            温馨提示
+                        </div>
+                        <div class="warm-tips-content">
+                            <p>商品支持30天无理由退换，但需保持包装完整。</p>
+                            <p>发货后预计3-7天送达，偏远地区可能需要更长时间。</p>
+                            <a href="javascript:void(0)" class="custom-link">
+                                查看配送服务详情
+                                <i class="fas fa-chevron-right custom-link-icon"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 底部按钮 - 增强视觉吸引力 -->
+                <div class="spec-select-footer">
+                    <div class="spec-select-footer-actions">
+                        <button class="spec-confirm-btn cart-btn add-cart">
+                            <i class="fas fa-shopping-cart"></i>
+                            加入购物车
+                        </button>
+                        <button class="spec-confirm-btn buy-btn buy-now">
+                            立即购买
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 其他内容... -->
+    </div>
+
+    <!-- 引入优化后的JavaScript文件 -->
+    <script type="module" src="../js/product-detail.js"></script>
+</body>
+</html>

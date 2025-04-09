@@ -751,7 +751,7 @@
         .float-filter-btn {
             position: fixed;
             right: 16px;
-            bottom: 80px;
+            bottom: 20px; /* 修改为20px，原来是80px，因为没有底部导航栏了 */
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -1036,61 +1036,13 @@
 
         /* 添加底部导航样式 */
         .bottom-nav {
-            display: flex;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: white;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-            z-index: 20;
-            padding-bottom: env(safe-area-inset-bottom, 0);
-            border-top: 1px solid #f0f0f0;
-        }
-
-        .bottom-nav .nav-item {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 8px 0;
-            color: #999;
-            text-decoration: none;
-            font-size: 12px;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .bottom-nav .nav-item i {
-            font-size: 20px;
-            margin-bottom: 2px;
-        }
-
-        .bottom-nav .nav-item.active {
-            color: var(--brand-primary);
-        }
-
-        .bottom-nav .nav-item.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 2px;
-            background-color: var(--brand-primary);
-            border-radius: 2px;
-        }
-
-        .bottom-nav .nav-item:hover {
-            color: var(--brand-primary);
+            display: none; /* 隐藏底部导航 */
         }
 
         /* Toast容器样式 */
         #toastContainer {
             position: fixed;
-            bottom: 80px;
+            bottom: 20px; /* 修改为20px，原来是80px，因为没有底部导航栏了 */
             left: 50%;
             transform: translateX(-50%);
             z-index: 9999;
@@ -1556,28 +1508,7 @@
     <div id="toastContainer"></div>
 
     <!-- 底部导航 -->
-    <div class="bottom-nav">
-        <a href="home.html" class="nav-item">
-            <i class="fas fa-home"></i>
-            <span>首页</span>
-        </a>
-        <a href="category.html" class="nav-item">
-            <i class="fas fa-th-large"></i>
-            <span>分类</span>
-        </a>
-        <a href="#" class="nav-item active">
-            <i class="fas fa-search"></i>
-            <span>搜索</span>
-        </a>
-        <a href="favorites.html" class="nav-item">
-            <i class="far fa-heart"></i>
-            <span>收藏</span>
-        </a>
-        <a href="account.html" class="nav-item">
-            <i class="far fa-user"></i>
-            <span>我的</span>
-        </a>
-    </div>
+    <!-- 此处移除了底部导航栏 -->
     
     <!-- 搜索相关脚本 -->
     <script>

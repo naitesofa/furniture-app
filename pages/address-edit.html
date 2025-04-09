@@ -305,7 +305,8 @@
                 district: params.get('district'),
                 address: params.get('address'),
                 tag: params.get('tag'),
-                isDefault: params.get('isDefault') === '1'
+                isDefault: params.get('isDefault') === '1',
+                returnUrl: params.get('returnUrl') || 'checkout.html'
             };
         }
 
@@ -376,8 +377,63 @@
 
         // 保存按钮点击事件
         document.querySelector('.save-btn').addEventListener('click', function() {
-            // 这里可以添加表单验证和数据提交逻辑
-            history.back();
+            // 获取表单数据
+            const name = document.querySelector('input[placeholder="请输入收货人姓名"]').value.trim();
+            const phone = document.querySelector('input[placeholder="请输入手机号码"]').value.trim();
+            const province = document.querySelector('.area-selector select:nth-child(1)').value;
+            const city = document.querySelector('.area-selector select:nth-child(2)').value;
+            const district = document.querySelector('.area-selector select:nth-child(3)').value;
+            const address = document.querySelector('input[placeholder="请输入详细地址"]').value.trim();
+            const isDefault = document.querySelector('.switch').classList.contains('active');
+            
+            // 获取选中的标签
+            let tag = '';
+            document.querySelectorAll('.tag-btn').forEach(btn => {
+                if (btn.classList.contains('active')) {
+                    tag = btn.textContent;
+                }
+            });
+            
+            // 表单验证
+            if (!name) {
+                alert('请输入收货人姓名');
+                return;
+            }
+            if (!phone || !/^1\d{10}$/.test(phone)) {
+                alert('请输入正确的手机号码');
+                return;
+            }
+            if (!province || !city) {
+                alert('请选择所在地区');
+                return;
+            }
+            if (!address) {
+                alert('请输入详细地址');
+                return;
+            }
+            
+            // 获取原始参数，准备返回
+            const urlParams = getUrlParams();
+            const addressId = urlParams.id || Date.now();
+            
+            // 构造要保存的地址数据
+            const addressData = {
+                id: addressId,
+                name: name,
+                phone: phone,
+                province: province,
+                city: city,
+                district: district,
+                detail: address,
+                tag: tag,
+                isDefault: isDefault
+            };
+            
+            // 将地址数据保存到localStorage，以便checkout页面获取
+            localStorage.setItem(`temp_address_${addressId}`, JSON.stringify(addressData));
+            
+            // 返回到checkout页面，并传递地址ID
+            window.location.href = `${urlParams.returnUrl}?addressEdited=${addressId}`;
         });
     </script>
 </body>

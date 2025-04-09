@@ -1,0 +1,3339 @@
+﻿// 瀹氫箟鍏ㄥ眬瀵艰埅鎸夐挳鍙橀噺
+let nextBtn, prevBtn;
+
+// 娌欏彂鍨嬪彿鏁版嵁
+const sofaData = {
+    XK: {
+        name: "鍔熻兘娌欏彂",
+        models: Array.from({length: 41}, (_, i) => {
+            // 涓烘瘡涓矙鍙戞坊鍔犻殢鏈哄姛鑳芥爣绛?            const features = [];
+            
+            // 鍙兘鐨勫姛鑳芥爣绛惧垪琛?            const possibleFeatures = [
+                { name: '鍙媶娲?, icon: 'fas fa-tint-slash' },
+                { name: '甯︽敹绾?, icon: 'fas fa-box' },
+                { name: '鍙皟鑺?, icon: 'fas fa-sync-alt' },
+                { name: '娌欏彂搴?, icon: 'fas fa-bed' },
+                { name: '鏅鸿兘鎺у埗', icon: 'fas fa-robot' },
+                { name: '鐢靛姩璋冭妭', icon: 'fas fa-cogs' },
+                { name: '楂樺害鍙皟', icon: 'fas fa-arrows-alt-v' },
+                { name: '鐜繚鏉愯川', icon: 'fas fa-leaf' },
+                { name: '甯︽寜鎽?, icon: 'fas fa-spa' },
+                { name: '甯︽壎鎵?, icon: 'fas fa-hand-paper' },
+                { name: '甯﹀厖鐢?, icon: 'fas fa-plug' }
+            ];
+            
+            // 闅忔満閫夋嫨2-3涓姛鑳芥爣绛?            const numFeatures = 2 + Math.floor(Math.random() * 2);
+            const shuffled = [...possibleFeatures].sort(() => 0.5 - Math.random());
+            features.push(...shuffled.slice(0, numFeatures));
+            
+            return {
+                id: `XK-${940 + i}`,
+                name: `XK-${940 + i}`,
+                image: `https://source.unsplash.com/featured/500x400/?sofa,functional,${940 + i}`,
+                stock: Math.random() > 0.7 ? "搴撳瓨绱у紶" : "搴撳瓨鍏呰冻",
+                stockClass: Math.random() > 0.7 ? "text-orange-500" : "text-green-500",
+                price: `${2 + Math.floor(Math.random() * 5)},${Math.floor(Math.random() * 10)}99`,
+                features: features
+            };
+        })
+    },
+    L: {
+        name: "鎷夊簥娌欏彂",
+        models: Array.from({length: 10}, (_, i) => {
+            // 涓烘瘡涓矙鍙戞坊鍔犻殢鏈哄姛鑳芥爣绛?            const features = [{ name: '娌欏彂搴?, icon: 'fas fa-bed' }]; // 鎷夊簥娌欏彂蹇呭畾鏈夋矙鍙戝簥鍔熻兘
+            
+            // 鍙兘鐨勫姛鑳芥爣绛惧垪琛?            const possibleFeatures = [
+                { name: '鍙媶娲?, icon: 'fas fa-tint-slash' },
+                { name: '甯︽敹绾?, icon: 'fas fa-box' },
+                { name: '鍙皟鑺?, icon: 'fas fa-sync-alt' },
+                { name: '鐜繚鏉愯川', icon: 'fas fa-leaf' }
+            ];
+            
+            // 闅忔満閫夋嫨1-2涓澶栧姛鑳芥爣绛?            const numFeatures = 1 + Math.floor(Math.random() * 2);
+            const shuffled = [...possibleFeatures].sort(() => 0.5 - Math.random());
+            features.push(...shuffled.slice(0, numFeatures));
+            
+            return {
+                id: `L-${301 + i}`,
+                name: `L-${301 + i}`,
+                image: `https://source.unsplash.com/featured/500x400/?sofa,bed,${301 + i}`,
+                stock: Math.random() > 0.8 ? "棰勫畾" : "搴撳瓨鍏呰冻",
+                stockClass: Math.random() > 0.8 ? "text-red-500" : "text-green-500",
+                price: `${3 + Math.floor(Math.random() * 3)},${Math.floor(Math.random() * 10)}99`,
+                features: features
+            };
+        })
+    },
+    HM: {
+        name: "鍘嬬缉娌欏彂",
+        models: Array.from({length: 10}, (_, i) => {
+            // 涓烘瘡涓矙鍙戞坊鍔犻殢鏈哄姛鑳芥爣绛?            const features = [{ name: '鍘嬬缉璁捐', icon: 'fas fa-compress-alt' }]; // 鍘嬬缉娌欏彂蹇呭畾鏈夊帇缂╁姛鑳?            
+            // 鍙兘鐨勫姛鑳芥爣绛惧垪琛?            const possibleFeatures = [
+                { name: '鍙媶娲?, icon: 'fas fa-tint-slash' },
+                { name: '灏忓阀杞讳究', icon: 'fas fa-feather' },
+                { name: '缁勫悎璁捐', icon: 'fas fa-th-large' },
+                { name: '渚挎惡鎬у己', icon: 'fas fa-dolly' }
+            ];
+            
+            // 闅忔満閫夋嫨1-2涓澶栧姛鑳芥爣绛?            const numFeatures = 1 + Math.floor(Math.random() * 2);
+            const shuffled = [...possibleFeatures].sort(() => 0.5 - Math.random());
+            features.push(...shuffled.slice(0, numFeatures));
+            
+            return {
+                id: `HM-${i < 9 ? '0' : ''}${i + 1}`,
+                name: `HM-${i < 9 ? '0' : ''}${i + 1}`,
+                image: `https://source.unsplash.com/featured/500x400/?sofa,compact,${i + 1}`,
+                stock: "搴撳瓨鍏呰冻",
+                stockClass: "text-green-500",
+                price: `${2 + Math.floor(Math.random() * 2)},${Math.floor(Math.random() * 10)}99`,
+                features: features
+            };
+        })
+    },
+    JY: {
+        name: "绠€绾︽矙鍙?,
+        models: Array.from({length: 11}, (_, i) => {
+            // 涓烘瘡涓矙鍙戞坊鍔犻殢鏈哄姛鑳芥爣绛?            const features = [{ name: '绠€绾﹁璁?, icon: 'fas fa-minus' }]; // 绠€绾︽矙鍙戝繀瀹氭湁绠€绾﹁璁?            
+            // 鍙兘鐨勫姛鑳芥爣绛惧垪琛?            const possibleFeatures = [
+                { name: '鍙媶娲?, icon: 'fas fa-tint-slash' },
+                { name: '鐜繚鏉愯川', icon: 'fas fa-leaf' },
+                { name: '杞诲阀缁撴瀯', icon: 'fas fa-feather' },
+                { name: '鍖楁椋庢牸', icon: 'fas fa-mountain' }
+            ];
+            
+            // 闅忔満閫夋嫨1-2涓澶栧姛鑳芥爣绛?            const numFeatures = 1 + Math.floor(Math.random() * 2);
+            const shuffled = [...possibleFeatures].sort(() => 0.5 - Math.random());
+            features.push(...shuffled.slice(0, numFeatures));
+            
+            return {
+                id: `JY-${i + 10}`,
+                name: `JY-${i + 10}`,
+                image: `https://source.unsplash.com/featured/500x400/?sofa,minimal,${i + 10}`,
+                stock: Math.random() > 0.6 ? "搴撳瓨绱у紶" : "搴撳瓨鍏呰冻",
+                stockClass: Math.random() > 0.6 ? "text-orange-500" : "text-green-500",
+                price: `${3 + Math.floor(Math.random() * 2)},${Math.floor(Math.random() * 10)}99`,
+                features: features
+            };
+        })
+    },
+    KF: {
+        name: "鍜栧暋娌欏彂",
+        models: Array.from({length: 8}, (_, i) => {
+            // 涓烘瘡涓矙鍙戞坊鍔犻殢鏈哄姛鑳芥爣绛?            const features = [{ name: '鏉灦', icon: 'fas fa-coffee' }]; // 鍜栧暋娌欏彂蹇呭畾鏈夋澂鏋?            
+            // 鍙兘鐨勫姛鑳芥爣绛惧垪琛?            const possibleFeatures = [
+                { name: '闃叉薄闈㈡枡', icon: 'fas fa-shield-alt' },
+                { name: '浼戦棽璁捐', icon: 'fas fa-couch' },
+                { name: '甯﹀皬妗屾澘', icon: 'fas fa-tablet-alt' },
+                { name: '鍙媶娲?, icon: 'fas fa-tint-slash' }
+            ];
+            
+            // 闅忔満閫夋嫨1-2涓澶栧姛鑳芥爣绛?            const numFeatures = 1 + Math.floor(Math.random() * 2);
+            const shuffled = [...possibleFeatures].sort(() => 0.5 - Math.random());
+            features.push(...shuffled.slice(0, numFeatures));
+            
+            return {
+                id: `KF-${i + 1}`,
+                name: `KF-${i + 1}`,
+                image: `https://source.unsplash.com/featured/500x400/?sofa,coffee,${i + 1}`,
+                stock: Math.random() > 0.5 ? "搴撳瓨绱у紶" : "搴撳瓨鍏呰冻",
+                stockClass: Math.random() > 0.5 ? "text-orange-500" : "text-green-500",
+                price: `${4 + Math.floor(Math.random() * 3)},${Math.floor(Math.random() * 10)}99`,
+                features: features
+            };
+        })
+    },
+    CS: {
+        name: "瓒呰垝閫傛矙鍙?,
+        models: Array.from({length: 6}, (_, i) => {
+            // 涓烘瘡涓矙鍙戞坊鍔犻殢鏈哄姛鑳芥爣绛?            const features = [{ name: '瓒呰垝閫?, icon: 'fas fa-cloud' }]; // 瓒呰垝閫傛矙鍙戝繀瀹氭湁瓒呰垝閫傛爣绛?            
+            // 鍙兘鐨勫姛鑳芥爣绛惧垪琛?            const possibleFeatures = [
+                { name: '鍔犲帤鍧愬灚', icon: 'fas fa-plus' },
+                { name: '闈犺儗鍙皟', icon: 'fas fa-angle-double-up' },
+                { name: '甯︽寜鎽?, icon: 'fas fa-spa' },
+                { name: '楂樺洖寮?, icon: 'fas fa-redo' }
+            ];
+            
+            // 闅忔満閫夋嫨1-2涓澶栧姛鑳芥爣绛?            const numFeatures = 2 + Math.floor(Math.random() * 2); // 瓒呰垝閫傛矙鍙戞湁鏇村鐗圭偣
+            const shuffled = [...possibleFeatures].sort(() => 0.5 - Math.random());
+            features.push(...shuffled.slice(0, numFeatures));
+            
+            return {
+                id: `CS-${i + 101}`,
+                name: `CS-${i + 101}`,
+                image: `https://source.unsplash.com/featured/500x400/?sofa,comfort,${i + 101}`,
+                stock: "搴撳瓨鍏呰冻",
+                stockClass: "text-green-500",
+                price: `${3 + Math.floor(Math.random() * 4)},${Math.floor(Math.random() * 10)}99`,
+                features: features
+            };
+        })
+    },
+    YZ: {
+        name: "棰滃€兼矙鍙?,
+        models: Array.from({length: 9}, (_, i) => {
+            // 涓烘瘡涓矙鍙戞坊鍔犻殢鏈哄姛鑳芥爣绛?            const features = [{ name: '楂橀鍊?, icon: 'fas fa-crown' }]; // 棰滃€兼矙鍙戝繀瀹氭湁楂橀鍊兼爣绛?            
+            // 鍙兘鐨勫姛鑳芥爣绛惧垪琛?            const possibleFeatures = [
+                { name: '绉戞妧闈㈡枡', icon: 'fas fa-atom' },
+                { name: '杞诲ア璁捐', icon: 'fas fa-gem' },
+                { name: '鑹烘湳闈犲寘', icon: 'fas fa-palette' },
+                { name: '鐙壒閫犲瀷', icon: 'fas fa-star' }
+            ];
+            
+            // 闅忔満閫夋嫨1-2涓澶栧姛鑳芥爣绛?            const numFeatures = 1 + Math.floor(Math.random() * 2);
+            const shuffled = [...possibleFeatures].sort(() => 0.5 - Math.random());
+            features.push(...shuffled.slice(0, numFeatures));
+            
+            return {
+                id: `YZ-${i + 201}`,
+                name: `YZ-${i + 201}`,
+                image: `https://source.unsplash.com/featured/500x400/?sofa,luxury,${i + 201}`,
+                stock: Math.random() > 0.7 ? "棰勫畾" : "搴撳瓨鍏呰冻",
+                stockClass: Math.random() > 0.7 ? "text-red-500" : "text-green-500",
+                price: `${5 + Math.floor(Math.random() * 5)},${Math.floor(Math.random() * 10)}99`,
+                features: features
+            };
+        })
+    }
+};
+
+// 鍒囨崲鏍囧噯/鏅鸿兘瀹氬埗
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        // 鏇存柊鎸夐挳鐘舵€?        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+
+        // 鎵ц缈昏浆鍔ㄧ敾
+        const flipper = document.querySelector('.flipper');
+        if (this.dataset.tab === 'ai') {
+            flipper.classList.add('flipped');
+        } else {
+            flipper.classList.remove('flipped');
+        }
+    });
+});
+
+// 澶勭悊娌欏彂鍒嗙被妯悜婊氬姩鎸囩ず鍣?const sofaCategoriesRows = document.querySelectorAll('.sofa-categories-row');
+const row1Indicators = document.querySelectorAll('.row1-indicator .indicator-dot');
+const row2Indicators = document.querySelectorAll('.row2-indicator .indicator-dot');
+
+function setupScrollIndicator(rowElement, indicatorDots) {
+    if (!rowElement || indicatorDots.length === 0) return;
+
+    // 璁＄畻姣忎釜婊氬姩鍖哄煙鐨勫搴?    const updateScrollIndicator = () => {
+        const scrollWidth = rowElement.scrollWidth;
+        const clientWidth = rowElement.clientWidth;
+        
+        if (scrollWidth <= clientWidth) {
+            // 濡傛灉鍐呭涓嶉渶瑕佹粴鍔紝闅愯棌鎸囩ず鍣?            indicatorDots[0].parentElement.style.display = 'none';
+            return;
+        } else {
+            indicatorDots[0].parentElement.style.display = 'flex';
+        }
+        
+        const scrollPosition = rowElement.scrollLeft;
+        const maxScroll = scrollWidth - clientWidth;
+        
+        // 璁＄畻褰撳墠婊氬姩浣嶇疆瀵瑰簲鐨勬寚绀哄櫒
+        const sections = indicatorDots.length;
+        const sectionSize = maxScroll / sections;
+        const activeSection = Math.min(Math.floor(scrollPosition / sectionSize), sections - 1);
+        
+        // 鏇存柊鎸囩ず鍣ㄧ姸鎬?        indicatorDots.forEach((dot, index) => {
+            dot.classList.toggle('active', index === activeSection);
+        });
+    };
+    
+    // 鐩戝惉婊氬姩浜嬩欢
+    rowElement.addEventListener('scroll', updateScrollIndicator);
+    
+    // 鍒濆鍖栨寚绀哄櫒
+    window.addEventListener('resize', updateScrollIndicator);
+    updateScrollIndicator();
+    
+    // 鐐瑰嚮鎸囩ず鍣ㄨ烦杞埌瀵瑰簲浣嶇疆
+    indicatorDots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            const scrollWidth = rowElement.scrollWidth;
+            const clientWidth = rowElement.clientWidth;
+            const maxScroll = scrollWidth - clientWidth;
+            const sections = indicatorDots.length;
+            const sectionSize = maxScroll / sections;
+            
+            rowElement.scrollTo({
+                left: index * sectionSize,
+                behavior: 'smooth'
+            });
+        });
+    });
+}
+
+// 涓轰袱琛屽垎鍒缃粴鍔ㄦ寚绀哄櫒
+if (sofaCategoriesRows.length >= 1) {
+    setupScrollIndicator(sofaCategoriesRows[0], row1Indicators);
+}
+if (sofaCategoriesRows.length >= 2) {
+    setupScrollIndicator(sofaCategoriesRows[1], row2Indicators);
+}
+
+// 鍨嬪彿閫夋嫨
+document.querySelectorAll('.model-item').forEach(item => {
+    item.addEventListener('click', function() {
+        document.querySelectorAll('.model-item').forEach(i => i.classList.remove('selected'));
+        this.classList.add('selected');
+    });
+});
+
+// 妯℃€佹鍔熻兘
+const sofaModal = document.getElementById('sofaModal');
+const modalOverlay = document.getElementById('modalOverlay');
+const closeModalBtn = document.querySelector('.close-modal');
+const sofaList = document.getElementById('sofaList');
+const modalTitle = document.querySelector('.modal-title');
+
+// 鍒濆鍖栨矙鍙戝瀷鍙锋暟鎹?const sofaModels = [
+    {
+        id: 'CS-101',
+        name: '鐜颁唬绠€绾︽矙鍙?,
+        category: 'JY',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,modern,101',
+        stock: '搴撳瓨鍏呰冻',
+        stockClass: 'text-green-500',
+        price: '2,999',
+        features: [
+            { name: '鍙媶娲?, icon: 'fas fa-tint-slash' },
+            { name: '甯︽敹绾?, icon: 'fas fa-box' }
+        ]
+    },
+    {
+        id: 'CS-102',
+        name: '鍖楁椋庢牸娌欏彂',
+        category: 'JY',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,nordic,102',
+        stock: '搴撳瓨绱у紶',
+        stockClass: 'text-orange-500',
+        price: '3,599',
+        features: [
+            { name: '鍙媶娲?, icon: 'fas fa-tint-slash' },
+            { name: '鐜繚鏉愯川', icon: 'fas fa-leaf' }
+        ]
+    },
+    // XK-962 鍒?XK-987 鍔熻兘娌欏彂鍨嬪彿
+    {
+        id: 'XK-962',
+        name: '澶氬姛鑳借浆瑙掓矙鍙?,
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,corner,962',
+        stock: '搴撳瓨鍏呰冻',
+        stockClass: 'text-green-500',
+        price: '3,899',
+        features: [
+            { name: '鍙皟鑺?, icon: 'fas fa-sync-alt' },
+            { name: '甯︽敹绾?, icon: 'fas fa-box' }
+        ]
+    },
+    {
+        id: 'XK-963',
+        name: '鏅鸿兘鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,smart,963',
+        stock: '搴撳瓨绱у紶',
+        stockClass: 'text-orange-500',
+        price: '5,999',
+        features: [
+            { name: '鏅鸿兘鎺у埗', icon: 'fas fa-robot' },
+            { name: '鐢靛姩璋冭妭', icon: 'fas fa-cogs' }
+        ]
+    },
+    {
+        id: 'XK-964',
+        name: '鍗囬檷鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,adjustable,964',
+        stock: '搴撳瓨鍏呰冻',
+        stockClass: 'text-green-500',
+        price: '4,499',
+        features: [
+            { name: '楂樺害鍙皟', icon: 'fas fa-arrows-alt-v' },
+            { name: '甯︽寜鎽?, icon: 'fas fa-spa' }
+        ]
+    },
+    {
+        id: 'XK-965',
+        name: '鍙樺舰鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,transform,965',
+        stock: '棰勫畾',
+        stockClass: 'text-red-500',
+        price: '6,199',
+        features: [
+            { name: '澶氬舰鎬?, icon: 'fas fa-sync-alt' },
+            { name: '鍙媶鍒?, icon: 'fas fa-puzzle-piece' }
+        ]
+    },
+    {
+        id: 'XK-966',
+        name: '浼戦棽鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,casual,966',
+        stock: '搴撳瓨鍏呰冻',
+        stockClass: 'text-green-500',
+        price: '3,799',
+        features: [
+            { name: '鍙媶娲?, icon: 'fas fa-tint-slash' },
+            { name: '甯︽壎鎵?, icon: 'fas fa-hand-paper' }
+        ]
+    },
+    {
+        id: 'XK-967',
+        name: '鍟嗗姟鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,business,967',
+        stock: '搴撳瓨绱у紶',
+        stockClass: 'text-orange-500',
+        price: '5,299',
+        features: [
+            { name: '甯﹀厖鐢?, icon: 'fas fa-plug' },
+            { name: '鍔炲叕閫傜敤', icon: 'fas fa-briefcase' }
+        ]
+    },
+    {
+        id: 'XK-968',
+        name: '楂樼鐨川鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,leather,968',
+        stock: '搴撳瓨鍏呰冻',
+        stockClass: 'text-green-500',
+        price: '7,999',
+        features: [
+            { name: '鐪熺毊鏉愯川', icon: 'fas fa-award' },
+            { name: '鏅鸿兘璋冭妭', icon: 'fas fa-cogs' }
+        ]
+    },
+    {
+        id: 'XK-969',
+        name: '鏋佺畝鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,minimal,969',
+        stock: '搴撳瓨鍏呰冻',
+        stockClass: 'text-green-500',
+        price: '3,299',
+        features: [
+            { name: '绠€绾﹁璁?, icon: 'fas fa-minus' },
+            { name: '鍙屽姛鑳?, icon: 'fas fa-th-large' }
+        ]
+    },
+    {
+        id: 'XK-970',
+        name: '鍖楁鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,scandinavian,970',
+        stock: '搴撳瓨绱у紶',
+        stockClass: 'text-orange-500',
+        price: '4,199',
+        features: [
+            { name: '鐜繚鏉愯川', icon: 'fas fa-leaf' },
+            { name: '鍙媶鍗?, icon: 'fas fa-tools' }
+        ]
+    },
+    {
+        id: 'XK-971',
+        name: '鏃ュ紡鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,japanese,971',
+        stock: '搴撳瓨鍏呰冻',
+        stockClass: 'text-green-500',
+        price: '3,599',
+        features: [
+            { name: '姒绘绫抽', icon: 'fas fa-border-none' },
+            { name: '浣庣煯璁捐', icon: 'fas fa-compress-alt' }
+        ]
+    },
+    {
+        id: 'XK-972',
+        name: '璞崕鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,luxury,972',
+        stock: '棰勫畾',
+        stockClass: 'text-red-500',
+        price: '8,999',
+        features: [
+            { name: '鎸夋懇鍔熻兘', icon: 'fas fa-spa' },
+            { name: '鍔犵儹绯荤粺', icon: 'fas fa-fire' }
+        ]
+    },
+    {
+        id: 'XK-973',
+        name: '瀹跺涵褰遍櫌鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,cinema,973',
+        stock: '搴撳瓨鍏呰冻',
+        stockClass: 'text-green-500',
+        price: '6,499',
+        features: [
+            { name: '鏉灦', icon: 'fas fa-glass-martini-alt' },
+            { name: '闊冲搷绯荤粺', icon: 'fas fa-volume-up' }
+        ]
+    },
+    {
+        id: 'XK-974',
+        name: '鍙媶鍒嗗姛鑳芥矙鍙?,
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,modular,974',
+        stock: '搴撳瓨绱у紶',
+        stockClass: 'text-orange-500',
+        price: '5,499',
+        features: [
+            { name: '缁勫悎璁捐', icon: 'fas fa-th-large' },
+            { name: '澶氱鎼厤', icon: 'fas fa-random' }
+        ]
+    },
+    {
+        id: 'XK-975',
+        name: '鍙屼汉鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,loveseat,975',
+        stock: '搴撳瓨鍏呰冻',
+        stockClass: 'text-green-500',
+        price: '3,499',
+        features: [
+            { name: '鍙屼汉璁捐', icon: 'fas fa-user-friends' },
+            { name: '璐靛姒?, icon: 'fas fa-couch' }
+        ]
+    },
+    {
+        id: 'XK-976',
+        name: '鍎跨鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,kids,976',
+        stock: '搴撳瓨鍏呰冻',
+        stockClass: 'text-green-500',
+        price: '2,599',
+        features: [
+            { name: '鍎跨瀹夊叏', icon: 'fas fa-baby' },
+            { name: '闃叉薄闈㈡枡', icon: 'fas fa-shield-alt' }
+        ]
+    },
+    {
+        id: 'XK-977',
+        name: '鐜颁唬鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,contemporary,977',
+        stock: '搴撳瓨绱у紶',
+        stockClass: 'text-orange-500',
+        price: '4,299',
+        features: [
+            { name: '鐜颁唬椋庢牸', icon: 'fas fa-star' },
+            { name: '閲戝睘鏀灦', icon: 'fas fa-wrench' }
+        ]
+    },
+    {
+        id: 'XK-978',
+        name: '浼戦棽甯冭壓鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,fabric,978',
+        stock: '搴撳瓨鍏呰冻',
+        stockClass: 'text-green-500',
+        price: '3,899',
+        features: [
+            { name: '鏌旇蒋甯冭壓', icon: 'fas fa-mitten' },
+            { name: '鍙姌鍙?, icon: 'fas fa-compress-alt' }
+        ]
+    },
+    {
+        id: 'XK-979',
+        name: '缁忓吀鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,classic,979',
+        stock: '棰勫畾',
+        stockClass: 'text-red-500',
+        price: '5,799',
+        features: [
+            { name: '澶嶅彜璁捐', icon: 'fas fa-history' },
+            { name: '澶氬姛鑳?, icon: 'fas fa-tools' }
+        ]
+    },
+    {
+        id: 'XK-980',
+        name: '瓒呭ぇ鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,large,980',
+        stock: '搴撳瓨鍏呰冻',
+        stockClass: 'text-green-500',
+        price: '6,999',
+        features: [
+            { name: '瓒呭ぇ灏哄', icon: 'fas fa-expand-arrows-alt' },
+            { name: '鍙绾?浜?, icon: 'fas fa-users' }
+        ]
+    },
+    {
+        id: 'XK-981',
+        name: '鐨川鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,leather,981',
+        stock: '搴撳瓨绱у紶',
+        stockClass: 'text-orange-500',
+        price: '5,199',
+        features: [
+            { name: '鐪熺毊闈㈡枡', icon: 'fas fa-award' },
+            { name: '鍙汉鍗?, icon: 'fas fa-bed' }
+        ]
+    },
+    {
+        id: 'XK-982',
+        name: '杩蜂綘鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,compact,982',
+        stock: '搴撳瓨鍏呰冻',
+        stockClass: 'text-green-500',
+        price: '2,799',
+        features: [
+            { name: '灏忓阀璁捐', icon: 'fas fa-compress' },
+            { name: '鍙Щ鍔?, icon: 'fas fa-dolly' }
+        ]
+    },
+    {
+        id: 'XK-983',
+        name: '缁勫悎鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,sectional,983',
+        stock: '搴撳瓨鍏呰冻',
+        stockClass: 'text-green-500',
+        price: '4,599',
+        features: [
+            { name: '缁勫悎寮?, icon: 'fas fa-th-large' },
+            { name: '鐏垫椿甯冪疆', icon: 'fas fa-random' }
+        ]
+    },
+    {
+        id: 'XK-984',
+        name: '鐢靛姩鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,electric,984',
+        stock: '搴撳瓨绱у紶',
+        stockClass: 'text-orange-500',
+        price: '6,899',
+        features: [
+            { name: '鐢靛姩璋冭妭', icon: 'fas fa-bolt' },
+            { name: '閬ユ帶鎺у埗', icon: 'fas fa-gamepad' }
+        ]
+    },
+    {
+        id: 'XK-985',
+        name: '鎴峰鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,outdoor,985',
+        stock: '搴撳瓨鍏呰冻',
+        stockClass: 'text-green-500',
+        price: '4,199',
+        features: [
+            { name: '鎴峰閫傜敤', icon: 'fas fa-umbrella-beach' },
+            { name: '闃叉按闈㈡枡', icon: 'fas fa-tint-slash' }
+        ]
+    },
+    {
+        id: 'XK-986',
+        name: '鍔炲叕鍔熻兘娌欏彂',
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,office,986',
+        stock: '棰勫畾',
+        stockClass: 'text-red-500',
+        price: '5,299',
+        features: [
+            { name: '鍔炲叕閫傜敤', icon: 'fas fa-briefcase' },
+            { name: '甯﹀伐浣滃彴', icon: 'fas fa-laptop' }
+        ]
+    },
+    {
+        id: 'XK-987',
+        name: '璞崕澶氬姛鑳芥矙鍙?,
+        category: 'XK',
+        image: 'https://source.unsplash.com/featured/500x400/?sofa,premium,987',
+        stock: '搴撳瓨鍏呰冻',
+        stockClass: 'text-green-500',
+        price: '9,999',
+        features: [
+            { name: '鍏ㄥ姛鑳?, icon: 'fas fa-tools' },
+            { name: '鏅鸿兘绯荤粺', icon: 'fas fa-microchip' },
+            { name: '璞崕閰嶇疆', icon: 'fas fa-gem' }
+        ]
+    }
+];
+
+// 娣诲姞娌欏彂鍒嗙被鎸夐挳鐨勭偣鍑讳簨浠跺鐞?document.querySelectorAll('.category-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const category = this.dataset.category;
+        
+        // 鏇存柊鎸夐挳娲昏穬鐘舵€?        document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        
+        // 鎵撳紑妯℃€佹
+        openSofaModal(category);
+    });
+});
+
+// 鎵撳紑娌欏彂閫夋嫨妯℃€佹
+function openSofaModal(category) {
+    const modal = document.getElementById('sofaModal');
+    const overlay = document.getElementById('modalOverlay');
+    const searchInput = document.getElementById('sofaSearch');
+    
+    // 閲嶇疆鎼滅储妗?    if (searchInput) {
+        searchInput.value = '';
+        document.getElementById('clearSearch').style.display = 'none';
+    }
+    
+    // 鐢熸垚娌欏彂鍒楄〃
+    generateSofaList(category);
+    
+    // 鏄剧ず妯℃€佹
+    modal.classList.add('active');
+    overlay.classList.add('active');
+    
+    // 绂佹鑳屾櫙婊氬姩
+    document.body.style.overflow = 'hidden';
+    
+    // 璁剧疆鎼滅储鍔熻兘
+    setupSearchFunction();
+}
+
+// 鍏抽棴娌欏彂閫夋嫨妯℃€佹
+function closeSofaModal() {
+    const modal = document.getElementById('sofaModal');
+    const overlay = document.getElementById('modalOverlay');
+    
+    modal.classList.remove('active');
+    overlay.classList.remove('active');
+    
+    // 鎭㈠鑳屾櫙婊氬姩
+    document.body.style.overflow = '';
+}
+
+// 娣诲姞鍏抽棴鎸夐挳浜嬩欢
+document.querySelector('.close-modal').addEventListener('click', closeSofaModal);
+document.getElementById('modalOverlay').addEventListener('click', closeSofaModal);
+
+// 鏇存柊宸查€変腑鐨勬矙鍙戝瀷鍙锋樉绀?function updateSelectedModel(model) {
+    if (!model) return;
+    
+    // 鍦ㄥ瀷鍙烽€夋嫨鍖哄煙绐佸嚭鏄剧ず閫変腑鐨勫瀷鍙?    const modelGrid = document.querySelector('.model-grid');
+    
+    // 妫€鏌ユ槸鍚﹀凡缁忔湁鐗规畩鏄剧ず鐨勫瀷鍙?    const existingHighlighted = modelGrid.querySelector('.model-item.selected.highlighted');
+    if (existingHighlighted) {
+        modelGrid.removeChild(existingHighlighted);
+    }
+    
+    // 鍒涘缓閫変腑鍨嬪彿鐨勭壒娈婃樉绀哄厓绱?    const selectedItem = document.createElement('div');
+    selectedItem.classList.add('model-item', 'selected', 'highlighted');
+    
+    let stockClass = 'text-green-500';
+    if (model.stock === '搴撳瓨绱у紶') stockClass = 'text-orange-500';
+    if (model.stock === '棰勫畾') stockClass = 'text-red-500';
+    
+    // 纭繚鍥剧墖URL浣跨敤featured鍥剧墖
+    const imageUrl = model.image.includes('source.unsplash.com/random') ? 
+        model.image.replace('source.unsplash.com/random', 'source.unsplash.com/featured') : 
+        model.image;
+    
+    selectedItem.innerHTML = `
+        <img src="${imageUrl}" alt="${model.name}">
+        <div class="font-medium">${model.id}</div>
+        <div class="text-sm ${stockClass}">${model.stock}</div>
+    `;
+    
+    // 娣诲姞鍒版ā鍨嬬綉鏍肩殑椤堕儴
+    modelGrid.insertBefore(selectedItem, modelGrid.firstChild);
+    
+    // 鍏抽棴妯℃€佹
+    closeSofaModal();
+}
+
+// 灏哄婊戝潡
+const sizeSlider = document.querySelector('input[type="range"]');
+const sizeValue = document.querySelector('.size-slider .flex span:nth-child(2)');
+sizeSlider.addEventListener('input', function() {
+    sizeValue.textContent = `褰撳墠: ${this.value}cm`;
+});
+
+// 鍥剧墖鎷栨嫿涓婁紶
+const uploadZone = document.querySelector('.upload-zone');
+
+uploadZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadZone.style.borderColor = 'var(--brand-primary)';
+    uploadZone.style.background = 'var(--brand-primary-transparent)';
+});
+
+uploadZone.addEventListener('dragleave', (e) => {
+    e.preventDefault();
+    uploadZone.style.borderColor = 'var(--brand-primary-transparent)';
+    uploadZone.style.background = 'var(--brand-light)';
+});
+
+uploadZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadZone.style.borderColor = 'var(--brand-primary-transparent)';
+    uploadZone.style.background = 'var(--brand-light)';
+    
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+        // 澶勭悊涓婁紶鐨勫浘鐗?        console.log('Uploaded files:', files);
+    }
+});
+
+// 鏀寔绮樿创涓婁紶
+document.addEventListener('paste', (e) => {
+    const items = e.clipboardData.items;
+    for (let item of items) {
+        if (item.type.indexOf('image') !== -1) {
+            const file = item.getAsFile();
+            console.log('Pasted image:', file);
+        }
+    }
+});
+
+// 鏉愯川閫夋嫨
+document.querySelectorAll('.fabric-item').forEach(item => {
+    item.addEventListener('click', function() {
+        document.querySelectorAll('.fabric-item').forEach(i => i.classList.remove('selected'));
+        this.classList.add('selected');
+        // 鏇存柊棰勮鍥?        const previewImg = document.querySelector('.fabric-preview img');
+        const fabricImg = this.querySelector('img');
+        if (previewImg && fabricImg) {
+            // 杩欓噷鍙互娣诲姞闈㈡枡棰勮鐨勯€昏緫
+        }
+    });
+});
+
+// 瀛椾綋閫夋嫨
+document.querySelectorAll('.font-item').forEach(item => {
+    item.addEventListener('click', function() {
+        document.querySelectorAll('.font-item').forEach(i => i.classList.remove('selected'));
+        this.classList.add('selected');
+    });
+});
+
+// 鏂囧瓧浣嶇疆閫夋嫨
+document.querySelectorAll('.position-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.position-btn').forEach(b => b.classList.remove('selected'));
+        this.classList.add('selected');
+    });
+});
+
+// 閰嶄欢閫夋嫨
+document.querySelectorAll('.accessory-item').forEach(item => {
+    item.addEventListener('click', function() {
+        this.classList.toggle('selected');
+        updateTotalPrice();
+    });
+});
+
+// 鏁伴噺璋冩暣
+const quantityBtns = document.querySelectorAll('.quantity-btn');
+const quantityInput = document.querySelector('.quantity-value');
+
+quantityBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+        let value = parseInt(quantityInput.value);
+        if (this.textContent === '+') {
+            value = Math.min(value + 1, 99);
+        } else {
+            value = Math.max(value - 1, 1);
+        }
+        quantityInput.value = value;
+        updateTotalPrice();
+    });
+});
+
+// 鏇存柊鎬讳环
+function updateTotalPrice() {
+    const basePrice = 4999;
+    const quantity = parseInt(document.querySelector('.quantity-value').value);
+    let accessoryPrice = 0;
+    
+    document.querySelectorAll('.accessory-item.selected').forEach(item => {
+        const price = parseInt(item.querySelector('.accessory-price').textContent.replace('楼', ''));
+        accessoryPrice += price;
+    });
+
+    const totalPrice = (basePrice + accessoryPrice) * quantity;
+    document.querySelector('.total-price').textContent = `鎬讳环锛毬?{totalPrice}`;
+}
+
+// 璇煶杈撳叆
+const voiceBtn = document.querySelector('.voice-btn');
+let isRecording = false;
+
+voiceBtn.addEventListener('click', function() {
+    isRecording = !isRecording;
+    this.innerHTML = isRecording ? 
+        '<i class="fas fa-stop"></i>' : 
+        '<i class="fas fa-microphone"></i>';
+    // 杩欓噷鍙互娣诲姞璇煶璇嗗埆鐨勯€昏緫
+});
+
+// 鍥剧墖涓婁紶棰勮
+document.querySelector('.upload-btn').addEventListener('click', function() {
+    // 瑙﹀彂鏂囦欢閫夋嫨
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                addImagePreview(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+    input.click();
+});
+
+// 娣诲姞鍥剧墖棰勮
+function addImagePreview(src) {
+    const preview = document.createElement('div');
+    preview.className = 'upload-preview';
+    preview.innerHTML = `
+        <img src="${src}" alt="涓婁紶棰勮">
+        <div class="remove-btn">
+            <i class="fas fa-times"></i>
+        </div>
+    `;
+    
+    preview.querySelector('.remove-btn').addEventListener('click', function() {
+        preview.remove();
+    });
+    
+    document.querySelector('.image-upload').insertBefore(
+        preview,
+        document.querySelector('.upload-btn').nextSibling
+    );
+}
+
+// 瑙勬牸鍗＄墖閫夋嫨
+document.querySelectorAll('.spec-card').forEach(card => {
+    card.addEventListener('click', function() {
+        // 鍙湪鍚屼竴缁勫唴鍒囨崲閫変腑鐘舵€?        const parent = this.parentElement;
+        parent.querySelectorAll('.spec-card').forEach(c => c.classList.remove('selected'));
+        this.classList.add('selected');
+    });
+});
+
+// 瀹氫箟鍏ㄥ眬褰撳墠姝ラ鍙橀噺
+let currentStep = 1;
+
+// 鏇存柊姝ラ鏄剧ず
+function updateSteps(stepNumber) {
+    console.log("[DEBUG] 鏇存柊姝ラ涓?", stepNumber);
+    
+    // 鏇存柊鍏ㄥ眬姝ラ鍙橀噺
+    currentStep = stepNumber;
+    
+    // 鏇存柊姝ラ鎸囩ず鍣?    document.querySelectorAll('.step').forEach(step => {
+        const stepNum = parseInt(step.getAttribute('data-step'));
+        step.classList.remove('active');
+        step.classList.remove('completed');
+        
+        if (stepNum === stepNumber) {
+            step.classList.add('active');
+        } else if (stepNum < stepNumber) {
+            step.classList.add('completed');
+        }
+    });
+    
+    // 鏇存柊鍐呭鏄剧ず
+    document.querySelectorAll('.step-content').forEach(content => {
+        content.classList.remove('active');
+        if (parseInt(content.getAttribute('data-step')) === stepNumber) {
+            content.classList.add('active');
+        }
+    });
+    
+    // 纭繚鎸夐挳鍙橀噺宸插垵濮嬪寲
+    ensureButtonsInitialized();
+    
+    // 鏇存柊搴曢儴瀵艰埅鎸夐挳鐘舵€?    if (nextBtn && prevBtn) {
+        prevBtn.disabled = stepNumber === 1;
+        nextBtn.disabled = stepNumber === 5;
+        
+        if (stepNumber === 1) {
+            prevBtn.classList.add('disabled');
+        } else {
+            prevBtn.classList.remove('disabled');
+        }
+        
+        if (stepNumber === 5) {
+            nextBtn.textContent = '瀹屾垚';
+            nextBtn.classList.add('complete');
+        } else {
+            nextBtn.textContent = '涓嬩竴姝?;
+            nextBtn.classList.remove('complete');
+        }
+    } else {
+        console.error("[DEBUG] 鎵句笉鍒颁笂涓€姝ユ垨涓嬩竴姝ユ寜閽?");
+    }
+
+    // 褰撹繘鍏ユ楠?鏃讹紝纭繚灏哄璋冩暣鍔熻兘姝ｅ父鍒濆鍖?    if (stepNumber === 3) {
+        // 寤惰繜涓€灏忔鏃堕棿纭繚DOM鍔犺浇瀹屾瘯
+        setTimeout(() => {
+            console.log("[DEBUG] 杩涘叆姝ラ3锛屽垵濮嬪寲灏哄璋冩暣鍔熻兘");
+            initializeDimensionsSettings();
+        }, 100);
+    }
+}
+
+// 涓嬩竴姝?nextBtn.addEventListener('click', function() {
+    if (currentStep < 5) {
+        currentStep++;
+        updateSteps(currentStep);
+    } else {
+        // 鏈€鍚庝竴姝ワ紝纭璁㈠崟
+        alert('璁㈠崟宸叉彁浜わ紒鎴戜滑灏嗗敖蹇鐞嗘偍鐨勫畾鍒惰姹傘€?);
+    }
+});
+
+// 涓婁竴姝?prevBtn.addEventListener('click', function() {
+    if (currentStep > 1) {
+        currentStep--;
+        updateSteps(currentStep);
+    }
+});
+
+// 鐐瑰嚮姝ラ鎸囩ず鍣ㄧ洿鎺ヨ烦杞?steps.forEach(step => {
+    step.addEventListener('click', function() {
+        const stepNum = parseInt(this.dataset.step);
+        if (stepNum <= Math.max(currentStep, 2)) { // 鍙厑璁歌烦杞埌宸插畬鎴愮殑姝ラ鎴栦笅涓€姝?            currentStep = stepNum;
+            updateSteps(currentStep);
+        }
+    });
+});
+
+// 绀句氦鍒嗕韩
+function setupSocialSharing() {
+    document.querySelectorAll('.share-btn').forEach(btn => {
+        if (btn) {
+            btn.addEventListener('click', function() {
+                alert('鍒嗕韩鍔熻兘鍗冲皢涓婄嚎锛屾暚璇锋湡寰咃紒');
+            });
+        }
+    });
+}
+
+// 鐑棬缁勫悎閫夋嫨
+function setupCombinationSelection() {
+    document.querySelectorAll('.combination-card').forEach(card => {
+        if (card) {
+            card.addEventListener('click', function() {
+                alert('宸查€夋嫨璇ョ儹闂ㄧ粍鍚堬紝灏嗕负鎮ㄨ嚜鍔ㄥ～鍏呯浉鍏抽厤缃紒');
+                // 杩欓噷鍙互娣诲姞鑷姩濉厖閰嶇疆鐨勯€昏緫
+            });
+        }
+    });
+}
+
+// 纭繚DOM鍏冪礌宸插姞杞藉苟缁戝畾浜嬩欢
+function ensureDOMElementsLoaded() {
+    // 閲嶆柊鏌ヨDOM鍏冪礌
+    fabricCards = document.querySelectorAll('.fabric-card');
+    
+    // 濡傛灉闈㈡枡鍗＄墖瀛樺湪
+    if (fabricCards && fabricCards.length > 0) {
+        console.log(`鎵惧埌${fabricCards.length}涓潰鏂欏崱鐗囷紝閲嶆柊缁戝畾浜嬩欢`);
+        
+        // 閲嶆柊缁戝畾鐐瑰嚮浜嬩欢
+        fabricCards.forEach(card => {
+            // 绉婚櫎鏃т簨浠讹紝闃叉閲嶅缁戝畾
+            const clone = card.cloneNode(true);
+            card.parentNode.replaceChild(clone, card);
+            
+            // 缁戝畾鏂颁簨浠?            clone.addEventListener('click', function() {
+                console.log('闈㈡枡鍗＄墖琚偣鍑?);
+                
+                // 鑾峰彇闈㈡枡鍨嬪彿
+                const fabricModel = this.querySelector('.fabric-model').textContent;
+                
+                // 鏍规嵁鐐瑰嚮鐨勫崱鐗囪幏鍙栧叾瀵瑰簲鐨勭壒鎬ф爣绛?                const features = Array.from(this.querySelectorAll('.feature-tag'))
+                    .map(tag => tag.textContent)
+                    .join('銆?);
+                
+                // 鑾峰彇浠锋牸淇℃伅
+                const price = this.querySelector('.fabric-price').textContent;
+                
+                // 鑾峰彇棰勮鍥剧墖锛堜娇鐢ㄨ疆鎾腑鐨勭涓€寮犲浘鐗囷級
+                const previewImage = this.querySelector('.fabric-img.active').src;
+                
+                // 鏋勫缓闈㈡枡鏁版嵁瀵硅薄
+                const fabricData = {
+                    model: fabricModel,
+                    category: features.includes('澶村眰鐗涚毊') ? '澶村眰鐗涚毊' : 
+                              features.includes('楂樼骇缁掗潰') ? '楂樼骇缁掗潰' : 
+                              features.includes('浜氶夯闈㈡枡') ? '浜氶夯闈㈡枡' : '鏍囧噯闈㈡枡',
+                    material: features.includes('澶村眰鐗涚毊') ? '榛勭墰鐨? : 
+                              features.includes('楂樼骇缁掗潰') ? '缁掗潰甯? : 
+                              features.includes('浜氶夯闈㈡枡') ? '浜氶夯' : '娣风汉',
+                    price: price,
+                    features: features,
+                    previewImg: previewImage,
+                    selectedColor: 'gray', // 榛樿閫変腑鐏拌壊
+                    colorPreviewImgs: {
+                        'gray': previewImage,
+                        'beige': previewImage,
+                        'blue': previewImage,
+                        'green': previewImage,
+                        'brown': previewImage,
+                        'red': previewImage,
+                        'black': previewImage
+                    }
+                };
+                
+                // 鐩存帴璋冪敤openFabricModal鍑芥暟鎵撳紑妯℃€佹
+                if (typeof openFabricModal === 'function') {
+                    openFabricModal(fabricData);
+                } else {
+                    console.error('openFabricModal鍑芥暟鏈畾涔?);
+                }
+            });
+        });
+    } else {
+        console.warn('鏈壘鍒伴潰鏂欏崱鐗囧厓绱?);
+    }
+}
+
+// 鍦ㄦ枃妗ｅ姞杞藉畬鎴愬悗鍒濆鍖栧姛鑳?document.addEventListener('DOMContentLoaded', function() {
+    console.log('[DEBUG] DOM宸插姞杞斤紝寮€濮嬪垵濮嬪寲...');
+    
+    // 鍒濆鍖栧叏灞€鎸夐挳鍙橀噺
+    nextBtn = document.getElementById('nextStep');
+    prevBtn = document.getElementById('prevStep');
+    
+    if (!nextBtn || !prevBtn) {
+        console.error('[DEBUG] 閿欒锛氭壘涓嶅埌瀵艰埅鎸夐挳锛?);
+    } else {
+        console.log('[DEBUG] 鎴愬姛鑾峰彇瀵艰埅鎸夐挳');
+    }
+    
+    // 棣栧厛鍒濆鍖栨楠ゅ鑸紝纭繚瀹冨湪椤甸潰鍔犺浇鍚庣涓€鏃堕棿鍙敤
+    setupStepNavigation();
+    
+    // 棣栧厛鍒濆鍖栨姌鍙犲尯鍩燂紝纭繚瀹冨湪椤甸潰鍔犺浇鏃舵纭樉绀?    setupDimensionsFold();
+    console.log('[DEBUG] 鎶樺彔鍖哄煙鍒濆鍖栧畬鎴?);
+    
+    // 瀹夊叏鍦拌皟鐢╯etupScrollIndicator锛岀‘淇濆厓绱犲瓨鍦?    const sofaCategoriesRow = document.querySelector('.sofa-categories-row');
+    const scrollIndicator = document.querySelector('.scroll-indicator');
+    if (sofaCategoriesRow && scrollIndicator) {
+        setupScrollIndicator(sofaCategoriesRow, scrollIndicator);
+    }
+    
+    setupFabricCarousels();
+    setupFabricEvents();
+    setupSofaTypeSelection();
+    setupDirectionSelection();
+    setupModuleSelection();
+    setupSizePresets();
+    setupDimensionSliders();
+    setupAdvancedOptions(); // 鍙湪杩欓噷璋冪敤涓€娆￠珮绾ч€夐」璁剧疆
+    setupViewToggle();
+    setupSocialSharing(); // 娣诲姞绀句氦鍒嗕韩鍔熻兘鍒濆鍖?    setupCombinationSelection(); // 娣诲姞鐑棬缁勫悎鍔熻兘鍒濆鍖?    
+    // 浠ヤ笅鏄坊鍔犵殑璋冭瘯浠ｇ爜锛屾鏌ラ〉闈笂鏄惁鏈夊昂瀵歌皟鏁存寜閽?    setTimeout(function() {
+        const foldBtn = document.getElementById('dimensions-fold-btn');
+        if (foldBtn) {
+            console.log('[DEBUG] 灏哄璋冩暣鎸夐挳瀛樺湪:', foldBtn);
+            console.log('[DEBUG] 鎸夐挳鍙鎬?', window.getComputedStyle(foldBtn).display);
+            
+            // 绉婚櫎鑷姩鏄剧ず鎻愮ず娑堟伅
+            // 娣诲姞涓存椂楂樹寒鏁堟灉锛屼絾涓嶆樉绀簍oast
+            setTimeout(function() {
+                foldBtn.classList.add('highlight-change');
+                setTimeout(function() {
+                    foldBtn.classList.remove('highlight-change');
+                }, 2000);
+            }, 1500);
+        } else {
+            console.error('[DEBUG] 閿欒锛氭壘涓嶅埌灏哄璋冩暣鎸夐挳!');
+        }
+    }, 500);
+    
+    // 鏍囩椤靛垏鎹?    document.querySelectorAll('.tab-btn').forEach(tab => {
+        tab.addEventListener('click', function() {
+            const tabType = this.getAttribute('data-tab');
+            
+            // 绉婚櫎鎵€鏈夋爣绛剧殑婵€娲荤姸鎬?            document.querySelectorAll('.tab-btn').forEach(t => {
+                t.classList.remove('active');
+            });
+            
+            // 娣诲姞褰撳墠鏍囩鐨勬縺娲荤姸鎬?            this.classList.add('active');
+            
+            // 鍒囨崲瀹瑰櫒
+            if (tabType === 'standard') {
+                document.querySelector('.flipper').classList.remove('flipped');
+            } else {
+                document.querySelector('.flipper').classList.add('flipped');
+            }
+        });
+    });
+});
+
+// 璁剧疆姝ラ瀵艰埅鍑芥暟
+function setupStepNavigation() {
+    console.log('[DEBUG] 璁剧疆姝ラ瀵艰埅...');
+    
+    // 纭繚鎸夐挳鍙橀噺宸插垵濮嬪寲
+    ensureButtonsInitialized();
+    
+    if (nextBtn) {
+        // 绉婚櫎鐜版湁鐨勪簨浠剁洃鍚櫒锛堝鏋滄湁锛?        const newNextBtn = nextBtn.cloneNode(true);
+        nextBtn.parentNode.replaceChild(newNextBtn, nextBtn);
+        nextBtn = newNextBtn; // 鏇存柊鍏ㄥ眬鍙橀噺
+        
+        // 娣诲姞浜嬩欢鐩戝惉鍣?        nextBtn.addEventListener('click', function() {
+            console.log("[DEBUG] 鐐瑰嚮涓嬩竴姝ユ寜閽?);
+            if (currentStep < 5) {
+                updateSteps(currentStep + 1);
+            }
+        });
+    } else {
+        console.error('[DEBUG] 鎵句笉鍒颁笅涓€姝ユ寜閽?');
+    }
+    
+    if (prevBtn) {
+        // 绉婚櫎鐜版湁鐨勪簨浠剁洃鍚櫒锛堝鏋滄湁锛?        const newPrevBtn = prevBtn.cloneNode(true);
+        prevBtn.parentNode.replaceChild(newPrevBtn, prevBtn);
+        prevBtn = newPrevBtn; // 鏇存柊鍏ㄥ眬鍙橀噺
+        
+        // 娣诲姞浜嬩欢鐩戝惉鍣?        prevBtn.addEventListener('click', function() {
+            console.log("[DEBUG] 鐐瑰嚮涓婁竴姝ユ寜閽?);
+            if (currentStep > 1) {
+                updateSteps(currentStep - 1);
+            }
+        });
+    } else {
+        console.error('[DEBUG] 鎵句笉鍒颁笂涓€姝ユ寜閽?');
+    }
+    
+    // 鍏佽鐐瑰嚮姝ラ鎸囩ず鍣ㄧ洿鎺ヨ烦杞?    document.querySelectorAll('.step').forEach(step => {
+        step.addEventListener('click', function() {
+            const stepNum = parseInt(this.getAttribute('data-step'));
+            console.log("[DEBUG] 鐐瑰嚮姝ラ鎸囩ず鍣?", stepNum);
+            
+            // 鍙厑璁歌烦杞埌宸插畬鎴愮殑姝ラ鎴栦笅涓€涓楠?            if (stepNum <= Math.max(currentStep, 2)) {
+                updateSteps(stepNum);
+            }
+        });
+    });
+    
+    console.log('[DEBUG] 姝ラ瀵艰埅璁剧疆瀹屾垚');
+}
+
+// 鍦ㄦā鎬佹涓姩鎬佺敓鎴愭矙鍙戝瀷鍙峰垪琛?function generateSofaList(category, searchTerm = '') {
+    const sofaList = document.getElementById('sofaList');
+    sofaList.innerHTML = '';
+    
+    // 鏍规嵁鍒嗙被鍜屾悳绱㈣瘝绛涢€夋矙鍙戝瀷鍙?    let filteredModels = [];
+    
+    // 浣跨敤鏁版嵁婧?    if (category && sofaData[category]) {
+        filteredModels = [...sofaData[category].models];
+        
+        // 濡傛灉鏄疿K鍒嗙被锛屾坊鍔犺缁嗙殑鍔熻兘娌欏彂鏁版嵁
+        if (category === 'XK') {
+            // 娣诲姞鏉ヨ嚜sofaModels鐨刋K绯诲垪鏁版嵁
+            const xkModels = sofaModels.filter(model => model.category === 'XK');
+            if (xkModels.length > 0) {
+                // 鍚堝苟涓や釜鏁版嵁婧愶紝骞舵牴鎹甀D鍘婚噸
+                const modelIds = new Set(filteredModels.map(m => m.id));
+                xkModels.forEach(model => {
+                    if (!modelIds.has(model.id)) {
+                        filteredModels.push(model);
+                    }
+                });
+            }
+        }
+    }
+    
+    // 搴旂敤鎼滅储杩囨护
+    if (searchTerm) {
+        searchTerm = searchTerm.toLowerCase();
+        filteredModels = filteredModels.filter(model => 
+            model.id.toLowerCase().includes(searchTerm) || 
+            (model.name && model.name.toLowerCase().includes(searchTerm))
+        );
+    }
+    
+    // 濡傛灉娌℃湁鍖归厤缁撴灉锛屾樉绀烘彁绀轰俊鎭?    if (filteredModels.length === 0) {
+        sofaList.innerHTML = `
+            <div class="no-results">
+                <i class="fas fa-search text-4xl text-gray-300 mb-2"></i>
+                <div class="text-gray-500">娌℃湁鎵惧埌鍖归厤鐨勬矙鍙戝瀷鍙?/div>
+                <div class="text-sm text-gray-400 mt-1">璇峰皾璇曞叾浠栨悳绱㈣瘝鎴栧垎绫?/div>
+            </div>
+        `;
+        return;
+    }
+    
+    // 鐢熸垚娌欏彂鍒楄〃
+    filteredModels.forEach(model => {
+        const item = document.createElement('div');
+        item.classList.add('sofa-item');
+        if (model.selected) {
+            item.classList.add('selected');
+        }
+        
+        // 涓烘櫘閫氭暟鎹簮娣诲姞榛樿鍔熻兘鏍囩
+        if (!model.features) {
+            model.features = [
+                { name: '鍙媶娲?, icon: 'fas fa-tint-slash' },
+                { name: '甯︽敹绾?, icon: 'fas fa-box' }
+            ];
+            
+            // 闅忔満娣诲姞棰濆鍔熻兘鏍囩
+            if (Math.random() > 0.5) {
+                model.features.push({ name: '鍙皟鑺?, icon: 'fas fa-sync-alt' });
+            }
+            if (Math.random() > 0.7) {
+                model.features.push({ name: '娌欏彂搴?, icon: 'fas fa-bed' });
+            }
+        }
+        
+        // 闄愬埗鏈€澶氭樉绀?涓壒鐐规爣绛撅紝閬垮厤鍗犵敤澶绌洪棿
+        const limitedFeatures = model.features.slice(0, 4);
+        
+        // 鐢熸垚鍔熻兘鏍囩HTML
+        const featuresHTML = limitedFeatures.map(feature => 
+            `<div class="feature-tag"><i class="${feature.icon}"></i>${feature.name}</div>`
+        ).join('');
+        
+        item.innerHTML = `
+            <div class="sofa-img-container">
+                <img src="${model.image.replace('source.unsplash.com/random', 'source.unsplash.com/featured')}" alt="${model.name || model.id}" class="sofa-img">
+            </div>
+            <div class="sofa-details">
+                <div class="sofa-info">
+                    <div class="sofa-name">${model.id}</div>
+                    <div class="sofa-price">楼${model.price || '3,999'} 璧?/div>
+                </div>
+                <div class="sofa-features">
+                    ${featuresHTML}
+                </div>
+            </div>
+        `;
+        
+        item.addEventListener('click', () => {
+            // 閫変腑褰撳墠娌欏彂鍨嬪彿
+            document.querySelectorAll('.sofa-item').forEach(el => el.classList.remove('selected'));
+            item.classList.add('selected');
+            
+            // 鏇存柊閫変腑鐘舵€?            if (sofaData[category]) {
+                sofaData[category].models.forEach(m => {
+                    m.selected = m.id === model.id;
+                });
+            }
+            
+            // 鏇存柊鍨嬪彿鏄剧ず
+            updateSelectedModel(model);
+        });
+        
+        sofaList.appendChild(item);
+    });
+}
+
+// 澶勭悊鎼滅储鍔熻兘
+function setupSearchFunction() {
+    const searchInput = document.getElementById('sofaSearch');
+    const clearButton = document.getElementById('clearSearch');
+    
+    if (!searchInput) return;
+    
+    // 鎼滅储杈撳叆浜嬩欢
+    searchInput.addEventListener('input', function() {
+        const searchTerm = this.value.trim();
+        
+        // 鏄剧ず鎴栭殣钘忔竻闄ゆ寜閽?        if (searchTerm) {
+            clearButton.style.display = 'flex';
+        } else {
+            clearButton.style.display = 'none';
+        }
+        
+        // 鑾峰彇褰撳墠閫変腑鐨勫垎绫?        const activeCategory = document.querySelector('.category-btn.active');
+        const category = activeCategory ? activeCategory.dataset.category : null;
+        
+        // 鏍规嵁鎼滅储璇嶉噸鏂扮敓鎴愭矙鍙戝垪琛?        generateSofaList(category, searchTerm);
+    });
+    
+    // 娓呴櫎鎼滅储
+    clearButton.addEventListener('click', function() {
+        searchInput.value = '';
+        this.style.display = 'none';
+        
+        // 鑾峰彇褰撳墠閫変腑鐨勫垎绫?        const activeCategory = document.querySelector('.category-btn.active');
+        const category = activeCategory ? activeCategory.dataset.category : null;
+        
+        // 閲嶆柊鐢熸垚娌欏彂鍒楄〃
+        generateSofaList(category, '');
+    });
+}
+
+// 闈㈡枡閫夋嫨鍔熻兘
+let fabricCards = document.querySelectorAll('.fabric-card');
+const colorSwatches = document.querySelectorAll('.color-swatch');
+const fabricCodeDisplay = document.querySelector('.detail-value:first-child');
+const previewImg = document.querySelector('.preview-img');
+const fabricSearch = document.querySelector('.fabric-search input');
+const categoryChips = document.querySelectorAll('.category-chip');
+
+// 鍒濆鍖栭€変腑鐨勯潰鏂?let selectedFabric = 'TC-001';
+let selectedColor = 'gray';
+
+// 闈㈡枡鍗＄墖杞挱鍔熻兘
+function setupFabricCarousels() {
+    const carousels = document.querySelectorAll('.fabric-carousel');
+    
+    carousels.forEach(carousel => {
+        const slides = carousel.querySelectorAll('.fabric-img');
+        const dots = carousel.querySelectorAll('.carousel-dot');
+        let currentIndex = 0;
+        let autoplayInterval;
+        
+        // 鍒囨崲鍒版寚瀹歴lide
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            currentIndex = index;
+            if (currentIndex >= slides.length) currentIndex = 0;
+            if (currentIndex < 0) currentIndex = slides.length - 1;
+            
+            slides[currentIndex].classList.add('active');
+            dots[currentIndex].classList.add('active');
+        }
+        
+        // 鐐瑰嚮鍦嗙偣鍒囨崲
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', (e) => {
+                e.stopPropagation(); // 闃叉瑙﹀彂闈㈡枡鍗＄墖鐨勭偣鍑讳簨浠?                showSlide(index);
+                resetAutoplay();
+            });
+        });
+        
+        // 鑷姩杞挱
+        function startAutoplay() {
+            autoplayInterval = setInterval(() => {
+                showSlide(currentIndex + 1);
+            }, 3000);
+        }
+        
+        // 閲嶇疆鑷姩杞挱
+        function resetAutoplay() {
+            clearInterval(autoplayInterval);
+            startAutoplay();
+        }
+        
+        // 榧犳爣鎮仠鏃舵殏鍋滆疆鎾?        carousel.addEventListener('mouseenter', () => {
+            clearInterval(autoplayInterval);
+        });
+        
+        // 榧犳爣绂诲紑鏃舵仮澶嶈疆鎾?        carousel.addEventListener('mouseleave', () => {
+            startAutoplay();
+        });
+        
+        // 瑙︽懜婊戝姩鏀寔
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        carousel.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+            clearInterval(autoplayInterval);
+        }, {passive: true});
+        
+        carousel.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            if (touchEndX - touchStartX > 50) {
+                // 鍙虫粦锛屾樉绀轰笂涓€寮?                showSlide(currentIndex - 1);
+            } else if (touchStartX - touchEndX > 50) {
+                // 宸︽粦锛屾樉绀轰笅涓€寮?                showSlide(currentIndex + 1);
+            }
+            resetAutoplay();
+        }, {passive: true});
+        
+        // 寮€濮嬭嚜鍔ㄨ疆鎾?        startAutoplay();
+    });
+}
+
+// 鏇存柊闈㈡枡鍗＄墖鐐瑰嚮浜嬩欢锛屾敮鎸佽疆鎾悗鐨勯€夋嫨
+fabricCards.forEach(card => {
+    card.addEventListener('click', function() {
+        // 鍙栨秷涔嬪墠閫変腑鐘舵€?        fabricCards.forEach(c => c.classList.remove('selected'));
+        
+        // 璁剧疆褰撳墠閫変腑鐘舵€?        this.classList.add('selected');
+        
+        // 鑾峰彇闈㈡枡鍨嬪彿
+        const fabricModel = this.querySelector('.fabric-model').textContent;
+        selectedFabric = fabricModel;
+        
+        // 鏇存柊闈㈡枡璇︽儏鏄剧ず
+        updateFabricDetails();
+        
+        // 鏇存柊鑹插崱
+        updateColorSwatches();
+        
+        // 鏇存柊棰勮鍥?        updatePreview();
+    });
+});
+
+// 闈㈡枡鎼滅储鍔熻兘
+fabricSearch.addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    
+    // 绛涢€夐潰鏂欏崱鐗?    fabricCards.forEach(card => {
+        const fabricCode = card.querySelector('.fabric-code').textContent.toLowerCase();
+        const fabricName = card.querySelector('.fabric-name').textContent.toLowerCase();
+        
+        if (fabricCode.includes(searchTerm) || fabricName.includes(searchTerm)) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+});
+
+// 闈㈡枡鍒嗙被閫夋嫨
+categoryChips.forEach(chip => {
+    chip.addEventListener('click', function() {
+        // 鍙栨秷涔嬪墠閫変腑鐘舵€?        categoryChips.forEach(c => c.classList.remove('active'));
+        
+        // 璁剧疆褰撳墠閫変腑鐘舵€?        this.classList.add('active');
+        
+        const category = this.textContent.toLowerCase();
+        
+        // 绛涢€夐潰鏂欏崱鐗囷紙妯℃嫙锛?        if (category === '鍏ㄩ儴') {
+            fabricCards.forEach(card => card.style.display = '');
+        } else {
+            fabricCards.forEach(card => {
+                const features = Array.from(card.querySelectorAll('.feature-tag')).map(tag => tag.textContent.toLowerCase());
+                if (features.includes(category) || card.querySelector('.fabric-name').textContent.toLowerCase().includes(category)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    });
+});
+
+// 鏇存柊闈㈡枡璇︽儏鏄剧ず
+function updateFabricDetails() {
+    if (fabricCodeDisplay) {
+        fabricCodeDisplay.textContent = `${selectedFabric}-${selectedColor.toUpperCase()}`;
+    }
+}
+
+// 鏇存柊鑹插崱鏄剧ず
+function updateColorSwatches() {
+    // 鍦ㄥ疄闄呭簲鐢ㄤ腑锛岃繖閲屽簲璇ユ牴鎹墍閫夐潰鏂欏姩鎬佸姞杞藉搴旂殑鑹插崱
+    colorSwatches.forEach(swatch => {
+        const color = swatch.dataset.color;
+        swatch.setAttribute('title', `${selectedFabric}-${color.toUpperCase()}`);
+    });
+    
+    // 閲嶇疆閫変腑鐨勯鑹?    colorSwatches[0].classList.add('active');
+    selectedColor = colorSwatches[0].dataset.color;
+}
+
+// 鏇存柊棰勮鍥?function updatePreview() {
+    // 鍦ㄥ疄闄呭簲鐢ㄤ腑锛岃繖閲屽簲璇ユ牴鎹墍閫夐潰鏂欏拰棰滆壊鍔犺浇瀵瑰簲鐨勯瑙堝浘
+    // 杩欓噷妯℃嫙閫氳繃娣诲姞鏌ヨ鍙傛暟鏉?鍒囨崲"鍥剧墖
+    const timestamp = new Date().getTime();
+    previewImg.src = `https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?fabric=${selectedFabric}&color=${selectedColor}&t=${timestamp}`;
+}
+
+// 璁剧疆闈㈡枡鐩稿叧鐨勪簨浠跺鐞?function setupFabricEvents() {
+    // 鏇存柊闈㈡枡鍗＄墖鐐瑰嚮浜嬩欢锛屾敮鎸佽疆鎾悗鐨勯€夋嫨
+    fabricCards.forEach(card => {
+        card.addEventListener('click', function() {
+            // 鍙栨秷涔嬪墠閫変腑鐘舵€?            fabricCards.forEach(c => c.classList.remove('selected'));
+            
+            // 璁剧疆褰撳墠閫変腑鐘舵€?            this.classList.add('selected');
+            
+            // 鑾峰彇闈㈡枡鍨嬪彿
+            const fabricModel = this.querySelector('.fabric-model').textContent;
+            
+            // 鏍规嵁鐐瑰嚮鐨勫崱鐗囪幏鍙栧叾瀵瑰簲鐨勭壒鎬ф爣绛?            const features = Array.from(this.querySelectorAll('.feature-tag'))
+                .map(tag => tag.textContent)
+                .join('銆?);
+            
+            // 鑾峰彇浠锋牸淇℃伅
+            const price = this.querySelector('.fabric-price').textContent;
+            
+            // 鑾峰彇棰勮鍥剧墖锛堜娇鐢ㄨ疆鎾腑鐨勭涓€寮犲浘鐗囷級
+            const previewImage = this.querySelector('.fabric-img.active').src;
+            
+            // 鏋勫缓闈㈡枡鏁版嵁瀵硅薄
+            const fabricData = {
+                model: fabricModel,
+                category: features.includes('澶村眰鐗涚毊') ? '澶村眰鐗涚毊' : 
+                          features.includes('楂樼骇缁掗潰') ? '楂樼骇缁掗潰' : 
+                          features.includes('浜氶夯闈㈡枡') ? '浜氶夯闈㈡枡' : '鏍囧噯闈㈡枡',
+                material: features.includes('澶村眰鐗涚毊') ? '榛勭墰鐨? : 
+                          features.includes('楂樼骇缁掗潰') ? '缁掗潰甯? : 
+                          features.includes('浜氶夯闈㈡枡') ? '浜氶夯' : '娣风汉',
+                price: price,
+                features: features,
+                previewImg: previewImage,
+                selectedColor: 'gray', // 榛樿閫変腑鐏拌壊
+                colorPreviewImgs: {
+                    'gray': previewImage,
+                    'beige': previewImage,
+                    'blue': previewImage,
+                    'green': previewImage,
+                    'brown': previewImage,
+                    'red': previewImage,
+                    'black': previewImage
+                }
+            };
+            
+            // 鐩存帴璋冪敤openFabricModal鍑芥暟鎵撳紑妯℃€佹
+            openFabricModal(fabricData);
+        });
+    });
+}
+
+// 闈㈡枡棰勮妯℃€佹鍔熻兘
+function setupFabricModal() {
+    const fabricModalOverlay = document.getElementById('fabricModalOverlay');
+    const fabricModal = document.getElementById('fabricModal');
+    const modalCloseBtn = fabricModal ? fabricModal.querySelector('.close-modal') : null;
+    const modalColorSwatches = fabricModal ? fabricModal.querySelectorAll('.color-swatch') : [];
+    const sendSampleBtn = fabricModal ? fabricModal.querySelector('.send-sample-btn') : null;
+    const modalPreviewImg = document.getElementById('modalPreviewImg');
+    const fabricModel = document.getElementById('fabricModel');
+    const fabricCategory = document.getElementById('fabricCategory');
+    const fabricPrice = document.getElementById('fabricPrice');
+    const fabricMaterial = document.getElementById('fabricMaterial');
+    const fabricColor = document.getElementById('fabricColor');
+    const fabricFeatures = document.getElementById('fabricFeatures');
+    const addToCustomBtn = fabricModal ? fabricModal.querySelector('.add-to-custom-btn') : null;
+    
+    const sampleFormModal = document.getElementById('sampleFormModal');
+    const closeSampleForm = document.getElementById('closeSampleForm');
+    const submitSampleBtn = sampleFormModal ? sampleFormModal.querySelector('.submit-sample-btn') : null;
+    const sampleToast = document.getElementById('sampleToast');
+    
+    // 褰撳墠閫夋嫨鐨勯潰鏂欐暟鎹?    let currentFabricData = {
+        model: '绔嬬壒8967',
+        category: '澶村眰鐗涚毊',
+        price: '15鍏?灏?,
+        material: '榛勭墰鐨?,
+        selectedColor: 'gray',
+        features: '澶村眰鐗涚毊銆佽€愮（銆侀槻姘?,
+        previewImg: 'https://images.unsplash.com/photo-1615529162924-f8605388461d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80',
+        colorPreviewImgs: {
+            'gray': 'https://images.unsplash.com/photo-1615529162924-f8605388461d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80',
+            'beige': 'https://images.unsplash.com/photo-1620222053918-6edb898f0e51?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80',
+            'blue': 'https://images.unsplash.com/photo-1620222052419-d131a14fc06e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80',
+            'green': 'https://images.unsplash.com/photo-1631280340909-a7b5bc3c3d7c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80',
+            'brown': 'https://images.unsplash.com/photo-1558304970-ee333f83041c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80',
+            'red': 'https://images.unsplash.com/photo-1605883705077-8d3d483e8c4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80',
+            'black': 'https://images.unsplash.com/photo-1636910159268-ca0a460812f2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80'
+        }
+    };
+    
+    // 瀵勯€佺毊鏍锋寜閽偣鍑讳簨浠?    if (sendSampleBtn && sampleFormModal) {
+        sendSampleBtn.addEventListener('click', function() {
+            // 鑾峰彇褰撳墠闈㈡枡淇℃伅
+            const colorMap = {
+                'gray': '鐏拌壊',
+                'beige': '绫宠壊',
+                'blue': '钃濊壊',
+                'green': '缁胯壊',
+                'brown': '妫曡壊',
+                'red': '绾㈣壊',
+                'black': '榛戣壊'
+            };
+            const colorName = colorMap[currentFabricData.selectedColor] || '鐏拌壊';
+            const fabricInfo = `${currentFabricData.model} (${colorName})`;
+            
+            // 鏇存柊鐨牱琛ㄥ崟涓殑鏍峰搧淇℃伅
+            const sampleDetail = document.getElementById('sampleDetail');
+            if (sampleDetail) {
+                sampleDetail.textContent = fabricInfo;
+            }
+            
+            // 鏇存柊鐨牱鍥剧墖
+            const sampleImage = document.getElementById('sampleImage');
+            if (sampleImage) {
+                sampleImage.src = currentFabricData.colorPreviewImgs[currentFabricData.selectedColor] || currentFabricData.previewImg;
+                sampleImage.alt = `${fabricInfo} 闈㈡枡鏍峰搧`;
+            }
+            
+            // 鏇存柊鏍峰搧鐗规€ф爣绛?            const sampleFeatures = document.querySelector('.sample-features');
+            if (sampleFeatures) {
+                // 娓呯┖鐜版湁鏍囩
+                sampleFeatures.innerHTML = '';
+                
+                // 娣诲姞鏂版爣绛?                let features = currentFabricData.features.split('銆?);
+                features.forEach(feature => {
+                    if (feature && feature.trim()) {
+                        const featureTag = document.createElement('span');
+                        featureTag.className = 'sample-feature';
+                        featureTag.textContent = feature.trim();
+                        sampleFeatures.appendChild(featureTag);
+                    }
+                });
+            }
+            
+            // 妫€鏌ュ苟鍔犺浇鍦板潃淇℃伅
+            checkAndLoadAddressInfo();
+            
+            // 鏄剧ず瀵勯€佺毊鏍疯〃鍗曞拰閬僵灞?            openSampleFormModal();
+            
+            // 闅愯棌闈㈡枡棰勮妯℃€佹
+            closeFabricModal();
+        });
+    }
+    
+    // 鎵撳紑鏍峰搧鐢宠妯℃€佺獥鍙?    function openSampleFormModal() {
+        const sampleFormModal = document.getElementById('sampleFormModal');
+        const sampleFormOverlay = document.getElementById('sampleFormOverlay');
+        const bottomNav = document.querySelector('.bottom-nav');
+        
+        if (sampleFormModal) {
+            sampleFormModal.classList.add('active');
+        }
+        
+        if (sampleFormOverlay) {
+            sampleFormOverlay.classList.add('active');
+        }
+        
+        // 闅愯棌涓荤晫闈笂鐨勫簳閮ㄥ鑸寜閽?        if (bottomNav) {
+            bottomNav.style.visibility = 'hidden';
+        }
+        
+        // 绂佹鑳屾櫙婊氬姩
+        document.body.style.overflow = 'hidden';
+    }
+    
+    // 鍏抽棴鏍峰搧鐢宠妯℃€佺獥鍙?    function closeSampleFormModal() {
+        const sampleFormModal = document.getElementById('sampleFormModal');
+        const sampleFormOverlay = document.getElementById('sampleFormOverlay');
+        const bottomNav = document.querySelector('.bottom-nav');
+        
+        if (sampleFormModal) {
+            sampleFormModal.classList.remove('active');
+        }
+        
+        if (sampleFormOverlay) {
+            sampleFormOverlay.classList.remove('active');
+        }
+        
+        // 鎭㈠涓荤晫闈笂鐨勫簳閮ㄥ鑸寜閽?        if (bottomNav) {
+            bottomNav.style.visibility = 'visible';
+        }
+        
+        // 鎭㈠鑳屾櫙婊氬姩
+        document.body.style.overflow = '';
+    }
+    
+    // 鍏抽棴妯℃€佹
+    function closeFabricModal() {
+        fabricModal.classList.remove('active');
+        fabricModalOverlay.classList.remove('active');
+        document.body.style.overflow = ''; // 鎭㈠鑳屾櫙婊氬姩
+    }
+    
+    // 鏇存柊妯℃€佹鍐呭
+    function updateModalContent() {
+        // 鏇存柊棰勮鍥?        if (modalPreviewImg) {
+            modalPreviewImg.src = currentFabricData.previewImg;
+        }
+        
+        // 鏇存柊闈㈡枡璇︽儏
+        if (fabricCategory) fabricCategory.textContent = currentFabricData.category;
+        if (fabricMaterial) fabricMaterial.textContent = currentFabricData.material;
+        if (fabricModel) fabricModel.textContent = currentFabricData.model;
+        if (fabricPrice) fabricPrice.textContent = currentFabricData.price;
+        
+        // 鏇存柊棰滆壊淇℃伅
+        updateColorText();
+        
+        // 浠庣壒鎬т腑绉婚櫎"澶村眰鐗涚毊"鐗规€у悗鏄剧ず
+        if (fabricFeatures) {
+            let features = currentFabricData.features;
+            features = features.replace('澶村眰鐗涚毊銆?, '').replace('銆佸ご灞傜墰鐨?, '').replace('澶村眰鐗涚毊', '');
+            fabricFeatures.textContent = features || '鏍囧噯闈㈡枡';
+        }
+        
+        // 鏇存柊閫変腑鐨勯鑹?        if (modalColorSwatches && modalColorSwatches.length > 0) {
+            modalColorSwatches.forEach(swatch => {
+                const color = swatch.dataset.color;
+                if (color === currentFabricData.selectedColor) {
+                    swatch.classList.add('active');
+                } else {
+                    swatch.classList.remove('active');
+                }
+            });
+        }
+    }
+    
+    // 杈呭姪鍑芥暟锛氭洿鏂伴鑹叉枃鏈?    function updateColorText() {
+        if (fabricColor) {
+            const colorMap = {
+                'gray': '鐏拌壊',
+                'beige': '绫宠壊',
+                'blue': '钃濊壊',
+                'green': '缁胯壊',
+                'brown': '妫曡壊',
+                'red': '绾㈣壊',
+                'black': '榛戣壊'
+            };
+            fabricColor.textContent = colorMap[currentFabricData.selectedColor] || '鐏拌壊';
+        }
+    }
+    
+    // 鍏抽棴鎸夐挳鐐瑰嚮浜嬩欢
+    if (modalCloseBtn) {
+        modalCloseBtn.addEventListener('click', closeFabricModal);
+    }
+    
+    // 鑳屾櫙閬僵鐐瑰嚮浜嬩欢
+    if (fabricModalOverlay) {
+        fabricModalOverlay.addEventListener('click', closeFabricModal);
+    }
+    
+    // 娣诲姞鍒板畾鍒舵寜閽偣鍑讳簨浠?    if (addToCustomBtn) {
+        addToCustomBtn.addEventListener('click', function() {
+            // 鍦ㄨ繖閲屽鐞嗛潰鏂欓€夋嫨閫昏緫
+            alert(`宸查€夋嫨闈㈡枡锛?{currentFabricData.model}锛岄鑹诧細${currentFabricData.selectedColor}`);
+            
+            // 鏇存柊椤甸潰涓婄殑閫変腑鐘舵€佸拰棰勮
+            updateSelectedFabric(currentFabricData);
+            
+            // 鍏抽棴妯℃€佹
+            closeFabricModal();
+            
+            // 鑷姩鍓嶈繘鍒颁笅涓€姝?            if (currentStep === 2) { // 濡傛灉褰撳墠鍦ㄩ潰鏂欓€夋嫨姝ラ
+                nextBtn.click();
+            }
+        });
+    }
+    
+    // 鏍峰搧琛ㄥ崟鍏抽棴鎸夐挳浜嬩欢
+    if (closeSampleForm && sampleFormModal) {
+        closeSampleForm.addEventListener('click', function() {
+            closeSampleFormModal();
+        });
+    }
+    
+    // 鏍峰搧琛ㄥ崟閬僵灞傜偣鍑讳簨浠?    const sampleFormOverlay = document.getElementById('sampleFormOverlay');
+    if (sampleFormOverlay) {
+        sampleFormOverlay.addEventListener('click', function() {
+            closeSampleFormModal();
+        });
+    }
+    
+    // 鏍峰搧鐢宠鎻愪氦鎸夐挳浜嬩欢
+    if (submitSampleBtn && sampleFormModal) {
+        submitSampleBtn.addEventListener('click', function() {
+            // 闅愯棌琛ㄥ崟
+            closeSampleFormModal();
+            
+            // 鏄剧ず鎴愬姛鎻愮ず
+            const sampleToast = document.getElementById('sampleToast');
+            if (sampleToast) {
+                sampleToast.classList.add('active');
+                
+                // 3绉掑悗闅愯棌鎻愮ず
+                setTimeout(() => {
+                    sampleToast.classList.remove('active');
+                }, 3000);
+            }
+        });
+    }
+    
+    // 鏇存柊閫変腑鐨勯潰鏂欎俊鎭埌椤甸潰涓?    function updateSelectedFabric(fabricData) {
+        // 杩欓噷鍙互鏇存柊涓婚〉闈笂鐨勯潰鏂欓瑙堝拰淇℃伅
+        // 浣嗙敱浜庢垜浠凡缁忛殣钘忎簡鍘熸湁鐨勯瑙堝尯鍩燂紝杩欓噷鍙互绠€鍗曞湴鏇存柊涓€浜涚姸鎬?        selectedFabric = fabricData.model;
+        selectedColor = fabricData.selectedColor;
+        
+        // 涔熷彲浠ュ湪椤甸潰涓婃坊鍔犱竴涓凡閫夐潰鏂欑殑鎻愮ず
+        const fabricSection = document.querySelector('.custom-section');
+        
+        if (fabricSection) {
+            // 妫€鏌ユ槸鍚﹀凡缁忔湁閫夋嫨鎻愮ず
+            let selectedInfo = fabricSection.querySelector('.selected-fabric-info');
+            
+            if (!selectedInfo) {
+                // 鍒涘缓閫夋嫨鎻愮ず
+                selectedInfo = document.createElement('div');
+                selectedInfo.className = 'selected-fabric-info mt-4 p-3 bg-blue-50 rounded-lg';
+                fabricSection.appendChild(selectedInfo);
+            }
+            
+            // 鏇存柊閫夋嫨鎻愮ず鍐呭
+            selectedInfo.innerHTML = `
+                <div class="flex items-center">
+                    <div class="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                    <div class="text-blue-800">宸查€夋嫨: <strong>${fabricData.model}</strong> (${fabricData.category}, ${fabricData.selectedColor}鑹?</div>
+                </div>
+            `;
+        }
+    }
+    
+    // 鎵撳紑妯℃€佹骞跺姞杞介潰鏂欐暟鎹?    function openFabricModal(fabricData) {
+        // 鏇存柊褰撳墠闈㈡枡鏁版嵁
+        if (fabricData) {
+            currentFabricData = fabricData;
+        }
+        
+        // 鏇存柊妯℃€佹鍐呭
+        updateModalContent();
+        
+        // 鏄剧ず妯℃€佹
+        if (fabricModal && fabricModalOverlay) {
+            fabricModal.classList.add('active');
+            fabricModalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // 闃叉鑳屾櫙婊氬姩
+        }
+    }
+    
+    // 杩斿洖妯℃€佹鐨勬柟娉曪紝鍖呮嫭openFabricModal鍑芥暟
+    return {
+        openFabricModal: openFabricModal,
+        closeFabricModal: closeFabricModal
+    };
+}
+
+// 鍒濆鍖栭潰鏂欐ā鎬佹骞跺鍑烘柟娉?const fabricModalController = setupFabricModal();
+
+// 鐜板湪鎴戜滑鍙互浠庢ā鎬佹鎺у埗鍣ㄤ腑鑾峰彇open鍜宑lose鏂规硶
+window.openFabricModal = fabricModalController.openFabricModal;
+window.closeFabricModal = fabricModalController.closeFabricModal;
+
+// 澶勭悊鍙睍寮€鏂囨湰鍏冪礌
+document.addEventListener('DOMContentLoaded', function() {
+    // 鍒濆鍖栧彲灞曞紑鏂囨湰
+    initExpandableText();
+    
+    // 鎵撳紑闈㈡枡妯℃€佹鏃剁‘淇濋噸鏂板垵濮嬪寲鍙睍寮€鏂囨湰
+    document.querySelectorAll('.fabric-card').forEach(card => {
+        card.addEventListener('click', function() {
+            setTimeout(initExpandableText, 300); // 缁欐ā鎬佹鍔ㄧ敾涓€浜涙椂闂?        });
+    });
+});
+
+// 鍒濆鍖栧彲灞曞紑鏂囨湰鍔熻兘
+function initExpandableText() {
+    document.querySelectorAll('.expandable').forEach(element => {
+        // 绉婚櫎涔嬪墠鐨勪簨浠剁洃鍚櫒
+        element.removeEventListener('click', toggleExpandableText);
+        // 娣诲姞鏂扮殑浜嬩欢鐩戝惉鍣?        element.addEventListener('click', toggleExpandableText);
+        
+        // 閲嶇疆鐘舵€?        if(element.classList.contains('expanded')) {
+            element.classList.remove('expanded');
+            const indicator = element.querySelector('.expandable-indicator i');
+            if(indicator) {
+                indicator.className = 'fas fa-plus';
+            }
+        }
+    });
+}
+
+// 鍒囨崲鍙睍寮€鏂囨湰鏄剧ず
+function toggleExpandableText(event) {
+    const expandable = this;
+    expandable.classList.toggle('expanded');
+    
+    const indicator = expandable.querySelector('.expandable-indicator i');
+    if(indicator) {
+        if(expandable.classList.contains('expanded')) {
+            indicator.className = 'fas fa-minus';
+        } else {
+            indicator.className = 'fas fa-plus';
+        }
+    }
+    
+    // 闃叉浜嬩欢鍐掓场鍒板叾浠栧厓绱?    event.stopPropagation();
+}
+
+// 澶勭悊鐢宠鐨牱琛ㄥ崟涓殑鍦板潃绠＄悊鍔熻兘
+document.addEventListener('DOMContentLoaded', function() {
+    setupSampleFormAddressFeature();
+    setupSampleFormSubmission();
+});
+
+// 璁剧疆鏍峰搧鐢宠鎻愪氦鍔熻兘
+function setupSampleFormSubmission() {
+    // 璁剧疆鎻愪氦鎸夐挳鐐瑰嚮浜嬩欢
+    const submitSampleBtn = document.getElementById('submitSampleApplication');
+
+    if (submitSampleBtn) {
+        submitSampleBtn.addEventListener('click', function() {
+            // 鑾峰彇骞堕獙璇佸湴鍧€琛ㄥ崟鏁版嵁
+            if (validateAddressForm()) {
+                // 淇濆瓨鍦板潃鍒版湰鍦?                const addressData = {
+                    name: document.getElementById('recipientName').value,
+                    phone: document.getElementById('recipientPhone').value,
+                    address: document.getElementById('addressDetail').value,
+                    isDefault: false // 鏆備笉璁句负榛樿鍦板潃
+                };
+                
+                // 淇濆瓨鍦板潃
+                saveAddress(addressData);
+                
+                // 鑾峰彇澶囨敞淇℃伅
+                const remarkText = document.getElementById('sampleRemark').value;
+                
+                // 澶勭悊鎻愪氦鐢宠
+                processSubmitApplication(remarkText);
+            }
+        });
+    }
+}
+
+// 澶勭悊鏍峰搧鐢宠鎻愪氦鐨勫嚱鏁?function processSubmitApplication(remarkText = '') {
+    // 鎻愪氦鐢宠鐨勯€昏緫
+    console.log('澶勭悊鏍峰搧鐢宠鎻愪氦锛屽娉?', remarkText);
+    
+    // 鏄剧ず鎴愬姛鎻愮ず
+    showToast('鐨牱鐢宠宸叉彁浜わ紝鎴戜滑浼氬敖蹇负鎮ㄥ瘎閫侊紒');
+    
+    // 鍏抽棴琛ㄥ崟妯℃€佺獥
+    const sampleFormModal = document.getElementById('sampleFormModal');
+    const sampleFormOverlay = document.getElementById('sampleFormOverlay');
+    
+    if (sampleFormModal) {
+        sampleFormModal.classList.remove('active');
+    }
+    if (sampleFormOverlay) {
+        sampleFormOverlay.classList.remove('active');
+    }
+}
+
+function setupSampleFormAddressFeature() {
+    // 鐩稿叧DOM鍏冪礌
+    const showAddressListBtn = document.getElementById('showAddressList');
+    const showAddressFormBtn = document.getElementById('showAddressForm');
+    const addressListDropdown = document.getElementById('addressListDropdown');
+    const closeAddressListBtn = document.getElementById('closeAddressList');
+    const addressForm = document.getElementById('addressForm');
+    const cancelAddressFormBtn = document.getElementById('cancelAddressForm');
+    const selectedAddressCard = document.getElementById('selectedAddressCard');
+    const changeAddressBtn = document.getElementById('changeAddressBtn');
+    const emptyFormBtn = document.getElementById('emptyFormBtn');
+    const addressItems = document.querySelectorAll('.address-item');
+    const noAddressMessage = document.getElementById('noAddressMessage');
+    const selectedAddressActions = document.getElementById('selectedAddressActions');
+    const submitSelectedAddressBtn = document.getElementById('submitSelectedAddress');
+    
+    // 鍒濆鍖栨椂闅愯棌閫夋嫨鍦板潃鍚庣殑鎿嶄綔鍖哄煙
+    if (selectedAddressActions) {
+        selectedAddressActions.classList.add('hidden');
+    }
+
+    // 纭繚鍏冪礌瀛樺湪鍐嶆坊鍔犱簨浠?    if (!selectedAddressCard || !addressForm) return;
+    
+    // 閫夋嫨鍦板潃鎸夐挳鐐瑰嚮浜嬩欢
+    if (showAddressListBtn && addressListDropdown) {
+        showAddressListBtn.addEventListener('click', function(event) {
+            // 妫€鏌ユ槸鍚︽湁淇濆瓨鐨勫湴鍧€
+            const hasAddresses = checkSavedAddresses();
+            
+            // 鏍规嵁鏄惁鏈夊湴鍧€鏄剧ず涓嶅悓鍐呭
+            if (hasAddresses) {
+                // 鏄剧ず鍦板潃鍒楄〃
+                if (noAddressMessage) noAddressMessage.classList.add('hidden');
+                Array.from(addressListDropdown.querySelectorAll('.address-item')).forEach(item => {
+                    item.classList.remove('hidden');
+                });
+            } else {
+                // 鏄剧ず鏃犲湴鍧€鎻愮ず
+                if (noAddressMessage) noAddressMessage.classList.remove('hidden');
+                Array.from(addressListDropdown.querySelectorAll('.address-item')).forEach(item => {
+                    item.classList.add('hidden');
+                });
+            }
+            
+            addressListDropdown.classList.remove('hidden');
+            
+            // 鐐瑰嚮鍏朵粬鍖哄煙鍏抽棴鍦板潃鍒楄〃
+            setTimeout(() => {
+                document.addEventListener('click', closeAddressListOnClickOutside);
+            }, 100);
+            
+            // 闃绘浜嬩欢鍐掓场锛岄伩鍏嶇珛鍗冲叧闂?            event.stopPropagation();
+        });
+    }
+    
+    // 鎵嬪姩濉啓鎸夐挳鐐瑰嚮浜嬩欢
+    if (showAddressFormBtn && addressForm) {
+        showAddressFormBtn.addEventListener('click', function() {
+            showAddressForm();
+            // 闅愯棌宸查€夋嫨鍦板潃鐩稿叧鍐呭
+            if (selectedAddressCard) selectedAddressCard.classList.add('hidden');
+            if (selectedAddressActions) selectedAddressActions.classList.add('hidden');
+        });
+    }
+    
+    // 鏃犲湴鍧€鏃?鎵嬪姩濉啓"鎸夐挳鐐瑰嚮浜嬩欢
+    if (emptyFormBtn && addressForm) {
+        emptyFormBtn.addEventListener('click', function() {
+            // 鍏抽棴鍦板潃鍒楄〃
+            if (addressListDropdown) {
+                addressListDropdown.classList.add('hidden');
+                document.removeEventListener('click', closeAddressListOnClickOutside);
+            }
+            
+            // 鏄剧ず琛ㄥ崟
+            showAddressForm();
+            // 闅愯棌宸查€夋嫨鍦板潃鐩稿叧鍐呭
+            if (selectedAddressCard) selectedAddressCard.classList.add('hidden');
+            if (selectedAddressActions) selectedAddressActions.classList.add('hidden');
+        });
+    }
+    
+    // 鍙栨秷琛ㄥ崟鎸夐挳鐐瑰嚮浜嬩欢
+    if (cancelAddressFormBtn) {
+        cancelAddressFormBtn.addEventListener('click', function() {
+            // 妫€鏌ユ槸鍚︽湁閫変腑鐨勫湴鍧€锛屽鏋滄湁鍒欐樉绀猴紝鍚﹀垯淇濇寔琛ㄥ崟鏄剧ず
+            if (selectedAddressCard && !selectedAddressCard.classList.contains('hidden')) {
+                // 闅愯棌琛ㄥ崟锛屾樉绀哄凡閫夊湴鍧€
+                addressForm.classList.add('hidden');
+                if (selectedAddressActions) selectedAddressActions.classList.remove('hidden');
+            } else {
+                // 妫€鏌ユ槸鍚︽湁淇濆瓨鐨勫湴鍧€
+                const hasAddresses = checkSavedAddresses();
+                if (hasAddresses) {
+                    // 閫夋嫨绗竴涓湴鍧€
+                    const firstAddress = getSavedAddresses()[0];
+                    if (firstAddress) {
+                        selectAddress(firstAddress);
+                        if (selectedAddressActions) selectedAddressActions.classList.remove('hidden');
+                    }
+                } else {
+                    // 濡傛灉娌℃湁鍦板潃锛屾樉绀哄湴鍧€鍒楄〃
+                    if (showAddressListBtn) {
+                        showAddressListBtn.click();
+                    }
+                }
+            }
+        });
+    }
+    
+    // 鍏抽棴鍦板潃鍒楄〃鎸夐挳鐐瑰嚮浜嬩欢
+    if (closeAddressListBtn && addressListDropdown) {
+        closeAddressListBtn.addEventListener('click', function() {
+            addressListDropdown.classList.add('hidden');
+            document.removeEventListener('click', closeAddressListOnClickOutside);
+        });
+    }
+    
+    // 鐐瑰嚮澶栭儴鍖哄煙鍏抽棴鍦板潃鍒楄〃
+    function closeAddressListOnClickOutside(event) {
+        if (addressListDropdown && !addressListDropdown.contains(event.target) && 
+            showAddressListBtn && !showAddressListBtn.contains(event.target)) {
+            addressListDropdown.classList.add('hidden');
+            document.removeEventListener('click', closeAddressListOnClickOutside);
+        }
+    }
+    
+    // 鏇存崲鍦板潃鎸夐挳鐐瑰嚮浜嬩欢
+    if (changeAddressBtn && showAddressListBtn) {
+        changeAddressBtn.addEventListener('click', function(event) {
+            // 瑙﹀彂鏄剧ず鍦板潃鍒楄〃
+            if (showAddressListBtn && typeof showAddressListBtn.click === 'function') {
+                showAddressListBtn.click();
+            } else {
+                // 澶囬€夋柟妗堬細鐩存帴鏄剧ず鍦板潃鍒楄〃
+                const hasAddresses = checkSavedAddresses();
+                
+                // 鏍规嵁鏄惁鏈夊湴鍧€鏄剧ず涓嶅悓鍐呭
+                if (hasAddresses) {
+                    // 鏄剧ず鍦板潃鍒楄〃
+                    if (noAddressMessage) noAddressMessage.classList.add('hidden');
+                    Array.from(addressListDropdown.querySelectorAll('.address-item')).forEach(item => {
+                        item.classList.remove('hidden');
+                    });
+                } else {
+                    // 鏄剧ず鏃犲湴鍧€鎻愮ず
+                    if (noAddressMessage) noAddressMessage.classList.remove('hidden');
+                    Array.from(addressListDropdown.querySelectorAll('.address-item')).forEach(item => {
+                        item.classList.add('hidden');
+                    });
+                }
+                
+                addressListDropdown.classList.remove('hidden');
+                setTimeout(() => {
+                    document.addEventListener('click', closeAddressListOnClickOutside);
+                }, 100);
+            }
+            
+            // 闃绘浜嬩欢鍐掓场
+            event.stopPropagation();
+        });
+    }
+
+    // 褰撶偣鍑诲湴鍧€閫夋嫨鎸夐挳鏃?    addressItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const addressId = this.getAttribute('data-id');
+            // 妯℃嫙浠庢湇鍔″櫒鑾峰彇鍦板潃璇︽儏
+            const addressInfo = {
+                id: addressId,
+                name: this.querySelector('.name').textContent,
+                phone: this.querySelector('.phone').textContent,
+                address: this.querySelector('.address-text').textContent,
+                isDefault: this.querySelector('.default-tag') !== null
+            };
+            
+            // 濉厖宸查€夋嫨鐨勫湴鍧€鍗＄墖
+            selectAddress(addressInfo);
+            
+            // 鍏抽棴鍦板潃鍒楄〃涓嬫媺妗?            addressListDropdown.classList.add('hidden');
+            // 绉婚櫎鐐瑰嚮澶栭儴鍏抽棴鐨勪簨浠剁洃鍚?            document.removeEventListener('click', closeAddressListOnClickOutside);
+            
+            // 鏄剧ず宸查€夋嫨鍦板潃鐨勬搷浣滃尯鍩?            if (selectedAddressActions) {
+                selectedAddressActions.classList.remove('hidden');
+            }
+            
+            // 闅愯棌鍦板潃琛ㄥ崟
+            if (addressForm) {
+                addressForm.classList.add('hidden');
+            }
+        });
+    });
+
+    // 宸查€夋嫨鍦板潃鐨勬彁浜ゆ寜閽偣鍑讳簨浠?    if (submitSelectedAddressBtn) {
+        submitSelectedAddressBtn.addEventListener('click', function() {
+            // 鑾峰彇澶囨敞淇℃伅
+            const remarkText = document.getElementById('selectedAddressRemark').value;
+            
+            // 澶勭悊鎻愪氦鐢宠
+            processSubmitApplication(remarkText);
+        });
+    }
+}
+
+// 妫€鏌ュ苟鍔犺浇鍦板潃淇℃伅
+function checkAndLoadAddressInfo() {
+    // 妫€鏌ユ槸鍚︽湁淇濆瓨鐨勫湴鍧€
+    const hasAddresses = checkSavedAddresses();
+    
+    if (hasAddresses) {
+        // 鍔犺浇榛樿鍦板潃
+        loadDefaultAddress();
+    } else {
+        // 濡傛灉娌℃湁鍦板潃锛屾樉绀哄湴鍧€琛ㄥ崟
+        showAddressForm();
+    }
+}
+
+// 鏄剧ず鍦板潃琛ㄥ崟
+function showAddressForm() {
+    const selectedAddressCard = document.getElementById('selectedAddressCard');
+    const addressForm = document.getElementById('addressForm');
+    
+    if (selectedAddressCard && addressForm) {
+        // 娓呯┖琛ㄥ崟瀛楁
+        const nameInput = document.getElementById('recipientName');
+        const phoneInput = document.getElementById('recipientPhone');
+        const addressInput = document.getElementById('addressDetail');
+        
+        if (nameInput) nameInput.value = '';
+        if (phoneInput) phoneInput.value = '';
+        if (addressInput) addressInput.value = '';
+        
+        // 闅愯棌鍦板潃鍗＄墖锛屾樉绀鸿〃鍗?        selectedAddressCard.classList.add('hidden');
+        addressForm.classList.remove('hidden');
+    }
+}
+
+// 楠岃瘉鍦板潃琛ㄥ崟
+function validateAddressForm() {
+    const nameInput = document.getElementById('recipientName');
+    const phoneInput = document.getElementById('recipientPhone');
+    const addressInput = document.getElementById('addressDetail');
+    
+    if (!nameInput || !phoneInput || !addressInput) return false;
+    
+    // 绠€鍗曢獙璇侊細妫€鏌ュ瓧娈典笉涓虹┖
+    if (nameInput.value.trim() === '') {
+        showToast('璇疯緭鍏ユ敹浠朵汉濮撳悕');
+        nameInput.focus();
+        return false;
+    }
+    
+    if (phoneInput.value.trim() === '') {
+        showToast('璇疯緭鍏ヨ仈绯荤數璇?);
+        phoneInput.focus();
+        return false;
+    }
+    
+    // 绠€鍗曠殑鎵嬫満鍙烽獙璇?    const phonePattern = /^1[3-9]\d{9}$/;
+    if (!phonePattern.test(phoneInput.value.trim())) {
+        showToast('璇疯緭鍏ユ湁鏁堢殑鎵嬫満鍙?);
+        phoneInput.focus();
+        return false;
+    }
+    
+    if (addressInput.value.trim() === '') {
+        showToast('璇疯緭鍏ヨ缁嗗湴鍧€');
+        addressInput.focus();
+        return false;
+    }
+    
+    return true;
+}
+
+// 鏄剧ずToast鎻愮ず
+function showToast(message) {
+    // 妫€鏌ユ槸鍚﹀凡鏈塼oast
+    let toast = document.querySelector('.toast-notification');
+    
+    // 濡傛灉娌℃湁锛屽垱寤轰竴涓?    if (!toast) {
+        toast = document.createElement('div');
+        toast.className = 'toast-notification';
+        toast.innerHTML = `
+            <span class="toast-icon"><i class="fas fa-check-circle"></i></span>
+            <span class="toast-message">${message}</span>
+        `;
+        document.body.appendChild(toast);
+    } else {
+        toast.querySelector('.toast-message').textContent = message;
+    }
+    
+    // 鏄剧ずtoast
+    setTimeout(() => {
+        toast.classList.add('active');
+    }, 10);
+    
+    // 3绉掑悗闅愯棌
+    setTimeout(() => {
+        toast.classList.remove('active');
+    }, 3000);
+}
+
+// 妫€鏌ユ槸鍚︽湁淇濆瓨鐨勫湴鍧€
+function checkSavedAddresses() {
+    // 瀹為檯搴旂敤涓紝杩欓噷浼氫粠localStorage鎴朅PI鑾峰彇淇濆瓨鐨勫湴鍧€
+    // 杩欓噷绠€鍗曟ā鎷?    const addresses = getSavedAddresses();
+    return addresses.length > 0;
+}
+
+// 鑾峰彇淇濆瓨鐨勫湴鍧€
+function getSavedAddresses() {
+    // 瀹為檯搴旂敤涓紝杩欓噷浼氫粠localStorage鎴朅PI鑾峰彇淇濆瓨鐨勫湴鍧€
+    // 杩欓噷绠€鍗曟ā鎷?    const mockAddresses = [
+        {
+            id: 1,
+            name: '寮犱笁',
+            phone: '138****1234',
+            address: '鍖椾含甯傛湞闃冲尯鏌愭煇璺?23鍙锋煇鏌愬皬鍖篈搴?鍗曞厓501瀹?,
+            isDefault: true
+        },
+        {
+            id: 2,
+            name: '寮犱笁',
+            phone: '139****5678',
+            address: '涓婃捣甯傛郸涓滄柊鍖洪檰瀹跺槾涓栫邯澶ч亾1鍙风幆鐞冮噾铻嶄腑蹇?8灞?,
+            isDefault: false
+        },
+        {
+            id: 3,
+            name: '鏉庡洓',
+            phone: '137****9876',
+            address: '骞垮窞甯傚ぉ娌冲尯澶╂渤璺?85鍙峰お鍙ゆ眹鍟嗗満4妤?,
+            isDefault: false
+        }
+    ];
+    
+    // 妯℃嫙娌℃湁鍦板潃鐨勬儏鍐碉紝鍙互鏍规嵁闇€瑕佹敞閲婃帀杩欒浠ｇ爜
+    // return [];
+    
+    return mockAddresses;
+}
+
+// 淇濆瓨鍦板潃
+function saveAddress(addressData) {
+    // 瀹為檯搴旂敤涓紝杩欓噷浼氬皢鍦板潃淇濆瓨鍒發ocalStorage鎴栭€氳繃API鍙戦€佸埌鏈嶅姟鍣?    console.log('淇濆瓨鍦板潃:', addressData);
+    
+    // 杩欓噷绠€鍗曟ā鎷燂紝瀹為檯搴旂敤闇€瑕佸疄鐜版寔涔呭寲
+    alert('鍦板潃淇濆瓨鎴愬姛锛?);
+}
+
+// 鑷姩鍔犺浇榛樿鍦板潃
+function loadDefaultAddress() {
+    // 鑾峰彇淇濆瓨鐨勫湴鍧€
+    const addresses = getSavedAddresses();
+    
+    // 鏌ユ壘榛樿鍦板潃
+    let defaultAddress = addresses.find(addr => addr.isDefault);
+    
+    // 濡傛灉娌℃湁榛樿鍦板潃锛屼娇鐢ㄧ涓€涓湴鍧€
+    if (!defaultAddress && addresses.length > 0) {
+        defaultAddress = addresses[0];
+    }
+    
+    // 濡傛灉鏈夊湴鍧€锛屽垯閫夋嫨璇ュ湴鍧€
+    if (defaultAddress) {
+        selectAddress(defaultAddress);
+    } else {
+        // 濡傛灉娌℃湁鍦板潃锛屾樉绀鸿〃鍗?        showAddressForm();
+    }
+}
+
+// 閫夋嫨鍦板潃鐨勯€氱敤鍑芥暟
+function selectAddress(addressData) {
+    const selectedName = document.getElementById('selectedName');
+    const selectedPhone = document.getElementById('selectedPhone');
+    const selectedAddress = document.getElementById('selectedAddress');
+    const defaultTag = document.getElementById('defaultTag');
+    const selectedAddressCard = document.getElementById('selectedAddressCard');
+    const selectedAddressActions = document.getElementById('selectedAddressActions');
+    
+    if (selectedName) selectedName.textContent = addressData.name;
+    if (selectedPhone) selectedPhone.textContent = addressData.phone;
+    if (selectedAddress) selectedAddress.textContent = addressData.address;
+    
+    // 澶勭悊榛樿鏍囩
+    if (defaultTag) {
+        if (addressData.isDefault) {
+            defaultTag.classList.remove('hidden');
+        } else {
+            defaultTag.classList.add('hidden');
+        }
+    }
+    
+    // 鏄剧ず宸查€夋嫨鐨勫湴鍧€鍗＄墖
+    if (selectedAddressCard) {
+        selectedAddressCard.classList.remove('hidden');
+    }
+    
+    // 鏄剧ず宸查€夋嫨鍦板潃鐨勬搷浣滃尯鍩?    if (selectedAddressActions) {
+        selectedAddressActions.classList.remove('hidden');
+    }
+    
+    // 濉厖琛ㄥ崟锛堥殣钘忚捣鏉ワ紝浣嗕繚鎸佽〃鍗曟暟鎹负鏈€鏂帮級
+    fillAddressForm(addressData);
+    
+    // 淇濆瓨褰撳墠閫夋嫨鐨勫湴鍧€
+    localStorage.setItem('currentSelectedAddress', JSON.stringify(addressData));
+}
+
+// 濉厖鍦板潃琛ㄥ崟
+function fillAddressForm(addressData) {
+    if (!addressData) return;
+    
+    const recipientNameInput = document.getElementById('recipientName');
+    const recipientPhoneInput = document.getElementById('recipientPhone');
+    const addressDetailInput = document.getElementById('addressDetail');
+    
+    if (recipientNameInput) recipientNameInput.value = addressData.name || '';
+    if (recipientPhoneInput) recipientPhoneInput.value = addressData.phone || '';
+    if (addressDetailInput) addressDetailInput.value = addressData.address || '';
+}
+
+// 鍦烘櫙閫夋嫨鐩稿叧閰嶇疆
+const sceneConfig = {
+    "small-living": {
+        title: "灏忔埛鍨嬪鍘?,
+        type: "straight",
+        size: 210,
+        recommendation: "鎮ㄩ€夋嫨鐨勫皬鎴峰瀷鏂规閫傚悎10-15銕＄殑瀹㈠巺锛屾帹鑽?.1绫崇洿鎺掓矙鍙戯紝绠€绾﹂鏍硷紝甯︽敹绾冲姛鑳斤紝鑺傜渷绌洪棿銆?
+    },
+    "family": {
+        title: "瀹跺涵褰遍櫌",
+        type: "l-shape",
+        size: 270,
+        recommendation: "鎮ㄩ€夋嫨鐨勫搴奖闄㈡柟妗堥€傚悎20-25銕＄殑瀹㈠巺锛屾帹鑽?.7绫矻鍨嬫矙鍙戯紝鑸掗€傞潬鑳岋紝鏂逛究鍏ㄥ浜轰竴璧疯褰变紤闂层€?
+    },
+    "office": {
+        title: "鍔炲叕鎺ュ緟",
+        type: "straight",
+        size: 240,
+        recommendation: "鎮ㄩ€夋嫨鐨勫姙鍏帴寰呮柟妗堥€傚悎15-20銕＄殑绌洪棿锛屾帹鑽?.4绫崇洿鎺掓矙鍙戯紝绠€娲佸ぇ鏂癸紝鏄撲簬娓呮磥锛岀獊鏄句笓涓氬舰璞°€?
+    },
+    "open": {
+        title: "寮€鏀惧紡绌洪棿",
+        type: "u-shape",
+        size: 300,
+        recommendation: "鎮ㄩ€夋嫨鐨勫紑鏀惧紡绌洪棿鏂规閫傚悎25銕′互涓婄殑澶х┖闂达紝鎺ㄨ崘3.0绫砋鍨嬫矙鍙戯紝鍙綔涓虹┖闂村垎闅旓紝鎻愪緵绀句氦鑱氫細鍦烘墍銆?
+    }
+};
+
+// 鍦烘櫙閫夋嫨澶勭悊
+document.addEventListener('DOMContentLoaded', () => {
+    // 鍒濆鍖栧満鏅崱鐗囩偣鍑讳簨浠?    
+    
+    // 鍒濆鍖栨矙鍙戠被鍨嬮€夋嫨
+    setupSofaTypeSelection();
+    
+    // 鍒濆鍖栧昂瀵搁€夋嫨
+    setupSizeSelection();
+    
+    // 鐩戝惉灏哄婊戝潡鍙樺寲
+    setupSizeSlider();
+});
+
+// 鍦烘櫙閫夋嫨鍔熻兘
+function setupSceneSelection() {
+    const sceneCards = document.querySelectorAll('.scene-card');
+    
+    sceneCards.forEach(card => {
+        card.addEventListener('click', () => {
+            // 绉婚櫎鍏朵粬鍗＄墖鐨勯€変腑鐘舵€?            sceneCards.forEach(c => c.classList.remove('active'));
+            
+            // 娣诲姞褰撳墠鍗＄墖鐨勯€変腑鐘舵€?            card.classList.add('active');
+            
+            // 鑾峰彇鍦烘櫙绫诲瀷
+            const sceneType = card.dataset.scene;
+            
+            // 搴旂敤鍦烘櫙閰嶇疆
+            applySceneConfig(sceneType);
+        });
+    });
+}
+
+// 搴旂敤鍦烘櫙閰嶇疆
+function applySceneConfig(sceneType) {
+    const config = sceneConfig[sceneType];
+    if (!config) return;
+    
+    // 璁剧疆娌欏彂绫诲瀷
+    setActiveType(config.type);
+    
+    // 璁剧疆灏哄
+    setActiveSize(config.size);
+    
+    // 鏇存柊婊戝潡鍊?    updateSizeSlider(config.size);
+    
+    // 鏇存柊璁捐甯堝缓璁?    updateRecommendation(config.recommendation);
+}
+
+// 璁剧疆娲昏穬鐨勬矙鍙戠被鍨?function setActiveType(type) {
+    const typeButtons = document.querySelectorAll('.type-btn');
+    
+    typeButtons.forEach(btn => {
+        if (btn.dataset.type === type) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+}
+
+// 璁剧疆娲昏穬鐨勫昂瀵?function setActiveSize(size) {
+    const sizeChips = document.querySelectorAll('.size-chip');
+    let foundMatch = false;
+    
+    sizeChips.forEach(chip => {
+        if (parseInt(chip.dataset.size, 10) === size) {
+            chip.classList.add('active');
+            foundMatch = true;
+        } else {
+            chip.classList.remove('active');
+        }
+    });
+    
+    // 濡傛灉娌℃湁鍖归厤鐨勫昂瀵搁€夐」锛屽垯涓嶉€変腑浠讳綍涓€涓?    if (!foundMatch) {
+        // 鍙互鍦ㄨ繖閲屾坊鍔犺嚜瀹氫箟灏哄鐨勯€昏緫
+    }
+    
+    // 鏇存柊娌欏彂灏哄鍙鍖?    updateSofaVisualization(size);
+}
+
+// 娌欏彂绫诲瀷閫夋嫨
+function setupSofaTypeSelection() {
+    const typeButtons = document.querySelectorAll('.type-btn');
+    
+    typeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // 绉婚櫎鍏朵粬鎸夐挳鐨勯€変腑鐘舵€?            typeButtons.forEach(b => b.classList.remove('active'));
+            
+            // 娣诲姞褰撳墠鎸夐挳鐨勯€変腑鐘舵€?            btn.classList.add('active');
+            
+            // 鏍规嵁娌欏彂绫诲瀷鏇存柊鎺ㄨ崘灏哄
+            updateRecommendationByType(btn.dataset.type);
+        });
+    });
+}
+
+// 灏哄閫夋嫨
+function setupSizeSelection() {
+    const sizeChips = document.querySelectorAll('.size-chip');
+    
+    sizeChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            // 绉婚櫎鍏朵粬灏哄鐨勯€変腑鐘舵€?            sizeChips.forEach(c => c.classList.remove('active'));
+            
+            // 娣诲姞褰撳墠灏哄鐨勯€変腑鐘舵€?            chip.classList.add('active');
+            
+            // 鑾峰彇閫変腑鐨勫昂瀵稿€?            const sizeValue = parseInt(chip.dataset.size, 10);
+            
+            // 鏇存柊婊戝潡鍊?            updateSizeSlider(sizeValue);
+            
+            // 鏇存柊娌欏彂灏哄鍙鍖?            updateSofaVisualization(sizeValue);
+            
+            // 鏇存柊璁捐甯堝缓璁?            updateRecommendationBySize(sizeValue);
+        });
+    });
+}
+
+// 灏哄婊戝潡
+function setupSizeSlider() {
+    const sizeSlider = document.querySelector('.size-range');
+    const currentSizeElement = document.querySelector('.current-size');
+    
+    if (sizeSlider && currentSizeElement) {
+        sizeSlider.addEventListener('input', () => {
+            const sizeValue = parseInt(sizeSlider.value, 10);
+            
+            // 鏇存柊褰撳墠灏哄鏄剧ず
+            currentSizeElement.textContent = `${sizeValue}cm`;
+            
+            // 鏇存柊娌欏彂灏哄鍙鍖?            updateSofaVisualization(sizeValue);
+            
+            // 妫€鏌ユ槸鍚﹀尮閰嶉璁惧昂瀵?            updateSizeChipBySlider(sizeValue);
+            
+            // 鏇存柊璁捐甯堝缓璁?            updateRecommendationBySize(sizeValue);
+        });
+    }
+}
+
+// 鏇存柊灏哄婊戝潡鍊?function updateSizeSlider(size) {
+    const sizeSlider = document.querySelector('.size-range');
+    const currentSizeElement = document.querySelector('.current-size');
+    
+    if (sizeSlider && currentSizeElement) {
+        sizeSlider.value = size;
+        currentSizeElement.textContent = `${size}cm`;
+    }
+}
+
+// 鏍规嵁婊戝潡鍊兼洿鏂板昂瀵搁€夋嫨鑺墖
+function updateSizeChipBySlider(size) {
+    const sizeChips = document.querySelectorAll('.size-chip');
+    let foundMatch = false;
+    
+    sizeChips.forEach(chip => {
+        if (parseInt(chip.dataset.size, 10) === size) {
+            chip.classList.add('active');
+            foundMatch = true;
+        } else {
+            chip.classList.remove('active');
+        }
+    });
+    
+    // 濡傛灉娌℃湁鍖归厤鐨勫昂瀵革紝鍒欏彇娑堟墍鏈夐€変腑鐘舵€?    if (!foundMatch) {
+        sizeChips.forEach(chip => chip.classList.remove('active'));
+    }
+}
+
+// 鏇存柊娌欏彂鍙鍖?function updateSofaVisualization(size) {
+    const sofaOutline = document.querySelector('.sofa-outline');
+    const sizeLabel = document.querySelector('.size-label');
+    
+    if (sofaOutline && sizeLabel) {
+        // 璁＄畻娌欏彂鍦ㄦ埧闂翠腑鐨勬瘮渚?(180cm-360cm 鏄犲皠鍒?30%-80%)
+        const minSize = 180;
+        const maxSize = 360;
+        const minWidth = 30;
+        const maxWidth = 80;
+        
+        const percentage = minWidth + ((size - minSize) / (maxSize - minSize)) * (maxWidth - minWidth);
+        
+        // 鏇存柊娌欏彂瀹藉害鍜屾爣绛?        sofaOutline.style.width = `${percentage}%`;
+        sizeLabel.textContent = `${size}cm`;
+    }
+}
+
+// 鏍规嵁娌欏彂绫诲瀷鏇存柊寤鸿
+function updateRecommendationByType(type) {
+    const recommendationText = document.querySelector('.recommendation-text');
+    
+    if (recommendationText) {
+        let recommendation = '';
+        
+        switch (type) {
+            case 'straight':
+                recommendation = '鐩存帓娌欏彂鏄渶缁忓吀鐨勬寮忥紝閫傚悎鏀惧湪澧欒竟锛岄€傚悎澶у鏁板搴鍘咃紝鎺ㄨ崘閫夋嫨2.4绫充互涓婂昂瀵搞€?;
+                break;
+            case 'l-shape':
+                recommendation = 'L鍨嬫矙鍙戦€傚悎鏀惧湪瀹㈠巺鎷愯锛岃兘鍏呭垎鍒╃敤绌洪棿锛屾彁渚涙洿澶氬骇浣嶏紝閫傚悎瀹朵汉涓€璧疯褰变紤闂层€?;
+                break;
+            case 'u-shape':
+                recommendation = 'U鍨嬫矙鍙戞彁渚涙渶澶х殑搴т綅绌洪棿锛岄€傚悎澶ф埛鍨嬪拰寮€鏀惧紡瀹㈠巺锛屾槸瀹跺涵鑱氫細鐨勭悊鎯抽€夋嫨銆?;
+                break;
+            case 'modular':
+                recommendation = '缁勫悎娌欏彂鐏垫椿澶氬彉锛屽彲鏍规嵁闇€瑕佽皟鏁村竷灞€锛岄€傚悎闇€瑕佺粡甯稿彉鎹㈠鍏峰竷缃殑瀹跺涵銆?;
+                break;
+            default:
+                recommendation = '璇烽€夋嫨娌欏彂绫诲瀷鑾峰彇璁捐甯堝缓璁€?;
+        }
+        
+        recommendationText.textContent = recommendation;
+    }
+}
+
+// 鏍规嵁灏哄鏇存柊寤鸿
+function updateRecommendationBySize(size) {
+    const recommendationText = document.querySelector('.recommendation-text');
+    
+    if (recommendationText) {
+        let recommendation = '';
+        
+        if (size <= 180) {
+            recommendation = '鎮ㄩ€夋嫨鐨?.8绫虫矙鍙戦€傚悎8-12銕＄殑灏忓鍘呮垨涔︽埧锛屽缓璁埧闂村搴︿笉灏忎簬2.5绫炽€?;
+        } else if (size <= 210) {
+            recommendation = '鎮ㄩ€夋嫨鐨?.1绫虫矙鍙戦€傚悎12-15銕＄殑瀹㈠巺锛岄€傚悎2-3浜哄搴紝寤鸿鎴块棿瀹藉害涓嶅皬浜?.8绫炽€?;
+        } else if (size <= 240) {
+            recommendation = '鎮ㄩ€夋嫨鐨?.4绫虫矙鍙戦€傚悎15-20銕＄殑瀹㈠巺锛屾槸鏈€甯歌鐨勪笁浜烘矙鍙戝昂瀵革紝寤鸿鎴块棿瀹藉害涓嶅皬浜?绫炽€?;
+        } else if (size <= 270) {
+            recommendation = '鎮ㄩ€夋嫨鐨?.7绫虫矙鍙戦€傚悎20-25銕＄殑瀹㈠巺锛屾彁渚涘鏁炵殑涓変汉搴т綅锛屽缓璁埧闂村搴︿笉灏忎簬3.5绫炽€?;
+        } else if (size <= 300) {
+            recommendation = '鎮ㄩ€夋嫨鐨?绫虫矙鍙戦€傚悎25銕′互涓婄殑澶у鍘咃紝鑳藉绾?浜哄悓鏃朵箻鍧愶紝寤鸿鎴块棿瀹藉害涓嶅皬浜?绫炽€?;
+        } else {
+            recommendation = '鎮ㄩ€夋嫨鐨勮秴澶у昂瀵告矙鍙戦€傚悎30銕′互涓婄殑寮€闃旂┖闂达紝閫傚悎澶у搴垨缁忓父鏈夊浜烘潵璁跨殑瀹跺涵銆?;
+        }
+        
+        recommendationText.textContent = recommendation;
+    }
+}
+
+// 鐩存帴鏇存柊寤鸿鏂囨湰
+function updateRecommendation(text) {
+    const recommendationText = document.querySelector('.recommendation-text');
+    
+    if (recommendationText && text) {
+        recommendationText.textContent = text;
+    }
+}
+
+// 娌欏彂閰嶇疆鍜屽昂瀵搁€夋嫨鐩稿叧鍔熻兘
+document.addEventListener('DOMContentLoaded', () => {
+    // 鍒濆鍖栨矙鍙戠被鍨嬮檺鍒舵鏌?    checkTypeRestrictions();
+    
+    // 鍒濆鍖栨矙鍙戠被鍨嬮€夋嫨
+    setupSofaTypeSelection();
+    
+    // 鍒濆鍖栧浣嶆柟鍚戦€夋嫨
+    setupDirectionSelection();
+    
+    // 鍒濆鍖栨ā鍧楁暟閲忛€夋嫨
+    setupModuleSelection();
+    
+    // 鍒濆鍖栧昂瀵搁璁鹃€夋嫨
+    setupSizePresets();
+    
+    // 鍒濆鍖栧昂瀵告粦鍧?    setupDimensionSliders();
+    
+    // 鍒濆鍖栭珮绾ч€夐」鍒囨崲
+    setupAdvancedOptions();
+    
+    // 鍒濆鍖栬鍥惧垏鎹?    setupViewToggle();
+});
+
+// 妫€鏌ユ矙鍙戠被鍨嬮檺鍒?function checkTypeRestrictions() {
+    // 鑾峰彇绗竴姝ラ€夋嫨鐨勬矙鍙戝瀷鍙?    const selectedModel = getCurrentModel();
+    
+    // 濡傛灉娌℃湁閫夋嫨鍨嬪彿锛岀鐢ㄥ彈闄愮殑娌欏彂绫诲瀷
+    if (!selectedModel) return;
+    
+    // 妫€鏌ユ瘡涓被鍨嬫寜閽?    document.querySelectorAll('.type-btn[data-requires]').forEach(btn => {
+        const requiredSeries = btn.dataset.requires.split(',');
+        
+        // 妫€鏌ュ綋鍓嶉€夋嫨鐨勫瀷鍙锋槸鍚﹀湪鍏佽鐨勭郴鍒椾腑
+        if (selectedModel && !isModelInSeries(selectedModel, requiredSeries)) {
+            btn.classList.add('disabled');
+            btn.setAttribute('title', '褰撳墠鎵€閫夋矙鍙戝瀷鍙蜂笉鏀寔姝ら厤缃?);
+        } else {
+            btn.classList.remove('disabled');
+            btn.removeAttribute('title');
+        }
+    });
+}
+
+// 鑾峰彇褰撳墠閫夋嫨鐨勬矙鍙戝瀷鍙?function getCurrentModel() {
+    // 姝ゅ搴旇杩斿洖鐢ㄦ埛鍦ㄧ涓€姝ラ€夋嫨鐨勬矙鍙戝瀷鍙?    // 杩欓噷绠€鍗曟ā鎷熶竴涓€硷紝瀹為檯搴旂敤涓簲浠庡簲鐢ㄧ姸鎬佽幏鍙?    return 'XK-101'; // 绀轰緥锛氬姛鑳芥矙鍙戝瀷鍙?}
+
+// 妫€鏌ュ瀷鍙锋槸鍚﹀睘浜庢寚瀹氱郴鍒?function isModelInSeries(model, seriesList) {
+    if (!model) return false;
+    
+    // 浠庡瀷鍙锋彁鍙栫郴鍒椾唬鐮侊紙濡俋K-101涓殑XK锛?    const seriesCode = model.split('-')[0];
+    
+    // 妫€鏌ユ槸鍚﹀湪鍏佽鐨勭郴鍒楀垪琛ㄤ腑
+    return seriesList.includes(seriesCode);
+}
+
+// 璁剧疆娌欏彂绫诲瀷閫夋嫨鍔熻兘
+function setupSofaTypeSelection() {
+    const typeButtons = document.querySelectorAll('.type-btn');
+    
+    typeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // 濡傛灉鎸夐挳琚鐢紝涓嶆墽琛屾搷浣?            if (btn.classList.contains('disabled')) return;
+            
+            // 绉婚櫎鍏朵粬鎸夐挳鐨勯€変腑鐘舵€?            typeButtons.forEach(b => b.classList.remove('active'));
+            
+            // 娣诲姞褰撳墠鎸夐挳鐨勯€変腑鐘舵€?            btn.classList.add('active');
+            
+            // 鑾峰彇鎵€閫夌被鍨?            const selectedType = btn.dataset.type;
+            
+            // 鏇存柊娌欏彂鍙鍖栨樉绀?            updateSofaVisualization(selectedType);
+            
+            // 鏇存柊鏉′欢閫夐」鏄剧ず
+            toggleConditionalOptions(selectedType);
+            
+            // 鏇存柊鎺ㄨ崘淇℃伅
+            updateRecommendationByType(selectedType);
+        });
+    });
+}
+
+// 鏇存柊娌欏彂鍙鍖?function updateSofaVisualization(type) {
+    // 闅愯棌鎵€鏈夋矙鍙戣疆寤?    document.querySelectorAll('.sofa-outline').forEach(outline => {
+        outline.style.display = 'none';
+    });
+    
+    // 鏄剧ず瀵瑰簲绫诲瀷鐨勬矙鍙戣疆寤?    const targetOutline = document.querySelector(`.sofa-outline[data-type="${type}"]`);
+    if (targetOutline) {
+        targetOutline.style.display = 'block';
+    }
+    
+    // 濡傛灉鏄疞鍨嬫矙鍙戯紝搴旂敤褰撳墠閫夋嫨鐨勫浣嶆柟鍚?    if (type === 'l-shape') {
+        updateLShapeDirection();
+    }
+}
+
+// 鍒囨崲鏉′欢鎬ч€夐」鏄剧ず
+function toggleConditionalOptions(type) {
+    // 闅愯棌鎵€鏈夋潯浠堕€夐」
+    document.querySelectorAll('.conditional-option').forEach(option => {
+        option.classList.remove('active');
+    });
+    
+    // 鏄剧ず閫傜敤浜庡綋鍓嶇被鍨嬬殑閫夐」
+    document.querySelectorAll(`.conditional-option[data-show-when="${type}"]`).forEach(option => {
+        option.classList.add('active');
+    });
+}
+
+// 璁剧疆濡冧綅鏂瑰悜閫夋嫨
+function setupDirectionSelection() {
+    const directionButtons = document.querySelectorAll('.direction-btn');
+    
+    directionButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // 绉婚櫎鍏朵粬鎸夐挳鐨勯€変腑鐘舵€?            directionButtons.forEach(b => b.classList.remove('active'));
+            
+            // 娣诲姞褰撳墠鎸夐挳鐨勯€変腑鐘舵€?            btn.classList.add('active');
+            
+            // 鏇存柊L鍨嬫矙鍙戠殑鏂瑰悜
+            updateLShapeDirection();
+        });
+    });
+}
+
+// 鏇存柊L鍨嬫矙鍙戠殑鏂瑰悜
+function updateLShapeDirection() {
+    const activeDirection = document.querySelector('.direction-btn.active');
+    if (!activeDirection) return;
+    
+    const direction = activeDirection.dataset.direction;
+    
+    // 鑾峰彇L鍨嬫矙鍙戠殑鍙鍖栧厓绱?    const lShapeVisual = document.querySelector('.sofa-visual.l-shape-left, .sofa-visual.l-shape-right');
+    
+    if (lShapeVisual) {
+        // 绉婚櫎鐜版湁鏂瑰悜绫?        lShapeVisual.classList.remove('l-shape-left', 'l-shape-right');
+        
+        // 娣诲姞鏂版柟鍚戠被
+        lShapeVisual.classList.add(`l-shape-${direction}`);
+    }
+}
+
+// 璁剧疆妯″潡鏁伴噺閫夋嫨
+function setupModuleSelection() {
+    const minusButtons = document.querySelectorAll('.qty-btn.minus');
+    const plusButtons = document.querySelectorAll('.qty-btn.plus');
+    
+    // 鍑忓皯鏁伴噺鎸夐挳
+    minusButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const module = btn.dataset.module;
+            const valueElement = document.getElementById(`${module}-module-qty`);
+            
+            if (valueElement) {
+                let value = parseInt(valueElement.textContent, 10);
+                
+                // 纭繚涓嶄綆浜?
+                if (value > 0) {
+                    value--;
+                    valueElement.textContent = value;
+                    
+                    // 鏇存柊浠锋牸
+                    updatePriceImpact();
+                }
+            }
+        });
+    });
+    
+    // 澧炲姞鏁伴噺鎸夐挳
+    plusButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const module = btn.dataset.module;
+            const valueElement = document.getElementById(`${module}-module-qty`);
+            
+            if (valueElement) {
+                let value = parseInt(valueElement.textContent, 10);
+                
+                // 澧炲姞鏁伴噺锛屼絾闄愬埗鏈€澶у€间负5
+                if (value < 5) {
+                    value++;
+                    valueElement.textContent = value;
+                    
+                    // 鏇存柊浠锋牸
+                    updatePriceImpact();
+                }
+            }
+        });
+    });
+}
+
+// 璁剧疆灏哄棰勮閫夋嫨
+function setupSizePresets() {
+    const sizeChips = document.querySelectorAll('.size-chip');
+    const lengthSlider = document.getElementById('length-slider');
+    
+    sizeChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            // 绉婚櫎鎵€鏈夋寜閽殑閫変腑鐘舵€?            sizeChips.forEach(c => c.classList.remove('active'));
+            
+            // 璁剧疆褰撳墠鎸夐挳涓洪€変腑鐘舵€?            chip.classList.add('active');
+            
+            // 鑾峰彇灏哄鍊?            const size = chip.getAttribute('data-size');
+            
+            // 鏇存柊婊戝潡鍜屾樉绀哄€?            if (lengthSlider) {
+                lengthSlider.value = size;
+                updateSliderValue('length', size);
+            }
+            
+            // 鏇存柊褰撳墠閫夋嫨鏄剧ず
+            const currentSizeDisplay = document.querySelector('.current-size-display span.font-medium');
+            if (currentSizeDisplay) {
+                currentSizeDisplay.textContent = chip.textContent;
+            }
+            
+            // 娣诲姞鐐瑰嚮鍙嶉鏁堟灉
+            chip.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                chip.style.transform = '';
+            }, 150);
+        });
+    });
+}
+
+// 璁剧疆灏哄婊戝潡
+function setupDimensionSliders() {
+    // 闀垮害婊戝潡
+    const lengthSlider = document.getElementById('length-slider');
+    const lengthValue = document.getElementById('length-value');
+    
+    if (lengthSlider && lengthValue) {
+        lengthSlider.addEventListener('input', () => {
+            updateSliderValue('length', lengthSlider.value);
+        });
+    }
+    
+    // 娣卞害婊戝潡
+    const depthSlider = document.getElementById('depth-slider');
+    const depthValue = document.getElementById('depth-value');
+    
+    if (depthSlider && depthValue) {
+        depthSlider.addEventListener('input', () => {
+            updateSliderValue('depth', depthSlider.value);
+        });
+    }
+    
+    // 楂樺害婊戝潡
+    const heightSlider = document.getElementById('height-slider');
+    const heightValue = document.getElementById('height-value');
+    
+    if (heightSlider && heightValue) {
+        heightSlider.addEventListener('input', () => {
+            updateSliderValue('height', heightSlider.value);
+        });
+    }
+    
+    // 楂樼骇閫夐」婊戝潡
+    const backrestSlider = document.getElementById('backrest-slider');
+    const backrestValue = document.getElementById('backrest-value');
+    
+    if (backrestSlider && backrestValue) {
+        backrestSlider.addEventListener('input', () => {
+            updateSliderValue('backrest', backrestSlider.value);
+        });
+    }
+    
+    const armrestSlider = document.getElementById('armrest-slider');
+    const armrestValue = document.getElementById('armrest-value');
+    
+    if (armrestSlider && armrestValue) {
+        armrestSlider.addEventListener('input', () => {
+            updateSliderValue('armrest', armrestSlider.value);
+        });
+    }
+}
+
+// 鏇存柊灏哄婊戝潡鍊煎苟楂樹寒鏄剧ず鍙樺寲
+function updateSliderValue(dimension, value) {
+    const valueElement = document.getElementById(`${dimension}-value`);
+    if (!valueElement) return;
+    
+    // 鏇存柊鏁板€?    valueElement.textContent = value;
+    
+    // 娣诲姞楂樹寒鏁堟灉
+    valueElement.parentElement.classList.add('highlight-change');
+    
+    // 绉婚櫎楂樹寒鏁堟灉锛堝姩鐢诲畬鎴愬悗锛?    setTimeout(() => {
+        valueElement.parentElement.classList.remove('highlight-change');
+    }, 800);
+    
+    // 鏇存柊灏哄鎸夐挳鐨勯€変腑鐘舵€?    if (dimension === 'length') {
+        updateSizeChipBySlider(value);
+    }
+    
+    // 鏇存柊鍙鍖栨晥鏋?    updateDimensionLabels();
+    
+    // 鏇存柊鎺ㄨ崘鏂囨湰
+    if (dimension === 'length') {
+        updateRecommendationBySize(value);
+    }
+    
+    // 浠锋牸褰卞搷璁＄畻
+    updatePriceImpact();
+}
+
+// 鏍规嵁婊戝潡鍊兼洿鏂板昂瀵告寜閽€変腑鐘舵€?function updateSizeChipBySlider(value) {
+    const sizeChips = document.querySelectorAll('.size-chip');
+    const numValue = parseInt(value, 10);
+    
+    // 绉婚櫎鎵€鏈夋寜閽殑閫変腑鐘舵€?    sizeChips.forEach(chip => {
+        chip.classList.remove('active');
+    });
+    
+    // 鍖归厤鎵惧埌鐨勬寜閽涓洪€変腑
+    let foundMatch = false;
+    sizeChips.forEach(chip => {
+        const chipSize = parseInt(chip.getAttribute('data-size'), 10);
+        if (chipSize === numValue) {
+            chip.classList.add('active');
+            foundMatch = true;
+        }
+    });
+    
+    // 鏇存柊褰撳墠閫夋嫨鏄剧ず
+    const currentSizeDisplay = document.querySelector('.current-size-display span.font-medium');
+    if (currentSizeDisplay) {
+        if (foundMatch) {
+            // 鎵惧埌鍖归厤鐨勯璁惧昂瀵革紝鏄剧ず鍏跺悕绉?            const activeChip = document.querySelector('.size-chip.active');
+            if (activeChip) {
+                currentSizeDisplay.textContent = activeChip.textContent;
+            }
+        } else {
+            // 娌℃壘鍒板尮閰嶏紝鏄剧ず涓鸿嚜瀹氫箟灏哄
+            currentSizeDisplay.textContent = `鑷畾涔?(${value}鍘樼背)`;
+        }
+    }
+}
+
+// 鏇存柊灏哄鏍囩
+function updateDimensionLabels() {
+    const lengthValue = document.getElementById('length-value').textContent;
+    const depthValue = document.getElementById('depth-value').textContent;
+    
+    // 鏇存柊灏哄鏍囩鏄剧ず
+    document.querySelector('.length-label').textContent = `${lengthValue} 鍘樼背`;
+    document.querySelector('.depth-label').textContent = `${depthValue} 鍘樼背`;
+    
+    // 鏇存柊褰撳墠灏哄閫夋嫨鏄剧ず
+    const lengthNum = parseInt(lengthValue, 10);
+    let sizeText;
+    let isCustom = true;
+    
+    // 妫€鏌ユ槸鍚﹀尮閰嶉璁惧昂瀵?    document.querySelectorAll('.size-chip').forEach(chip => {
+        const chipSize = parseInt(chip.getAttribute('data-size'), 10);
+        if (chipSize === lengthNum) {
+            sizeText = chip.textContent;
+            isCustom = false;
+        }
+    });
+    
+    // 濡傛灉鏄嚜瀹氫箟灏哄
+    if (isCustom) {
+        sizeText = `鑷畾涔?(${lengthValue}鍘樼背)`;
+    }
+    
+    // 鏇存柊褰撳墠閫夋嫨鏄剧ず
+    const currentSizeDisplay = document.querySelector('.current-size-display span.font-medium');
+    if (currentSizeDisplay) {
+        currentSizeDisplay.textContent = sizeText;
+    }
+    
+    // 鏇存柊寤鸿鏂囨湰
+    updateRecommendationBySize(lengthNum);
+}
+
+// 璁剧疆楂樼骇閫夐」鍒囨崲
+function setupAdvancedOptions() {
+    console.log("[DEBUG] 寮€濮嬭缃珮绾ч€夐」");
+    const toggleMoreOptionsBtn = document.getElementById('toggle-more-options');
+    const advancedOptions = document.getElementById('advanced-options');
+    
+    if (toggleMoreOptionsBtn && advancedOptions) {
+        console.log("[DEBUG] 鎵惧埌楂樼骇閫夐」鎸夐挳鍜屽唴瀹瑰尯鍩?);
+        
+        // 鍏堢Щ闄ゅ彲鑳藉凡缁忓瓨鍦ㄧ殑浜嬩欢锛岄槻姝㈤噸澶嶇粦瀹?        toggleMoreOptionsBtn.removeEventListener('click', toggleAdvancedOptions);
+        
+        // 娣诲姞浜嬩欢澶勭悊鍑芥暟
+        toggleMoreOptionsBtn.addEventListener('click', toggleAdvancedOptions);
+        
+        // 瀹氫箟浜嬩欢澶勭悊鍑芥暟
+        function toggleAdvancedOptions(e) {
+            e.preventDefault();
+            console.log("[DEBUG] 鐐瑰嚮楂樼骇閫夐」鎸夐挳");
+            
+            // 鍒囨崲楂樼骇閫夐」鐨勬樉绀?闅愯棌
+            advancedOptions.classList.toggle('hidden');
+            console.log("[DEBUG] 楂樼骇閫夐」鐘舵€?", advancedOptions.classList.contains('hidden') ? "闅愯棌" : "鏄剧ず");
+            
+            // 鍒囨崲鎸夐挳鏂囨湰鍜屽浘鏍?            if (advancedOptions.classList.contains('hidden')) {
+                toggleMoreOptionsBtn.innerHTML = '<i class="fas fa-plus-circle"></i> 鏄剧ず楂樼骇灏哄閫夐」';
+                toggleMoreOptionsBtn.classList.remove('active');
+            } else {
+                toggleMoreOptionsBtn.innerHTML = '<i class="fas fa-minus-circle"></i> 闅愯棌楂樼骇灏哄閫夐」';
+                toggleMoreOptionsBtn.classList.add('active');
+            }
+        }
+        
+        console.log("[DEBUG] 楂樼骇閫夐」璁剧疆瀹屾垚");
+    } else {
+        console.error("[DEBUG] 閿欒锛氭壘涓嶅埌楂樼骇閫夐」鎸夐挳鎴栧唴瀹瑰尯鍩?");
+    }
+}
+
+// 璁剧疆瑙嗗浘鍒囨崲
+function setupViewToggle() {
+    const viewToggles = document.querySelectorAll('.view-toggle');
+    
+    viewToggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            viewToggles.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            // 杩欓噷鍙互娣诲姞鍒囨崲瑙嗗浘鐨勯€昏緫
+        });
+    });
+}
+
+// 璁＄畻浠锋牸褰卞搷
+function calculatePriceImpact() {
+    // 鑾峰彇鏍囧噯灏哄鐨勫€?    const standardLength = 240;
+    const standardDepth = 90;
+    const standardHeight = 45;
+    
+    // 鑾峰彇褰撳墠鍊?    const currentLength = parseInt(document.getElementById('length-value').textContent, 10);
+    const currentDepth = parseInt(document.getElementById('depth-value').textContent, 10);
+    const currentHeight = parseInt(document.getElementById('height-value').textContent, 10);
+    
+    // 璁＄畻姣忓崟浣嶅樊寮傜殑浠锋牸褰卞搷
+    const pricePerLengthUnit = 40; // 姣忓帢绫抽暱搴β?0
+    const pricePerDepthUnit = 30;  // 姣忓帢绫虫繁搴β?0
+    const pricePerHeightUnit = 20; // 姣忓帢绫抽珮搴β?0
+    
+    // 璁＄畻宸€?    const lengthDiff = Math.abs(currentLength - standardLength);
+    const depthDiff = Math.abs(currentDepth - standardDepth);
+    const heightDiff = Math.abs(currentHeight - standardHeight);
+    
+    // 璁＄畻鎬讳环褰卞搷
+    const totalImpact = (lengthDiff * pricePerLengthUnit) + 
+                        (depthDiff * pricePerDepthUnit) + 
+                        (heightDiff * pricePerHeightUnit);
+    
+    return totalImpact;
+}
+
+// 鏇存柊浠锋牸褰卞搷鏄剧ず
+function updatePriceImpact() {
+    const impactValue = calculatePriceImpact();
+    const impactElement = document.getElementById('size-price-impact');
+    
+    if (impactElement) {
+        impactElement.textContent = impactValue;
+        
+        // 娣诲姞楂樹寒鍔ㄧ敾
+        impactElement.parentElement.classList.add('highlight-change');
+        setTimeout(() => {
+            impactElement.parentElement.classList.remove('highlight-change');
+        }, 1000);
+    }
+}
+
+// 璁剧疆灏哄鎶樺彔鍖哄煙鐨勪氦浜?function setupDimensionsFold() {
+    console.log("[DEBUG] 寮€濮嬭缃昂瀵告姌鍙犲尯鍩?);
+    const foldBtn = document.getElementById('dimensions-fold-btn');
+    const foldContent = document.getElementById('dimensions-content');
+    
+    if (foldBtn && foldContent) {
+        console.log("[DEBUG] 鎵惧埌灏哄鎶樺彔鎸夐挳鍜屽唴瀹瑰尯鍩?);
+        
+        // 纭繚鍒濆鐘舵€佷笅鎶樺彔鍐呭鏄殣钘忕殑
+        foldContent.classList.remove('active');
+        
+        // 绉婚櫎鎵€鏈夊唴鑱旀牱寮忥紝渚濊禆CSS绫绘潵鎺у埗鏍峰紡
+        foldBtn.removeAttribute('style');
+        foldContent.removeAttribute('style');
+        
+        foldBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log("[DEBUG] 灏哄鎶樺彔鎸夐挳琚偣鍑?);
+            
+            // 鍒囨崲閾炬帴鐨勬縺娲荤姸鎬?            foldBtn.classList.toggle('active');
+            
+            // 鍒囨崲鍐呭鍖哄煙鐨勬樉绀?闅愯棌
+            foldContent.classList.toggle('active');
+            
+            // 鏇存柊鍥炬爣鍜屽唴瀹规樉绀?            if (foldContent.classList.contains('active')) {
+                console.log("[DEBUG] 灞曞紑鍐呭鍖哄煙");
+                // 鏄剧ず鍐呭鍖哄煙骞剁‘淇濆叾鍙
+                foldContent.style.display = 'block';
+                foldContent.style.maxHeight = foldContent.scrollHeight + 'px';
+                
+                // 婊氬姩鍒拌鍥?                setTimeout(() => {
+                    foldContent.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            } else {
+                console.log("[DEBUG] 鎶樺彔鍐呭鍖哄煙");
+                // 濡傛灉鏄姌鍙犵姸鎬侊紝鍏堣缃甿ax-height涓?锛岀劧鍚庣敤寤舵椂鏉ラ殣钘忓厓绱?                foldContent.style.maxHeight = '0';
+                setTimeout(() => {
+                    if (!foldContent.classList.contains('active')) {
+                        foldContent.style.display = 'none';
+                    }
+                }, 300); // 涓嶤SS杩囨浮鏃堕棿鍖归厤
+            }
+        });
+        
+        console.log("[DEBUG] 灏哄鎶樺彔鍖哄煙璁剧疆瀹屾垚");
+    } else {
+        console.error("[DEBUG] 閿欒锛氭壘涓嶅埌灏哄璋冩暣鎸夐挳鎴栧唴瀹瑰尯鍩?");
+    }
+}
+
+// 鍒濆鍖栧昂瀵歌皟鏁寸浉鍏宠缃?function initializeDimensionsSettings() {
+    console.log("[DEBUG] 鍒濆鍖栧昂瀵歌皟鏁寸浉鍏宠缃?);
+    
+    // 閲嶆柊鍒濆鍖栧昂瀵告姌鍙犲姛鑳?    setupDimensionsFold();
+    
+    // 纭繚楂樼骇閫夐」涔熻姝ｇ‘鍒濆鍖?    setupAdvancedOptions();
+    
+    // 纭繚灏哄婊戝潡鍔熻兘姝ｅ父
+    setupDimensionSliders();
+    
+    // 纭繚灏哄棰勮鍔熻兘姝ｅ父
+    setupSizePresets();
+    
+    // 鎵惧埌鎶樺彔鎸夐挳锛岀粰瀹冩坊鍔犱竴涓獊鍑烘樉绀虹殑鍔ㄧ敾
+    const foldBtn = document.getElementById('dimensions-fold-btn');
+    if (foldBtn) {
+        // 娣诲姞绐佸嚭鍔ㄧ敾
+        setTimeout(() => {
+            foldBtn.classList.add('highlight-change');
+            setTimeout(() => {
+                foldBtn.classList.remove('highlight-change');
+            }, 1500);
+        }, 500);
+    }
+}
+
+// 纭繚鍏ㄥ眬瀵艰埅鎸夐挳鍙橀噺宸插垵濮嬪寲
+function ensureButtonsInitialized() {
+    if (!nextBtn || !prevBtn) {
+        nextBtn = document.getElementById('nextStep');
+        prevBtn = document.getElementById('prevStep');
+        console.log('[DEBUG] 閲嶆柊鍒濆鍖栧鑸寜閽?);
+    }
+    return nextBtn && prevBtn;
+}
+
+// 鏂囨。灏辩华鍚庣殑鍒濆鍖栧嚱鏁?document.addEventListener('DOMContentLoaded', function() {
+    console.log('[DEBUG] DOM宸插姞杞斤紝寮€濮嬪垵濮嬪寲...');
+    
+    // 鍒濆鍖栧叏灞€鎸夐挳鍙橀噺
+    nextBtn = document.getElementById('nextStep');
+    prevBtn = document.getElementById('prevStep');
+    
+    if (!nextBtn || !prevBtn) {
+        console.error('[DEBUG] 閿欒锛氭壘涓嶅埌瀵艰埅鎸夐挳锛?);
+    } else {
+        console.log('[DEBUG] 鎴愬姛鑾峰彇瀵艰埅鎸夐挳');
+    }
+    
+    // 棣栧厛鍒濆鍖栨楠ゅ鑸紝纭繚瀹冨湪椤甸潰鍔犺浇鍚庣涓€鏃堕棿鍙敤
+    setupStepNavigation();
+    
+    // 棣栧厛鍒濆鍖栨姌鍙犲尯鍩燂紝纭繚瀹冨湪椤甸潰鍔犺浇鏃舵纭樉绀?    setupDimensionsFold();
+    console.log('[DEBUG] 鎶樺彔鍖哄煙鍒濆鍖栧畬鎴?);
+    
+    // 瀹夊叏鍦拌皟鐢╯etupScrollIndicator锛岀‘淇濆厓绱犲瓨鍦?    const sofaCategoriesRow = document.querySelector('.sofa-categories-row');
+    const scrollIndicator = document.querySelector('.scroll-indicator');
+    if (sofaCategoriesRow && scrollIndicator) {
+        setupScrollIndicator(sofaCategoriesRow, scrollIndicator);
+    }
+    
+    setupFabricCarousels();
+    setupFabricEvents();
+    setupSofaTypeSelection();
+    setupDirectionSelection();
+    setupModuleSelection();
+    setupSizePresets();
+    setupDimensionSliders();
+    setupAdvancedOptions(); // 鍙湪杩欓噷璋冪敤涓€娆￠珮绾ч€夐」璁剧疆
+    setupViewToggle();
+    setupSocialSharing(); // 娣诲姞绀句氦鍒嗕韩鍔熻兘鍒濆鍖?    setupCombinationSelection(); // 娣诲姞鐑棬缁勫悎鍔熻兘鍒濆鍖?    
+    // 浠ヤ笅鏄坊鍔犵殑璋冭瘯浠ｇ爜锛屾鏌ラ〉闈笂鏄惁鏈夊昂瀵歌皟鏁存寜閽?    setTimeout(function() {
+        const foldBtn = document.getElementById('dimensions-fold-btn');
+        if (foldBtn) {
+            console.log('[DEBUG] 灏哄璋冩暣鎸夐挳瀛樺湪:', foldBtn);
+            console.log('[DEBUG] 鎸夐挳鍙鎬?', window.getComputedStyle(foldBtn).display);
+            
+            // 绉婚櫎鑷姩鏄剧ず鎻愮ず娑堟伅
+            // 娣诲姞涓存椂楂樹寒鏁堟灉锛屼絾涓嶆樉绀簍oast
+            setTimeout(function() {
+                foldBtn.classList.add('highlight-change');
+                setTimeout(function() {
+                    foldBtn.classList.remove('highlight-change');
+                }, 2000);
+            }, 1500);
+        } else {
+            console.error('[DEBUG] 閿欒锛氭壘涓嶅埌灏哄璋冩暣鎸夐挳!');
+        }
+    }, 500);
+    
+    // 鏍囩椤靛垏鎹?    document.querySelectorAll('.tab-btn').forEach(tab => {
+        tab.addEventListener('click', function() {
+            const tabType = this.getAttribute('data-tab');
+            
+            // 绉婚櫎鎵€鏈夋爣绛剧殑婵€娲荤姸鎬?            document.querySelectorAll('.tab-btn').forEach(t => {
+                t.classList.remove('active');
+            });
+            
+            // 娣诲姞褰撳墠鏍囩鐨勬縺娲荤姸鎬?            this.classList.add('active');
+            
+            // 鍒囨崲瀹瑰櫒
+            if (tabType === 'standard') {
+                document.querySelector('.flipper').classList.remove('flipped');
+            } else {
+                document.querySelector('.flipper').classList.add('flipped');
+            }
+        });
+    });
+});
+
+
+
