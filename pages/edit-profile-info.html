@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编辑个人信息 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        /* 主题颜色变量 - 与首页保持一致 */
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--brand-dark);
+        }
+        
+        .nav-bar {
+            background: var(--brand-primary);
+            box-shadow: 0 4px 6px rgba(38, 70, 83, 0.1);
+        }
+        
+        .btn-primary {
+            background-color: var(--brand-primary);
+            color: white;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--brand-primary-dark);
+        }
+        
+        .btn-press {
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .btn-press:active {
+            transform: scale(0.95);
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--brand-dark);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--brand-light-dark);
+            border-radius: 0.5rem;
+            background-color: white;
+            color: var(--brand-dark);
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.1);
+        }
+        
+        .form-item {
+            border-bottom: 1px solid var(--brand-light-dark);
+            transition: all 0.3s ease;
+        }
+        
+        .form-item:last-child {
+            border-bottom: none;
+        }
+        
+        .avatar-container {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid white;
+            margin: 0 auto;
+        }
+        
+        .avatar-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 4px 0;
+            color: white;
+            font-size: 12px;
+            text-align: center;
+        }
+        
+        /* 弹窗样式 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            padding: 24px;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .avatar-option {
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .avatar-option:hover {
+            background-color: var(--brand-primary-transparent);
+        }
+        
+        .avatar-option i {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: var(--brand-primary);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <div class="flex items-center">
+                <a href="settings.html" class="text-white">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="text-lg font-medium text-white ml-4">编辑个人信息</div>
+            </div>
+            <button id="saveBtn" class="text-white font-medium">保存</button>
+        </div>
+    </div>
+    
+    <!-- 主要内容区域 -->
+    <div class="pt-16 px-4 pb-6">
+        <!-- 头像部分 -->
+        <div class="bg-white rounded-lg overflow-hidden mb-4">
+            <div class="p-6 flex flex-col items-center">
+                <div class="avatar-container relative btn-press" onclick="showModal('avatar-select')">
+                    <img id="user-avatar" src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="用户头像" class="w-full h-full object-cover">
+                    <div class="avatar-overlay">
+                        <i class="fas fa-camera mr-1"></i>更换头像
+                    </div>
+                </div>
+                <div class="text-sm text-gray-500 mt-3">点击头像更换</div>
+            </div>
+        </div>
+        
+        <!-- 个人信息表单 -->
+        <div class="bg-white rounded-lg overflow-hidden">
+            <div class="form-item p-4">
+                <div class="form-group">
+                    <label class="form-label">昵称</label>
+                    <input type="text" id="nickname" class="form-input" value="李小明" placeholder="请输入昵称">
+                </div>
+            </div>
+            
+            <div class="form-item p-4">
+                <div class="form-group">
+                    <label class="form-label">手机号</label>
+                    <input type="tel" id="phone" class="form-input" value="138****1234" placeholder="请输入手机号" readonly>
+                    <div class="text-right">
+                        <a href="bind-phone.html" class="text-sm text-primary">更换手机号</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 保存按钮 -->
+        <div class="mt-6">
+            <button id="saveButton" class="btn-primary w-full py-3 btn-press">保存修改</button>
+        </div>
+    </div>
+    
+    <!-- 头像选择弹窗 -->
+    <div id="avatar-select" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-medium">选择头像</h3>
+                <button onclick="closeModal('avatar-select')" class="text-gray-500">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="avatar-options">
+                <div class="avatar-option" onclick="showWechatAvatar()">
+                    <i class="fab fa-weixin"></i>
+                    <span>使用微信头像</span>
+                </div>
+                
+                <div class="avatar-option" onclick="chooseFromGallery()">
+                    <i class="fas fa-images"></i>
+                    <span>从相册选择</span>
+                </div>
+                
+                <div class="avatar-option" onclick="takePicture()">
+                    <i class="fas fa-camera"></i>
+                    <span>拍照</span>
+                </div>
+            </div>
+            
+            <input type="file" id="file-input" accept="image/*" class="hidden">
+        </div>
+    </div>
+    
+    <!-- 拍照模态框 -->
+    <div id="camera-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">拍摄照片</h3>
+                <button onclick="closeModal('camera-modal')" class="text-gray-500">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="camera-container bg-gray-200 rounded-lg overflow-hidden" style="height: 300px;">
+                <video id="camera-view" class="w-full h-full object-cover" autoplay></video>
+            </div>
+            <div class="mt-4 flex justify-center">
+                <button id="capture-btn" class="w-16 h-16 rounded-full bg-white border-4 border-gray-300 flex items-center justify-center btn-press">
+                    <div class="w-12 h-12 rounded-full bg-red-500"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let userAvatar = localStorage.getItem('userAvatar') || 'https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80';
+        let stream = null;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取用户信息
+            const userData = JSON.parse(localStorage.getItem('userData') || '{"nickname":"李小明","phone":"138****1234"}');
+            
+            // 填充表单
+            document.getElementById('nickname').value = userData.nickname || '李小明';
+            document.getElementById('phone').value = userData.phone || '138****1234';
+            
+            // 设置头像
+            document.getElementById('user-avatar').src = userAvatar;
+            
+            // 文件输入框监听
+            const fileInput = document.getElementById('file-input');
+            fileInput.addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        userAvatar = e.target.result;
+                        document.getElementById('user-avatar').src = userAvatar;
+                        closeModal('avatar-select');
+                    }
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+            
+            // 保存按钮
+            const saveButton = document.getElementById('saveButton');
+            const saveBtn = document.getElementById('saveBtn');
+            
+            function saveProfile() {
+                // 获取表单数据
+                const updatedData = {
+                    nickname: document.getElementById('nickname').value,
+                    phone: document.getElementById('phone').value
+                };
+                
+                // 在真实应用中，这里会发送数据到服务器
+                // 这里仅模拟保存成功
+                localStorage.setItem('userData', JSON.stringify(updatedData));
+                localStorage.setItem('userAvatar', userAvatar);
+                
+                // 提示保存成功
+                alert('个人信息保存成功！');
+                
+                // 返回设置页面
+                window.location.href = 'settings.html';
+            }
+            
+            saveButton.addEventListener('click', saveProfile);
+            saveBtn.addEventListener('click', saveProfile);
+            
+            // 捕获按钮
+            const captureBtn = document.getElementById('capture-btn');
+            if (captureBtn) {
+                captureBtn.addEventListener('click', capturePhoto);
+            }
+        });
+        
+        // 显示模态框
+        function showModal(id) {
+            document.getElementById(id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // 关闭模态框
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+            document.body.style.overflow = '';
+            
+            if (id === 'camera-modal') {
+                closeCamera();
+            }
+        }
+        
+        // 使用微信头像
+        function showWechatAvatar() {
+            // 模拟从微信获取头像
+            // 实际应用中，这里需要与微信API集成
+            alert('正在同步微信头像...');
+            
+            // 模拟微信头像
+            setTimeout(function() {
+                const wechatAvatar = 'https://images.unsplash.com/photo-1527980965255-d3b416303d12?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80';
+                userAvatar = wechatAvatar;
+                document.getElementById('user-avatar').src = userAvatar;
+                closeModal('avatar-select');
+                alert('已成功同步微信头像');
+            }, 1000);
+        }
+        
+        // 从相册选择
+        function chooseFromGallery() {
+            document.getElementById('file-input').click();
+        }
+        
+        // 拍照
+        function takePicture() {
+            closeModal('avatar-select');
+            openCamera();
+        }
+        
+        // 打开相机
+        function openCamera() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                    .then(function(videoStream) {
+                        stream = videoStream;
+                        const cameraView = document.getElementById('camera-view');
+                        cameraView.srcObject = stream;
+                        cameraView.play();
+                        showModal('camera-modal');
+                    })
+                    .catch(function(error) {
+                        console.error("无法访问相机: ", error);
+                        alert("无法访问相机，请检查权限设置");
+                    });
+            } else {
+                alert("您的设备不支持拍照功能");
+            }
+        }
+        
+        // 关闭相机
+        function closeCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => {
+                    track.stop();
+                });
+            }
+        }
+        
+        // 拍照
+        function capturePhoto() {
+            const cameraView = document.getElementById('camera-view');
+            const canvas = document.createElement('canvas');
+            canvas.width = cameraView.videoWidth;
+            canvas.height = cameraView.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(cameraView, 0, 0, canvas.width, canvas.height);
+            
+            const photoUrl = canvas.toDataURL('image/png');
+            userAvatar = photoUrl;
+            document.getElementById('user-avatar').src = userAvatar;
+            
+            closeCamera();
+            closeModal('camera-modal');
+        }
+    </script>
+</body>
+</html> 

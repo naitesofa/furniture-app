@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>绑定手机号 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        /* 主题颜色变量 - 与首页保持一致 */
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--brand-dark);
+        }
+        
+        .nav-bar {
+            background: var(--brand-primary);
+            box-shadow: 0 4px 6px rgba(38, 70, 83, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--brand-dark);
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--brand-light-dark);
+            border-radius: 0.5rem;
+            background-color: white;
+            color: var(--brand-dark);
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--brand-primary);
+            box-shadow: 0 0 0 3px rgba(42, 157, 143, 0.1);
+        }
+        
+        .btn-primary {
+            background-color: var(--brand-primary);
+            color: white;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            font-weight: 500;
+            width: 100%;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--brand-primary-dark);
+        }
+        
+        .btn-secondary {
+            background-color: var(--brand-secondary);
+            color: var(--brand-dark);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.25rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--brand-secondary-dark);
+        }
+        
+        .btn-press {
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .btn-press:active {
+            transform: scale(0.95);
+        }
+        
+        .btn-disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .btn-disabled:active {
+            transform: none;
+        }
+        
+        .verification-input-group {
+            position: relative;
+        }
+        
+        .verification-input {
+            padding-right: 120px;
+        }
+        
+        .verification-btn {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            padding: 0 1rem;
+            border-left: 1px solid var(--brand-light-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--brand-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: transparent;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+        
+        .verification-btn:hover {
+            background-color: var(--brand-primary-transparent);
+        }
+        
+        .verification-btn.counting {
+            color: var(--brand-dark-light);
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <div class="flex items-center">
+                <a href="edit-profile-info.html" class="text-white">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="text-lg font-medium text-white ml-4">绑定手机号</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主要内容区域 -->
+    <div class="pt-16 px-4 pb-6">
+        <div class="bg-white rounded-lg p-5 shadow-sm">
+            <form id="phone-form">
+                <div class="form-group">
+                    <label class="form-label" for="phone">手机号</label>
+                    <input type="tel" id="phone" class="form-input" placeholder="请输入手机号码" maxlength="11">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="verification">验证码</label>
+                    <div class="verification-input-group">
+                        <input type="text" id="verification" class="form-input verification-input" placeholder="请输入验证码" maxlength="6">
+                        <button type="button" id="send-code-btn" class="verification-btn btn-press">获取验证码</button>
+                    </div>
+                </div>
+                
+                <div class="mt-8">
+                    <button type="submit" id="submit-btn" class="btn-primary btn-press">确认绑定</button>
+                </div>
+            </form>
+            
+            <div class="mt-6">
+                <p class="text-sm text-gray-500">
+                    <i class="fas fa-info-circle mr-1"></i>
+                    绑定手机号后，可使用手机号登录账号
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneInput = document.getElementById('phone');
+            const verificationInput = document.getElementById('verification');
+            const sendCodeBtn = document.getElementById('send-code-btn');
+            const submitBtn = document.getElementById('submit-btn');
+            const phoneForm = document.getElementById('phone-form');
+            
+            // 从本地存储获取当前手机号
+            const userData = JSON.parse(localStorage.getItem('userData') || '{"phone":""}');
+            if (userData.phone) {
+                // 如果已有手机号，则在placeholder中提示
+                phoneInput.placeholder = `当前手机号: ${userData.phone}`;
+            }
+            
+            // 验证手机号格式
+            function validatePhone(phone) {
+                const phoneRegex = /^1[3-9]\d{9}$/;
+                return phoneRegex.test(phone);
+            }
+            
+            // 发送验证码
+            let countdown = 0;
+            let timer = null;
+            
+            function updateCountdown() {
+                if (countdown > 0) {
+                    sendCodeBtn.textContent = `${countdown}秒后重新获取`;
+                    countdown--;
+                    timer = setTimeout(updateCountdown, 1000);
+                } else {
+                    sendCodeBtn.textContent = '获取验证码';
+                    sendCodeBtn.classList.remove('counting');
+                    sendCodeBtn.disabled = false;
+                }
+            }
+            
+            sendCodeBtn.addEventListener('click', function() {
+                const phone = phoneInput.value.trim();
+                
+                if (!validatePhone(phone)) {
+                    alert('请输入正确的手机号码');
+                    phoneInput.focus();
+                    return;
+                }
+                
+                // 在真实应用中，这里会发送请求到服务器获取验证码
+                // 这里仅模拟发送验证码
+                sendCodeBtn.disabled = true;
+                sendCodeBtn.classList.add('counting');
+                countdown = 60;
+                updateCountdown();
+                
+                alert(`验证码已发送至手机号 ${phone}`);
+            });
+            
+            // 提交表单
+            phoneForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const phone = phoneInput.value.trim();
+                const code = verificationInput.value.trim();
+                
+                if (!validatePhone(phone)) {
+                    alert('请输入正确的手机号码');
+                    phoneInput.focus();
+                    return;
+                }
+                
+                if (!code || code.length !== 6) {
+                    alert('请输入6位验证码');
+                    verificationInput.focus();
+                    return;
+                }
+                
+                // 在真实应用中，这里会发送请求到服务器验证手机号和验证码
+                // 这里仅模拟验证成功
+                
+                // 更新本地存储
+                userData.phone = phone;
+                localStorage.setItem('userData', JSON.stringify(userData));
+                
+                // 显示成功提示
+                alert('手机号绑定成功！');
+                
+                // 返回上一页
+                window.location.href = 'edit-profile-info.html';
+            });
+        });
+    </script>
+</body>
+</html> 

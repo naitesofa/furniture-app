@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>更换头像 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        /* 主题颜色变量 - 与首页保持一致 */
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--brand-dark);
+        }
+        
+        .nav-bar {
+            background: var(--brand-primary);
+            box-shadow: 0 4px 6px rgba(38, 70, 83, 0.1);
+        }
+        
+        .btn-primary {
+            background-color: var(--brand-primary);
+            color: white;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--brand-primary-dark);
+        }
+        
+        .btn-press {
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .btn-press:active {
+            transform: scale(0.95);
+        }
+        
+        .avatar-preview {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid white;
+        }
+        
+        .avatar-option {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid var(--brand-light-dark);
+        }
+        
+        .avatar-option.selected {
+            border: 2px solid var(--brand-primary);
+            transform: scale(1.05);
+            box-shadow: 0 0 0 2px var(--brand-primary-transparent);
+        }
+        
+        .upload-btn {
+            border: 2px dashed var(--brand-light-dark);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-btn:hover {
+            border-color: var(--brand-primary);
+            background-color: var(--brand-primary-transparent);
+        }
+        
+        .avatar-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .slider-control {
+            width: 100%;
+            max-width: 300px;
+            margin: 10px 0;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            padding: 24px;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <div class="flex items-center">
+                <a href="settings.html" class="text-white">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="text-lg font-medium text-white ml-4">更换头像</div>
+            </div>
+            <button id="saveBtn" class="text-white font-medium">保存</button>
+        </div>
+    </div>
+    
+    <!-- 主要内容区域 -->
+    <div class="pt-16 px-4 pb-20">
+        <!-- 头像预览 -->
+        <div class="flex justify-center mt-6">
+            <div class="avatar-preview">
+                <img id="current-avatar" src="https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="当前头像" class="w-full h-full object-cover">
+            </div>
+        </div>
+        
+        <!-- 头像控制 -->
+        <div class="avatar-controls mt-6">
+            <div class="text-sm text-gray-600 mb-2">调整头像</div>
+            <div class="slider-control">
+                <input type="range" min="1" max="2" step="0.01" value="1" class="w-full" id="zoom-slider">
+                <div class="flex justify-between text-xs text-gray-500 mt-1">
+                    <span>缩小</span>
+                    <span>放大</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 上传新头像 -->
+        <div class="mt-8">
+            <div class="text-center font-medium mb-4">上传新头像</div>
+            <label for="avatar-upload" class="upload-btn block mb-4">
+                <input type="file" id="avatar-upload" class="hidden" accept="image/*">
+                <div class="text-center">
+                    <i class="fas fa-camera text-gray-400 text-2xl mb-2"></i>
+                    <p class="text-gray-600">从相册选择</p>
+                </div>
+            </label>
+            
+            <button id="take-photo" class="upload-btn w-full">
+                <div class="text-center">
+                    <i class="fas fa-camera-retro text-gray-400 text-2xl mb-2"></i>
+                    <p class="text-gray-600">拍摄照片</p>
+                </div>
+            </button>
+        </div>
+        
+        <!-- 预设头像选择 -->
+        <div class="mt-8">
+            <div class="text-center font-medium mb-4">选择预设头像</div>
+            <div class="grid grid-cols-5 gap-3">
+                <div class="avatar-option" data-avatar="../images/avatars/avatar1.jpg">
+                    <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="预设头像1" class="w-full h-full object-cover">
+                </div>
+                <div class="avatar-option" data-avatar="../images/avatars/avatar2.jpg">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="预设头像2" class="w-full h-full object-cover">
+                </div>
+                <div class="avatar-option" data-avatar="../images/avatars/avatar3.jpg">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="预设头像3" class="w-full h-full object-cover">
+                </div>
+                <div class="avatar-option" data-avatar="../images/avatars/avatar4.jpg">
+                    <img src="https://images.unsplash.com/photo-1531123897727-8f129e1688ce?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="预设头像4" class="w-full h-full object-cover">
+                </div>
+                <div class="avatar-option" data-avatar="../images/avatars/avatar5.jpg">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="预设头像5" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部按钮 -->
+        <div class="fixed bottom-0 left-0 right-0 p-4 bg-white border-t">
+            <button id="saveButton" class="btn-primary w-full py-3 btn-press">保存头像</button>
+        </div>
+    </div>
+    
+    <!-- 照相机模态框 -->
+    <div id="camera-modal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold">拍摄照片</h3>
+                <button onclick="closeModal('camera-modal')" class="text-gray-500">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="camera-container bg-gray-200 rounded-lg overflow-hidden" style="height: 300px;">
+                <video id="camera-view" class="w-full h-full object-cover" autoplay></video>
+            </div>
+            <div class="mt-4 flex justify-center">
+                <button id="capture-btn" class="w-16 h-16 rounded-full bg-white border-4 border-gray-300 flex items-center justify-center btn-press">
+                    <div class="w-12 h-12 rounded-full bg-red-500"></div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentAvatar = document.getElementById('current-avatar');
+            const zoomSlider = document.getElementById('zoom-slider');
+            const avatarUpload = document.getElementById('avatar-upload');
+            const takePhotoBtn = document.getElementById('take-photo');
+            const saveBtn = document.getElementById('saveBtn');
+            const saveButton = document.getElementById('saveButton');
+            const avatarOptions = document.querySelectorAll('.avatar-option');
+            const cameraModal = document.getElementById('camera-modal');
+            const cameraView = document.getElementById('camera-view');
+            const captureBtn = document.getElementById('capture-btn');
+            
+            let selectedAvatar = currentAvatar.src;
+            let stream = null;
+            
+            // 缩放头像
+            zoomSlider.addEventListener('input', function() {
+                currentAvatar.style.transform = `scale(${this.value})`;
+            });
+            
+            // 上传头像
+            avatarUpload.addEventListener('change', function(e) {
+                if (e.target.files && e.target.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        currentAvatar.src = e.target.result;
+                        selectedAvatar = e.target.result;
+                        resetZoom();
+                    }
+                    
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            });
+            
+            // 选择预设头像
+            avatarOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const avatarSrc = this.querySelector('img').src;
+                    currentAvatar.src = avatarSrc;
+                    selectedAvatar = avatarSrc;
+                    resetZoom();
+                    
+                    // 更新选中状态
+                    avatarOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+            
+            // 打开相机
+            takePhotoBtn.addEventListener('click', function() {
+                openCamera();
+            });
+            
+            // 打开相机函数
+            function openCamera() {
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                        .then(function(videoStream) {
+                            stream = videoStream;
+                            cameraView.srcObject = stream;
+                            cameraView.play();
+                            showModal('camera-modal');
+                        })
+                        .catch(function(error) {
+                            console.error("无法访问相机: ", error);
+                            alert("无法访问相机，请检查权限设置");
+                        });
+                } else {
+                    alert("您的设备不支持拍照功能");
+                }
+            }
+            
+            // 拍照
+            captureBtn.addEventListener('click', function() {
+                const canvas = document.createElement('canvas');
+                canvas.width = cameraView.videoWidth;
+                canvas.height = cameraView.videoHeight;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(cameraView, 0, 0, canvas.width, canvas.height);
+                
+                const photoUrl = canvas.toDataURL('image/png');
+                currentAvatar.src = photoUrl;
+                selectedAvatar = photoUrl;
+                resetZoom();
+                
+                // 关闭相机
+                closeCamera();
+                closeModal('camera-modal');
+            });
+            
+            // 关闭相机
+            function closeCamera() {
+                if (stream) {
+                    stream.getTracks().forEach(track => {
+                        track.stop();
+                    });
+                }
+            }
+            
+            // 重置缩放
+            function resetZoom() {
+                zoomSlider.value = 1;
+                currentAvatar.style.transform = 'scale(1)';
+            }
+            
+            // 显示模态框
+            function showModal(id) {
+                document.getElementById(id).classList.add('active');
+            }
+            
+            // 关闭模态框
+            window.closeModal = function(id) {
+                document.getElementById(id).classList.remove('active');
+                if (id === 'camera-modal') {
+                    closeCamera();
+                }
+            }
+            
+            // 保存头像
+            function saveAvatar() {
+                // 在实际应用中，这里会将头像上传到服务器
+                // 这里仅模拟保存成功
+                localStorage.setItem('userAvatar', selectedAvatar);
+                
+                // 提示保存成功
+                alert('头像保存成功！');
+                
+                // 返回设置页面
+                window.location.href = 'settings.html';
+            }
+            
+            saveBtn.addEventListener('click', saveAvatar);
+            saveButton.addEventListener('click', saveAvatar);
+        });
+    </script>
+</body>
+</html> 
