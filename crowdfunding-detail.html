@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>未来感智能沙发 - 内置按摩、语音控制 | 家逸生活众筹</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/crowdfunding-detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 粒子效果容器 (减少粒子数量以提升性能) -->
+    <div class="particle-container"></div>
+
+    <!-- 头部导航 -->
+    <header class="header">
+        <div class="container">
+            <button onclick="goBack()" class="back-button" aria-label="返回">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <h1 class="header-title">未来感智能沙发</h1>
+            <button onclick="sharePage()" class="icon-button" aria-label="分享">
+                <i class="fas fa-share-alt"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- 主容器 -->
+    <main class="container">
+        <!-- 产品轮播图 -->
+        <div id="productSwiper" class="swiper-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img src="images/tech-sofa-1.jpg" alt="未来感智能沙发" class="skeleton" loading="lazy">
+                </div>
+                <div class="swiper-slide">
+                    <img src="images/tech-sofa-2.jpg" alt="未来感智能沙发功能展示" class="skeleton" loading="lazy">
+                </div>
+                <div class="swiper-slide">
+                    <img src="images/tech-sofa-3.jpg" alt="未来感智能沙发细节" class="skeleton" loading="lazy">
+                </div>
+                <div class="swiper-slide">
+                    <img src="images/tech-sofa-4.jpg" alt="未来感智能沙发场景" class="skeleton" loading="lazy">
+                </div>
+            </div>
+            <div class="swiper-pagination">
+                <span class="swiper-pagination-bullet swiper-pagination-bullet-active" data-index="0"></span>
+                <span class="swiper-pagination-bullet" data-index="1"></span>
+                <span class="swiper-pagination-bullet" data-index="2"></span>
+                <span class="swiper-pagination-bullet" data-index="3"></span>
+            </div>
+        </div>
+
+        <!-- 产品基本信息 -->
+        <section class="product-info-section">
+            <h2 class="product-title">未来感智能沙发</h2>
+            <p class="product-description">前沿科技与人体工程学的完美结合，内置8点按摩系统</p>
+            
+            <!-- 技术标签 -->
+            <div class="tag-container">
+                <span class="tag"><i class="fas fa-microchip"></i>智能控制</span>
+                <span class="tag"><i class="fas fa-wifi"></i>无线充电</span>
+                <span class="tag"><i class="fas fa-brain"></i>记忆材料</span>
+                <span class="tag"><i class="fas fa-mobile-alt"></i>APP控制</span>
+            </div>
+            
+            <!-- 进度条 -->
+            <div class="progress-container">
+                <div class="progress-info">
+                    <div>已筹：¥1,258,320</div>
+                    <div>目标：¥500,000</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 75%"></div>
+                </div>
+            </div>
+            
+            <!-- 倒计时和数据组合布局 -->
+            <div class="countdown-container">
+                <div class="countdown-item">
+                    <span class="countdown-number">15</span>
+                    <span class="countdown-label">天</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number">08</span>
+                    <span class="countdown-label">时</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number">42</span>
+                    <span class="countdown-label">分</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="countdown-number">36</span>
+                    <span class="countdown-label">秒</span>
+                </div>
+            </div>
+            
+            <!-- 项目数据 -->
+            <div class="project-stats">
+                <div class="stat-item">
+                    <div class="stat-value">2,516</div>
+                    <div class="stat-label">支持者</div>
+                </div>
+                <div class="stat-item" onclick="showSupportersModal()">
+                    <div class="stat-value">查看详情 <i class="fas fa-angle-right"></i></div>
+                    <div class="stat-label">支持者列表</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 标签导航 -->
+        <div class="detail-tab-container">
+            <div id="detailTabNav" class="detail-tab-nav">
+                <div class="detail-tab-item active" data-target="projectDetails" data-index="0">详情</div>
+                <div class="detail-tab-item" data-target="supportTiers" data-index="1">档位</div>
+                <div class="detail-tab-item" data-target="projectUpdates" data-index="2">动态</div>
+                <div class="detail-tab-item" data-target="comments" data-index="3">评论<span class="comment-count">56</span></div>
+            </div>
+            <!-- 滑块放在导航外部 -->
+            <div id="detailTabSlider" class="detail-tab-slider"></div>
+        </div>
+
+        <!-- 内容区域 -->
+        <!-- 项目详情 -->
+        <section id="projectDetails" class="product-info-section">
+            <h3>未来感智能沙发 - 引领居家新时代</h3>
+            <p>我们的智能沙发采用航天级记忆材料，根据您的体型自动调整形状，为您提供舒适体验。内置8点按摩系统，可通过语音或APP控制。</p>
+            <img src="images/tech-sofa-detail-1.jpg" alt="智能沙发功能展示" style="width: 100%;" loading="lazy">
+            
+            <h3>核心科技</h3>
+            <ul>
+                <li>✦ 航天级记忆材料，自动适应体型</li>
+                <li>✦ 8点精准按摩系统，多种模式可选</li>
+                <li>✦ 蓝牙5.2和高保真音响系统</li>
+                <li>✦ 集成无线充电板，随时为手机充电</li>
+                <li>✦ 语音控制系统，支持智能家居平台</li>
+            </ul>
+            
+            <img src="images/tech-sofa-detail-2.jpg" alt="智能沙发技术展示" style="width: 100%;" loading="lazy">
+            
+            <h3>人体工程学设计</h3>
+            <p>经过上千次的人体工程学测试，我们的智能沙发能够适应各种身材，为您提供最佳的支撑和舒适度。</p>
+            
+            <h3>智能APP控制</h3>
+            <p>通过我们的专属APP，您可以随时调整沙发的各项功能：</p>
+            <ul>
+                <li>✦ 按摩强度和模式设置</li>
+                <li>✦ 温度控制</li>
+                <li>✦ 智能场景定制</li>
+                <li>✦ 睡眠追踪与分析</li>
+            </ul>
+        </section>
+        
+        <!-- 支持档位 -->
+        <section id="supportTiers" class="product-info-section" style="display: none;">
+            <h3>选择支持档位</h3>
+            
+            <!-- 早鸟档位 -->
+            <div class="tier-card tier-highlighted">
+                <div class="tier-header">
+                    <h4 class="tier-title">超级早鸟特惠</h4>
+                    <div class="tier-price-tag">
+                        ¥ <span class="text-xl">2,999</span>
+                    </div>
+                </div>
+                <p class="tier-description">限量100套，比零售价低60%，预计明年6月发货</p>
+                <div class="tier-features">
+                    <div class="tier-feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>航天级记忆材料智能沙发一套</span>
+                    </div>
+                    <div class="tier-feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>标准8点按摩系统</span>
+                    </div>
+                    <div class="tier-feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>3年质保服务</span>
+                    </div>
+                    <div class="tier-feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>免费送货上门并安装</span>
+                    </div>
+                </div>
+                <div class="tier-footer">
+                    <div class="tier-status">剩余：42/100</div>
+                </div>
+            </div>
+            
+            <!-- 标准档位 -->
+            <div class="tier-card">
+                <div class="tier-header">
+                    <h4 class="tier-title">早鸟特惠</h4>
+                    <div class="tier-price-tag">
+                        ¥ <span class="text-xl">3,499</span>
+                    </div>
+                </div>
+                <p class="tier-description">比零售价低50%，预计明年6月发货</p>
+                <div class="tier-features">
+                    <div class="tier-feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>航天级记忆材料智能沙发一套</span>
+                    </div>
+                    <div class="tier-feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>标准8点按摩系统</span>
+                    </div>
+                    <div class="tier-feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>3年质保服务</span>
+                    </div>
+                </div>
+                <div class="tier-footer">
+                    <div class="tier-status">剩余：358/500</div>
+                </div>
+            </div>
+            
+            <!-- 豪华档位 -->
+            <div class="tier-card">
+                <div class="tier-header">
+                    <h4 class="tier-title">豪华定制版</h4>
+                    <div class="tier-price-tag">
+                        ¥ <span class="text-xl">4,999</span>
+                    </div>
+                </div>
+                <p class="tier-description">专属定制服务，个性化色彩与材质选择</p>
+                <div class="tier-features">
+                    <div class="tier-feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>可选专属颜色与高级面料</span>
+                    </div>
+                    <div class="tier-feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>升级12点按摩系统</span>
+                    </div>
+                    <div class="tier-feature-item">
+                        <i class="fas fa-check-circle"></i>
+                        <span>5年质保与优先维修服务</span>
+                    </div>
+                </div>
+                <div class="tier-footer">
+                    <div class="tier-status">剩余：89/100</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 项目动态 -->
+        <section id="projectUpdates" class="product-info-section" style="display: none;">
+            <h3>项目进度更新</h3>
+            
+            <!-- 动态项 -->
+            <div class="update-item">
+                <div class="update-header">
+                    <div class="update-title">成功突破1000位支持者！</div>
+                    <div class="update-time">2小时前</div>
+                </div>
+                <div class="update-content">
+                    <p>感谢各位的支持！我们已经成功突破1000位支持者，比原计划提前了整整一周！作为感谢，我们决定为所有早鸟支持者额外赠送一个高级抱枕。</p>
+                    <img src="images/tech-sofa-update-1.jpg" alt="感谢支持者" style="width: 100%;" loading="lazy">
+                </div>
+            </div>
+            
+            <div class="update-item">
+                <div class="update-header">
+                    <div class="update-title">新增温控功能演示视频</div>
+                    <div class="update-time">昨天</div>
+                </div>
+                <div class="update-content">
+                    <p>应大家要求，我们录制了智能温控系统的详细演示视频。通过APP可以精确控制沙发不同区域的温度。</p>
+                    <div class="video-placeholder" style="background: rgba(0,0,0,0.2); border-radius: 8px; height: 150px; display: flex; align-items: center; justify-content: center; margin: 8px 0;">
+                        <i class="fas fa-play-circle" style="font-size: 36px; color: var(--tech-blue-primary);"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="update-item">
+                <div class="update-header">
+                    <div class="update-title">生产线准备就绪</div>
+                    <div class="update-time">3天前</div>
+                </div>
+                <div class="update-content">
+                    <p>我们很高兴地宣布，智能沙发的生产线已经完成调试并准备就绪。我们的工程师团队正在进行最后的质量测试。</p>
+                    <img src="images/tech-sofa-update-2.jpg" alt="生产线照片" style="width: 100%;" loading="lazy">
+                </div>
+            </div>
+        </section>
+        
+        <!-- 评论区 -->
+        <section id="comments" class="product-info-section" style="display: none;">
+            <h3>用户评论</h3>
+            
+            <!-- 评论输入框 -->
+            <div class="comment-input-container">
+                <textarea class="comment-input" placeholder="分享您的想法..." rows="3"></textarea>
+                <button class="comment-submit">发表评论</button>
+            </div>
+            
+            <!-- 评论列表 -->
+            <div class="comment-item">
+                <div class="comment-header">
+                    <div class="comment-author">李明</div>
+                    <div class="comment-time">10分钟前</div>
+                </div>
+                <div class="comment-content">
+                    这款智能沙发看起来很酷！我最关心的是按摩系统的噪音大小，希望能提供一些实际使用时的噪音分贝数据。
+                </div>
+            </div>
+            
+            <div class="comment-item">
+                <div class="comment-header">
+                    <div class="comment-author">张芳</div>
+                    <div class="comment-time">30分钟前</div>
+                </div>
+                <div class="comment-content">
+                    我已经支持了超级早鸟特惠！迫不及待想要体验这款沙发的按摩功能，我的老腰终于有救了😄
+                </div>
+            </div>
+            
+            <div class="comment-item">
+                <div class="comment-header">
+                    <div class="comment-author">王强</div>
+                    <div class="comment-time">1小时前</div>
+                </div>
+                <div class="comment-content">
+                    请问豪华定制版可以选择什么颜色？我家是现代简约风格，想找一款配色合适的沙发。
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- 底部支持栏 -->
+    <div class="support-bar">
+        <div class="support-info">
+            <div class="text-lg">¥2,999</div>
+            <div class="text-xs">超级早鸟特惠（已选）</div>
+        </div>
+        <div class="support-actions">
+            <button class="favorite-button" onclick="toggleFavorite(this)" aria-label="收藏">
+                <i class="far fa-heart"></i>
+            </button>
+            <button class="support-button" onclick="showPaymentModal()">立即支持</button>
+        </div>
+    </div>
+    
+    <!-- 图片预览 -->
+    <div id="imagePreview" class="image-preview">
+        <img id="previewImage" src="" alt="预览图片">
+    </div>
+    
+    <!-- 退款政策模态框 -->
+    <div id="refundPolicyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">退款政策</h3>
+                <button class="modal-close" onclick="hideModal('refundPolicyModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>1. 众筹结束前，您可以随时申请全额退款，无需说明理由。</p>
+                <p>2. 众筹成功后至发货前，如需退款需支付5%的手续费。</p>
+                <p>3. 产品发货后，除产品质量问题外，不再接受退款申请。</p>
+                <p>4. 产品存在质量问题的，可在收到产品后7天内申请退款或更换。</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="hideModal('refundPolicyModal')">我知道了</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 取消订单模态框 -->
+    <div id="cancelOrderModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">取消订单</h3>
+                <button class="modal-close" onclick="hideModal('cancelOrderModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>请选择取消原因：</p>
+                <div class="cancel-reason-list">
+                    <label class="cancel-reason-item">
+                        <input type="radio" name="cancelReason" value="found_better">
+                        <span>找到更好的产品</span>
+                    </label>
+                    <label class="cancel-reason-item">
+                        <input type="radio" name="cancelReason" value="financial_reason">
+                        <span>资金问题</span>
+                    </label>
+                    <label class="cancel-reason-item">
+                        <input type="radio" name="cancelReason" value="changed_mind">
+                        <span>改变主意</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="hideModal('cancelOrderModal')">再想想</button>
+                <button class="btn" onclick="processCancelOrder()">确认取消</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/crowdfunding-detail.js"></script>
+</body>
+</html> 

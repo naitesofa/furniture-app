@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>科技创新众筹 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <link href="../css/crowdfunding.css" rel="stylesheet">
+    <style>
+        /* 覆盖卡片标签样式，确保状态标签显示清晰 */
+        .card-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            z-index: 10;
+        }
+        
+        .status-tag {
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            /* 增加对比度和可见性 */
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            /* 添加深色背景确保可见性 */
+            background-color: rgba(10, 14, 23, 0.85);
+            border-width: 1px;
+            padding: 3px 8px;
+            letter-spacing: 0.5px;
+            font-size: 10px;
+            border-radius: 12px;
+            /* 添加文字阴影增强可见性 */
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 状态图标 */
+        .status-tag::before {
+            display: inline-block;
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            margin-right: 3px;
+            font-size: 9px;
+        }
+        
+        /* 为不同状态添加更明显的边框颜色 */
+        .status-ongoing {
+            border-color: var(--brand-primary);
+        }
+        
+        .status-preheating {
+            border-color: var(--brand-warning);
+        }
+        
+        .status-production {
+            border-color: var(--brand-secondary);
+        }
+        
+        .status-shipping {
+            border-color: var(--brand-warning);
+        }
+        
+        .status-success {
+            border-color: var(--brand-success);
+        }
+        
+        /* 众筹卡片样式 */
+        .crowdfunding-card {
+            height: 150px; 
+        }
+        
+        /* 左右布局卡片样式 */
+        .card-image-container {
+            width: 45%;
+            min-width: 130px;
+        }
+        
+        .card-content {
+            width: 55%;
+            padding: 12px;
+        }
+        
+        /* 项目标题和描述 */
+        .project-title {
+            font-size: 14px;
+            line-height: 1.3;
+            margin-bottom: 5px;
+        }
+        
+        .project-desc {
+            margin-bottom: 10px;
+        }
+        
+        /* 底部信息区域 */
+        .card-bottom {
+            margin-top: auto;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 375px) {
+            .card-image-container {
+                width: 40%;
+                min-width: 110px;
+            }
+            .card-content {
+                width: 60%;
+                padding: 10px;
+            }
+        }
+        
+        /* 覆盖卡片标签样式，确保状态标签显示清晰 */
+        .status-ongoing::before {
+            content: "\f021"; /* fa-sync */
+            color: var(--brand-primary);
+        }
+        
+        .status-preheating::before {
+            content: "\f624"; /* fa-fire-alt */
+            color: var(--brand-warning);
+        }
+        
+        .status-production::before {
+            content: "\f085"; /* fa-cog */
+            color: var(--brand-secondary);
+        }
+        
+        .status-shipping::before {
+            content: "\f48b"; /* fa-shipping-fast */
+            color: var(--brand-warning);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-container">
+        <!-- 页面头部 -->
+        <div class="header">
+            <div class="header-left">
+                <i class="fas fa-arrow-left" onclick="goBack()"></i>
+            </div>
+            <div class="header-title">
+                <span class="tech-title">TECH</span>众筹
+            </div>
+            <div class="header-right">
+                <i class="fas fa-search" id="searchIcon"></i>
+            </div>
+        </div>
+        
+        <!-- 页面内容 -->
+        <div class="content">
+            <!-- 搜索框 -->
+            <div class="search-container" id="searchContainer">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="探索创新科技沙发" id="searchInput">
+                    <i class="fas fa-times" id="clearSearch"></i>
+                </div>
+            </div>
+            
+            <!-- 轮播广告 -->
+            <div class="banner-container" id="bannerContainer">
+                <div class="banner-wrapper">
+                    <div class="banner-slide">
+                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=400&fit=crop" alt="科技沙发" class="banner-img">
+                        <div class="banner-content">
+                            <div class="banner-badge">新品预售</div>
+                            <h3 class="banner-title">智能舒适体验</h3>
+                            <p class="banner-subtitle">前沿科技与人体工程学的完美结合</p>
+                        </div>
+                    </div>
+                    <div class="banner-slide">
+                        <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&h=400&fit=crop" alt="创新设计" class="banner-img">
+                        <div class="banner-content">
+                            <div class="banner-badge">限时特惠</div>
+                            <h3 class="banner-title">未来感沙发系列</h3>
+                            <p class="banner-subtitle">体验前所未有的舒适与科技</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="banner-pagination">
+                    <div class="banner-bullet active"></div>
+                    <div class="banner-bullet"></div>
+                </div>
+            </div>
+            
+            <!-- 标签导航 -->
+            <div class="px-4 py-3" style="padding-bottom: 0px;">
+                <div class="tab-nav relative">
+                    <div class="tab-slider" id="tabSlider"></div>
+                    <div class="tab-nav-item active" data-index="0" data-type="all">全部</div>
+                    <div class="tab-nav-item" data-index="1" data-type="ongoing">进行中</div>
+                    <div class="tab-nav-item" data-index="2" data-type="upcoming">即将开始</div>
+                    <div class="tab-nav-item" data-index="3" data-type="ended">已结束</div>
+                </div>
+            </div>
+            
+            <!-- 众筹列表 -->
+            <div class="crowdfunding-list px-4" id="crowdfundingList">
+                <!-- 左右布局示例 -->
+                <div class="crowdfunding-card">
+                    <div class="card-image-container">
+                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&h=300&fit=crop" alt="智能舒适沙发" class="card-image">
+                        <div class="card-badge">
+                            <span class="status-tag status-ongoing">众筹中</span>
+                        </div>
+                        <div class="tech-overlay">
+                            <div class="tech-circle"></div>
+                            <div class="tech-circle"></div>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div>
+                            <h3 class="project-title">未来感智能沙发 - 内置按摩、语音控制</h3>
+                            <p class="project-desc">采用航天级记忆材料，内置8点按摩系统，支持语音控制和手机APP远程操作</p>
+                        </div>
+                        <div class="card-bottom">
+                            <div class="progress-wrapper mb-2">
+                                <div class="progress-container">
+                                    <div class="progress-bar" style="width: 90%"></div>
+                                </div>
+                                <div class="funding-percent">已达成<span class="highlight">198%</span></div>
+                            </div>
+                            
+                            <div class="flex justify-between items-center">
+                                <div class="funding-amount">¥2,999</div>
+                                <button class="support-btn">去支持</button>
+                            </div>
+                            <div class="flex justify-between items-center mt-2">
+                                <div class="support-info">
+                                    <i class="fas fa-user-group text-xs"></i>
+                                    <span class="text-xs">328人支持</span>
+                                </div>
+                                <div class="time-info">
+                                    <i class="fas fa-clock text-xs"></i>
+                                    <span class="text-xs">剩余12天</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 加载更多 -->
+            <div class="loading-more" id="loadingMore">
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <span>加载更多</span>
+            </div>
+        </div>
+        
+        <!-- 底部导航 -->
+        <div class="bottom-nav">
+            <div class="bottom-nav-item" onclick="navigateTo('home')">
+                <i class="fas fa-home"></i>
+                <span>首页</span>
+            </div>
+            <div class="bottom-nav-item active" onclick="navigateTo('crowdfunding')">
+                <i class="fas fa-crown"></i>
+                <span>众筹</span>
+            </div>
+            <div class="bottom-nav-item" onclick="navigateTo('category')">
+                <i class="fas fa-th-large"></i>
+                <span>分类</span>
+            </div>
+            <div class="bottom-nav-item" onclick="navigateTo('cart')">
+                <i class="fas fa-shopping-cart"></i>
+                <span>购物车</span>
+            </div>
+            <div class="bottom-nav-item" onclick="navigateTo('profile')">
+                <i class="fas fa-user"></i>
+                <span>我的</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 引入JavaScript文件 -->
+    <script src="../js/crowdfunding.js"></script>
+</body>
+</html> 

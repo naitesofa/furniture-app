@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>科技沙发众筹详情 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <link href="../css/crowdfunding-detail.css" rel="stylesheet">
+</head>
+<body>
+    <div class="page-container">
+        <!-- 页面头部 -->
+        <div class="header">
+            <div class="header-left">
+                <i class="fas fa-arrow-left" onclick="goBack()"></i>
+            </div>
+            <div class="header-title">
+                <!-- <span class="gradient-title">科技沙发</span> -->
+                <span class="ml-1">众筹详情</span>
+            </div>
+            <div class="header-right">
+                <!-- 移除分享图标 -->
+            </div>
+        </div>
+        
+        <!-- 页面内容 -->
+        <div class="content pb-24" id="contentWrapper"> <!-- 底部padding为支持按钮留出空间 -->
+            <!-- 产品轮播图 -->
+            <div class="swiper-container" id="productSwiper">
+                <div class="swiper-wrapper">
+                    <!-- 视频轮播项 -->
+                    <div class="swiper-slide video-slide">
+                        <video id="productVideo" poster="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixid=MnwxfDB8MXxyYW5kb218MHx8c29mYXx8fHx8fDE2NDkzNzI1NzM&ixlib=rb-1.2.1&q=80&w=800">
+                            <source src="https://cdn.videvo.net/videvo_files/video/free/2019-01/small_watermarked/181015_13_Venice%20Beach%20Drone_25_preview.webm" type="video/webm">
+                            <source src="https://cdn.videvo.net/videvo_files/video/free/2019-01/small_watermarked/181015_13_Venice%20Beach%20Drone_25_preview.mp4" type="video/mp4">
+                            您的浏览器不支持视频标签。
+                        </video>
+                        <div class="video-overlay" onclick="toggleVideo()">
+                            <div class="video-play-btn">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="video-controls">
+                            <button class="video-btn play-pause-btn" onclick="toggleVideo()">
+                                <i class="fas fa-pause"></i>
+                            </button>
+                            <div class="video-progress">
+                                <div class="video-progress-bar" style="width: 0%"></div>
+                            </div>
+                            <button class="video-btn mute-btn" onclick="toggleMute()">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                            <button class="video-btn fullscreen-btn" onclick="toggleFullscreen()">
+                                <i class="fas fa-expand"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="swiper-slide">
+                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixid=MnwxfDB8MXxyYW5kb218MHx8c29mYXx8fHx8fDE2NDkzNzI1NzM&ixlib=rb-1.2.1&q=80&w=800" class="skeleton" alt="智能舒适沙发" loading="lazy">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://images.unsplash.com/photo-1567016432779-094069958ea5?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixid=MnwxfDB8MXxyYW5kb218MHx8c21hcnQgaG9tZXx8fHx8fDE2NDkzNzI1NzM&ixlib=rb-1.2.1&q=80&w=800" class="skeleton" alt="沙发智能控制系统" loading="lazy">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://images.unsplash.com/photo-1558211583-d26f610c1eb1?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixid=MnwxfDB8MXxyYW5kb218MHx8c21hcnQgaG9tZXx8fHx8fDE2NDkzNzI1NzM&ixlib=rb-1.2.1&q=80&w=800" class="skeleton" alt="沙发无线充电功能" loading="lazy">
+                    </div>
+                    <div class="swiper-slide">
+                        <img src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=800&ixid=MnwxfDB8MXxyYW5kb218MHx8c21hcnQgZnVybml0dXJlfHx8fHx8MTY0OTM3MjU3Mw&ixlib=rb-1.2.1&q=80&w=800" class="skeleton" alt="沙发语音控制演示" loading="lazy">
+                    </div>
+                </div>
+                
+                <!-- 图片指示器 -->
+                <div class="swiper-pagination">
+                    <div class="swiper-pagination-bullet swiper-pagination-bullet-active" data-index="0"></div>
+                    <div class="swiper-pagination-bullet" data-index="1"></div>
+                    <div class="swiper-pagination-bullet" data-index="2"></div>
+                    <div class="swiper-pagination-bullet" data-index="3"></div>
+                    <div class="swiper-pagination-bullet" data-index="4"></div>
+                </div>
+                
+                <!-- 状态标签 -->
+                <div class="absolute top-4 left-4">
+                    <div class="status-tag status-ongoing">众筹中</div>
+                </div>
+            </div>
+            
+            <!-- 基本信息卡片 -->
+            <div class="basic-info-card" style="margin-bottom: 0px;">
+                <div class="tech-overlay">
+                    <div class="tech-circle"></div>
+                    <div class="tech-circle"></div>
+                </div>
+                <h1 class="text-xl font-bold mb-2">未来感智能沙发 - 内置按摩、语音控制</h1>
+                <p class="text-sm mb-4 text-gray-300">采用航天级记忆材料，内置8点按摩系统，支持语音控制和手机APP远程操作</p>
+                
+                <!-- 众筹进度 -->
+                <div >
+                    <div class="flex justify-between items-center mb-1">
+                        <div class="flex items-baseline">
+                            <span class="text-xl font-bold text-brand-primary">¥198,520</span>
+                            <span class="text-gray-400 ml-2">已筹</span>
+                        </div>
+                        <span class="text-gray-400">目标 ¥100,000</span>
+                    </div>
+                    <div class="progress-container mb-2" style="margin-bottom: 22px;">
+                        <div class="progress-bar" style="width: 100%;">
+                            <div class="progress-percentage">198%</div>
+                        </div>
+                        <div class="progress-markers">
+                            <div class="marker" style="left: 25%"><span>25%</span></div>
+                            <div class="marker" style="left: 50%"><span>50%</span></div>
+                            <div class="marker" style="left: 75%"><span>75%</span></div>
+                            <div class="marker" style="left: 100%"><span>100%</span></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between text-sm text-gray-400">
+                        <div>支持者: <span class="highlight">328</span>人</div>
+                        <div class="flex items-center">
+                            剩余时间: 
+                            <div class="countdown-container ml-1">
+                                <div class="countdown-item">12</div>
+                                <div class="countdown-separator">天</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 支持者按钮（已移除头像部分，保留按钮） -->
+                <!-- <div class="flex justify-end items-center mt-2">
+                    <button class="flex items-center text-brand-primary text-sm btn-press" onclick="showSupportersModal()">
+                        <span>查看支持者</span>
+                        <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                    </button>
+                </div> -->
+            </div>
+            
+            <!-- 标签导航 -->
+            <div class="detail-tab-container mt-2 sticky top-0 z-10">
+                <div class="detail-tab-nav relative" id="detailTabNav">
+                   
+                    <div class="detail-tab-item active" data-target="projectDetails" data-index="0">众筹故事</div>
+                    <div class="detail-tab-item" data-target="supportTiers" data-index="1">支持档位</div>
+                    <div class="detail-tab-item" data-target="projectUpdates" data-index="2">项目动态</div>
+                    <div class="detail-tab-item" data-target="comments" data-index="3">讨论<span class="discussion-count">56</span></div>
+                    <div class="detail-tab-slider" id="detailTabSlider"></div>
+                </div>
+            </div>
+            
+            <!-- 项目详情 -->
+            <div id="projectDetails" class="pt-4 mt-2">
+                <div class="content-section">
+                    <!-- <h2 class="text-lg font-bold mb-3 gradient-title">项目详情</h2> -->
+                    
+                    <!-- 商品信息模块化结构 -->
+                    <div class="product-detail-container">
+                        <!-- 产品详情图 -->
+                        <div class="product-module mb-6">
+                            <!-- <div class="module-header mb-3"> -->
+                                <!-- <h3 class="text-md font-semibold flex items-center">
+                                <i class="fas fa-image text-brand-primary mr-2"></i>
+                                    产品详情
+                                </h3> -->
+                            <!-- </div> -->
+                            <div class="module-content">
+                                <div class="product-detail-images">
+                                    <img src="https://images.unsplash.com/photo-1582582621959-48d27397dc69?w=800&h=500&fit=crop" class="w-full rounded-lg mb-4" alt="智能沙发详情图1">
+                                    <img src="https://images.unsplash.com/photo-1628171541806-5b66737cec5f?w=800&h=500&fit=crop" class="w-full rounded-lg mb-4" alt="智能沙发详情图2">
+                                    <img src="https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?w=800&h=400&fit=crop" class="w-full rounded-lg mb-4" alt="智能沙发APP控制界面">
+                                    <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&h=500&fit=crop" class="w-full rounded-lg mb-4" alt="智能沙发材质展示">
+                                    <img src="https://images.unsplash.com/photo-1581539250439-c96689b516dd?w=800&h=500&fit=crop" class="w-full rounded-lg mb-4" alt="智能沙发功能展示">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 模块5: 众筹须知 -->
+                        <div class="product-module mb-6 collapsible">
+                            <div class="module-header mb-3">
+                                <h3 class="text-md font-semibold flex items-center">
+                                    <i class="fas fa-info-circle text-brand-primary mr-2"></i>
+                                    众筹须知
+                            </h3>
+                            </div>
+                            <div class="module-content">
+                                <!-- 众筹流程说明 -->
+                                <div class="crowdfunding-guide mb-4">
+                                    <h4 class="text-sm font-semibold mb-2">众筹流程</h4>
+                                    <div class="crowdfunding-steps">
+                                        <div class="step-item">
+                                            <div class="step-number">1</div>
+                                            <div class="step-content">
+                                                <h5>支持项目</h5>
+                                                <p>选择心仪档位，完成支付</p>
+                                            </div>
+                                        </div>
+                                        <div class="step-item">
+                                            <div class="step-number">2</div>
+                                            <div class="step-content">
+                                                <h5>项目众筹</h5>
+                                                <p>等待众筹结束，达成目标</p>
+                                            </div>
+                                        </div>
+                                        <div class="step-item">
+                                            <div class="step-number">3</div>
+                                            <div class="step-content">
+                                                <h5>产品生产</h5>
+                                                <p>众筹成功后进入生产阶段</p>
+                                            </div>
+                                        </div>
+                                        <div class="step-item">
+                                            <div class="step-number">4</div>
+                                            <div class="step-content">
+                                                <h5>产品发货</h5>
+                                                <p>生产完成后按顺序发货</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 退款说明 -->
+                                <div class="refund-policy-guide mb-4">
+                                    <h4 class="text-sm font-semibold mb-2">退款政策</h4>
+                                    <div class="refund-policy-card">
+                                        <div class="refund-policy-content">
+                                            <p class="text-sm text-gray-300 mb-3">
+                                                我们制定了透明的退款政策，保障您的支持：
+                                            </p>
+                                            <div class="refund-stages-grid">
+                                                <div class="refund-stage">
+                                                    <div class="stage-badge">众筹期间</div>
+                                                    <div class="refund-percent">100%</div>
+                                                    <div class="stage-desc">完全自由退</div>
+                                    </div>
+                                                <div class="refund-stage">
+                                                    <div class="stage-badge">生产前</div>
+                                                    <div class="refund-percent">100%</div>
+                                                    <div class="stage-desc">无条件退</div>
+                                    </div>
+                                                <div class="refund-stage">
+                                                    <div class="stage-badge">生产中</div>
+                                                    <div class="refund-percent">70%</div>
+                                                    <div class="stage-desc">部分退款</div>
+                                    </div>
+                                                <div class="refund-stage">
+                                                    <div class="stage-badge">发货后</div>
+                                                    <div class="refund-percent">-</div>
+                                                    <div class="stage-desc">仅质量问题可退</div>
+                                                </div>
+                                            </div>
+                                            <div class="view-full-policy mt-3 text-center">
+                                                <button class="view-policy-btn btn-press" onclick="showRefundPolicyModal()">
+                                                    <i class="fas fa-shield-alt mr-1"></i>
+                                                    查看完整退款政策
+                                                </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                                <!-- 常见问题 -->
+                                <div class="crowdfunding-faq">
+                                    <h4 class="text-sm font-semibold mb-2">常见问题</h4>
+                            <div class="faq-container">
+                                <div class="faq-item">
+                                    <div class="faq-question">
+                                                <span>众筹成功后，预计什么时候发货？</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                    <div class="faq-answer">
+                                                众筹成功且结束后，我们承诺在45天内完成所有订单的发货。具体发货时间会在项目动态中及时更新，您也可以在个人中心查看订单状态。
+                                    </div>
+                                </div>
+                                <div class="faq-item">
+                                    <div class="faq-question">
+                                                <span>如果众筹失败，我支持的金额会退还吗？</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                    <div class="faq-answer">
+                                                是的，如果众筹未能在截止日期前达成目标金额，系统将自动为所有支持者发起全额退款，退款将在3个工作日内原路返回到您的支付账户。
+                                    </div>
+                                </div>
+                                        <!-- <div class="faq-item">
+                                            <div class="faq-question">
+                                                <span>智能沙发的电池续航如何？需要频繁充电吗？</span>
+                                                <i class="fas fa-chevron-down"></i>
+                                            </div>
+                                            <div class="faq-answer">
+                                                我们的智能沙发采用高容量锂电池，单次充电可使用15-20天。同时提供便捷的磁吸式充电接口，充电过程不影响正常使用。
+                                            </div>
+                                        </div> -->
+                                <div class="faq-item">
+                                    <div class="faq-question">
+                                                <span>众筹期间可以取消订单吗？</span>
+                                        <i class="fas fa-chevron-down"></i>
+                                    </div>
+                                    <div class="faq-answer">
+                                                众筹期间以及众筹成功后至生产前，您都可以随时取消订单并获得全额退款。进入生产阶段后取消订单将根据生产进度收取一定比例的手续费，具体请参考退款政策。
+                                    </div>
+                                </div>
+                            </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 添加模块按钮 -->
+                        <!-- <div class="add-module-btn-container text-center mt-6">
+                            <button id="addModuleBtn" class="add-module-btn">
+                                <i class="fas fa-plus-circle mr-2"></i>添加新模块
+                            </button>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 支持档位 -->
+            <div id="supportTiers" class="pt-4 mt-2" style="display: none;">
+                <div class="content-section">
+                    <h2 class="text-lg font-bold mb-3 gradient-title">支持选项</h2>
+                    
+                    <!-- 添加交付承诺说明 -->
+                    <div class="delivery-promise mb-4">
+                        <div class="flex items-center mb-2">
+                            <i class="fas fa-truck-loading text-brand-primary mr-2"></i>
+                            <span class="font-semibold">交付承诺</span>
+                        </div>
+                        <p class="text-sm text-gray-300">所有支持档位将在众筹成功且结束后的45天内发货，我们承诺准时交付，如有延期将提前告知并补偿。</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <!-- 档位1 -->
+                        <div class="tier-card">
+                            <div class="relative mb-3">
+                                <div class="tier-price-tag">
+                                    <span class="text-xl font-bold">¥99</span>
+                                </div>
+                                <!-- <div class="tier-badge">
+                                    <span>限量</span>
+                                </div> -->
+                            </div>
+                            <h3 class="tier-title">科技粉丝支持款</h3>
+                            <p class="tier-desc">支持我们的创新理念，获得项目专属纪念徽章和感谢信，同时享受新品优先购买权</p>
+                            <div class="tier-stats">
+                                <div>
+                                    <div class="text-xs text-gray-400">已支持</div>
+                                    <div class="font-semibold">328人</div>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-400">预计发货</div>
+                                    <div class="font-semibold delivery-time">众筹成功后45天内</div>
+                                </div>
+                            </div>
+                            <button class="tier-button clickable-btn" onclick="showPaymentModal()">
+                                <span>立即支持</span>
+                                <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- 档位2 -->
+                        <div class="tier-card tier-highlighted">
+                            <div class="popular-tag">最受欢迎</div>
+                            <div class="relative mb-3">
+                                <div class="tier-price-tag">
+                                    <span class="text-xl font-bold">¥2999</span>
+                                    <span class="text-xs line-through ml-1">¥3999</span>
+                                </div>
+                                <!-- <div class="tier-badge">
+                                    <span>早鸟价</span>
+                                </div> -->
+                            </div>
+                            <h3 class="tier-title">智能单人沙发套装</h3>
+                            <p class="tier-desc">包含一张智能单人沙发，配备智能控制系统、无线充电、APP控制等功能，享受科技与舒适的完美融合</p>
+                            
+                            <div class="tech-features">
+                                <div class="tech-feature-item">
+                                    <i class="fas fa-wifi"></i>
+                                    <span>无线控制</span>
+                                </div>
+                                <div class="tech-feature-item">
+                                    <i class="fas fa-bolt"></i>
+                                    <span>无线充电</span>
+                                </div>
+                                <div class="tech-feature-item">
+                                    <i class="fas fa-temperature-low"></i>
+                                    <span>温控调节</span>
+                                </div>
+                                <div class="tech-feature-item">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <span>APP控制</span>
+                                </div>
+                            </div>
+
+                            <div class="tier-stats">
+                                <div>
+                                    <div class="text-xs text-gray-400">已支持</div>
+                                    <div class="font-semibold">156人</div>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-400">预计发货</div>
+                                    <div class="font-semibold delivery-time">众筹成功后45天内</div>
+                                </div>
+                            </div>
+                            <button class="tier-button clickable-btn" onclick="showPaymentModal()">
+                                <span>立即支持</span>
+                                <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- 档位3 -->
+                        <div class="tier-card">
+                            <div class="relative mb-3">
+                                <div class="tier-price-tag">
+                                    <span class="text-xl font-bold">¥4999</span>
+                                    <span class="text-xs line-through ml-1">¥6888</span>
+                                </div>
+                                <!-- <div class="tier-badge">
+                                    <span>优惠</span>
+                                </div> -->
+                            </div>
+                            <h3 class="tier-title">智能双人沙发套装</h3>
+                            <p class="tier-desc">包含一张智能双人沙发，配备全套科技功能，双人座独立控制，更大的空间带来更舒适的体验</p>
+                            
+                            <div class="tech-features">
+                                <div class="tech-feature-item">
+                                    <i class="fas fa-wifi"></i>
+                                    <span>无线控制</span>
+                                </div>
+                                <div class="tech-feature-item">
+                                    <i class="fas fa-bolt"></i>
+                                    <span>无线充电</span>
+                                </div>
+                                <div class="tech-feature-item">
+                                    <i class="fas fa-temperature-low"></i>
+                                    <span>温控调节</span>
+                                </div>
+                                <div class="tech-feature-item">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <span>APP控制</span>
+                                </div>
+                                <div class="tech-feature-item">
+                                    <i class="fas fa-microchip"></i>
+                                    <span>双区控制</span>
+                                </div>
+                                <div class="tech-feature-item">
+                                    <i class="fas fa-volume-up"></i>
+                                    <span>语音助手</span>
+                                </div>
+                            </div>
+
+                            <div class="tier-stats">
+                                <div>
+                                    <div class="text-xs text-gray-400">已支持</div>
+                                    <div class="font-semibold">89人</div>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-400">预计发货</div>
+                                    <div class="font-semibold delivery-time">众筹成功后45天内</div>
+                                </div>
+                            </div>
+                            <button class="tier-button clickable-btn" onclick="showPaymentModal()">
+                                <span>立即支持</span>
+                                <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- 档位4 -->
+                        <div class="tier-card premium-tier">
+                            <div class="premium-tag">尊享版</div>
+                            <div class="relative mb-3">
+                                <div class="tier-price-tag">
+                                    <span class="text-xl font-bold">¥8999</span>
+                                    <span class="text-xs line-through ml-1">¥12999</span>
+                                </div>
+                                <!-- <div class="tier-badge">
+                                    <span>豪华套装</span>
+                                </div> -->
+                            </div>
+                            <h3 class="tier-title">智能家居组合套装</h3>
+                            <p class="tier-desc">智能三人沙发+智能茶几，打造完整的智能客厅解决方案，所有设备无缝衔接，提供极致的科技体验</p>
+                            
+                            <div class="tech-features">
+                                <div class="tech-feature-item">
+                                    <i class="fas fa-wifi"></i>
+                                    <span>无线控制</span>
+                                </div>
+                                <div class="tech-feature-item">
+                                    <i class="fas fa-bolt"></i>
+                                    <span>无线充电</span>
+                                </div>
+                                <div class="tech-feature-item">
+                                    <i class="fas fa-temperature-low"></i>
+                                    <span>温控调节</span>
+                                </div>
+                                <div class="tech-feature-item">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <span>APP控制</span>
+                                </div>
+                                <div class="tech-feature-item">
+                                    <i class="fas fa-microchip"></i>
+                                    <span>多区控制</span>
+                                </div>
+                                <div class="tech-feature-item">
+                                    <i class="fas fa-volume-up"></i>
+                                    <span>语音助手</span>
+                                </div>
+                                <div class="tech-feature-item">
+                                    <i class="fas fa-lightbulb"></i>
+                                    <span>情景照明</span>
+                                </div>
+                                <div class="tech-feature-item">
+                                    <i class="fas fa-plug"></i>
+                                    <span>智能茶几</span>
+                                </div>
+                            </div>
+
+                            <div class="tier-stats">
+                                <div>
+                                    <div class="text-xs text-gray-400">已支持</div>
+                                    <div class="font-semibold">32人</div>
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-400">预计发货</div>
+                                    <div class="font-semibold delivery-time">众筹成功后45天内</div>
+                                </div>
+                            </div>
+                            <button class="tier-button premium-button clickable-btn" onclick="showPaymentModal()">
+                                <span>立即支持</span>
+                                <i class="fas fa-arrow-right ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 项目动态 -->
+            <div id="projectUpdates" class="pt-4 mt-2" style="display: none;">
+                <div class="content-section">
+                    <h2 class="text-lg font-bold mb-3 gradient-title">项目动态</h2>
+                    
+                    <div class="update-item">
+                        <div class="text-sm text-gray-400">2023-09-01</div>
+                        <h3 class="font-semibold mb-1">众筹已突破195%！</h3>
+                        <p class="text-sm text-gray-300 mb-2">
+                            感谢所有支持者的信任，我们已经达成了195%的众筹目标！为了回馈大家的支持，我们决定为所有支持者升级智能控制芯片，增加语音助手功能，提升整体使用体验。
+                        </p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <img src="https://images.unsplash.com/photo-1565374392032-8358a9d64154?w=300&h=192&fit=crop" class="w-full h-24 object-cover rounded-lg" alt="更新图片">
+                            <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=300&h=192&fit=crop" class="w-full h-24 object-cover rounded-lg" alt="更新图片">
+                        </div>
+                    </div>
+                    
+                    <div class="update-item">
+                        <div class="text-sm text-gray-400">2023-08-25</div>
+                        <h3 class="font-semibold mb-1">核心技术研发完成</h3>
+                        <p class="text-sm text-gray-300">
+                            我们很高兴地宣布，智能沙发的核心控制系统研发已经完成！这个系统包含了多项专利技术，特别是AI智能调节算法，能根据用户习惯自动调整最舒适的座椅形态和按摩力度。接下来我们将进入软件优化阶段。
+                        </p>
+                    </div>
+                    
+                    <div class="update-item">
+                        <div class="text-sm text-gray-400">2023-08-15</div>
+                        <h3 class="font-semibold mb-1">众筹正式启动！</h3>
+                        <p class="text-sm text-gray-300">
+                            今天我们正式启动众筹！这款未来感智能沙发是我们团队耗时两年精心研发的科技产品，融合了最新的智能家居技术和人体工程学设计。希望能得到大家的支持，让科技为您的生活带来舒适与便捷。
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 讨论区 -->
+            <div id="comments" class="pt-4 mt-2" style="display: none;">
+                <div class="content-section">
+                    <h2 class="text-lg font-bold mb-3 gradient-title">讨论(56)</h2>
+                    
+                    <!-- 讨论输入框 -->
+                    <div class="flex items-center mb-4">
+                        <img src="https://randomuser.me/api/portraits/men/92.jpg" class="w-8 h-8 rounded-full mr-2 border-2 border-brand-primary-transparent" alt="用户头像">
+                        <div class="flex-1 bg-black bg-opacity-20 rounded-full px-4 py-2 text-sm text-gray-400 border border-gray-800" onclick="showDiscussionModal()">
+                            参与讨论...
+                        </div>
+                    </div>
+                    
+                    <!-- 讨论列表 -->
+                    <div class="space-y-4">
+                        <div class="comment-item">
+                            <div class="flex mb-2">
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" class="comment-avatar" alt="讨论用户">
+                                <div class="flex-1">
+                                    <div class="flex justify-between">
+                                        <div class="font-medium">张小明</div>
+                                        <div class="text-xs text-gray-500">2小时前</div>
+                                    </div>
+                                    <div class="text-xs text-gray-500">支持了智能双人沙发套装</div>
+                                </div>
+                            </div>
+                            <div class="text-sm text-gray-300 mb-2">
+                                看到这款沙发的科技感十足，之前有使用过其他智能家居产品但没有很好的集成体验，希望这款沙发能够提供更加整合的智能家居解决方案。已经支持了双人款，很期待收到后的体验！
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div class="flex items-center">
+                                    <button class="text-xs text-gray-500 flex items-center">
+                                        <i class="far fa-thumbs-up mr-1"></i>
+                                        <span>12</span>
+                                    </button>
+                                    <button class="text-xs text-gray-500 flex items-center ml-4">
+                                        <i class="far fa-comment mr-1"></i>
+                                        <span>回复</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="comment-item">
+                            <div class="flex mb-2">
+                                <img src="https://randomuser.me/api/portraits/women/44.jpg" class="comment-avatar" alt="讨论用户">
+                                <div class="flex-1">
+                                    <div class="flex justify-between">
+                                        <div class="font-medium">李华</div>
+                                        <div class="text-xs text-gray-500">5小时前</div>
+                                    </div>
+                                    <div class="text-xs text-gray-500">支持了智能三人沙发套装</div>
+                                </div>
+                            </div>
+                            <div class="text-sm text-gray-300 mb-2">
+                                想问一下，这款沙发的语音控制系统是否支持与小爱同学、天猫精灵等智能音箱的联动？我家里已经有了一套智能家居系统，希望能无缝集成。
+                            </div>
+                            
+                            <!-- 回复 -->
+                            <div class="official-reply">
+                                <div class="flex mb-1">
+                                    <img src="https://randomuser.me/api/portraits/lego/1.jpg" class="w-5 h-5 rounded-full mr-1" alt="官方回复">
+                                    <div class="flex-1">
+                                        <div class="flex justify-between">
+                                            <div class="text-xs font-medium">
+                                                <span class="text-brand-primary">项目方</span>
+                                            </div>
+                                            <div class="text-xs text-gray-500">3小时前</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-xs text-gray-300">
+                                    您好，感谢支持！我们的沙发已经完成了与主流智能音箱和智能家居系统的对接，包括小爱同学、天猫精灵、HomeKit等，您可以通过这些平台直接控制沙发的所有功能。另外，我们还提供开放API，可以进行更深度的智能家居集成。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 查看更多按钮 -->
+                    <div class="text-center mt-4">
+                        <button class="text-sm text-brand-primary" onclick="showToast('加载更多讨论...')">
+                            查看更多讨论
+                            <i class="fas fa-chevron-down ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 浮动导航按钮 -->
+        <div class="float-nav-btn" id="floatNavBtn">
+            <div class="float-nav-icon">
+                <i class="fas fa-list-ul"></i>
+            </div>
+            <div class="float-nav-menu" id="floatNavMenu">
+                <div class="float-nav-item" data-target="projectDetails">项目详情</div>
+                <div class="float-nav-item" data-target="supportTiers">支持档位</div>
+                <div class="float-nav-item" data-target="projectUpdates">项目动态</div>
+                <div class="float-nav-item" data-target="comments">讨论<span class="float-discussion-count">56</span></div>
+            </div>
+        </div>
+        
+        <!-- 底部支持栏 -->
+        <div class="support-bar">
+        
+            <div class="action-bar">
+                <div class="action-item">
+                    <button class="action-btn" onclick="showCustomerService()">
+                        <i class="fas fa-headset"></i>
+                        <span>客服</span>
+                    </button>
+                </div>
+                <div class="action-item">
+                    <button class="action-btn star-btn" onclick="toggleFavorite(this)">
+                        <i class="far fa-star"></i>
+                        <span>收藏</span>
+                    </button>
+                </div>
+                <div class="action-item">
+                    <button class="action-btn share-btn" onclick="sharePage()">
+                        <i class="fas fa-share-alt"></i>
+                        <span>分享</span>
+                    </button>
+                </div>
+                <div class="action-item">
+                    <button class="action-btn test-btn" onclick="testCancelOrder()" style="color: #e74c3c;">
+                        <i class="fas fa-vial"></i>
+                        <span>测试模式</span>
+                    </button>
+                </div>
+            </div>
+            <div class="support-actions">
+                <!-- <button class="cancel-btn" onclick="showCancelOrderModal()">
+                    取消订单
+                </button> -->
+                <button class="support-btn pulse-animation clickable-btn" onclick="showPaymentModal()">
+                    <i class="fas fa-bolt mr-1"></i>立即支持
+                </button>
+            </div>
+        </div>
+        
+        <!-- 图片预览 -->
+        <div class="image-preview" id="imagePreview">
+            <div class="w-full h-full flex items-center justify-center">
+                <img src="" class="preview-image" id="previewImage" alt="产品预览">
+            </div>
+        </div>
+    </div>
+    
+    <!-- 添加退款政策详情模态框 -->
+    <div class="modal" id="refundPolicyModal">
+        <div class="modal-content max-h-90vh refund-policy-modal">
+            <div class="modal-header flex items-center justify-between">
+                <h3 class="modal-title flex items-center">
+                    <i class="fas fa-shield-alt text-brand-primary mr-2"></i>众筹退款保障政策
+                </h3>
+                <button class="modal-close-btn" onclick="handleRefundPolicyConfirm()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- 退款政策内容 -->
+                <div class="space-y-4">
+                    <div class="policy-section">
+                        <div class="policy-section-header">
+                            <i class="fas fa-undo-alt"></i>
+                            <h4>众筹失败自动退款</h4>
+                        </div>
+                        <p class="policy-desc">
+                            若本项目未能在众筹期限截止日前达到目标金额，系统将自动为所有支持者发起全额退款流程。
+                        </p>
+                        <ul class="policy-list">
+                            <li>退款将原路返回至您的支付账户</li>
+                            <li>退款将在众筹失败确认后的3个工作日内完成</li>
+                            <li>您无需手动申请，系统自动处理</li>
+                            <li>若超过5个工作日未收到退款，请联系客服处理</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="policy-section">
+                        <div class="policy-section-header">
+                            <i class="fas fa-calendar-times"></i>
+                            <h4>生产前取消订单政策</h4>
+                        </div>
+                        <p class="policy-desc">
+                            在众筹成功后至项目进入生产阶段前，支持者可自主取消订单申请全额退款。
+                        </p>
+                        <ul class="policy-list">
+                            <li>在个人中心-我的订单页面，点击"取消订单"</li>
+                            <li>也可在项目详情页底部，点击"取消订单"</li>
+                            <li>退款将在申请成功后的3-7个工作日内退回原支付账户</li>
+                            <li>此阶段取消订单无需支付任何手续费</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="policy-section">
+                        <div class="policy-section-header">
+                            <i class="fas fa-chart-pie"></i>
+                            <h4>分阶段退款规则</h4>
+                        </div>
+                        <p class="policy-desc">
+                            根据项目不同阶段，我们设置了相应的退款比例，以平衡支持者权益与项目实际投入：
+                        </p>
+                        <div class="stage-refund-table">
+                            <div class="table-row table-header">
+                                <div>阶段</div>
+                                <div>时间范围</div>
+                                <div>退款比例</div>
+                            </div>
+                            
+                            <div class="table-row">
+                                <div>众筹期间</div>
+                                <div>众筹结束前</div>
+                                <div class="refund-full">100%</div>
+                            </div>
+                                
+                            <div class="table-row">
+                                <div>众筹成功至生产前</div>
+                                <div>生产开始前</div>
+                                <div class="refund-full">100%</div>
+                            </div>
+                                
+                            <div class="table-row">
+                                <div>生产期间</div>
+                                <div>生产过程中</div>
+                                <div class="refund-partial">70%</div>
+                            </div>
+                                
+                            <div class="table-row">
+                                <div>质检期间</div>
+                                <div>质检阶段</div>
+                                <div class="refund-partial">50%</div>
+                            </div>
+                                
+                            <div class="table-row">
+                                <div>发货期间</div>
+                                <div>发货后</div>
+                                <div class="refund-none">仅质量问题可退</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="policy-section">
+                        <div class="policy-section-header">
+                            <i class="fas fa-question-circle"></i>
+                            <h4>退款常见问题</h4>
+                        </div>
+                        <div class="refund-faq">
+                            <div class="refund-faq-item">
+                                <div class="refund-faq-question">退款会收取手续费吗？</div>
+                                <div class="refund-faq-answer">在众筹期间和众筹成功后至生产前阶段，取消订单不收取任何手续费。生产阶段后的退款将根据上表比例进行部分退款。</div>
+                            </div>
+                            <div class="refund-faq-item">
+                                <div class="refund-faq-question">退款到账时间是多久？</div>
+                                <div class="refund-faq-answer">系统发起退款后，资金一般会在3-7个工作日内原路返回至您的支付账户，具体到账时间可能因支付渠道而略有差异。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 底部按钮 -->
+                <div class="modal-footer">
+                    <button class="confirm-btn" onclick="handleRefundPolicyConfirm()">
+                        我已了解
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加取消订单模态框 -->
+    <div class="modal" id="cancelOrderModal">
+        <div class="modal-content cancel-order-modal">
+            <div class="modal-header flex items-center justify-between">
+                <h3 class="modal-title">
+                    <i class="fas fa-undo-alt"></i>申请取消订单
+                </h3>
+                <button class="modal-close-btn" onclick="hideModal('cancelOrderModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body p-4">
+                <!-- 订单信息 -->
+                <div class="order-info-card">
+                    <h4 class="order-info-title">
+                        <i class="fas fa-info-circle"></i>订单信息
+                    </h4>
+                    <div class="order-info-grid">
+                        <div class="order-info-label">订单编号</div>
+                        <div class="order-info-value">CF20230825364987</div>
+                        <div class="order-info-label">支持档位</div>
+                        <div class="order-info-value">双人沙发套装</div>
+                        <div class="order-info-label">支持金额</div>
+                        <div class="order-info-value">¥5,999</div>
+                        <div class="order-info-label">支持时间</div>
+                        <div class="order-info-value">2023-08-25 15:30</div>
+                        <div class="order-info-label">预计退款</div>
+                        <div class="order-info-value highlight">¥5,999 (100%)</div>
+                    </div>
+                    <div class="order-stage-note">
+                        <i class="fas fa-info-circle"></i>
+                        当前处于生产前阶段，可获得全额退款
+                    </div>
+                </div>
+                
+                <!-- 取消原因 -->
+                <div class="mb-4">
+                    <h4 class="section-title">
+                        <i class="fas fa-question-circle"></i>取消原因
+                    </h4>
+                    <div class="cancel-reason-list">
+                        <label class="cancel-reason-item">
+                            <input type="radio" name="cancelReason" value="资金问题" class="reason-radio">
+                            <span class="reason-text">资金问题，暂时无法支持</span>
+                        </label>
+                        <label class="cancel-reason-item">
+                            <input type="radio" name="cancelReason" value="时间问题" class="reason-radio">
+                            <span class="reason-text">等待时间过长</span>
+                        </label>
+                        <label class="cancel-reason-item">
+                            <input type="radio" name="cancelReason" value="找到替代品" class="reason-radio">
+                            <span class="reason-text">已找到其他合适的产品</span>
+                        </label>
+                        <label class="cancel-reason-item">
+                            <input type="radio" name="cancelReason" value="改变主意" class="reason-radio">
+                            <span class="reason-text">改变主意，不再需要</span>
+                        </label>
+                        <label class="cancel-reason-item">
+                            <input type="radio" name="cancelReason" value="其他" class="reason-radio">
+                            <span class="reason-text">其他原因</span>
+                        </label>
+                    </div>
+                    <textarea placeholder="请详细说明您取消订单的原因..." class="reason-textarea"></textarea>
+                </div>
+                
+                <!-- 退款信息 -->
+                <div class="mb-4">
+                    <h4 class="section-title">
+                        <i class="fas fa-money-bill-wave"></i>退款信息
+                    </h4>
+                    <div class="refund-info-list">
+                        <div class="refund-info-item">
+                            <i class="fas fa-check-circle"></i>
+                            <span>退款将原路返回至您的支付账户</span>
+                        </div>
+                        <div class="refund-info-item">
+                            <i class="fas fa-clock"></i>
+                            <span>预计3-7个工作日内到账</span>
+                        </div>
+                        <div class="refund-info-item">
+                            <i class="fas fa-headset"></i>
+                            <span>若超过7个工作日未收到退款，请联系客服</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 确认取消 -->
+                <div class="modal-footer">
+                    <div class="policy-link">
+                        <i class="fas fa-shield-alt text-brand-primary"></i>
+                        <span>按</span>
+                        <a href="#" onclick="showRefundPolicyModal(); return false;">退款政策</a>
+                        <span>处理</span>
+                    </div>
+                    <button class="confirm-cancel-btn" onclick="processCancelOrder()">
+                        <i class="fas fa-check"></i>确认取消订单
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 添加档位选择模态框 -->
+    <div class="modal" id="supportTierModal">
+        <div class="modal-content max-h-90vh support-tier-modal">
+            <div class="modal-header flex items-center justify-between">
+                <h3 class="modal-title flex items-center">
+                    <i class="fas fa-bolt text-brand-primary mr-2"></i>选择支持档位
+                </h3>
+                <button class="modal-close-btn" onclick="hideModal('supportTierModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="text-sm text-gray-400 mb-4">请选择您想要支持的档位：</p>
+                
+                <!-- 档位列表 -->
+                <div class="tier-list space-y-3">
+                    <!-- 档位1 -->
+                    <div class="tier-selector-item" data-tier-id="1" data-tier-name="科技粉丝支持款" data-tier-price="99">
+                        <div class="tier-selector-content">
+                            <div class="tier-selector-price">¥99</div>
+                            <div class="tier-selector-info">
+                                <div class="tier-selector-name">科技粉丝支持款</div>
+                                <div class="tier-selector-desc">获得项目专属纪念徽章和感谢信</div>
+                            </div>
+                        </div>
+                        <div class="tier-selector-count">
+                            <span class="tier-remaining">剩余172份</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 档位2 - 最受欢迎 -->
+                    <div class="tier-selector-item tier-recommended" data-tier-id="2" data-tier-name="智能单人沙发套装" data-tier-price="2999">
+                        <div class="recommended-badge">最受欢迎</div>
+                        <div class="tier-selector-content">
+                            <div class="tier-selector-price">¥2999<span class="tier-original-price">¥3999</span></div>
+                            <div class="tier-selector-info">
+                                <div class="tier-selector-name">智能单人沙发套装</div>
+                                <div class="tier-selector-desc">包含一张智能单人沙发，配备全套智能控制功能</div>
+                            </div>
+                        </div>
+                        <div class="tier-selector-count">
+                            <span class="tier-remaining">剩余44份</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 档位3 -->
+                    <div class="tier-selector-item" data-tier-id="3" data-tier-name="智能双人沙发套装" data-tier-price="4999">
+                        <div class="tier-selector-content">
+                            <div class="tier-selector-price">¥4999<span class="tier-original-price">¥6888</span></div>
+                            <div class="tier-selector-info">
+                                <div class="tier-selector-name">智能双人沙发套装</div>
+                                <div class="tier-selector-desc">包含一张智能双人沙发，双人座独立控制</div>
+                            </div>
+                        </div>
+                        <div class="tier-selector-count">
+                            <span class="tier-remaining">剩余61份</span>
+                        </div>
+                    </div>
+                    
+                    <!-- 档位4 -->
+                    <div class="tier-selector-item" data-tier-id="4" data-tier-name="智能家居组合套装" data-tier-price="8999">
+                        <div class="premium-tier-badge">尊享版</div>
+                        <div class="tier-selector-content">
+                            <div class="tier-selector-price">¥8999<span class="tier-original-price">¥12999</span></div>
+                            <div class="tier-selector-info">
+                                <div class="tier-selector-name">智能家居组合套装</div>
+                                <div class="tier-selector-desc">智能三人沙发+智能茶几，完整的客厅解决方案</div>
+                            </div>
+                        </div>
+                        <div class="tier-selector-count">
+                            <span class="tier-remaining">剩余18份</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 底部选择按钮 -->
+                <div class="mt-6">
+                    <button class="confirm-support-btn confirm-btn w-full" onclick="confirmSupportTier()">
+                        确认支持
+                    </button>
+                    <div class="text-center text-xs text-gray-500 mt-3">
+                        点击确认即表示您同意<a href="#" class="text-brand-primary" onclick="showRefundPolicyModal(); return false;">众筹退款政策</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加讨论模态框 -->
+    <div class="modal" id="discussionModal">
+        <div class="modal-content max-h-90vh cancel-order-modal">
+            <div class="modal-header flex items-center justify-between">
+                <h3 class="modal-title">
+                    <i class="fas fa-comment-dots text-brand-primary mr-2"></i>参与讨论
+                </h3>
+                <button class="modal-close-btn" onclick="hideModal('discussionModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body p-4">
+                <!-- 讨论内容 -->
+                <div class="mb-4">
+                    <h4 class="section-title">
+                        <i class="fas fa-pencil-alt text-brand-primary mr-2"></i>讨论内容
+                    </h4>
+                    <textarea id="discussionContent" placeholder="分享您的想法、提问或建议..." class="reason-textarea"></textarea>
+                    <div class="text-right text-xs text-gray-500 mt-1">
+                        <span id="discussionLength">0</span>/500
+                    </div>
+                </div>
+                
+                <!-- 上传图片 -->
+                <div class="mb-4">
+                    <h4 class="section-title">
+                        <i class="fas fa-image text-brand-primary mr-2"></i>上传图片（可选）
+                    </h4>
+                    <div class="flex flex-wrap gap-2 mt-2">
+                        <div class="upload-image-box">
+                            <i class="fas fa-plus"></i>
+                            <input type="file" class="opacity-0 absolute inset-0 cursor-pointer" accept="image/*" onchange="previewImage(this)">
+                        </div>
+                        <!-- 图片预览将在这里动态添加 -->
+                    </div>
+                    <div class="text-xs text-gray-500 mt-1">
+                        最多可上传3张图片，单张不超过5MB
+                    </div>
+                </div>
+                
+                <!-- 提交按钮 -->
+                <div class="modal-footer">
+                    <label class="flex items-center text-sm text-gray-400">
+                        <input type="checkbox" id="anonymousComment" class="mr-2 accent-brand-primary">
+                        匿名发表
+                    </label>
+                    <button id="submitDiscussionBtn" class="confirm-support-btn" onclick="submitDiscussion()">
+                        发表讨论
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入JavaScript文件 -->
+    <!-- 添加Swiper库JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <script src="../js/crowdfunding-detail.js"></script>
+</body>
+</html> 
