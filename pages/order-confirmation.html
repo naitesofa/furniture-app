@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>订单确认 - 高科技智能沙发众筹</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/payment.css">
+    <link rel="stylesheet" href="../css/crowdfunding-detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            background-color: #0A0E17;
+            color: #ffffff;
+        }
+        
+        .header {
+            background: rgba(15, 19, 28, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .header-title {
+            color: #00E5FF;
+            font-weight: 600;
+        }
+        
+        .content {
+            background-color: #0A0E17;
+            padding-bottom: 120px;
+        }
+        
+        .order-details {
+            background: #10141F;
+            border-radius: 16px;
+            margin: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 120px;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin: 0;
+            padding: 16px 16px 12px;
+            color: #00E5FF;
+        }
+        
+        .section-content {
+            padding: 0 16px 16px;
+        }
+        
+        /* 地址样式 */
+        .address-selection {
+            margin-bottom: 0;
+        }
+        
+        .address-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            background: rgba(25, 29, 43, 0.6);
+            border-radius: 12px;
+            padding: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 0;
+        }
+        
+        .address-item.selected {
+            border-color: #00E5FF;
+        }
+        
+        .address-radio {
+            width: 18px;
+            height: 18px;
+            margin-top: 3px;
+            accent-color: #00E5FF;
+        }
+        
+        .address-info {
+            flex: 1;
+        }
+        
+        .address-name-phone {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 6px;
+        }
+        
+        .address-phone {
+            color: rgba(255, 255, 255, 0.6);
+            margin-left: 12px;
+        }
+        
+        .address-detail {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        
+        .address-tag {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .tag-home, .tag-company, .tag-default {
+            font-size: 11px;
+            padding: 1px 6px;
+            border-radius: 3px;
+            display: inline-block;
+        }
+        
+        .tag-home {
+            background-color: rgba(0, 229, 255, 0.15);
+            color: #00E5FF;
+        }
+        
+        .tag-default {
+            background-color: rgba(0, 204, 102, 0.15);
+            color: #00CC66;
+        }
+        
+        .edit-address-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+
+        /* 分隔线 */
+        .section-divider {
+            height: 10px;
+            background-color: #0A0E17;
+            border: none;
+            margin: 0;
+        }
+        
+        /* 档位信息样式 */
+        .tier-preview {
+            display: flex;
+            align-items: center;
+            background: rgba(25, 29, 43, 0.6);
+            border-radius: 12px;
+            padding: 12px;
+            border: 1px solid rgba(0, 229, 255, 0.1);
+            margin-bottom: 0;
+        }
+        
+        .tier-image {
+            width: 70px;
+            height: 70px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+        
+        .tier-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: white;
+        }
+        
+        .tier-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #00E5FF;
+            margin-bottom: 0;
+        }
+        
+        /* 支付方式样式 */
+        .payment-methods {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+        }
+        
+        .payment-method {
+            display: flex;
+            align-items: center;
+            padding: 14px;
+            background: rgba(25, 29, 43, 0.6);
+            border-radius: 12px;
+            margin-bottom: 0;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+        }
+        
+        .payment-method.selected {
+            border: 1px solid #00E5FF;
+        }
+        
+        .payment-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .payment-checkbox {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+        }
+        
+        .payment-method.selected .payment-checkbox {
+            border-color: #00E5FF;
+        }
+        
+        .payment-method.selected .payment-checkbox:after {
+            background-color: #00E5FF;
+        }
+        
+        /* 底部固定区域 */
+        .fixed-bottom {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: #10141F;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 12px 16px 8px;
+            z-index: 100;
+        }
+        
+        .fixed-bottom-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        
+        .fixed-bottom-price-label {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 2px;
+        }
+        
+        .fixed-bottom-price-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: #00E5FF;
+        }
+        
+        .fixed-pay-button {
+            background: #00E5FF;
+            color: #10141F;
+            border: none;
+            border-radius: 24px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        .policy-agreement {
+            text-align: center;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 0;
+        }
+        
+        .policy-agreement a {
+            color: #00E5FF;
+            text-decoration: none;
+        }
+        
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+        
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease forwards;
+        }
+        
+        .modal-content {
+            width: 92%;
+            max-width: 480px;
+            background: linear-gradient(145deg, #10141F, #171C29);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUp 0.3s ease 0.1s forwards;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .max-h-90vh {
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            padding: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .modal-close-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .modal-close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .modal-body {
+            padding: 16px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+        
+        .modal-footer {
+            padding: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        
+        .confirm-btn {
+            background: linear-gradient(to right, var(--tech-blue-primary), var(--brand-secondary));
+            color: white;
+            border: none;
+            border-radius: 24px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .confirm-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 104, 255, 0.3);
+        }
+        
+        /* 退款政策模态框特定样式 */
+        .refund-policy-modal .policy-section {
+            margin-bottom: 20px;
+            background: rgba(25, 29, 43, 0.6);
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .policy-section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .policy-section-header i {
+            color: var(--brand-primary);
+            margin-right: 10px;
+            font-size: 18px;
+        }
+        
+        .policy-section-header h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            margin: 0;
+        }
+        
+        .policy-desc {
+            margin-bottom: 12px;
+            line-height: 1.5;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .policy-list {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+        }
+        
+        .policy-list li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .policy-list li:before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--brand-primary);
+        }
+        
+        .stage-refund-table {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+        
+        .table-row {
+            display: grid;
+            grid-template-columns: 1.5fr 1.5fr 1fr;
+            padding: 10px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .table-row:last-child {
+            border-bottom: none;
+        }
+        
+        .table-header {
+            background: rgba(0, 0, 0, 0.3);
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .refund-full {
+            color: #4CAF50;
+            font-weight: 600;
+        }
+        
+        .refund-partial {
+            color: #FFC107;
+            font-weight: 600;
+        }
+        
+        .refund-none {
+            color: #F44336;
+            font-weight: 600;
+        }
+        
+        .refund-faq {
+            margin-top: 12px;
+        }
+        
+        .refund-faq-item {
+            margin-bottom: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .refund-faq-question {
+            padding: 10px 12px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+        }
+        
+        .refund-faq-answer {
+            padding: 2px 12px 12px 12px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <!-- 顶部导航栏 -->
+    <header class="header">
+        <div class="container">
+            <div class="header-left">
+                <button class="back-button" onclick="goBack()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+            </div>
+            <h1 class="header-title">确认订单</h1>
+            <div class="header-right">
+                <button class="icon-button" onclick="showCustomerService()">
+                    <i class="fas fa-headset"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <div class="content">
+        <!-- 订单详情卡片 -->
+        <div class="order-details">
+            <!-- 地址选择 -->
+            <h3 class="section-title">收货地址</h3>
+            <div class="section-content">
+                <div class="address-selection">
+                    <div class="address-item selected" onclick="selectAddress(this)">
+                        <div class="flex items-start">
+                            <input type="radio" name="address" class="address-radio" checked>
+                            <div class="address-info ml-3">
+                                <div class="address-name-phone">
+                                    <span class="address-name">李明</span>
+                                    <span class="address-phone">138****5678</span>
+                                </div>
+                                <div class="address-detail">
+                                    上海市浦东新区张江高科技园区博云路2号智能公寓5号楼2201室
+                                </div>
+                                <div class="address-tag">
+                                    <span class="tag-home">家</span>
+                                    <span class="tag-default">默认</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="address-actions">
+                            <button class="edit-address-btn" onclick="editAddress('1', event)">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 分隔线 -->
+            <hr class="section-divider">
+            
+            <!-- 档位信息 -->
+            <h3 class="section-title">档位信息</h3>
+            <div class="section-content">
+                <!-- 档位预览 -->
+                <div class="tier-preview">
+                    <div class="tier-image">
+                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=200&q=80" alt="智能沙发档位图片">
+                    </div>
+                    <div class="tier-info">
+                        <div class="tier-name" id="tierName">智能单人沙发套装</div>
+                        <div class="tier-price" id="tierPrice">¥2,999</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 分隔线 -->
+            <hr class="section-divider">
+            
+            <!-- 支付方式 -->
+            <h3 class="section-title">选择支付方式</h3>
+            <div class="section-content">
+                <div class="payment-methods">
+                    <div class="payment-method selected" onclick="selectPaymentMethod(this)">
+                        <img src="../images/wechat-pay.png" alt="微信支付" class="payment-icon">
+                        <div class="payment-info">
+                            <div class="payment-title">微信支付</div>
+                        </div>
+                        <div class="payment-checkbox"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 固定底部区域 -->
+    <div class="fixed-bottom">
+        <div class="fixed-bottom-content">
+            <div class="fixed-bottom-price">
+                
+                <div class="fixed-bottom-price-value" id="fixedTotalAmount">¥2,999</div>
+            </div>
+            <button class="fixed-pay-button" onclick="proceedToPayment()">
+                <i class="fas fa-lock mr-2"></i>
+                确认支付
+            </button>
+        </div>
+        <!-- 协议提示 -->
+        <div class="policy-agreement">
+            点击支付即表示您同意<a href="javascript:void(0)" onclick="showMaginaAgreementModal()">麦吉纳众筹协议</a>
+        </div>
+    </div>
+
+    <!-- 添加退款政策模态框 -->
+    <div class="modal" id="refundPolicyModal">
+        <div class="modal-content max-h-90vh refund-policy-modal">
+            <div class="modal-header flex items-center justify-between">
+                <h3 class="modal-title flex items-center">
+                    <i class="fas fa-shield-alt text-brand-primary mr-2"></i>众筹退款保障政策
+                </h3>
+                <button class="modal-close-btn" onclick="hideModal('refundPolicyModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- 退款政策内容 -->
+                <div class="space-y-4">
+                    <div class="policy-section">
+                        <div class="policy-section-header">
+                            <i class="fas fa-undo-alt"></i>
+                            <h4>众筹失败自动退款</h4>
+                        </div>
+                        <p class="policy-desc">
+                            若本项目未能在众筹期限截止日前达到目标金额，系统将自动为所有支持者发起全额退款流程。
+                        </p>
+                        <ul class="policy-list">
+                            <li>退款将原路返回至您的支付账户</li>
+                            <li>退款将在众筹失败确认后的3个工作日内完成</li>
+                            <li>您无需手动申请，系统自动处理</li>
+                            <li>若超过5个工作日未收到退款，请联系客服处理</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="policy-section">
+                        <div class="policy-section-header">
+                            <i class="fas fa-calendar-times"></i>
+                            <h4>生产前取消订单政策</h4>
+                        </div>
+                        <p class="policy-desc">
+                            在众筹成功后至项目进入生产阶段前，支持者可自主取消订单申请全额退款。
+                        </p>
+                        <ul class="policy-list">
+                            <li>在个人中心-我的订单页面，点击"取消订单"</li>
+                            <li>也可在项目详情页底部，点击"取消订单"</li>
+                            <li>退款将在申请成功后的3-7个工作日内退回原支付账户</li>
+                            <li>此阶段取消订单无需支付任何手续费</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="policy-section">
+                        <div class="policy-section-header">
+                            <i class="fas fa-chart-pie"></i>
+                            <h4>分阶段退款规则</h4>
+                        </div>
+                        <p class="policy-desc">
+                            根据项目不同阶段，我们设置了相应的退款比例，以平衡支持者权益与项目实际投入：
+                        </p>
+                        <div class="stage-refund-table">
+                            <div class="table-row table-header">
+                                <div>阶段</div>
+                                <div>时间范围</div>
+                                <div>退款比例</div>
+                            </div>
+                            
+                            <div class="table-row">
+                                <div>众筹期间</div>
+                                <div>众筹结束前</div>
+                                <div class="refund-full">100%</div>
+                            </div>
+                                
+                            <div class="table-row">
+                                <div>众筹成功至生产前</div>
+                                <div>生产开始前</div>
+                                <div class="refund-full">100%</div>
+                            </div>
+                                
+                            <div class="table-row">
+                                <div>生产期间</div>
+                                <div>生产过程中</div>
+                                <div class="refund-partial">70%</div>
+                            </div>
+                                
+                            <div class="table-row">
+                                <div>质检期间</div>
+                                <div>质检阶段</div>
+                                <div class="refund-partial">50%</div>
+                            </div>
+                                
+                            <div class="table-row">
+                                <div>发货期间</div>
+                                <div>发货后</div>
+                                <div class="refund-none">仅质量问题可退</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="policy-section">
+                        <div class="policy-section-header">
+                            <i class="fas fa-question-circle"></i>
+                            <h4>退款常见问题</h4>
+                        </div>
+                        <div class="refund-faq">
+                            <div class="refund-faq-item">
+                                <div class="refund-faq-question">退款会收取手续费吗？</div>
+                                <div class="refund-faq-answer">在众筹期间和众筹成功后至生产前阶段，取消订单不收取任何手续费。生产阶段后的退款将根据上表比例进行部分退款。</div>
+                            </div>
+                            <div class="refund-faq-item">
+                                <div class="refund-faq-question">退款到账时间是多久？</div>
+                                <div class="refund-faq-answer">系统发起退款后，资金一般会在3-7个工作日内原路返回至您的支付账户，具体到账时间可能因支付渠道而略有差异。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 底部按钮 -->
+                <div class="modal-footer">
+                    <button class="confirm-btn" onclick="hideModal('refundPolicyModal')">
+                        我已了解
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加麦吉纳众筹协议模态框 -->
+    <div class="modal" id="maginaAgreementModal">
+        <div class="modal-content max-h-90vh">
+            <div class="modal-header flex items-center justify-between">
+                <h3 class="modal-title flex items-center">
+                    <i class="fas fa-file-contract mr-2" style="color: #00E5FF;"></i>麦吉纳家居众筹协议
+                </h3>
+                <button class="modal-close-btn" onclick="hideModal('maginaAgreementModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" style="color: rgba(255,255,255,0.85); font-size: 14px;">
+                <div class="agreement-content" style="line-height: 1.6;">
+                    <p class="font-bold mb-3" style="color: #00E5FF; font-size: 16px;">《麦吉纳家居众筹协议》</p>
+                    <p class="mb-2">甲方（发起人）：天津麦吉纳家居科技有限公司<br>
+                    乙方（支持者）：参与众筹的自然人、法人或其他组织</p>
+                    
+                    <p class="font-bold mt-4 mb-2" style="color: #00E5FF;">第一条 定义与解释</p>
+                    <p class="mb-2">下列术语在本协议中具有如下含义：</p>
+                    <ol class="mb-3 ml-4" style="padding-left: 1rem;">
+                        <li style="margin-bottom: 0.5rem;">1. 众筹：指甲方发起众筹项目，乙方出资支持，甲方按约定向乙方交付回报的合作行为。</li>
+                        <li style="margin-bottom: 0.5rem;">2. 麦吉纳众筹平台：指甲方运营的微信小程序"麦吉纳家居"及相关网络服务平台（以下简称"平台"），用于发布众筹项目、支持及回报交付等功能。</li>
+                        <li style="margin-bottom: 0.5rem;">3. 发起人：即甲方，指在平台上发起众筹项目的天津麦吉纳家居科技有限公司。</li>
+                        <li style="margin-bottom: 0.5rem;">4. 支持者：即乙方，指出资支持众筹项目并获取回报的主体。</li>
+                        <li style="margin-bottom: 0.5rem;">5. 众筹期限：甲方在项目页面公示的资金募集时间段。</li>
+                        <li style="margin-bottom: 0.5rem;">6. 募集目标金额：甲方在项目页面明确的众筹资金目标。</li>
+                        <li style="margin-bottom: 0.5rem;">7. 众筹成功：众筹期限内众筹金额达到或超过众筹目标金额。</li>
+                        <li style="margin-bottom: 0.5rem;">8. 众筹失败：包括但不限于：
+                            <ul class="ml-4" style="padding-left: 1rem; margin-top: 0.3rem;">
+                                <li style="margin-bottom: 0.3rem;">- 众筹期限届满未达募集目标金额；</li>
+                                <li style="margin-bottom: 0.3rem;">- 甲方因不可抗力、监管要求等原因提前终止项目；</li>
+                                <li style="margin-bottom: 0.3rem;">- 甲方明确无法按约定交付回报。</li>
+                            </ul>
+                        </li>
+                        <li style="margin-bottom: 0.5rem;">9. 项目回报：甲方在项目页面承诺的，向支持者交付的产品、服务或其他权益。</li>
+                    </ol>
+                    
+                    <p class="font-bold mt-4 mb-2" style="color: #00E5FF;">第二条 协议主体与适用范围</p>
+                    <ol class="mb-3 ml-4" start="10" style="padding-left: 1rem;">
+                        <li style="margin-bottom: 0.5rem;">10. 本协议由甲方与乙方签署，乙方点击"立即支持"并完成付款即视为同意本协议全部条款。</li>
+                        <li style="margin-bottom: 0.5rem;">11. 乙方支持项目前，应仔细阅读项目页面的众筹期限、回报内容等信息。若不同意，可选择不支持。</li>
+                        <li style="margin-bottom: 0.5rem;">12. 平台由甲方运营，作为甲乙双方众筹活动的技术服务载体，不涉及第三方平台，相关法律关系仅存在于甲乙双方之间。</li>
+                    </ol>
+                    
+                    <p class="font-bold mt-4 mb-2" style="color: #00E5FF;">第三条 双方权利与义务</p>
+                    <p class="font-bold mb-1" style="color: white;">一、甲方权利与义务</p>
+                    <ol class="mb-3 ml-4" start="13" style="padding-left: 1rem;">
+                        <li style="margin-bottom: 0.5rem;">13. 信息披露：在项目页面如实公示众筹期限、募集目标、回报内容、交付时间、售后政策等关键信息，确保内容真实合法。</li>
+                        <li style="margin-bottom: 0.5rem;">14. 项目执行：
+                            <ul class="ml-4" style="padding-left: 1rem; margin-top: 0.3rem;">
+                                <li style="margin-bottom: 0.3rem;">- 严格按项目计划推进，定期通过平台更新项目进展；</li>
+                                <li style="margin-bottom: 0.3rem;">- 指定专人维护用户留言区，及时回复乙方咨询。</li>
+                            </ul>
+                        </li>
+                        <li style="margin-bottom: 0.5rem;">15. 回报交付：
+                            <ul class="ml-4" style="padding-left: 1rem; margin-top: 0.3rem;">
+                                <li style="margin-bottom: 0.3rem;">- 众筹成功后，按约定时间和方式向乙方交付回报</li>
+                                <li style="margin-bottom: 0.3rem;">- 承担回报的发货、安装、售后等责任，因回报质量、延迟交付等产生的纠纷，由甲方直接与乙方协商解决。</li>
+                            </ul>
+                        </li>
+                        <li style="margin-bottom: 0.5rem;">16. 资金管理：
+                            <ul class="ml-4" style="padding-left: 1rem; margin-top: 0.3rem;">
+                                <li style="margin-bottom: 0.3rem;">- 众筹失败时，在15个工作日内将乙方已付款项原路退回，不收取任何手续费，不承担额外赔偿（协议另有约定除外）；</li>
+                            </ul>
+                        </li>
+                        <li style="margin-bottom: 0.5rem;">17. 隐私保护：
+                            <ul class="ml-4" style="padding-left: 1rem; margin-top: 0.3rem;">
+                                <li style="margin-bottom: 0.3rem;">- 仅为交付回报、处理售后等目的收集乙方个人信息（如姓名、地址、联系方式），不向第三方泄露；</li>
+                                <li style="margin-bottom: 0.3rem;">- 法律规定或乙方授权的除外。</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    
+                    <p class="font-bold mb-1" style="color: white;">二、乙方权利与义务</p>
+                    <ol class="mb-3 ml-4" start="18" style="padding-left: 1rem;">
+                        <li style="margin-bottom: 0.5rem;">18. 自主选择：自愿决定是否支持项目，理解众筹非传统商品交易，存在一定风险（见第五条）。</li>
+                        <li style="margin-bottom: 0.5rem;">19. 配合义务：提供真实准确的个人信息及收货信息，因信息错误导致回报无法交付的，甲方不承担责任。</li>
+                    </ol>
+                    
+                    <p class="font-bold mt-4 mb-2" style="color: #00E5FF;">第四条 风险提示与责任承担</p>
+                    <ol class="mb-3 ml-4" start="20" style="padding-left: 1rem;">
+                        <li style="margin-bottom: 0.5rem;">20. 项目风险：
+                            <ul class="ml-4" style="padding-left: 1rem; margin-top: 0.3rem;">
+                                <li style="margin-bottom: 0.3rem;">- 甲方已明确告知众筹可能因政策变化、生产延误、市场波动等原因导致回报延迟或调整，乙方支持即视为接受此类风险；</li>
+                                <li style="margin-bottom: 0.3rem;">- 非因甲方故意或重大过失导致的回报差异，双方应协商解决，乙方不得主张额外赔偿。</li>
+                            </ul>
+                        </li>
+                        <li style="margin-bottom: 0.5rem;">21. 法律合规：
+                            <ul class="ml-4" style="padding-left: 1rem; margin-top: 0.3rem;">
+                                <li style="margin-bottom: 0.3rem;">- 甲方保证项目不侵犯第三方知识产权，若因知识产权纠纷导致项目终止，甲方应退还乙方款项；</li>
+                                <li style="margin-bottom: 0.3rem;">- 因国家法律法规调整导致项目无法执行的，甲方有权终止项目并退款，不承担违约责任。</li>
+                            </ul>
+                        </li>
+                        <li style="margin-bottom: 0.5rem;">22. 技术风险：平台可能因黑客攻击、系统故障等原因出现异常，甲方应及时修复，但对乙方因此产生的直接损失不承担责任。</li>
+                    </ol>
+                    
+                    <p class="font-bold mt-4 mb-2" style="color: #00E5FF;">第五条 违约责任</p>
+                    <ol class="mb-3 ml-4" start="23" style="padding-left: 1rem;">
+                        <li style="margin-bottom: 0.5rem;">23. 若甲方未按约定交付回报或擅自变更项目内容，乙方有权要求甲方继续履行、退款或承担直接损失（不超过乙方实际付款金额）。</li>
+                        <li style="margin-bottom: 0.5rem;">24. 若乙方恶意诋毁项目、伪造信息或干扰平台运营，甲方有权取消其支持资格，已付款项不予退还，并保留追究法律责任的权利。</li>
+                        <li style="margin-bottom: 0.5rem;">25. 任何一方违约导致诉讼的，违约方需承担律师费、诉讼费等合理维权费用。</li>
+                    </ol>
+                    
+                    <p class="font-bold mt-4 mb-2" style="color: #00E5FF;">第六条 争议解决与法律适用</p>
+                    <ol class="mb-3 ml-4" start="26" style="padding-left: 1rem;">
+                        <li style="margin-bottom: 0.5rem;">26. 本协议适用中华人民共和国法律。</li>
+                        <li style="margin-bottom: 0.5rem;">27. 因协议产生的争议，双方应先协商解决；协商不成的，任何一方均有权向甲方所在地（天津市）有管辖权的法院提起诉讼。</li>
+                    </ol>
+                    
+                    <p class="font-bold mt-4 mb-2" style="color: #00E5FF;">第七条 其他条款</p>
+                    <ol class="mb-3 ml-4" start="28" style="padding-left: 1rem;">
+                        <li style="margin-bottom: 0.5rem;">28. 本协议自乙方完成项目支持付款时生效，至甲方交付全部回报且无争议后终止。</li>
+                        <li style="margin-bottom: 0.5rem;">29. 项目页面的具体承诺（如回报细节、交付时间等）作为本协议附件，与本协议具有同等效力。</li>
+                    </ol>
+                </div>
+                
+                <!-- 底部按钮 -->
+                <div class="modal-footer">
+                    <button class="confirm-btn" style="background: #00E5FF; color: #10141F;" onclick="hideModal('maginaAgreementModal')">
+                        我已了解
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/common.js"></script>
+    <script>
+        // 页面加载时从localStorage获取选择的档位信息
+        document.addEventListener('DOMContentLoaded', function() {
+            const tierName = localStorage.getItem('selectedTierName') || '智能单人沙发套装';
+            const tierPrice = localStorage.getItem('selectedTierPrice') || '2999';
+            
+            if (tierName) {
+                document.getElementById('tierName').textContent = tierName;
+            }
+            
+            if (tierPrice) {
+                const formattedPrice = formatPrice(tierPrice);
+                document.getElementById('tierPrice').textContent = formattedPrice;
+                // 更新固定底部价格
+                document.getElementById('fixedTotalAmount').textContent = formattedPrice;
+            }
+            
+            // 加载相应的档位图片
+            loadTierImage(tierName);
+            
+            // 初始化地址选择功能
+            initAddressSelection();
+        });
+        
+        // 初始化地址选择功能
+        function initAddressSelection() {
+            const addressItems = document.querySelectorAll('.address-item');
+            addressItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    selectAddress(this);
+                });
+            });
+        }
+        
+        // 选择地址
+        function selectAddress(element) {
+            // 移除所有地址项的选中状态
+            const addressItems = document.querySelectorAll('.address-item');
+            addressItems.forEach(item => item.classList.remove('selected'));
+            
+            // 添加选中状态
+            element.classList.add('selected');
+            
+            // 选中对应的radio
+            const radio = element.querySelector('.address-radio');
+            if (radio) {
+                radio.checked = true;
+            }
+            
+            // 触觉反馈
+            if ('vibrate' in navigator) {
+                navigator.vibrate(5);
+            }
+        }
+        
+        // 显示新增地址模态框
+        function showAddAddressModal() {
+            showToast('功能开发中：新增地址');
+        }
+        
+        // 显示更多地址
+        function showMoreAddresses() {
+            showToast('功能开发中：加载更多地址');
+        }
+        
+        // 编辑地址
+        function editAddress(addressId, event) {
+            // 阻止事件冒泡，避免触发地址选择
+            if (event) {
+                event.stopPropagation();
+            }
+            showToast(`功能开发中：编辑地址 ${addressId}`);
+        }
+        
+        // 根据档位名称加载对应图片 - 使用Unsplash图片
+        function loadTierImage(tierName) {
+            let imagePath = 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=200&q=80'; // 默认双人沙发
+            
+            if (tierName && tierName.includes('单人')) {
+                imagePath = 'https://images.unsplash.com/photo-1517705008128-361805f42e86?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=200&q=80'; // 单人沙发
+            } else if (tierName && tierName.includes('双人')) {
+                imagePath = 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=200&q=80'; // 双人沙发
+            } else if (tierName && (tierName.includes('三人') || tierName.includes('家居组合'))) {
+                imagePath = 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=200&h=200&q=80'; // 三人/家居组合沙发
+            }
+            
+            const tierImage = document.querySelector('.tier-image img');
+            if (tierImage) {
+                tierImage.src = imagePath;
+            }
+        }
+        
+        // 格式化价格显示
+        function formatPrice(price) {
+            if (!price) return '¥0';
+            
+            // 移除所有非数字字符
+            price = price.toString().replace(/[^\d.]/g, '');
+            
+            // 格式化为带千位分隔符的价格
+            return '¥' + parseFloat(price).toLocaleString('zh-CN');
+        }
+        
+        // 选择支付方式
+        function selectPaymentMethod(element) {
+            // 移除所有选中状态
+            const methods = document.querySelectorAll('.payment-method');
+            methods.forEach(method => method.classList.remove('selected'));
+            
+            // 添加选中状态
+            element.classList.add('selected');
+            
+            // 触觉反馈
+            if ('vibrate' in navigator) {
+                navigator.vibrate(5);
+            }
+        }
+        
+        // 处理支付
+        function proceedToPayment() {
+            // 检查是否选择了地址
+            const selectedAddress = document.querySelector('.address-item.selected');
+            if (!selectedAddress) {
+                showToast('请选择收货地址');
+                return;
+            }
+            
+            // 检查是否选择了支付方式
+            const selectedMethod = document.querySelector('.payment-method.selected');
+            let paymentType = '';
+            
+            if (!selectedMethod) {
+                showToast('请选择支付方式');
+                return;
+            } else {
+                paymentType = selectedMethod.querySelector('.payment-title').textContent;
+            }
+            
+            // 获取地址信息
+            const addressName = selectedAddress.querySelector('.address-name').textContent;
+            const addressDetail = selectedAddress.querySelector('.address-detail').textContent;
+            
+            // 保存地址信息到localStorage
+            localStorage.setItem('selectedAddressName', addressName);
+            localStorage.setItem('selectedAddressDetail', addressDetail);
+            
+            // 显示加载提示
+            showToast('正在处理您的支付请求...');
+            
+            // 设置订单状态为已支付，确保回到众筹详情页时能显示取消订单按钮
+            localStorage.setItem('orderStatus', 'paid');
+            
+            // 模拟支付处理
+            setTimeout(() => {
+                // 跳转到支付成功页面
+                window.location.href = 'payment-success.html';
+            }, 1500);
+        }
+        
+        // 显示提示信息
+        function showToast(message) {
+            let toast = document.querySelector('.toast');
+            
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.style.position = 'fixed';
+                toast.style.left = '50%';
+                toast.style.bottom = '120px';
+                toast.style.transform = 'translateX(-50%) translateY(20px)';
+                toast.style.padding = '10px 20px';
+                toast.style.background = 'rgba(0, 0, 0, 0.8)';
+                toast.style.color = 'white';
+                toast.style.borderRadius = '20px';
+                toast.style.zIndex = '1000';
+                toast.style.opacity = '0';
+                toast.style.transition = 'all 0.3s ease';
+                document.body.appendChild(toast);
+            }
+            
+            toast.textContent = message;
+            toast.style.transform = 'translateX(-50%) translateY(0)';
+            toast.style.opacity = '1';
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateX(-50%) translateY(20px)';
+                toast.style.opacity = '0';
+            }, 3000);
+        }
+        
+        // 返回上一页
+        function goBack() {
+            window.history.back();
+        }
+        
+        // 显示客服
+        function showCustomerService() {
+            showToast('正在连接客服...');
+        }
+        
+        // 显示模态框通用函数
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        
+        // 隐藏模态框通用函数
+        function hideModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        }
+        
+        // 显示退款政策模态框
+        function showRefundPolicyModal() {
+            showModal('refundPolicyModal');
+        }
+        
+        // 显示麦吉纳众筹协议模态框
+        function showMaginaAgreementModal() {
+            showModal('maginaAgreementModal');
+        }
+    </script>
+</body>
+</html> 
