@@ -194,6 +194,9 @@
                 <a href="order-detail.html?id=2023112309876" class="btn btn-primary px-6 py-2 text-sm">
                     查看订单
                 </a>
+                <a href="crowdfunding-detail.html" class="btn btn-outline px-6 py-2 text-sm">
+                    返回众筹
+                </a>
                 <a href="home.html" class="btn btn-outline px-6 py-2 text-sm">
                     返回首页
                 </a>
@@ -304,15 +307,25 @@
             const orderId = getUrlParam('id');
             const method = getUrlParam('method') || 'wechat';
             
+            // 设置订单状态为已支付
+            localStorage.setItem('orderStatus', 'paid');
+            
+            // 设置页面上显示的金额
+            const tierPrice = localStorage.getItem('selectedTierPrice');
+            if (tierPrice) {
+                const amountEls = document.querySelectorAll('.text-2xl.font-bold.text-brand-primary');
+                amountEls.forEach(el => {
+                    el.textContent = `¥${tierPrice}`;
+                });
+            }
+            
             // 尝试从本地存储获取订单信息
             try {
                 const orderData = JSON.parse(localStorage.getItem(`order_${orderId}`));
                 if (orderData) {
-                    // 设置订单金额
-                    const amountEls = document.querySelectorAll('.text-2xl.font-bold.text-brand-primary');
-                    amountEls.forEach(el => {
-                        el.textContent = `¥${orderData.amount}`;
-                    });
+                    // 更新订单状态为已支付
+                    orderData.status = 'paid';
+                    localStorage.setItem(`order_${orderId}`, JSON.stringify(orderData));
                     
                     // 设置收货地址信息
                     if (orderData.address) {
@@ -405,6 +418,15 @@
             const viewOrderBtn = document.querySelector('a[href^="order-detail.html"]');
             if (viewOrderBtn && orderId) {
                 viewOrderBtn.href = `order-detail.html?id=${orderId}`;
+            }
+            
+            // 设置返回众筹按钮链接
+            const backToCrowdfundingBtn = document.querySelector('a[href="crowdfunding-detail.html"]');
+            if (backToCrowdfundingBtn) {
+                backToCrowdfundingBtn.addEventListener('click', function() {
+                    // 确保返回按钮点击时订单状态依然存在
+                    localStorage.setItem('orderStatus', 'paid');
+                });
             }
         });
     </script>

@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>收货地址 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <style>
+        /* 主题颜色变量 - 与首页保持一致 */
+        :root {
+            --primary-color: #2A9D8F;
+            --secondary-color: #E9C46A;
+            --accent-color: #F4A261;
+            --dark-color: #264653;
+            --light-color: #F8F9FA;
+            --bg-color: #F5F7F8;
+            
+            /* 完整品牌色彩系统 */
+            --brand-primary: #2A9D8F;
+            --brand-primary-light: #4DB6A9;
+            --brand-primary-dark: #1F7A70;
+            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
+            
+            --brand-secondary: #E9C46A;
+            --brand-secondary-light: #F2D68B;
+            --brand-secondary-dark: #D4A93B;
+            
+            --brand-accent: #F4A261;
+            --brand-accent-light: #F7BE8C;
+            --brand-accent-dark: #E68940;
+            
+            --brand-dark: #264653;
+            --brand-dark-light: #3A6A7E;
+            --brand-dark-dark: #1A323C;
+            
+            --brand-light: #F8F9FA;
+            --brand-light-dark: #E9ECEF;
+            
+            --brand-success: #38B2AC;
+            --brand-warning: #F59E0B;
+            --brand-error: #EF4444;
+            --brand-info: #3B82F6;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--brand-dark);
+        }
+
+        .nav-bar {
+            background: var(--brand-primary);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-press {
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .btn-press:active {
+            transform: scale(0.95);
+        }
+        
+        .btn-primary {
+            background-color: var(--brand-primary);
+            color: white;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--brand-primary-dark);
+        }
+        
+        .btn-outline {
+            border: 1px solid var(--brand-primary);
+            color: var(--brand-primary);
+            background-color: transparent;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--brand-primary-transparent);
+        }
+        
+        .address-card {
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .default-tag {
+            background-color: var(--brand-primary-transparent);
+            color: var(--brand-primary);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-right: 8px;
+        }
+        
+        /* 弹窗样式 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 12px;
+            max-width: 90%;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 24px;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .form-input {
+            border: 1px solid var(--brand-light-dark);
+            border-radius: 8px;
+            padding: 12px 16px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            border-color: var(--brand-primary);
+            outline: none;
+            box-shadow: 0 0 0 3px var(--brand-primary-transparent);
+        }
+        
+        .form-select {
+            border: 1px solid var(--brand-light-dark);
+            border-radius: 8px;
+            padding: 12px 16px;
+            width: 100%;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 pb-20">
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <div class="flex items-center">
+                <a href="settings.html" class="text-white">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="text-lg font-medium text-white ml-4">收货地址</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主要内容区域 -->
+    <div class="pt-16 px-4">
+        <!-- 地址列表 -->
+        <div id="address-list" class="space-y-4 mb-8">
+            <!-- 默认地址 -->
+            <div class="address-card bg-white p-4">
+                <div class="flex justify-between items-start mb-2">
+                    <div>
+                        <div class="flex items-center mb-1">
+                            <span class="font-medium mr-2">李小明</span>
+                            <span>138****1234</span>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="default-tag">默认</span>
+                            <span class="text-gray-600 text-sm">天津市宝坻区方家庄镇产业功能区一期</span>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="text-brand-primary text-sm" onclick="editAddress(1)">编辑</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 其他地址 -->
+            <div class="address-card bg-white p-4">
+                <div class="flex justify-between items-start mb-2">
+                    <div>
+                        <div class="flex items-center mb-1">
+                            <span class="font-medium mr-2">王小红</span>
+                            <span>159****5678</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-600 text-sm">北京市朝阳区朝阳北路世纪绿洲小区3号楼2单元801</span>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="text-brand-primary text-sm" onclick="editAddress(2)">编辑</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 添加新地址按钮 -->
+        <div class="fixed bottom-8 left-4 right-4">
+            <button class="btn-primary w-full py-3 btn-press flex items-center justify-center" onclick="showModal('add-address')">
+                <i class="fas fa-plus mr-2"></i> 添加新地址
+            </button>
+        </div>
+    </div>
+    
+    <!-- 添加/编辑地址弹窗 -->
+    <div id="add-address" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold" id="address-modal-title">添加新地址</h3>
+                <button onclick="closeModal('add-address')" class="text-gray-500">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- 表单 -->
+                <form id="address-form">
+                    <input type="hidden" id="address-id" value="">
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">收货人姓名</label>
+                        <input type="text" class="form-input" id="receiver-name" placeholder="请输入收货人姓名">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">手机号码</label>
+                        <input type="tel" class="form-input" id="receiver-phone" placeholder="请输入联系电话">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">所在地区</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <select class="form-select" id="province">
+                                <option value="">请选择省份</option>
+                                <option value="北京市">北京市</option>
+                                <option value="天津市">天津市</option>
+                                <option value="上海市">上海市</option>
+                                <option value="重庆市">重庆市</option>
+                                <!-- 其他省份 -->
+                            </select>
+                            <select class="form-select" id="city">
+                                <option value="">请选择城市</option>
+                                <!-- 动态加载城市 -->
+                            </select>
+                            <select class="form-select" id="district">
+                                <option value="">请选择区县</option>
+                                <!-- 动态加载区县 -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">详细地址</label>
+                        <textarea class="form-input" id="address-detail" rows="3" placeholder="请输入详细地址，如街道、门牌号、小区、楼栋号、单元室等"></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">地址标签</label>
+                        <div class="flex space-x-2">
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded-full text-sm tag-btn" data-value="家">家</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded-full text-sm tag-btn" data-value="公司">公司</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded-full text-sm tag-btn" data-value="学校">学校</button>
+                            <button type="button" class="px-3 py-1 border border-gray-300 rounded-full text-sm tag-btn" data-value="其他">其他</button>
+                        </div>
+                        <input type="hidden" id="address-tag" value="">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="flex items-center">
+                            <input type="checkbox" id="is-default" class="mr-2">
+                            <span class="text-gray-700">设为默认地址</span>
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="mt-6 grid grid-cols-2 gap-4">
+                <button onclick="closeModal('add-address')" class="btn-outline py-3">取消</button>
+                <button onclick="saveAddress()" class="btn-primary py-3">保存</button>
+            </div>
+            
+            <!-- 删除地址按钮（编辑模式才显示） -->
+            <div class="mt-4 hidden" id="delete-btn-container">
+                <button onclick="deleteAddress()" class="w-full py-3 text-red-500 border border-red-500 rounded-lg btn-press">删除该地址</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 存储地址数据
+        let addresses = JSON.parse(localStorage.getItem('addresses') || '[]');
+        // 如果没有地址，添加示例地址
+        if (addresses.length === 0) {
+            addresses = [
+                {
+                    id: 1,
+                    name: '李小明',
+                    phone: '13812341234',
+                    province: '天津市',
+                    city: '天津市',
+                    district: '宝坻区',
+                    detail: '方家庄镇产业功能区一期',
+                    tag: '公司',
+                    isDefault: true
+                },
+                {
+                    id: 2,
+                    name: '王小红',
+                    phone: '15987654321',
+                    province: '北京市',
+                    city: '北京市',
+                    district: '朝阳区',
+                    detail: '朝阳北路世纪绿洲小区3号楼2单元801',
+                    tag: '家',
+                    isDefault: false
+                }
+            ];
+            localStorage.setItem('addresses', JSON.stringify(addresses));
+        }
+        
+        // 页面加载时渲染地址列表
+        document.addEventListener('DOMContentLoaded', function() {
+            renderAddressList();
+            
+            // 为标签按钮添加点击事件
+            document.querySelectorAll('.tag-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.tag-btn').forEach(b => {
+                        b.classList.remove('bg-primary', 'text-white');
+                        b.classList.add('border-gray-300', 'text-gray-700');
+                    });
+                    this.classList.remove('border-gray-300', 'text-gray-700');
+                    this.classList.add('bg-primary', 'text-white');
+                    document.getElementById('address-tag').value = this.dataset.value;
+                });
+            });
+        });
+        
+        // 渲染地址列表
+        function renderAddressList() {
+            const addressList = document.getElementById('address-list');
+            addressList.innerHTML = '';
+            
+            if (addresses.length === 0) {
+                addressList.innerHTML = '<div class="text-center py-8 text-gray-500">暂无收货地址</div>';
+                return;
+            }
+            
+            // 先显示默认地址
+            const defaultAddresses = addresses.filter(addr => addr.isDefault);
+            const otherAddresses = addresses.filter(addr => !addr.isDefault);
+            const sortedAddresses = [...defaultAddresses, ...otherAddresses];
+            
+            sortedAddresses.forEach(addr => {
+                const addressCard = document.createElement('div');
+                addressCard.className = 'address-card bg-white p-4';
+                addressCard.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <div class="flex items-center mb-1">
+                                <span class="font-medium mr-2">${addr.name}</span>
+                                <span>${maskPhone(addr.phone)}</span>
+                            </div>
+                            <div class="flex items-center">
+                                ${addr.isDefault ? '<span class="default-tag">默认</span>' : ''}
+                                <span class="text-gray-600 text-sm">${addr.province}${addr.city}${addr.district}${addr.detail}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="text-brand-primary text-sm" onclick="editAddress(${addr.id})">编辑</button>
+                        </div>
+                    </div>
+                `;
+                addressList.appendChild(addressCard);
+            });
+        }
+        
+        // 手机号码脱敏显示
+        function maskPhone(phone) {
+            if (!phone) return '';
+            return phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+        }
+        
+        // 显示弹窗
+        function showModal(id) {
+            document.getElementById(id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // 关闭弹窗
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+            document.body.style.overflow = '';
+            // 重置表单
+            document.getElementById('address-form').reset();
+            document.getElementById('address-modal-title').textContent = '添加新地址';
+            document.getElementById('delete-btn-container').classList.add('hidden');
+            // 重置标签按钮样式
+            document.querySelectorAll('.tag-btn').forEach(btn => {
+                btn.classList.remove('bg-primary', 'text-white');
+                btn.classList.add('border-gray-300', 'text-gray-700');
+            });
+        }
+        
+        // 编辑地址
+        function editAddress(id) {
+            const address = addresses.find(addr => addr.id === id);
+            if (!address) return;
+            
+            // 设置表单值
+            document.getElementById('address-id').value = address.id;
+            document.getElementById('receiver-name').value = address.name;
+            document.getElementById('receiver-phone').value = address.phone;
+            document.getElementById('province').value = address.province;
+            // 这里应该触发省份变更，加载城市列表，然后设置城市和区县值
+            document.getElementById('city').value = address.city;
+            document.getElementById('district').value = address.district;
+            document.getElementById('address-detail').value = address.detail;
+            document.getElementById('address-tag').value = address.tag;
+            document.getElementById('is-default').checked = address.isDefault;
+            
+            // 设置标签按钮状态
+            if (address.tag) {
+                document.querySelectorAll('.tag-btn').forEach(btn => {
+                    if (btn.dataset.value === address.tag) {
+                        btn.classList.remove('border-gray-300', 'text-gray-700');
+                        btn.classList.add('bg-primary', 'text-white');
+                    } else {
+                        btn.classList.remove('bg-primary', 'text-white');
+                        btn.classList.add('border-gray-300', 'text-gray-700');
+                    }
+                });
+            }
+            
+            // 更新模态框标题和显示删除按钮
+            document.getElementById('address-modal-title').textContent = '编辑地址';
+            document.getElementById('delete-btn-container').classList.remove('hidden');
+            
+            // 显示弹窗
+            showModal('add-address');
+        }
+        
+        // 保存地址
+        function saveAddress() {
+            const addressId = document.getElementById('address-id').value;
+            const name = document.getElementById('receiver-name').value;
+            const phone = document.getElementById('receiver-phone').value;
+            const province = document.getElementById('province').value;
+            const city = document.getElementById('city').value;
+            const district = document.getElementById('district').value;
+            const detail = document.getElementById('address-detail').value;
+            const tag = document.getElementById('address-tag').value;
+            const isDefault = document.getElementById('is-default').checked;
+            
+            // 简单验证
+            if (!name || !phone || !province || !city || !district || !detail) {
+                alert('请填写完整的地址信息');
+                return;
+            }
+            
+            // 手机号格式验证
+            if (!/^1[3-9]\d{9}$/.test(phone)) {
+                alert('请输入正确的手机号码');
+                return;
+            }
+            
+            // 如果设置为默认地址，需要将其他地址设为非默认
+            if (isDefault) {
+                addresses.forEach(addr => {
+                    addr.isDefault = false;
+                });
+            }
+            
+            // 新增或更新地址
+            if (addressId) {
+                // 更新现有地址
+                const index = addresses.findIndex(addr => addr.id === parseInt(addressId));
+                if (index !== -1) {
+                    addresses[index] = {
+                        ...addresses[index],
+                        name,
+                        phone,
+                        province,
+                        city,
+                        district,
+                        detail,
+                        tag,
+                        isDefault
+                    };
+                }
+            } else {
+                // 新增地址
+                const newId = addresses.length > 0 ? Math.max(...addresses.map(addr => addr.id)) + 1 : 1;
+                addresses.push({
+                    id: newId,
+                    name,
+                    phone,
+                    province,
+                    city,
+                    district,
+                    detail,
+                    tag,
+                    isDefault
+                });
+            }
+            
+            // 如果没有默认地址且当前添加的是第一个地址，则设为默认
+            if (addresses.length === 1) {
+                addresses[0].isDefault = true;
+            }
+            
+            // 保存到本地存储
+            localStorage.setItem('addresses', JSON.stringify(addresses));
+            
+            // 重新渲染地址列表
+            renderAddressList();
+            
+            // 关闭弹窗
+            closeModal('add-address');
+        }
+        
+        // 删除地址
+        function deleteAddress() {
+            const addressId = parseInt(document.getElementById('address-id').value);
+            if (!addressId) return;
+            
+            if (confirm('确定要删除这个地址吗？')) {
+                const index = addresses.findIndex(addr => addr.id === addressId);
+                if (index !== -1) {
+                    const isDefault = addresses[index].isDefault;
+                    // 删除地址
+                    addresses.splice(index, 1);
+                    
+                    // 如果删除的是默认地址，且还有其他地址，则将第一个地址设为默认
+                    if (isDefault && addresses.length > 0) {
+                        addresses[0].isDefault = true;
+                    }
+                    
+                    // 保存到本地存储
+                    localStorage.setItem('addresses', JSON.stringify(addresses));
+                    
+                    // 重新渲染地址列表
+                    renderAddressList();
+                    
+                    // 关闭弹窗
+                    closeModal('add-address');
+                }
+            }
+        }
+    </script>
+</body>
+</html> 

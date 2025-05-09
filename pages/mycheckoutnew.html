@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>确认订单 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <link href="../css/scrollbar.css" rel="stylesheet">
+    <link href="../css/mycheckout.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar fixed top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-4 h-12">
+            <div class="flex items-center">
+                <a href="cart.html" class="text-gray-500 mr-3">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <div class="text-lg font-medium">确认订单</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 主要内容区 -->
+    <div class="main-content pt-14 pb-24 px-4">
+        <!-- 收货地址 -->
+        <div class="section address p-4" id="addressSection">
+            <!-- 增加明确的点击提示 -->
+            <div class="absolute top-2 right-2 text-xs text-gray-400">点击选择</div>
+            
+            <div class="flex items-center justify-between">
+                <div class="flex-1">
+                    <div class="flex items-center">
+                        <div class="font-medium">李小明</div>
+                        <div class="text-sm text-gray-500 ml-4">13800138000</div>
+                    </div>
+                    <div class="text-sm text-gray-600 mt-1">
+                        广东省深圳市南山区科技园南区A栋1001室
+                    </div>
+                </div>
+                <div class="text-gray-400">
+                    <i class="fas fa-chevron-right text-lg"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 商品信息 -->
+        <div class="section p-4">
+            <div class="flex mt-3" id="productContainer">
+                <div class="product-image w-20 h-20 bg-gray-100 rounded-md overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1494028698538-2cd52a400b17?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="北欧设计师台灯" class="w-full h-full object-cover">
+                </div>
+                <div class="ml-3 flex-1">
+                    <div class="text-sm font-medium">北欧设计师台灯</div>
+                    <div class="text-xs text-gray-500 mt-1">黑色</div>
+                    <div class="flex justify-between mt-2">
+                        <div class="text-sm price font-medium">¥599</div>
+                        <div class="text-sm text-gray-500">x2</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 配送方式 -->
+            <div class="divider"></div>
+            <div class="delivery-option flex items-center justify-between p-2 rounded-lg" id="deliveryOption">
+                <div class="text-sm">配送方式</div>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-600">快递免邮</span>
+                    <i class="fas fa-chevron-right text-gray-400 text-xs ml-2"></i>
+                </div>
+            </div>
+            
+            <!-- 预计送达时间 -->
+            <div class="delivery-time-option flex items-center justify-between p-2 rounded-lg" id="deliveryTimeOption">
+                <div class="text-sm">预计送达</div>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-600" id="estimatedDelivery">4月7日（周一）09:00-18:00</span>
+                    <i class="fas fa-chevron-right text-gray-400 text-xs ml-2"></i>
+                </div>
+            </div>
+            
+            <!-- 订单备注 -->
+            <div class="divider"></div>
+            <div class="flex items-center justify-between" id="orderRemarkOption">
+                <div class="text-sm">订单备注</div>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-400">选填，建议备注相关特殊需求</span>
+                    <i class="fas fa-chevron-right text-gray-400 text-xs ml-2"></i>
+                </div>
+            </div>
+            
+            <!-- 小计 -->
+            <div class="divider"></div>
+            <div class="flex justify-between text-sm">
+                <div>商品金额</div>
+                <div class="price" id="productTotal">¥5,097</div>
+            </div>
+            <div class="flex justify-between text-sm mt-2">
+                <div>运费</div>
+                <div id="shippingFee">¥0.00</div>
+            </div>
+            <div class="flex justify-between text-sm mt-2 coupon-discount" id="couponDiscount" style="display: none;">
+                <div>优惠券折扣</div>
+                <div class="coupon-discount-value price" id="couponDiscountValue">-¥0.00</div>
+            </div>
+        </div>
+        
+        <!-- 优惠券 -->
+        <div class="section p-4 flex items-center justify-between" id="couponSection">
+            <div class="text-sm">优惠券</div>
+            <div class="flex items-center">
+                <a href="javascript:void(0)" class="coupon-selector" id="couponSelector">
+                    <span class="text-sm coupon-text" id="couponText">¥200 免运费(不满足条件)</span>
+                    <i class="fas fa-chevron-right text-gray-400 text-xs ml-2"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- 支付方式 -->
+        <div class="section p-4">
+            <div class="text-sm font-medium mb-3">支付方式</div>
+            
+            <div class="payment-method flex items-center justify-between py-2" data-payment="wechat">
+                <div class="flex items-center">
+                    <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                        <i class="fab fa-weixin text-white text-sm"></i>
+                    </div>
+                    <div class="text-sm ml-3">微信支付</div>
+                </div>
+                <input type="radio" name="payment" class="w-5 h-5" checked>
+            </div>
+            
+            <div class="payment-method flex items-center justify-between py-2 border-t border-gray-100" data-payment="alipay">
+                <div class="flex items-center">
+                    <div class="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+                        <i class="fas fa-credit-card text-white text-sm"></i>
+                    </div>
+                    <div class="text-sm ml-3">支付宝</div>
+                </div>
+                <input type="radio" name="payment" class="w-5 h-5">
+            </div>
+        </div>
+        
+        <!-- 发票信息 -->
+        <div class="section p-4 flex items-center justify-between" id="invoiceSection">
+            <div class="text-sm">发票信息</div>
+            <div class="flex items-center">
+                <span class="text-sm invoice-text" id="invoiceText">不开发票</span>
+                <i class="fas fa-chevron-right text-gray-400 text-xs ml-2"></i>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部结算栏 -->
+    <div class="bottom-bar fixed bottom-0 left-0 right-0 h-16 flex items-center justify-between px-4">
+        <div class="text-sm">
+            合计：<span class="text-lg font-medium price total-price" id="totalPrice">¥5,097</span>
+        </div>
+        <div class="flex items-center space-x-3">
+            <button type="button" class="save-order-btn text-sm flex items-center" id="saveOrderBtn">
+                <i class="far fa-star text-gray-400 mr-2"></i>
+                <span>保存常用</span>
+            </button>
+            <button type="button" class="submit-btn" id="submitOrderBtn">
+                提交订单
+            </button>
+        </div>
+    </div>
+
+    <!-- 发票模态框 -->
+    <div id="invoiceModal" class="modal-container fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="modal-content bg-white rounded-xl w-11/12 max-w-md max-h-90vh overflow-y-auto">
+            <div class="p-4 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="font-medium">发票信息</h3>
+                <button id="closeInvoiceModal" class="text-gray-400">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-4">
+                <div class="mb-4">
+                    <div class="text-sm text-gray-500 mb-2">发票类型</div>
+                    <div class="flex space-x-4">
+                        <label class="flex items-center">
+                            <input type="radio" name="invoiceType" value="electronic" checked class="mr-2">
+                            <span>电子发票</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="invoiceType" value="paper" class="mr-2">
+                            <span>纸质发票</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="text-sm text-gray-500 mb-2">发票抬头</div>
+                    <div class="flex space-x-4 mb-3">
+                        <label class="flex items-center">
+                            <input type="radio" name="invoiceTitle" value="personal" checked class="mr-2" id="personalTitle">
+                            <span>个人</span>
+                        </label>
+                        <label class="flex items-center">
+                            <input type="radio" name="invoiceTitle" value="company" class="mr-2" id="companyTitle">
+                            <span>单位</span>
+                        </label>
+                    </div>
+                    
+                    <div id="companyInfo" class="hidden">
+                        <input type="text" placeholder="单位名称" class="w-full border border-gray-200 rounded-lg p-2 mb-2">
+                        <input type="text" placeholder="纳税人识别号" class="w-full border border-gray-200 rounded-lg p-2">
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <div class="text-sm text-gray-500 mb-2">发票内容</div>
+                    <select class="w-full border border-gray-200 rounded-lg p-2">
+                        <option value="detail">商品明细</option>
+                        <option value="office">办公用品</option>
+                        <option value="furniture">家具用品</option>
+                        <option value="electronic">电子产品</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" checked class="mr-2">
+                        <span class="text-sm">保存发票信息</span>
+                    </label>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-100">
+                <button id="confirmInvoice" class="modal-btn w-full bg-gradient-to-r from-green-500 to-teal-500 text-white py-2 rounded-lg">
+                    确认
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 保存常用订单模态框 -->
+    <div id="saveOrderModal" class="modal-container fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="modal-content bg-white rounded-xl w-11/12 max-w-md">
+            <div class="p-4 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="font-medium">保存为常用订单</h3>
+                <button id="closeSaveOrderModal" class="text-gray-400">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-4">
+                <div class="mb-4">
+                    <input type="text" id="orderName" placeholder="输入常用订单名称" class="modal-input w-full border border-gray-200 rounded-lg p-2">
+                </div>
+                <div class="text-sm text-gray-500 mb-4">
+                    保存后可在"我的-常用订单"中查看和使用
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-100">
+                <button id="confirmSaveOrder" class="modal-btn w-full bg-gradient-to-r from-green-500 to-teal-500 text-white py-2 rounded-lg">
+                    保存
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 备注模态框 -->
+    <div id="remarkModal" class="modal-container fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="modal-content bg-white rounded-xl w-11/12 max-w-md">
+            <div class="p-4 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="font-medium">填写订单备注</h3>
+                <button id="closeRemarkModal" class="text-gray-400">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="p-4">
+                <div class="mb-4">
+                    <textarea id="orderRemark" placeholder="请填写订单备注信息，如配送时间要求、特殊包装需求等" class="modal-input w-full border border-gray-200 rounded-lg p-2 h-32"></textarea>
+                </div>
+                <div class="text-xs text-gray-500 mb-4">
+                    最多可输入100字
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-100">
+                <button id="confirmRemark" class="modal-btn w-full bg-gradient-to-r from-green-500 to-teal-500 text-white py-2 rounded-lg">
+                    确认
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/mycheckout.js"></script>
+</body>
+</html> 

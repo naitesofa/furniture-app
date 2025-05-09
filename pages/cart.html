@@ -1607,6 +1607,12 @@
                 // 绑定删除按钮事件
                 bindDeleteButtons();
                 
+                // 初始化产品交互功能
+                initProductInteractions();
+                
+                // 初始化规格选择模态框
+                initSpecModal();
+                
                 // 标记为已初始化
                 isInitialized = true;
             }
@@ -2307,6 +2313,8 @@
                 return;
             }
             
+            console.log('开始初始化产品交互功能');
+            
             // 为产品图片和标题添加点击事件
             document.querySelectorAll('.cart-item').forEach(item => {
                 const productId = item.getAttribute('data-product-id');
@@ -2340,28 +2348,48 @@
                 if (productSpec) {
                     productSpec.style.cursor = 'pointer';
                     productSpec.style.position = 'relative';
+                    
                     // 添加小图标表示可编辑
                     const editIcon = document.createElement('i');
                     editIcon.className = 'fas fa-pencil-alt text-xs text-gray-400 ml-1';
                     editIcon.style.fontSize = '10px';
+                    editIcon.style.cursor = 'pointer'; // 确保鼠标指针样式正确
+                    
+                    // 先清除可能存在的旧图标
+                    const existingIcon = productSpec.querySelector('i');
+                    if (existingIcon) {
+                        productSpec.removeChild(existingIcon);
+                    }
+                    
                     productSpec.appendChild(editIcon);
                     
+                    // 为整个规格文本区域添加点击事件
+                    productSpec.addEventListener('click', function(e) {
+                        console.log(`规格点击，商品ID: ${productId}`);
+                        openSpecModal(productId);
+                        e.stopPropagation(); // 阻止事件冒泡
+                    });
+                    
+                    // 单独为编辑图标添加点击事件
+                    editIcon.addEventListener('click', function(e) {
+                        console.log(`编辑图标点击，商品ID: ${productId}`);
+                        e.preventDefault(); // 阻止默认行为
+                        e.stopPropagation(); // 阻止事件冒泡
+                        openSpecModal(productId);
+                    });
+                    
+                    // 鼠标悬停效果
                     productSpec.addEventListener('mouseenter', function() {
                         this.style.color = 'var(--brand-primary-muted)';
                         editIcon.style.color = 'var(--brand-primary-muted)';
                     });
+                    
                     productSpec.addEventListener('mouseleave', function() {
                         this.style.color = '';
                         editIcon.style.color = '';
                     });
-                    productSpec.addEventListener('click', function() {
-                        openSpecModal(productId);
-                    });
                 }
             });
-            
-            // 初始化规格模态框
-            initSpecModal();
             
             window.productInteractionsInitialized = true;
             console.log('产品交互功能初始化完成');
@@ -2392,14 +2420,18 @@
         
         // 初始化规格选择模态框
         function initSpecModal() {
+            console.log('初始化规格选择模态框');
             const specModal = document.getElementById('specModal');
             const specModalContent = document.getElementById('specModalContent');
             const closeSpecModal = document.getElementById('closeSpecModal');
             const confirmSpecChange = document.getElementById('confirmSpecChange');
-            const colorOptions = document.querySelectorAll('.color-option');
-            const sizeOptions = document.querySelectorAll('.size-option');
             
-            if (!specModal) return;
+            if (!specModal) {
+                console.error('规格模态框元素未找到');
+                return;
+            }
+            
+            console.log('找到规格模态框元素', specModal);
             
             // 确保模态框初始状态为隐藏
             specModal.classList.add('hidden');
@@ -2407,9 +2439,17 @@
             specModalContent.classList.add('scale-95', 'opacity-0');
             
             // 关闭模态框
-            closeSpecModal.addEventListener('click', function() {
-                closeModal();
-            });
+            if (closeSpecModal) {
+                // 移除可能存在的旧事件监听
+                const newCloseBtn = closeSpecModal.cloneNode(true);
+                closeSpecModal.parentNode.replaceChild(newCloseBtn, closeSpecModal);
+                
+                newCloseBtn.addEventListener('click', function() {
+                    closeModal();
+                });
+            } else {
+                console.error('关闭按钮元素未找到');
+            }
             
             // 点击模态框外部关闭
             specModal.addEventListener('click', function(e) {
@@ -2420,7 +2460,11 @@
             
             // 规格选项点击事件
             document.querySelectorAll('.spec-option').forEach(option => {
-                option.addEventListener('click', function() {
+                // 移除可能存在的旧事件监听
+                const newOption = option.cloneNode(true);
+                option.parentNode.replaceChild(newOption, option);
+                
+                newOption.addEventListener('click', function() {
                     // 移除同类选项的选中状态
                     const parentElement = this.parentElement;
                     parentElement.querySelectorAll('.spec-option').forEach(opt => {
@@ -2440,28 +2484,61 @@
             });
             
             // 确认修改按钮
-            confirmSpecChange.addEventListener('click', function() {
-                if (!currentProductId || !currentProductSpecs.color || !currentProductSpecs.size) {
-                    showToast('请选择完整的规格', 'warning');
-                    return;
-                }
+            if (confirmSpecChange) {
+                // 移除可能存在的旧事件监听
+                const newConfirmBtn = confirmSpecChange.cloneNode(true);
+                confirmSpecChange.parentNode.replaceChild(newConfirmBtn, confirmSpecChange);
                 
-                // 更新购物车中的规格
-                updateProductSpec(currentProductId, currentProductSpecs);
-                closeModal();
-            });
-            
-            // 关闭模态框函数
-            function closeModal() {
-                specModal.classList.add('hidden');
-                specModalContent.classList.remove('scale-100', 'opacity-100');
-                specModalContent.classList.add('scale-95', 'opacity-0');
+                newConfirmBtn.addEventListener('click', function() {
+                    if (!currentProductId || !currentProductSpecs.color) {
+                        showToast('请选择颜色', 'warning');
+                        return;
+                    }
+                    
+                    // 更新购物车中的规格
+                    updateProductSpec(currentProductId, currentProductSpecs);
+                    closeModal();
+                });
+            } else {
+                console.error('确认按钮元素未找到');
             }
+            
+            console.log('规格模态框初始化完成');
+        }
+        
+        // 关闭模态框函数
+        function closeModal() {
+            const specModal = document.getElementById('specModal');
+            const specModalContent = document.getElementById('specModalContent');
+            
+            if (!specModal || !specModalContent) {
+                console.error('模态框元素未找到');
+                return;
+            }
+            
+            specModal.classList.add('hidden');
+            specModalContent.classList.remove('scale-100', 'opacity-100');
+            specModalContent.classList.add('scale-95', 'opacity-0');
+            console.log('关闭模态框');
         }
         
         // 打开规格选择模态框
         function openSpecModal(productId) {
+            console.log(`打开规格选择模态框，商品ID: ${productId}`);
             const specModal = document.getElementById('specModal');
+            if (!specModal) {
+                console.error('规格模态框元素未找到！');
+                // 尝试重新初始化
+                initSpecModal();
+                // 再次获取模态框元素
+                const reloadedModal = document.getElementById('specModal');
+                if (!reloadedModal) {
+                    console.error('即使重新初始化后，仍找不到规格模态框元素');
+                    showToast('系统错误，请稍后再试', 'error');
+                    return;
+                }
+            }
+            
             const specModalContent = document.getElementById('specModalContent');
             const specProductImage = document.getElementById('specProductImage');
             const specProductName = document.getElementById('specProductName');
@@ -2479,54 +2556,88 @@
             
             // 从购物车项中获取当前的规格
             const cartItem = document.querySelector(`[data-product-id="${productId}"]`);
+            if (!cartItem) {
+                console.error(`未找到商品项，ID: ${productId}`);
+                return;
+            }
+            
             const specText = cartItem.querySelector('.text-xs.text-gray-500.mt-1').textContent;
+            console.log(`当前规格文本: "${specText}"`);
+            
+            // 清除编辑图标后的文本内容
+            const cleanSpecText = specText.replace(/\s*\u007c.*$/, '');
             
             // 解析规格文本，例如 "浅灰色 / 三人座"
-            const specParts = specText.split(' / ');
+            const specParts = cleanSpecText.split(' / ');
             currentProductSpecs = {
                 color: specParts[0],
                 size: specParts.length > 1 ? specParts[1] : ''
             };
             
+            console.log('解析出的规格:', currentProductSpecs);
+            
             // 更新模态框内容
-            specProductImage.src = cartItem.querySelector('img').src;
-            specProductName.textContent = product.name;
-            specProductPrice.innerHTML = `<span class="price-currency">¥</span>${numberWithCommas(product.price)}`;
+            if (specProductImage) specProductImage.src = cartItem.querySelector('img').src;
+            if (specProductName) specProductName.textContent = product.name;
+            if (specProductPrice) specProductPrice.innerHTML = `<span class="price-currency">¥</span>${numberWithCommas(product.price)}`;
+            
+            // 首先清除所有选项的选中状态
+            document.querySelectorAll('.spec-option').forEach(option => {
+                option.classList.remove('border-brand-primary-muted', 'text-brand-primary-muted', 'bg-brand-primary-transparent');
+            });
             
             // 设置当前选中的规格
-            document.querySelectorAll('.color-option').forEach(option => {
-                const value = option.getAttribute('data-value');
-                if (value === currentProductSpecs.color) {
-                    option.classList.add('border-brand-primary-muted', 'text-brand-primary-muted', 'bg-brand-primary-transparent');
-                } else {
-                    option.classList.remove('border-brand-primary-muted', 'text-brand-primary-muted', 'bg-brand-primary-transparent');
-                }
-            });
+            if (currentProductSpecs.color) {
+                let foundColor = false;
+                document.querySelectorAll('.color-option').forEach(option => {
+                    const value = option.getAttribute('data-value');
+                    if (value === currentProductSpecs.color) {
+                        option.classList.add('border-brand-primary-muted', 'text-brand-primary-muted', 'bg-brand-primary-transparent');
+                        foundColor = true;
+                    }
+                });
+                console.log(`颜色"${currentProductSpecs.color}"找到匹配: ${foundColor}`);
+            }
             
-            document.querySelectorAll('.size-option').forEach(option => {
-                const value = option.getAttribute('data-value');
-                if (value === currentProductSpecs.size) {
-                    option.classList.add('border-brand-primary-muted', 'text-brand-primary-muted', 'bg-brand-primary-transparent');
-                } else {
-                    option.classList.remove('border-brand-primary-muted', 'text-brand-primary-muted', 'bg-brand-primary-transparent');
-                }
-            });
+            if (currentProductSpecs.size) {
+                let foundSize = false;
+                document.querySelectorAll('.size-option').forEach(option => {
+                    const value = option.getAttribute('data-value');
+                    if (value === currentProductSpecs.size) {
+                        option.classList.add('border-brand-primary-muted', 'text-brand-primary-muted', 'bg-brand-primary-transparent');
+                        foundSize = true;
+                    }
+                });
+                console.log(`尺寸"${currentProductSpecs.size}"找到匹配: ${foundSize}`);
+            }
             
             // 显示模态框
             specModal.classList.remove('hidden');
+            console.log('模态框显示状态:', specModal.className);
+            
             setTimeout(() => {
-                specModalContent.classList.remove('scale-95', 'opacity-0');
-                specModalContent.classList.add('scale-100', 'opacity-100');
+                const content = document.getElementById('specModalContent');
+                if (content) {
+                    content.classList.remove('scale-95', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }
             }, 50);
         }
         
         // 更新商品规格
         function updateProductSpec(productId, specs) {
+            console.log(`更新商品${productId}的规格:`, specs);
             const cartItem = document.querySelector(`[data-product-id="${productId}"]`);
-            if (!cartItem) return;
+            if (!cartItem) {
+                console.error(`未找到商品项，ID: ${productId}`);
+                return;
+            }
             
             const specElement = cartItem.querySelector('.text-xs.text-gray-500.mt-1');
-            if (!specElement) return;
+            if (!specElement) {
+                console.error(`未找到规格元素，商品ID: ${productId}`);
+                return;
+            }
             
             // 拼接规格文本
             let specText = specs.color || '';
@@ -2534,12 +2645,25 @@
                 specText += ` / ${specs.size}`;
             }
             
-            // 保留编辑图标
-            const editIcon = specElement.querySelector('i');
+            console.log(`新规格文本: "${specText}"`);
+            
+            // 清空内容
             specElement.textContent = specText;
-            if (editIcon) {
-                specElement.appendChild(editIcon);
-            }
+            
+            // 重新添加编辑图标
+            const editIcon = document.createElement('i');
+            editIcon.className = 'fas fa-pencil-alt text-xs text-gray-400 ml-1';
+            editIcon.style.fontSize = '10px';
+            editIcon.style.cursor = 'pointer';
+            specElement.appendChild(editIcon);
+            
+            // 重新绑定编辑图标事件
+            editIcon.addEventListener('click', function(e) {
+                console.log(`编辑图标点击，商品ID: ${productId}`);
+                e.preventDefault();
+                e.stopPropagation();
+                openSpecModal(productId);
+            });
             
             // 显示更新成功提示
             showToast('规格已更新');
@@ -2553,7 +2677,7 @@
     </script>
     
     <!-- 规格选择模态框 -->
-    <div id="specModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden" style="display: none !important;">
+    <div id="specModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden">
         <div class="bg-white rounded-lg w-11/12 max-w-md transform transition-all duration-300 scale-95 opacity-0" id="specModalContent">
             <div class="relative">
                 <div class="p-4 border-b border-gray-200">

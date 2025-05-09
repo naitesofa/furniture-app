@@ -8,516 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="../css/common.css" rel="stylesheet">
     <link href="../css/scrollbar.css" rel="stylesheet">
-    <style>
-        /* 主题颜色变量 - 与首页保持一致 */
-        :root {
-            --primary-color: #2A9D8F;
-            --secondary-color: #E9C46A;
-            --accent-color: #F4A261;
-            --dark-color: #264653;
-            --light-color: #F8F9FA;
-            --bg-color: #F5F7F8;
-            
-            /* 完整品牌色彩系统 */
-            --brand-primary: #2A9D8F;
-            --brand-primary-light: #4DB6A9;
-            --brand-primary-dark: #1F7A70;
-            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
-            
-            --brand-secondary: #E9C46A;
-            --brand-secondary-light: #F2D68B;
-            --brand-secondary-dark: #D4A93B;
-            
-            --brand-accent: #F4A261;
-            --brand-accent-light: #F7BE8C;
-            --brand-accent-dark: #E68940;
-            
-            --brand-dark: #264653;
-            --brand-dark-light: #3A6A7E;
-            --brand-dark-dark: #1A323C;
-            
-            --brand-light: #F8F9FA;
-            --brand-light-dark: #E9ECEF;
-            
-            --brand-success: #38B2AC;
-            --brand-warning: #F59E0B;
-            --brand-error: #EF4444;
-            --brand-info: #3B82F6;
-            
-            /* 渐变色 */
-            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
-            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
-            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
-            --brand-gradient-light: linear-gradient(135deg, #f0f4fd, #e6eefa);
-            
-            /* 阴影 */
-            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
-            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
-            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
-            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
-        }
-
-        body {
-            background-color: white;
-            color: var(--brand-dark);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            overflow: hidden;
-            height: 100vh;
-            position: relative;
-        }
-
-        /* 主内容区域样式 */
-        .main-content {
-            position: absolute;
-            top: 80px;
-            bottom: 139px;
-            left: 0;
-            right: 0;
-            padding: 0;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            background-color: white;
-        }
-
-        /* 顶部导航栏样式 */
-        .nav-bar {
-            background: white;
-            box-shadow: none;
-            position: fixed;
-            top: 20px;
-            left: 0;
-            right: 0;
-            z-index: 10;
-            height: 48px;
-            border-bottom: 1px solid rgba(233, 236, 239, 0.5);
-        }
-
-        /* AI助手头像样式 */
-        .ai-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 2px solid white;
-            box-shadow: var(--shadow-md);
-            position: relative;
-        }
-        
-        .ai-avatar::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 14px;
-            height: 14px;
-            background-color: #4ade80;
-            border-radius: 50%;
-            border: 2px solid white;
-        }
-        
-        /* 介绍容器样式 */
-        .intro-container {
-            background: white;
-            padding: 12px 16px;
-            box-shadow: none;
-            display: flex;
-            align-items: center;
-            margin-bottom: 0;
-            animation: fadeIn 0.4s ease;
-            border-radius: 0;
-            width: 100%;
-            border-bottom: 1px solid rgba(233, 236, 239, 0.5);
-        }
-        
-        .intro-text {
-            margin-left: 10px;
-        }
-
-        /* 功能卡片样式 */
-        .function-card {
-            background: white;
-            border-radius: 16px;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.3s ease;
-        }
-
-        .function-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .function-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 8px;
-        }
-
-        .icon-product {
-            background: linear-gradient(135deg, rgba(56, 178, 172, 0.1), rgba(56, 178, 172, 0.2));
-            color: var(--brand-success);
-        }
-
-        .icon-order {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.2));
-            color: var(--brand-info);
-        }
-
-        .icon-service {
-            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(245, 158, 11, 0.2));
-            color: var(--brand-warning);
-        }
-
-        .icon-human {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(239, 68, 68, 0.2));
-            color: var(--brand-error);
-        }
-
-        /* 聊天区域样式 */
-        .chat-container {
-            background-color: white;
-            border-radius: 0;
-            box-shadow: none;
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-            width: 100%;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(42, 157, 143, 0.2) transparent;
-            -ms-overflow-style: none;
-        }
-        
-        .chat-container::-webkit-scrollbar {
-            width: 4px;
-        }
-        
-        .chat-container::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        
-        .chat-container::-webkit-scrollbar-thumb {
-            background-color: rgba(42, 157, 143, 0.2);
-            border-radius: 4px;
-        }
-        
-        .chat-container::-webkit-scrollbar-thumb:hover {
-            background-color: rgba(42, 157, 143, 0.4);
-        }
-
-        .chat-message {
-            max-width: 85%;
-            border-radius: 16px;
-            padding: 12px 16px;
-            margin-bottom: 12px;
-            position: relative;
-            animation: fadeIn 0.3s ease;
-            line-height: 1.5;
-        }
-
-        .chat-message.ai {
-            background-color: var(--brand-light);
-            border-top-left-radius: 4px;
-            align-self: flex-start;
-        }
-
-        .chat-message.user {
-            background-color: var(--brand-primary-transparent);
-            color: var(--brand-dark);
-            border-top-right-radius: 4px;
-            align-self: flex-end;
-        }
-
-        /* 输入框样式 */
-        .input-container {
-            background-color: white;
-            border-radius: 24px;
-            box-shadow: var(--shadow-md);
-            transition: all 0.3s ease;
-            padding: 4px 8px;
-            border: 1px solid var(--brand-light-dark);
-            display: flex;
-            align-items: center;
-        }
-
-        .input-container:focus-within {
-            box-shadow: var(--shadow-highlight);
-            border-color: var(--brand-primary-light);
-        }
-
-        .input-field {
-            border: none;
-            outline: none;
-            background: transparent;
-            width: 100%;
-            padding: 8px 12px;
-            font-size: 14px;
-            border-radius: 20px;
-        }
-        
-        .input-field::placeholder {
-            color: #9CA3AF;
-            transition: all 0.3s ease;
-        }
-        
-        .input-field:focus::placeholder {
-            opacity: 0.6;
-        }
-
-        .voice-btn, .send-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-        }
-
-        .voice-btn {
-            background: var(--brand-light-dark);
-            color: var(--brand-dark-light);
-        }
-
-        .voice-btn.active {
-            background: var(--brand-error);
-            color: white;
-            animation: pulse 1.5s infinite;
-        }
-
-        .send-btn {
-            background: var(--brand-gradient-primary);
-            color: white;
-        }
-
-        .send-btn:hover, .voice-btn:hover {
-            transform: scale(1.05);
-        }
-
-        /* 快捷问题样式 */
-        .quick-tag {
-            background-color: var(--brand-light);
-            border-radius: 20px;
-            padding: 8px 16px;
-            margin-right: 8px;
-            margin-bottom: 8px;
-            display: inline-block;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            font-size: 13px;
-        }
-
-        .quick-tag:hover {
-            background-color: var(--brand-primary-transparent);
-        }
-
-        /* 动画效果 */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
-            }
-        }
-
-        .animate-fadeIn {
-            animation: fadeIn 0.3s ease-out forwards;
-        }
-
-        /* 打字效果 */
-        .typing-indicator {
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .typing-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background-color: var(--brand-dark-light);
-            margin: 0 2px;
-            animation: typingAnimation 1.4s infinite ease-in-out;
-        }
-
-        .typing-dot:nth-child(1) {
-            animation-delay: 0s;
-        }
-
-        .typing-dot:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .typing-dot:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes typingAnimation {
-            0%, 60%, 100% {
-                transform: translateY(0);
-            }
-            30% {
-                transform: translateY(-5px);
-            }
-        }
-
-        /* 状态栏样式 */
-        .status-bar {
-            display: flex;
-            justify-content: space-between;
-            padding: 2px 16px;
-            font-size: 12px;
-            background-color: white;
-            height: 20px;
-        }
-        
-        .status-bar .time {
-            font-weight: 500;
-        }
-        
-        .status-bar .icons {
-            display: flex;
-            gap: 5px;
-        }
-        
-        /* 底部工具栏样式 */
-        .bottom-toolbar {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: white;
-            padding: 12px 16px;
-            border-top: 1px solid rgba(233, 236, 239, 0.5);
-            z-index: 10;
-            box-shadow: none;
-        }
-        
-        .tools-scroll-container {
-            display: flex;
-            overflow-x: auto;
-            padding: 5px 0;
-            margin-bottom: 10px;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-        
-        .tools-scroll-container::-webkit-scrollbar {
-            display: none;
-        }
-        
-        .tool-card {
-            background: white;
-            border-radius: 8px;
-            padding: 8px 12px;
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-            margin-right: 10px;
-            min-width: 110px;
-            border: 1px solid rgba(42, 157, 143, 0.1);
-        }
-        
-        .tool-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-            background-color: var(--brand-light-dark);
-        }
-        
-        .tool-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 8px;
-            flex-shrink: 0;
-        }
-
-        .tool-text {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--brand-dark);
-        }
-        
-        .human-support-avatar {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            overflow: hidden;
-            border: 1px solid white;
-            box-shadow: var(--shadow-sm);
-            position: absolute;
-            top: -5px;
-            right: -5px;
-        }
-
-        /* 常见问题卡片样式 */
-        .faq-card {
-            background-color: white;
-            border-radius: 12px;
-            padding: 10px 14px;
-            margin-bottom: 8px;
-            box-shadow: var(--shadow-sm);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-left: 3px solid var(--brand-primary);
-            width: 100%;
-        }
-        
-        .faq-card:hover {
-            transform: translateX(3px);
-            box-shadow: var(--shadow-md);
-            background-color: var(--brand-primary-transparent);
-        }
-        
-        .faq-card-title {
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--brand-dark);
-            display: flex;
-            align-items: center;
-        }
-        
-        .faq-card-title i {
-            margin-right: 8px;
-            color: var(--brand-primary);
-        }
-
-        /* 卡片点击效果 */
-        .faq-card:active, .tool-card:active {
-            transform: scale(0.98);
-            background-color: var(--brand-primary-transparent);
-            transition: all 0.1s ease;
-        }
-    </style>
+    <link href="../css/customer-service.css" rel="stylesheet">
 </head>
 <body>
     <!-- 状态栏 -->
@@ -533,17 +24,13 @@
     <!-- 顶部导航栏 -->
     <div class="nav-bar">
         <div class="flex items-center justify-between px-4 h-full">
-            <div class="flex items-center">
+            <div class="flex items-center w-1/4 justify-start">
                 <a href="javascript:history.back()" class="text-gray-700">
                     <i class="fas fa-chevron-left"></i>
                 </a>
             </div>
-            <div class="text-lg font-medium">智能客服</div>
-            <div class="flex items-center">
-                <a href="#" class="text-gray-700">
-                    <i class="fas fa-ellipsis-v"></i>
-                </a>
-            </div>
+            <div class="text-lg font-medium text-center w-2/4">智能客服</div>
+            <div class="w-1/4"><!-- 占位以确保标题居中 --></div>
         </div>
     </div>
     
@@ -555,13 +42,13 @@
                 <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="AI助手" class="w-full h-full object-cover">
             </div>
             <div class="intro-text">
-                <div class="text-sm font-medium">您好，我是智能导购</div>
+                <div class="text-sm font-medium">您好，我是小夏</div>
                 <div class="text-xs text-gray-500">有什么可以帮助您的？</div>
             </div>
         </div>
         
         <!-- 聊天界面 -->
-        <div class="chat-container flex flex-col animate-fadeIn" id="chat-container">
+        <div class="chat-container flex flex-col animate-fadeIn" id="chat-container" style="padding-top: 5px;">
             <!-- <div class="chat-message ai">
                 您好！我是家逸生活智能客服，有什么可以帮您解决的问题吗？可以点击下方功能按钮，或直接输入您的问题。
             </div> -->
@@ -571,19 +58,37 @@
                 <div class="faq-card" id="faq-delivery">
                     <div class="faq-card-title">
                         <i class="fas fa-truck"></i>
-                        <span>送货时间一般是多久？</span>
+                        <span>发货时间一般是多久？</span>
                     </div>
                 </div>
-                <div class="faq-card" id="faq-return">
+                <!-- <div class="faq-card" id="faq-return">
                     <div class="faq-card-title">
                         <i class="fas fa-undo"></i>
                         <span>如何申请退换货？</span>
                     </div>
-                </div>
+                </div> -->
                 <div class="faq-card" id="faq-install">
                     <div class="faq-card-title">
                         <i class="fas fa-tools"></i>
                         <span>安装服务是否收费？</span>
+                    </div>
+                </div>
+                <!-- <div class="faq-card" id="faq-maintenance">
+                    <div class="faq-card-title">
+                        <i class="fas fa-pump-soap"></i>
+                        <span>家具如何保养？</span>
+                    </div>
+                </div> -->
+                <div class="faq-card" id="faq-size">
+                    <div class="faq-card-title">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>沙发的质保有哪些？</span>
+                    </div>
+                </div>
+                <div class="faq-card" id="faq-sofa-sink">
+                    <div class="faq-card-title">
+                        <i class="fas fa-couch"></i>
+                        <span>沙发用了一段时间出现塌陷怎么办？</span>
                     </div>
                 </div>
             </div>
@@ -593,7 +98,7 @@
     <!-- 底部工具栏 -->
     <div class="bottom-toolbar">
         <div class="tools-scroll-container">
-            <div class="tool-card" id="product-inquiry">
+            <!-- <div class="tool-card" id="product-inquiry">
                 <div class="tool-icon icon-product">
                     <i class="fas fa-box text-sm"></i>
                 </div>
@@ -604,41 +109,39 @@
                     <i class="fas fa-clipboard-list text-sm"></i>
                 </div>
                 <div class="tool-text">订单追踪</div>
-            </div>
-            <div class="tool-card" id="after-sales">
+            </div> -->
+            <!-- <div class="tool-card" id="after-sales">
                 <div class="tool-icon icon-service">
                     <i class="fas fa-tools text-sm"></i>
                 </div>
                 <div class="tool-text">售后申请</div>
-            </div>
-            <div class="tool-card relative" id="human-service">
-                <div class="tool-icon icon-human">
-                    <i class="fas fa-user text-sm"></i>
-                </div>
-                <div class="tool-text">转人工</div>
-                <div class="human-support-avatar">
-                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" alt="客服" class="w-full h-full object-cover">
-                </div>
-            </div>
+            </div> -->
             <div class="tool-card" id="promotions">
-                <div class="tool-icon" style="background: linear-gradient(135deg, rgba(219, 39, 119, 0.1), rgba(219, 39, 119, 0.2)); color: #DB2777;">
+                <div class="tool-icon" style="background: linear-gradient(135deg, rgba(42, 157, 143, 0.1), rgba(42, 157, 143, 0.2)); color: var(--brand-primary);">
                     <i class="fas fa-tag text-sm"></i>
                 </div>
                 <div class="tool-text">优惠活动</div>
             </div>
-            <div class="tool-card" id="faq">
+            <div class="tool-card relative" id="human-service">
+                <div class="tool-icon" style="background: linear-gradient(135deg, rgba(42, 157, 143, 0.1), rgba(42, 157, 143, 0.2)); color: var(--brand-primary);">
+                    <i class="fas fa-user text-sm"></i>
+                </div>
+                <div class="tool-text">转人工</div>
+                <!-- <div class="human-support-avatar">
+                    <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" alt="客服" class="w-full h-full object-cover">
+                </div> -->
+            </div>
+      
+            <!-- <div class="tool-card" id="faq">
                 <div class="tool-icon" style="background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(124, 58, 237, 0.2)); color: #7C3AED;">
                     <i class="fas fa-question-circle text-sm"></i>
                 </div>
                 <div class="tool-text">常见问题</div>
-            </div>
+            </div> -->
         </div>
         
         <!-- 输入框区域 -->
         <div class="input-container mt-3">
-            <div class="voice-btn" id="voice-btn">
-                <i class="fas fa-microphone text-sm"></i>
-            </div>
             <input type="text" class="input-field" placeholder="发送消息..." id="message-input">
             <div class="send-btn" id="send-btn">
                 <i class="fas fa-paper-plane text-sm"></i>
@@ -646,404 +149,6 @@
         </div>
     </div>
     
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const messageInput = document.getElementById('message-input');
-            const sendBtn = document.getElementById('send-btn');
-            const voiceBtn = document.getElementById('voice-btn');
-            const productInquiry = document.getElementById('product-inquiry');
-            const orderTracking = document.getElementById('order-tracking');
-            const afterSales = document.getElementById('after-sales');
-            const humanService = document.getElementById('human-service');
-            const promotions = document.getElementById('promotions');
-            const faq = document.getElementById('faq');
-            const quickTags = document.querySelectorAll('.quick-tag');
-            const faqDelivery = document.getElementById('faq-delivery');
-            const faqReturn = document.getElementById('faq-return');
-            const faqInstall = document.getElementById('faq-install');
-            const chatContainer = document.getElementById('chat-container');
-            
-            // 检查用户来源，如果是从首页来的，添加特殊标识
-            const serviceSource = localStorage.getItem('service_source');
-            if (serviceSource === 'home') {
-                const navTitle = document.querySelector('.nav-bar .text-lg');
-                if (navTitle) {
-                    navTitle.innerHTML = `智能客服 <span class="ml-2 inline-block px-2 py-0.5 bg-brand-primary text-white text-xs rounded-full">首页咨询</span>`;
-                }
-            }
-            
-            // 初始化聊天界面
-            initChat();
-            
-            // 语音按钮点击事件
-            let isRecording = false;
-            voiceBtn.addEventListener('click', function() {
-                isRecording = !isRecording;
-                if (isRecording) {
-                    voiceBtn.classList.add('active');
-                    voiceBtn.innerHTML = '<i class="fas fa-stop"></i>';
-                    // 这里应该启动语音识别
-                    alert('开始录音...\n(实际应用中会调用语音识别API)');
-                    
-                    // 模拟3秒后自动停止录音
-                    setTimeout(() => {
-                        isRecording = false;
-                        voiceBtn.classList.remove('active');
-                        voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
-                        messageInput.value = "我想了解一下家具的保养方法";
-                        // 实际应用中这里会获取语音识别的结果
-                    }, 3000);
-                } else {
-                    voiceBtn.classList.remove('active');
-                    voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
-                    // 这里应该停止语音识别
-                    alert('停止录音');
-                }
-            });
-            
-            // 发送按钮点击事件
-            sendBtn.addEventListener('click', function() {
-                sendMessage();
-            });
-            
-            // 回车键发送消息
-            messageInput.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    sendMessage();
-                }
-            });
-            
-            // 产品咨询点击事件
-            productInquiry.addEventListener('click', function() {
-                messageInput.value = "我想咨询一下产品的详细信息";
-                messageInput.focus();
-                
-                // 添加用户消息到聊天界面
-                addUserMessage("我想咨询一下产品的详细信息");
-                
-                // 添加AI回复
-                setTimeout(() => {
-                    addAiMessage("您好！您可以告诉我您对哪类家具感兴趣吗？比如沙发、床、餐桌等，我可以为您提供详细的产品信息和推荐。");
-                }, 800);
-            });
-            
-            // 订单追踪点击事件
-            orderTracking.addEventListener('click', function() {
-                messageInput.value = "我想查询我的订单状态";
-                messageInput.focus();
-                
-                // 添加用户消息到聊天界面
-                addUserMessage("我想查询我的订单状态");
-                
-                // 添加AI回复
-                setTimeout(() => {
-                    addAiMessage("请提供您的订单号，我将为您查询订单状态。如果您不记得订单号，也可以提供下单时间和购买的商品名称，我会尽力帮您查询。");
-                }, 800);
-            });
-            
-            // 售后申请点击事件
-            afterSales.addEventListener('click', function() {
-                messageInput.value = "我需要申请售后服务";
-                messageInput.focus();
-                
-                // 添加用户消息到聊天界面
-                addUserMessage("我需要申请售后服务");
-                
-                // 添加AI回复
-                setTimeout(() => {
-                    addAiMessage("您好！请问您需要哪种售后服务？我们提供退货、换货、维修等服务。您可以提供订单号和具体问题，我们会尽快为您处理。");
-                }, 800);
-            });
-            
-            // 转人工点击事件
-            humanService.addEventListener('click', function() {
-                // 添加用户消息到聊天界面
-                addUserMessage("我想转接人工客服");
-                
-                // 添加系统消息
-                addSystemMessage("正在为您转接人工客服，请稍候...");
-                
-                setTimeout(() => {
-                    addHumanMessage("您好，我是客服小美，很高兴为您服务。请问有什么可以帮助您的？");
-                }, 1500);
-            });
-            
-            // 优惠活动点击事件
-            promotions.addEventListener('click', function() {
-                // 添加用户消息到聊天界面
-                addUserMessage("我想了解最新的优惠活动");
-                
-                // 添加AI回复
-                setTimeout(() => {
-                    addAiMessage("您好！我们目前有以下优惠活动：\n1. 新人首单满1000减100\n2. 卧室家具套装8折优惠\n3. 限时特价：精选实木餐桌5折起\n\n您对哪个活动感兴趣？可以点击了解详情。");
-                }, 800);
-            });
-            
-            // 常见问题卡片点击事件
-            faqDelivery.addEventListener('click', function() {
-                // 添加用户消息到聊天界面
-                addUserMessage("送货时间一般是多久？");
-                
-                // 添加AI回复
-                setTimeout(() => {
-                    addAiMessage("您好！我们的送货时间根据您的位置和商品库存情况而定：\n\n1. 同城订单：一般1-3个工作日送达\n2. 跨城订单：一般3-7个工作日送达\n3. 定制商品：需要15-20个工作日\n\n您可以在订单详情页查看具体的预计送达时间。如有特殊需求，可以联系客服安排。");
-                }, 800);
-            });
-            
-            faqReturn.addEventListener('click', function() {
-                // 添加用户消息到聊天界面
-                addUserMessage("如何申请退换货？");
-                
-                // 添加AI回复
-                setTimeout(() => {
-                    addAiMessage("您好！申请退换货的步骤如下：1. 进入我的订单，找到相应订单 2. 点击申请售后按钮 3. 选择退货或换货选项 4. 填写申请原因并上传照片 5. 提交申请等待审核。非质量问题需在7天内申请，质量问题需在30天内申请。");
-                }, 800);
-            });
-            
-            faqInstall.addEventListener('click', function() {
-                // 添加用户消息到聊天界面
-                addUserMessage("安装服务是否收费？");
-                
-                // 添加AI回复
-                setTimeout(() => {
-                    addAiMessage("您好！关于安装服务的收费情况：\n\n1. 标准家具（床、沙发、餐桌等）：首次安装免费\n2. 大型复杂家具（衣柜、书柜等）：首次安装免费\n3. 二次上门安装：收取上门费100元起\n4. 非本店购买商品：收取安装费，具体费用视商品复杂度而定\n\n免费安装服务仅限于商品送达时一并完成，如您选择暂不安装，后续需要安装服务将收取费用。");
-                }, 800);
-            });
-            
-            // 快捷标签点击事件
-            quickTags.forEach(tag => {
-                tag.addEventListener('click', function() {
-                    const tagText = this.textContent.trim();
-                    messageInput.value = tagText;
-                    messageInput.focus();
-                });
-            });
-            
-            // 常见问题点击事件
-            faq.addEventListener('click', function() {
-                // 添加用户消息到聊天界面
-                addUserMessage("我想查看常见问题解答");
-                
-                // 添加AI回复
-                setTimeout(() => {
-                    addAiMessage("以下是我们的常见问题：\n1. 家具如何保养？\n2. 送货时间一般是多久？\n3. 如何申请退换货？\n4. 安装服务是否收费？\n\n请问您想了解哪个问题？");
-                }, 800);
-            });
-            
-            // 发送消息函数
-            function sendMessage() {
-                const message = messageInput.value.trim();
-                if (message) {
-                    // 添加用户消息到聊天界面
-                    addUserMessage(message);
-                    
-                    // 清空输入框
-                    messageInput.value = '';
-                    
-                    // 模拟AI回复
-                    setTimeout(() => {
-                        addAiMessage("感谢您的提问！我正在处理您的问题，请稍候...");
-                        
-                        // 模拟思考时间
-                        setTimeout(() => {
-                            addAiMessage("我已经找到了一些信息，希望对您有所帮助。如果您有其他问题，请随时告诉我。");
-                        }, 1500);
-                    }, 800);
-                }
-            }
-            
-            // 添加用户消息到聊天界面
-            function addUserMessage(text) {
-                const chatContainer = document.getElementById('chat-container');
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'chat-message user';
-                messageDiv.textContent = text;
-                chatContainer.appendChild(messageDiv);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
-            
-            // 添加AI消息到聊天界面
-            function addAiMessage(text) {
-                const chatContainer = document.getElementById('chat-container');
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'chat-message ai';
-                messageDiv.textContent = text;
-                chatContainer.appendChild(messageDiv);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
-            
-            // 添加系统消息到聊天界面
-            function addSystemMessage(text) {
-                const chatContainer = document.getElementById('chat-container');
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'chat-message system';
-                messageDiv.textContent = text;
-                messageDiv.style.backgroundColor = '#f0f0f0';
-                messageDiv.style.color = '#666';
-                messageDiv.style.fontStyle = 'italic';
-                messageDiv.style.textAlign = 'center';
-                messageDiv.style.maxWidth = '100%';
-                messageDiv.style.padding = '8px 12px';
-                chatContainer.appendChild(messageDiv);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
-            
-            // 添加人工客服消息到聊天界面
-            function addHumanMessage(text) {
-                const chatContainer = document.getElementById('chat-container');
-                const messageDiv = document.createElement('div');
-                messageDiv.className = 'chat-message human';
-                
-                // 创建头像和文本的容器
-                const contentDiv = document.createElement('div');
-                contentDiv.className = 'flex items-start';
-                
-                // 添加客服头像
-                const avatarDiv = document.createElement('div');
-                avatarDiv.className = 'w-8 h-8 rounded-full overflow-hidden mr-2 flex-shrink-0';
-                const avatar = document.createElement('img');
-                avatar.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80';
-                avatar.className = 'w-full h-full object-cover';
-                avatarDiv.appendChild(avatar);
-                
-                // 添加文本和名称
-                const textContainer = document.createElement('div');
-                
-                const nameDiv = document.createElement('div');
-                nameDiv.className = 'text-xs text-brand-error font-medium mb-1';
-                nameDiv.textContent = '客服小美';
-                
-                const textDiv = document.createElement('div');
-                textDiv.textContent = text;
-                
-                textContainer.appendChild(nameDiv);
-                textContainer.appendChild(textDiv);
-                
-                contentDiv.appendChild(avatarDiv);
-                contentDiv.appendChild(textContainer);
-                
-                messageDiv.appendChild(contentDiv);
-                messageDiv.style.backgroundColor = 'rgba(239, 68, 68, 0.1)';
-                
-                chatContainer.appendChild(messageDiv);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }
-            
-            // 初始化聊天界面
-            function initChat() {
-                // 确保聊天容器滚动到底部
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-                
-                // 移除可能重复的事件监听器
-                const allCards = document.querySelectorAll('.faq-card, .tool-card');
-                allCards.forEach(card => {
-                    const newCard = card.cloneNode(true);
-                    card.parentNode.replaceChild(newCard, card);
-                });
-                
-                // 根据用户来源显示个性化欢迎信息
-                const serviceSource = localStorage.getItem('service_source') || '';
-                const serviceTime = localStorage.getItem('service_time') || '';
-                let welcomeMessage = "您好！我是家逸生活智能客服，很高兴为您服务，请问有什么可以帮您的？";
-                
-                // 根据不同来源显示不同的欢迎信息
-                if (serviceSource === 'home') {
-                    welcomeMessage = "您好！感谢您从首页进入客服页面。我是家逸生活智能客服，有什么可以帮您解决的问题吗？";
-                } else if (serviceSource === 'product') {
-                    welcomeMessage = "您好！看起来您正在浏览我们的产品。我是家逸生活智能客服，有关于产品的疑问都可以问我。";
-                } else if (serviceSource === 'cart') {
-                    welcomeMessage = "您好！我看到您正在购物车页面有疑问。我是家逸生活智能客服，购物相关问题都可以咨询我。";
-                } else if (serviceSource === 'order') {
-                    welcomeMessage = "您好！我看到您正在查看订单。我是家逸生活智能客服，订单相关问题都可以咨询我。";
-                }
-                
-                // 添加AI欢迎消息
-                setTimeout(() => {
-                    addAiMessage(welcomeMessage);
-                }, 500);
-                
-                // 重新绑定常见问题卡片事件
-                document.getElementById('faq-delivery').addEventListener('click', function() {
-                    addUserMessage("送货时间一般是多久？");
-                    setTimeout(() => {
-                        addAiMessage("您好！我们的送货时间根据您的位置和商品库存情况而定：\n\n1. 同城订单：一般1-3个工作日送达\n2. 跨城订单：一般3-7个工作日送达\n3. 定制商品：需要15-20个工作日\n\n您可以在订单详情页查看具体的预计送达时间。如有特殊需求，可以联系客服安排。");
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
-                    }, 800);
-                });
-                
-                document.getElementById('faq-return').addEventListener('click', function() {
-                    addUserMessage("如何申请退换货？");
-                    setTimeout(() => {
-                        addAiMessage("您好！申请退换货的步骤如下：1. 进入我的订单，找到相应订单 2. 点击申请售后按钮 3. 选择退货或换货选项 4. 填写申请原因并上传照片 5. 提交申请等待审核。非质量问题需在7天内申请，质量问题需在30天内申请。");
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
-                    }, 800);
-                });
-                
-                document.getElementById('faq-install').addEventListener('click', function() {
-                    addUserMessage("安装服务是否收费？");
-                    setTimeout(() => {
-                        addAiMessage("您好！关于安装服务的收费情况：\n\n1. 标准家具（床、沙发、餐桌等）：首次安装免费\n2. 大型复杂家具（衣柜、书柜等）：首次安装免费\n3. 二次上门安装：收取上门费100元起\n4. 非本店购买商品：收取安装费，具体费用视商品复杂度而定\n\n免费安装服务仅限于商品送达时一并完成，如您选择暂不安装，后续需要安装服务将收取费用。");
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
-                    }, 800);
-                });
-                
-                // 重新绑定底部工具栏事件
-                document.getElementById('product-inquiry').addEventListener('click', function() {
-                    messageInput.value = "我想咨询一下产品的详细信息";
-                    messageInput.focus();
-                    addUserMessage("我想咨询一下产品的详细信息");
-                    setTimeout(() => {
-                        addAiMessage("您好！您可以告诉我您对哪类家具感兴趣吗？比如沙发、床、餐桌等，我可以为您提供详细的产品信息和推荐。");
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
-                    }, 800);
-                });
-                
-                document.getElementById('order-tracking').addEventListener('click', function() {
-                    messageInput.value = "我想查询我的订单状态";
-                    messageInput.focus();
-                    addUserMessage("我想查询我的订单状态");
-                    setTimeout(() => {
-                        addAiMessage("请提供您的订单号，我将为您查询订单状态。如果您不记得订单号，也可以提供下单时间和购买的商品名称，我会尽力帮您查询。");
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
-                    }, 800);
-                });
-                
-                document.getElementById('after-sales').addEventListener('click', function() {
-                    messageInput.value = "我需要申请售后服务";
-                    messageInput.focus();
-                    addUserMessage("我需要申请售后服务");
-                    setTimeout(() => {
-                        addAiMessage("您好！请问您需要哪种售后服务？我们提供退货、换货、维修等服务。您可以提供订单号和具体问题，我们会尽快为您处理。");
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
-                    }, 800);
-                });
-                
-                document.getElementById('human-service').addEventListener('click', function() {
-                    addUserMessage("我想转接人工客服");
-                    addSystemMessage("正在为您转接人工客服，请稍候...");
-                    setTimeout(() => {
-                        addHumanMessage("您好，我是客服小美，很高兴为您服务。请问有什么可以帮助您的？");
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
-                    }, 1500);
-                });
-                
-                document.getElementById('promotions').addEventListener('click', function() {
-                    addUserMessage("我想了解最新的优惠活动");
-                    setTimeout(() => {
-                        addAiMessage("您好！我们目前有以下优惠活动：\n1. 新人首单满1000减100\n2. 卧室家具套装8折优惠\n3. 限时特价：精选实木餐桌5折起\n\n您对哪个活动感兴趣？可以点击了解详情。");
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
-                    }, 800);
-                });
-                
-                document.getElementById('faq').addEventListener('click', function() {
-                    addUserMessage("我想查看常见问题解答");
-                    setTimeout(() => {
-                        addAiMessage("以下是我们的常见问题：\n1. 家具如何保养？\n2. 送货时间一般是多久？\n3. 如何申请退换货？\n4. 安装服务是否收费？\n\n请问您想了解哪个问题？");
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
-                    }, 800);
-                });
-            }
-        });
-    </script>
+    <script src="../js/customer-service.js"></script>
 </body>
 </html> 

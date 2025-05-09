@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>沙发电动功能图标</title>
+    <style>
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background-color: #f5f7f8;
+            padding: 20px;
+            color: #264653;
+        }
+        .icon-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .icon-item {
+            text-align: center;
+            position: relative;
+        }
+        .icon {
+            width: 80px;
+            height: 80px;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 10px;
+            box-sizing: border-box;
+            background-color: #fff;
+            box-shadow: 0 3px 8px rgba(38, 70, 83, 0.1);
+            transition: transform 0.3s;
+        }
+        .icon:hover {
+            transform: scale(1.05);
+        }
+        .icon-title {
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #264653;
+        }
+        h1 {
+            text-align: center;
+            color: #2A9D8F;
+            margin-bottom: 30px;
+        }
+        .download-btn {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 5px 10px;
+            background-color: #2A9D8F;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .download-btn:hover {
+            background-color: #1F7A70;
+        }
+        .batch-download {
+            display: block;
+            margin: 30px auto;
+            padding: 10px 20px;
+            background-color: #264653;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .batch-download:hover {
+            background-color: #1A323C;
+        }
+        .buttons-container {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+        .png-btn {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #264653;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .png-btn:hover {
+            background-color: #1A323C;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 30px auto;
+        }
+        .loading-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            color: white;
+            font-size: 18px;
+            display: none;
+        }
+        .loading-content {
+            background-color: #264653;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>沙发电动功能选项</h1>
+    
+    <div class="button-group">
+        <button class="batch-download" id="downloadAll">下载全部SVG图标</button>
+        <button class="batch-download" id="downloadAllPNG">下载全部PNG图标</button>
+    </div>
+    
+    <div class="loading-indicator" id="loadingIndicator">
+        <div class="loading-content">
+            <p>正在生成PNG图像，请稍候...</p>
+            <p>处理进度：<span id="progressCounter">0</span>/<span id="totalCounter">0</span></p>
+        </div>
+    </div>
+    
+    <div class="icon-container">
+        <!-- 一键启动图标 -->
+        <div class="icon-item">
+            <svg class="icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <!-- 沙发侧视图 - 更真实的形状 -->
+                <!-- 扶手 -->
+                <path d="M10,30 L10,60 C10,62 12,65 15,65 L20,65 L20,40 C20,35 15,30 10,30 Z" fill="#264653" />
+                <path d="M70,30 L70,60 C70,62 68,65 65,65 L60,65 L60,40 C60,35 65,30 70,30 Z" fill="#264653" />
+                
+                <!-- 靠背 - 可动部分 -->
+                <path d="M20,30 L20,50 L60,50 L60,30 C60,25 55,15 40,15 C25,15 20,25 20,30 Z" fill="#3A6A7E" />
+                
+                <!-- 座位 -->
+                <rect x="20" y="50" width="40" height="15" rx="2" fill="#3A6A7E" />
+                
+                <!-- 沙发腿 -->
+                <rect x="20" y="65" width="5" height="5" fill="#1A323C" />
+                <rect x="55" y="65" width="5" height="5" fill="#1A323C" />
+                
+                <!-- 沙发缝线 -->
+                <line x1="30" y1="30" x2="30" y2="50" stroke="#1A323C" stroke-width="0.5" stroke-dasharray="2,1" />
+                <line x1="50" y1="30" x2="50" y2="50" stroke="#1A323C" stroke-width="0.5" stroke-dasharray="2,1" />
+                <line x1="20" y1="40" x2="60" y2="40" stroke="#1A323C" stroke-width="0.5" stroke-dasharray="2,1" />
+                
+                <!-- 一键启动按钮 - 在扶手处 -->
+                <circle cx="65" cy="40" r="6" fill="#2A9D8F" />
+                <circle cx="65" cy="40" r="4" fill="#1F7A70" stroke="#fff" stroke-width="1" />
+                <path d="M65 38v4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" />
+                <path d="M63 40h4" stroke="#fff" stroke-width="1.5" stroke-linecap="round" />
+                
+                <!-- 动态指示 - 靠背移动 -->
+                <path d="M25 15c0,0 -2,-5 5,-5" stroke="#4DB6A9" stroke-width="1.5" fill="none" stroke-linecap="round" />
+                <path d="M55 15c0,0 2,-5 -5,-5" stroke="#4DB6A9" stroke-width="1.5" fill="none" stroke-linecap="round" />
+                
+                <!-- 闪电电动符号 -->
+                <path d="M40 10l-3 5h6l-3 5" stroke="#E9C46A" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <div class="icon-title">一键启动</div>
+            <div class="buttons-container">
+                <button class="download-btn" data-index="0">下载SVG</button>
+                <button class="png-btn" data-index="0">下载PNG</button>
+            </div>
+        </div>
+
+        <!-- 按键启动图标 -->
+        <div class="icon-item">
+            <svg class="icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <!-- 沙发侧视图 - 更真实的形状 -->
+                <!-- 扶手 -->
+                <path d="M10,30 L10,60 C10,62 12,65 15,65 L20,65 L20,40 C20,35 15,30 10,30 Z" fill="#264653" />
+                <path d="M70,30 L70,60 C70,62 68,65 65,65 L60,65 L60,40 C60,35 65,30 70,30 Z" fill="#264653" />
+                
+                <!-- 靠背 -->
+                <path d="M20,30 L20,50 L60,50 L60,30 C60,25 55,15 40,15 C25,15 20,25 20,30 Z" fill="#3A6A7E" />
+                
+                <!-- 座位 -->
+                <rect x="20" y="50" width="40" height="15" rx="2" fill="#3A6A7E" />
+                
+                <!-- 沙发腿 -->
+                <rect x="20" y="65" width="5" height="5" fill="#1A323C" />
+                <rect x="55" y="65" width="5" height="5" fill="#1A323C" />
+                
+                <!-- 沙发缝线 -->
+                <line x1="30" y1="30" x2="30" y2="50" stroke="#1A323C" stroke-width="0.5" stroke-dasharray="2,1" />
+                <line x1="50" y1="30" x2="50" y2="50" stroke="#1A323C" stroke-width="0.5" stroke-dasharray="2,1" />
+                <line x1="20" y1="40" x2="60" y2="40" stroke="#1A323C" stroke-width="0.5" stroke-dasharray="2,1" />
+                
+                <!-- 控制器面板 - 放在扶手上 -->
+                <rect x="60" y="30" width="10" height="20" rx="2" fill="#264653" stroke="#1A323C" stroke-width="0.5" />
+                
+                <!-- 控制器按钮 -->
+                <circle cx="65" cy="35" r="2" fill="#F4A261" stroke="#fff" stroke-width="0.5" />
+                <path d="M65 33l2 3h-4z" fill="#fff" />
+                
+                <circle cx="65" cy="42" r="2" fill="#2A9D8F" stroke="#fff" stroke-width="0.5" />
+                <path d="M65 44l2-3h-4z" fill="#fff" />
+                
+                <circle cx="65" cy="49" r="2" fill="#E9C46A" stroke="#fff" stroke-width="0.5" />
+                <path d="M64 49h2" stroke="#fff" stroke-width="0.5" />
+                
+                <!-- 动态指示 - 座位和靠背移动 -->
+                <path d="M30 25l-3-5" stroke="#F4A261" stroke-width="1" fill="none" stroke-linecap="round" />
+                <path d="M50 25l3-5" stroke="#F4A261" stroke-width="1" fill="none" stroke-linecap="round" />
+                <path d="M30 55l-3 5" stroke="#2A9D8F" stroke-width="1" fill="none" stroke-linecap="round" />
+                <path d="M50 55l3 5" stroke="#2A9D8F" stroke-width="1" fill="none" stroke-linecap="round" />
+            </svg>
+            <div class="icon-title">按键启动</div>
+            <div class="buttons-container">
+                <button class="download-btn" data-index="1">下载SVG</button>
+                <button class="png-btn" data-index="1">下载PNG</button>
+            </div>
+        </div>
+
+        <!-- 手动控制图标 -->
+        <div class="icon-item">
+            <svg class="icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <!-- 沙发侧视图 - 更真实的形状 -->
+                <!-- 扶手 -->
+                <path d="M10,30 L10,60 C10,62 12,65 15,65 L20,65 L20,40 C20,35 15,30 10,30 Z" fill="#264653" />
+                <path d="M70,30 L70,60 C70,62 68,65 65,65 L60,65 L60,40 C60,35 65,30 70,30 Z" fill="#264653" />
+                
+                <!-- 靠背 -->
+                <path d="M20,30 L20,50 L60,50 L60,30 C60,25 55,15 40,15 C25,15 20,25 20,30 Z" fill="#3A6A7E" />
+                
+                <!-- 座位 -->
+                <rect x="20" y="50" width="40" height="15" rx="2" fill="#3A6A7E" />
+                
+                <!-- 沙发腿 -->
+                <rect x="20" y="65" width="5" height="5" fill="#1A323C" />
+                <rect x="55" y="65" width="5" height="5" fill="#1A323C" />
+                
+                <!-- 沙发缝线 -->
+                <line x1="30" y1="30" x2="30" y2="50" stroke="#1A323C" stroke-width="0.5" stroke-dasharray="2,1" />
+                <line x1="50" y1="30" x2="50" y2="50" stroke="#1A323C" stroke-width="0.5" stroke-dasharray="2,1" />
+                <line x1="20" y1="40" x2="60" y2="40" stroke="#1A323C" stroke-width="0.5" stroke-dasharray="2,1" />
+                
+                <!-- 手动杠杆 -->
+                <rect x="65" y="35" width="3" height="15" rx="1" fill="#264653" />
+                <circle cx="66.5" cy="35" r="3" fill="#3A6A7E" stroke="#1A323C" stroke-width="0.5" />
+                <circle cx="66.5" cy="35" r="1.5" fill="#F8F9FA" />
+                
+                <!-- 手动旋转指示 -->
+                <path d="M66.5 32c0 0 -3 -2 -3 -5s3 -5 3 -5" fill="none" stroke="#3A6A7E" stroke-width="1" stroke-linecap="round" />
+                <path d="M66.5 22l1.5 2l-3 1" fill="none" stroke="#3A6A7E" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" />
+                
+                <!-- 手动操作的手 -->
+                <path d="M45 35c0 0 0 -4 2 -4s2 1 2 3v5c0.5 -3 2 -4 3.5 -4s1.5 1 1.5 2v3c0.5 -2 1.5 -3 3 -3s1.5 1 1.5 2v4c0 3 -1.5 6 -5 6h-5c-2.5 0 -4 -3 -4 -6z" fill="#F4A261" stroke="#E68940" stroke-width="0.7" />
+            </svg>
+            <div class="icon-title">手动控制</div>
+            <div class="buttons-container">
+                <button class="download-btn" data-index="2">下载SVG</button>
+                <button class="png-btn" data-index="2">下载PNG</button>
+            </div>
+        </div>
+
+        <!-- 无电动功能图标 -->
+        <div class="icon-item">
+            <svg class="icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <!-- 沙发侧视图 - 更真实的形状 -->
+                <!-- 扶手 -->
+                <path d="M10,30 L10,60 C10,62 12,65 15,65 L20,65 L20,40 C20,35 15,30 10,30 Z" fill="#264653" />
+                <path d="M70,30 L70,60 C70,62 68,65 65,65 L60,65 L60,40 C60,35 65,30 70,30 Z" fill="#264653" />
+                
+                <!-- 靠背 -->
+                <path d="M20,30 L20,50 L60,50 L60,30 C60,25 55,15 40,15 C25,15 20,25 20,30 Z" fill="#3A6A7E" />
+                
+                <!-- 座位 -->
+                <rect x="20" y="50" width="40" height="15" rx="2" fill="#3A6A7E" />
+                
+                <!-- 沙发腿 -->
+                <rect x="20" y="65" width="5" height="5" fill="#1A323C" />
+                <rect x="55" y="65" width="5" height="5" fill="#1A323C" />
+                
+                <!-- 沙发缝线 - 更明显更多 -->
+                <line x1="30" y1="30" x2="30" y2="50" stroke="#1A323C" stroke-width="0.5" stroke-dasharray="2,1" />
+                <line x1="40" y1="30" x2="40" y2="50" stroke="#1A323C" stroke-width="0.5" stroke-dasharray="2,1" />
+                <line x1="50" y1="30" x2="50" y2="50" stroke="#1A323C" stroke-width="0.5" stroke-dasharray="2,1" />
+                <line x1="20" y1="35" x2="60" y2="35" stroke="#1A323C" stroke-width="0.5" stroke-dasharray="2,1" />
+                <line x1="20" y1="40" x2="60" y2="40" stroke="#1A323C" stroke-width="0.5" stroke-dasharray="2,1" />
+                <line x1="20" y1="45" x2="60" y2="45" stroke="#1A323C" stroke-width="0.5" stroke-dasharray="2,1" />
+                
+                <!-- 固定锁定标志 -->
+                <circle cx="65" cy="20" r="7" fill="none" stroke="#EF4444" stroke-width="1.5" />
+                <line x1="60" y1="15" x2="70" y2="25" stroke="#EF4444" stroke-width="1.5" />
+                <line x1="60" y1="25" x2="70" y2="15" stroke="#EF4444" stroke-width="1.5" />
+                
+                <!-- 固定沙发文字 -->
+                <text x="40" y="10" font-size="5" text-anchor="middle" fill="#264653" font-weight="bold">固定沙发</text>
+            </svg>
+            <div class="icon-title">无电动功能</div>
+            <div class="buttons-container">
+                <button class="download-btn" data-index="3">下载SVG</button>
+                <button class="png-btn" data-index="3">下载PNG</button>
+            </div>
+        </div>
+        
+        <!-- 新增：无功能图标 -->
+        <div class="icon-item">
+            <svg class="icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <!-- 沙发侧视图 - 更真实的形状 -->
+                <!-- 扶手 -->
+                <path d="M10,30 L10,60 C10,62 12,65 15,65 L20,65 L20,40 C20,35 15,30 10,30 Z" fill="#264653" />
+                <path d="M70,30 L70,60 C70,62 68,65 65,65 L60,65 L60,40 C60,35 65,30 70,30 Z" fill="#264653" />
+                
+                <!-- 靠背 -->
+                <path d="M20,30 L20,50 L60,50 L60,30 C60,25 55,15 40,15 C25,15 20,25 20,30 Z" fill="#3A6A7E" />
+                
+                <!-- 座位 -->
+                <rect x="20" y="50" width="40" height="15" rx="2" fill="#3A6A7E" />
+                
+                <!-- 沙发腿 -->
+                <rect x="20" y="65" width="5" height="5" fill="#1A323C" />
+                <rect x="55" y="65" width="5" height="5" fill="#1A323C" />
+                
+                <!-- 缝线 -->
+                <line x1="30" y1="30" x2="30" y2="50" stroke="#1A323C" stroke-width="0.5" stroke-dasharray="2,1" />
+                <line x1="50" y1="30" x2="50" y2="50" stroke="#1A323C" stroke-width="0.5" stroke-dasharray="2,1" />
+                <line x1="20" y1="40" x2="60" y2="40" stroke="#1A323C" stroke-width="0.5" stroke-dasharray="2,1" />
+                
+                <!-- 斜纹阴影效果 -->
+                <defs>
+                    <pattern id="diagonalHatch" patternUnits="userSpaceOnUse" width="4" height="4">
+                        <path d="M-1,1 l2,-2 M0,4 l4,-4 M3,5 l2,-2" stroke="#264653" stroke-width="0.5" stroke-opacity="0.3"/>
+                    </pattern>
+                </defs>
+                <rect x="10" y="15" width="60" height="50" fill="url(#diagonalHatch)" />
+                
+                <!-- 禁止符号 - 圆圈加斜线 -->
+                <circle cx="40" cy="30" r="15" fill="#F8F9FA" stroke="#EF4444" stroke-width="2" fill-opacity="0.85" />
+                <line x1="30" y1="20" x2="50" y2="40" stroke="#EF4444" stroke-width="2.5" />
+                
+                <!-- 无功能标识 -->
+                <text x="40" y="10" font-size="6" text-anchor="middle" fill="#264653" font-weight="bold">无</text>
+                
+                <!-- 设置不可用的透明度覆盖 -->
+                <rect x="10" y="15" width="60" height="50" fill="#F8F9FA" fill-opacity="0.15" />
+            </svg>
+            <div class="icon-title">无</div>
+            <div class="buttons-container">
+                <button class="download-btn" data-index="4">下载SVG</button>
+                <button class="png-btn" data-index="4">下载PNG</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 新增：与功能无关的明确"无"图标 -->
+    <div class="icon-container" style="margin-top: 40px;">
+        <div class="icon-item">
+            <svg class="icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <!-- 白色背景 -->
+                <rect x="0" y="0" width="80" height="80" rx="12" fill="#F8F9FA" />
+                
+                <!-- 浅色圆形背景 -->
+                <circle cx="40" cy="40" r="30" fill="#F5F7F8" stroke="#E9ECEF" stroke-width="1" />
+                
+                <!-- 禁止符号 - 使用主题色 -->
+                <circle cx="40" cy="40" r="25" fill="none" stroke="#2A9D8F" stroke-width="3" />
+                <line x1="22" y1="22" x2="58" y2="58" stroke="#2A9D8F" stroke-width="3" />
+                
+                <!-- 斜纹阴影效果 -->
+                <defs>
+                    <pattern id="diagonalHatchMain" patternUnits="userSpaceOnUse" width="6" height="6">
+                        <path d="M-1,1 l2,-2 M0,6 l6,-6 M5,7 l2,-2" stroke="#264653" stroke-width="0.7" stroke-opacity="0.3"/>
+                    </pattern>
+                </defs>
+                <circle cx="40" cy="40" r="20" fill="url(#diagonalHatchMain)" />
+                
+                <!-- 装饰元素 -->
+                <circle cx="40" cy="40" r="10" fill="#E9C46A" fill-opacity="0.2" />
+                
+                <!-- 边框装饰 -->
+                <rect x="0" y="0" width="80" height="80" rx="12" fill="none" stroke="#E9ECEF" stroke-width="1" />
+            </svg>
+            <div class="icon-title" style="font-size: 16px; color: #264653; font-weight: bold;">-</div>
+            <div class="buttons-container">
+                <button class="download-btn" data-index="5">下载SVG</button>
+                <button class="png-btn" data-index="5">下载PNG</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 新增：脚踏相关图标 -->
+    <div class="icon-container" style="margin-top: 40px;">
+        <h2 style="text-align: center; color: #2A9D8F; width: 100%;">脚踏选项</h2>
+        
+        <!-- 储物脚踏图标 -->
+        <div class="icon-item">
+            <svg class="icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <!-- 背景 -->
+                <rect x="0" y="0" width="80" height="80" rx="12" fill="#F8F9FA" />
+                
+                <!-- 脚踏 - 打开状态 -->
+                <rect x="15" y="45" width="50" height="20" rx="2" fill="#2A9D8F" />
+                <rect x="15" y="42" width="50" height="3" rx="1" fill="#1F7A70" />
+                
+                <!-- 脚踏内部 -->
+                <rect x="18" y="48" width="44" height="14" rx="1" fill="#264653" />
+                
+                <!-- 脚踏盖 - 打开状态 -->
+                <path d="M15,42 L65,42 L65,25 Q65,22 62,22 L18,22 Q15,22 15,25 Z" fill="#2A9D8F" />
+                <path d="M18,39 L62,39 L62,25 Q62,25 60,25 L20,25 Q18,25 18,25 Z" fill="#3BBCAD" stroke="#1F7A70" stroke-width="0.5" />
+                
+                <!-- 脚踏腿 -->
+                <path d="M20,65 L25,65 L25,60 L20,60 Z" fill="#264653" />
+                <path d="M55,65 L60,65 L60,60 L55,60 Z" fill="#264653" />
+                
+                <!-- 内部储物物品 -->
+                <rect x="25" y="50" width="30" height="8" rx="2" fill="#E9C46A" />
+                <rect x="25" y="50" width="30" height="2" rx="1" fill="#F4A261" />
+                
+                <!-- 打开指示箭头 -->
+                <path d="M40,15 L40,10 M36,12 L40,8 L44,12" stroke="#2A9D8F" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+                
+                <!-- 储物标识 -->
+                <circle cx="65" cy="15" r="6" fill="#E9C46A" fill-opacity="0.7" />
+                <path d="M62,15 L65,13 L68,15 L65,17 Z" fill="#264653" />
+                
+                <!-- 边框装饰 -->
+                <rect x="0" y="0" width="80" height="80" rx="12" fill="none" stroke="#E9ECEF" stroke-width="1" />
+            </svg>
+            <div class="icon-title" style="font-size: 14px; color: #264653; font-weight: bold;">储物脚踏</div>
+            <div class="buttons-container">
+                <button class="download-btn" data-index="6">下载SVG</button>
+                <button class="png-btn" data-index="6">下载PNG</button>
+            </div>
+        </div>
+        
+        <!-- 非储物脚踏图标 -->
+        <div class="icon-item">
+            <svg class="icon" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+                <!-- 背景 -->
+                <rect x="0" y="0" width="80" height="80" rx="12" fill="#F8F9FA" />
+                
+                <!-- 脚踏 - 封闭状态 -->
+                <rect x="15" y="25" width="50" height="20" rx="3" fill="#2A9D8F" />
+                <rect x="18" y="28" width="44" height="14" rx="1" fill="#3BBCAD" />
+                
+                <!-- 脚踏线条装饰 -->
+                <line x1="20" y1="35" x2="60" y2="35" stroke="#1F7A70" stroke-width="0.5" stroke-dasharray="2,1" />
+                <line x1="25" y1="30" x2="25" y2="40" stroke="#1F7A70" stroke-width="0.5" stroke-dasharray="2,1" />
+                <line x1="55" y1="30" x2="55" y2="40" stroke="#1F7A70" stroke-width="0.5" stroke-dasharray="2,1" />
+                
+                <!-- 脚踏腿 -->
+                <path d="M20,45 L25,45 L25,50 L20,50 Z" fill="#264653" />
+                <path d="M55,45 L60,45 L60,50 L55,50 Z" fill="#264653" />
+                
+                <!-- 非储物标识 -->
+                <g transform="translate(65,15)">
+                    <circle cx="0" cy="0" r="6" fill="#F5F7F8" stroke="#264653" stroke-width="0.5" />
+                    <line x1="-3" y1="0" x2="3" y2="0" stroke="#264653" stroke-width="1.5" />
+                </g>
+                
+                <!-- 固定标识 -->
+                <rect x="33" y="15" width="14" height="5" rx="1" fill="#E9C46A" fill-opacity="0.7" />
+                <line x1="35" y1="17.5" x2="45" y2="17.5" stroke="#264653" stroke-width="1" />
+                <line x1="40" y1="15" x2="40" y2="20" stroke="#264653" stroke-width="1" />
+                
+                <!-- 边框装饰 -->
+                <rect x="0" y="0" width="80" height="80" rx="12" fill="none" stroke="#E9ECEF" stroke-width="1" />
+            </svg>
+            <div class="icon-title" style="font-size: 14px; color: #264653; font-weight: bold;">非储物脚踏</div>
+            <div class="buttons-container">
+                <button class="download-btn" data-index="7">下载SVG</button>
+                <button class="png-btn" data-index="7">下载PNG</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // SVG转PNG函数
+        function svgToPng(svgElement, scale = 2) {
+            return new Promise((resolve, reject) => {
+                try {
+                    const svgData = new XMLSerializer().serializeToString(svgElement);
+                    const canvas = document.createElement("canvas");
+                    const width = svgElement.clientWidth || 100;
+                    const height = svgElement.clientHeight || 100;
+                    
+                    canvas.width = width * scale;
+                    canvas.height = height * scale;
+                    
+                    const ctx = canvas.getContext("2d");
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    const img = new Image();
+                    img.onload = function() {
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        const pngData = canvas.toDataURL("image/png");
+                        resolve(pngData);
+                    };
+                    
+                    img.onerror = function(err) {
+                        reject(err);
+                    };
+                    
+                    const blob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+                    const url = URL.createObjectURL(blob);
+                    img.src = url;
+                } catch (err) {
+                    reject(err);
+                }
+            });
+        }
+        
+        // 下载单个SVG图标
+        document.querySelectorAll('.download-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const index = this.getAttribute('data-index');
+                const svgElement = document.querySelectorAll('.icon')[index];
+                const svgData = new XMLSerializer().serializeToString(svgElement);
+                const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+                const svgUrl = URL.createObjectURL(svgBlob);
+                
+                const downloadLink = document.createElement('a');
+                downloadLink.href = svgUrl;
+                downloadLink.download = `沙发功能图标_${index}.svg`;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                URL.revokeObjectURL(svgUrl);
+            });
+        });
+        
+        // 下载单个PNG图标
+        document.querySelectorAll('.png-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const index = this.getAttribute('data-index');
+                const svgElement = document.querySelectorAll('.icon')[index];
+                
+                // 显示加载指示器
+                document.getElementById('loadingIndicator').style.display = 'flex';
+                document.getElementById('progressCounter').textContent = '0';
+                document.getElementById('totalCounter').textContent = '1';
+                
+                svgToPng(svgElement, 3)
+                    .then(pngData => {
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = pngData;
+                        downloadLink.download = `沙发功能图标_${index}.png`;
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        document.body.removeChild(downloadLink);
+                        
+                        // 隐藏加载指示器
+                        document.getElementById('loadingIndicator').style.display = 'none';
+                    })
+                    .catch(error => {
+                        console.error('PNG转换失败:', error);
+                        alert('PNG转换失败，请重试');
+                        // 隐藏加载指示器
+                        document.getElementById('loadingIndicator').style.display = 'none';
+                    });
+            });
+        });
+        
+        // 下载所有SVG图标
+        document.getElementById('downloadAll').addEventListener('click', function() {
+            const svgElements = document.querySelectorAll('.icon');
+            let delay = 0;
+            
+            svgElements.forEach((svg, index) => {
+                setTimeout(() => {
+                    const svgData = new XMLSerializer().serializeToString(svg);
+                    const svgBlob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+                    const svgUrl = URL.createObjectURL(svgBlob);
+                    
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = svgUrl;
+                    downloadLink.download = `沙发功能图标_${index}.svg`;
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+                    URL.revokeObjectURL(svgUrl);
+                }, delay);
+                
+                delay += 200; // 添加延迟，避免浏览器阻止多个下载
+            });
+        });
+        
+        // 下载所有PNG图标
+        document.getElementById('downloadAllPNG').addEventListener('click', function() {
+            const svgElements = document.querySelectorAll('.icon');
+            const totalIcons = svgElements.length;
+            let convertedCount = 0;
+            
+            // 显示加载指示器
+            document.getElementById('loadingIndicator').style.display = 'flex';
+            document.getElementById('progressCounter').textContent = '0';
+            document.getElementById('totalCounter').textContent = totalIcons.toString();
+            
+            const promises = Array.from(svgElements).map((svg, index) => {
+                return svgToPng(svg, 3)
+                    .then(pngData => {
+                        const downloadLink = document.createElement('a');
+                        downloadLink.href = pngData;
+                        downloadLink.download = `沙发功能图标_${index}.png`;
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        document.body.removeChild(downloadLink);
+                        
+                        convertedCount++;
+                        document.getElementById('progressCounter').textContent = convertedCount.toString();
+                        
+                        return new Promise(resolve => setTimeout(resolve, 200)); // 延迟下载以防止浏览器阻止
+                    });
+            });
+            
+            Promise.all(promises)
+                .then(() => {
+                    // 完成后隐藏加载指示器
+                    document.getElementById('loadingIndicator').style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('批量PNG转换失败:', error);
+                    alert('批量PNG转换失败，请重试');
+                    // 隐藏加载指示器
+                    document.getElementById('loadingIndicator').style.display = 'none';
+                });
+        });
+    </script>
+</body>
+</html> 
