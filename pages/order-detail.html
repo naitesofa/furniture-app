@@ -1199,9 +1199,334 @@
             position: relative;
             z-index: 5;
         }
+
+        /* 订单物流时间线样式（简化版）*/
+        .logistics-timeline-mini {
+            position: relative;
+            margin-left: 5px;
+        }
+
+        /* 添加定制订单相关样式 */
+        .custom-order-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: rgba(233, 196, 106, 0.2);
+            color: #cd991a;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-right: 10px;
+            border: 1px solid rgba(233, 196, 106, 0.2);
+        }
+
+        .custom-order-badge i {
+            font-size: 9px;
+            margin-right: 3px;
+        }
+
+        /* 定制订单状态卡片 */
+        .order-status-card.custom-pending-price {
+            background: linear-gradient(135deg, #E9C46A, #F4A261);
+            color: white;
+        }
+
+        .order-status-card.custom-price-confirming {
+            background: linear-gradient(135deg, #F4A261, #E76F51);
+            color: white;
+        }
+
+        .order-status-card.custom-pending-payment {
+            background-color: var(--brand-secondary);
+            color: white;
+        }
+
+        .order-status-card.custom-pending {
+            background: linear-gradient(135deg, #2A9D8F, #38B2AC);
+            color: white;
+        }
+
+        /* 价格状态标签 */
+        .price-status-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: rgba(249, 115, 22, 0.15);
+            color: #f97316;
+            font-size: 10px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .price-status-badge.pending {
+            background-color: rgba(244, 162, 97, 0.2);
+            color: #e67e22;
+            animation: pulse 1.5s infinite;
+        }
+
+        .price-status-badge.updated {
+            background-color: rgba(56, 178, 172, 0.2);
+            color: #2A9D8F;
+        }
+
+        .price-status-badge i {
+            margin-right: 5px;
+            font-size: 10px;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { opacity: 0.7; }
+        }
+
+        /* 定制详情卡片 */
+        .custom-detail-card {
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+        }
+
+        .custom-detail-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+
+        .custom-detail-header i {
+            margin-right: 6px;
+            color: var(--brand-primary);
+        }
+
+        .custom-detail-content {
+            padding: 16px;
+        }
+
+        .custom-config-item {
+            display: flex;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed #f0f0f0;
+        }
+
+        .custom-config-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .custom-config-label {
+            width: 80px;
+            font-size: 13px;
+            color: #666;
+            flex-shrink: 0;
+        }
+
+        .custom-config-value {
+            flex: 1;
+            font-size: 13px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .custom-fabric-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            margin-right: 10px;
+            border: 1px solid #f0f0f0;
+            overflow: hidden;
+        }
+
+        .custom-fabric-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .custom-fabric-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .custom-fabric-name {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .custom-fabric-code {
+            font-size: 11px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        /* 价格更新通知 */
+        .price-update-notice {
+            margin-top: 14px;
+            margin-bottom: 8px;
+            padding: 12px;
+            background-color: rgba(244, 162, 97, 0.1);
+            border: 1px dashed rgba(244, 162, 97, 0.3);
+            border-radius: 8px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .price-update-notice i {
+            color: #e67e22;
+            margin-right: 10px;
+            margin-top: 2px;
+            font-size: 14px;
+        }
+
+        .price-update-text {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .price-update-notice.confirmed {
+            background-color: rgba(56, 178, 172, 0.1);
+            border: 1px dashed rgba(56, 178, 172, 0.3);
+        }
+
+        .price-update-notice.confirmed i {
+            color: #2A9D8F;
+        }
+
+        /* 倒计时样式 */
+        .countdown-timer {
+            font-size: 12px;
+            color: #f97316;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            background-color: rgba(254, 215, 170, 0.3);
+            padding: 3px 8px;
+            border-radius: 12px;
+            margin-top: 4px;
+        }
+
+        .countdown-timer i {
+            margin-right: 4px;
+            font-size: 12px;
+        }
+
+        .countdown-timer.price-timer {
+            color: #e67e22;
+            background-color: rgba(254, 215, 170, 0.3);
+        }
+
+        /* 定制生产进度 */
+        .custom-production-progress {
+            margin-top: 16px;
+        }
+
+        .progress-bar-container {
+            height: 4px;
+            background-color: #E5E7EB;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--brand-gradient-primary);
+            border-radius: 2px;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            flex: 1;
+            text-align: center;
+        }
+
+        .step-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #E5E7EB;
+            margin-bottom: 4px;
+        }
+
+        .step-dot.active {
+            background-color: var(--brand-primary);
+            box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.2);
+        }
+
+        .step-label {
+            font-size: 10px;
+            color: #9CA3AF;
+            text-align: center;
+        }
+
+        .step-label.active {
+            color: var(--brand-primary);
+            font-weight: 500;
+        }
+
+        /* 确认按钮样式 */
+        .confirm-price-btn {
+            background-color: rgba(56, 178, 172, 0.1);
+            color: #2A9D8F;
+            border: 1px solid rgba(56, 178, 172, 0.3);
+        }
+
+        .confirm-price-btn:hover {
+            background-color: rgba(56, 178, 172, 0.2);
+            border-color: rgba(56, 178, 172, 0.4);
+        }
+
+        /* 页面加载指示器 */
+        #pageLoadingIndicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #2A9D8F, #E9C46A);
+            z-index: 9999;
+            transition: width 0.3s ease-in-out;
+        }
+        
+        /* 定制商品标识 */
+        .custom-product-badge {
+            display: inline-flex;
+            align-items: center;
+            background-color: rgba(233, 196, 106, 0.2);
+            color: #cd991a;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 5px;
+            border: 1px solid rgba(233, 196, 106, 0.2);
+        }
+
+        .custom-product-badge i {
+            font-size: 9px;
+            margin-right: 3px;
+        }
     </style>
 </head>
 <body>
+    <!-- 页面加载指示器 -->
+    <div id="pageLoadingIndicator" style="width: 0%"></div>
+    
     <!-- 顶部导航栏 -->
     <div class="nav-bar fixed top-0 left-0 right-0 z-10">
         <div class="flex items-center justify-between px-4 h-12">
@@ -1210,137 +1535,6 @@
                     <i class="fas fa-arrow-left"></i>
                 </a>
                 <h1 class="text-base font-medium">订单详情</h1>
-            </div>
-        </div>
-    </div>
-    
-    <!-- 订单列表页示例（优化版）- 非真实功能，仅作为演示 -->
-    <div id="orderListExample" style="display: none;">
-        <div class="nav-bar fixed top-0 left-0 right-0 z-10">
-            <div class="flex items-center justify-between px-4 h-12">
-                <div class="flex items-center flex-shrink-0">
-                    <a href="javascript:history.back()" class="text-gray-500 mr-3">
-                        <i class="fas fa-arrow-left"></i>
-                    </a>
-                    <h1 class="text-base font-medium">我的订单</h1>
-            </div>
-        </div>
-    </div>
-    
-        <div class="order-list-container pt-16">
-            <!-- 订单状态标签页 -->
-            <div class="order-list-tab">
-                <div class="order-list-tab-item">全部</div>
-                <div class="order-list-tab-item">待付款</div>
-                <div class="order-list-tab-item">待发货</div>
-                <div class="order-list-tab-item active">待收货</div>
-                <div class="order-list-tab-item">待评价</div>
-            </div>
-            
-            <!-- 待收货订单示例 -->
-            <div class="order-card">
-                <div class="order-card-header">
-                    <div class="order-id">订单号：2023112208765</div>
-                    <div class="order-status">待收货</div>
-                </div>
-                
-                <!-- 商品信息部分 - 点击这里跳转到订单详情页 -->
-                <a href="order-detail.html?id=2023112208765&status=pending_receipt" class="block">
-                    <div class="order-product">
-                        <div class="order-product-img">
-                            <img src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="北欧风格餐桌">
-                        </div>
-                        <div class="order-product-info">
-                    <div>
-                                <div class="order-product-name">北欧风格餐桌</div>
-                                <div class="order-product-spec">白色</div>
-                    </div>
-                            <div class="order-product-price-count">
-                                <div class="order-product-price">¥2,499</div>
-                                <div class="order-product-count">x1</div>
-                </div>
-            </div>
-        </div>
-                </a>
-                
-                <div class="order-product-total">
-                    共1件商品 合计：<span class="order-product-total-amount">¥2,499</span>
-                </div>
-                
-                <!-- 物流信息部分 - 点击这里直接跳转到物流详情页 -->
-                <a href="logistics-detail.html?tracking=SF1234567890&product=furniture" class="block">
-                    <div class="order-logistics">
-                        <div class="order-logistics-icon">
-                            <i class="fas fa-truck"></i>
-                    </div>
-                        <div class="order-logistics-info">
-                            <div class="order-logistics-status">【深圳市】配送员李师傅正在派送，请保持电话畅通</div>
-                            <div class="order-logistics-time">今天 10:35</div>
-                    </div>
-                        <div class="order-logistics-arrow">
-                            <i class="fas fa-chevron-right"></i>
-                </div>
-                    </div>
-                </a>
-                
-                <!-- 操作按钮 -->
-                <div class="order-actions">
-                    <button class="order-btn">联系客服</button>
-                    <button class="order-btn-primary">确认收货</button>
-            </div>
-        </div>
-        
-            <!-- 另一个待收货订单示例 -->
-            <div class="order-card">
-                <div class="order-card-header">
-                    <div class="order-id">订单号：2023112106432</div>
-                    <div class="order-status">待收货</div>
-            </div>
-            
-                <!-- 商品信息部分 - 点击这里跳转到订单详情页 -->
-                <a href="order-detail.html?id=2023112106432&status=pending_receipt" class="block">
-                    <div class="order-product">
-                        <div class="order-product-img">
-                            <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="北欧风格三人沙发">
-                    </div>
-                        <div class="order-product-info">
-                            <div>
-                                <div class="order-product-name">北欧风格三人沙发</div>
-                                <div class="order-product-spec">浅灰色</div>
-                        </div>
-                            <div class="order-product-price-count">
-                                <div class="order-product-price">¥3,699</div>
-                                <div class="order-product-count">x1</div>
-                    </div>
-                </div>
-            </div>
-                </a>
-                
-                <div class="order-product-total">
-                    共1件商品 合计：<span class="order-product-total-amount">¥3,699</span>
-        </div>
-        
-                <!-- 物流信息部分 - 点击这里直接跳转到物流详情页 -->
-                <a href="logistics-detail.html?tracking=YT6543210987&product=furniture" class="block">
-                    <div class="order-logistics">
-                        <div class="order-logistics-icon">
-                            <i class="fas fa-truck"></i>
-                        </div>
-                        <div class="order-logistics-info">
-                            <div class="order-logistics-status">【广州市】家具已发出，预计1-2天内送达</div>
-                            <div class="order-logistics-time">昨天 16:48</div>
-                        </div>
-                        <div class="order-logistics-arrow">
-                            <i class="fas fa-chevron-right"></i>
-                        </div>
-                    </div>
-                </a>
-                
-                <!-- 操作按钮 -->
-                <div class="order-actions">
-                    <button class="order-btn">联系客服</button>
-                    <button class="order-btn-primary">确认收货</button>
-                </div>
             </div>
         </div>
     </div>
@@ -1360,11 +1554,11 @@
                     <i class="fas fa-map-marker-alt"></i>
                 </div>
                 <div class="flex-1 font-medium text-sm">收货地址</div>
-                    </div>
+            </div>
             <div class="address-contact">
                 <div>李小明</div>
                 <div>13800138000</div>
-                    </div>
+            </div>
             <div class="address-detail">
                 广东省深圳市南山区科技园南区4栋1001室
             </div>
@@ -1376,46 +1570,44 @@
                 <i class="fas fa-shopping-bag"></i>
                 <span>商品信息</span>
             </div>
-            <a href="product-detail.html?id=10003" class="block hover:bg-gray-50 transition-colors">
-                <div class="product-item">
-                    <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="北欧风格餐桌">
+            <div class="product-item">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="三人沙发定制">
+                </div>
+                <div class="product-info">
+                    <div class="product-info-left">
+                        <div class="product-name">三人沙发定制</div>
+                        <!-- <div class="product-spec">北欧简约风</div> -->
                     </div>
-                    <div class="product-info">
-                        <div class="product-info-left">
-                            <div class="product-name">北欧风格餐桌</div>
-                            <div class="product-spec">白色</div>
-                        </div>
-                        <div class="product-info-right">
-                            <div class="product-price">¥2,499</div>
-                            <div class="product-quantity">x1</div>
-                        </div>
+                    <div class="product-info-right">
+                        <div class="product-price">¥5,899</div>
+                        <div class="product-quantity">x1</div>
                     </div>
                 </div>
-            </a>
+            </div>
         </div>
         
         <!-- 订单金额明细 -->
         <div class="price-detail-card">
             <div class="price-detail-list">
+                <!-- <div class="price-item">
+                    <div>商品金额</div>
+                    <div id="product-amount">¥5,899.00</div>
+                </div> -->
                 <div class="price-item">
-                <div>商品金额</div>
-                <div>¥2,499.00</div>
-            </div>
+                    <div>运费</div>
+                    <div id="shipping-fee">¥0.00</div>
+                </div>
                 <div class="price-item">
-                <div>运费</div>
-                <div>¥0.00</div>
-            </div>
-                <div class="price-item">
-                <div>优惠券</div>
-                    <div class="price-deduction">-¥0.00</div>
+                    <div>优惠券</div>
+                    <div class="price-deduction" id="coupon-discount">-¥0.00</div>
                 </div>
                 <div class="price-item price-item-total">
                     <div id="total-amount-label">合计金额</div>
-                    <div>¥2,499.00</div>
+                    <div id="total-amount">¥5,899.00</div>
+                </div>
             </div>
-            </div>
-            </div>
+        </div>
             
         <!-- 订单信息 -->
         <div class="order-info-card">
@@ -1423,15 +1615,15 @@
                 <div class="order-info-item">
                     <div class="order-info-label">订单编号</div>
                     <div class="order-info-value copyable">
-                        <span>2023112208765</span>
-                        <button class="copy-btn" data-copy="2023112208765">
+                        <span>2023122001234</span>
+                        <button class="copy-btn" data-copy="2023122001234">
                             <i class="far fa-copy text-xs"></i>
                         </button>
-            </div>
+                    </div>
                 </div>
                 <div class="order-info-item">
                     <div class="order-info-label">创建时间</div>
-                    <div class="order-info-value">2023-11-22 14:30:25</div>
+                    <div class="order-info-value">2023-12-20 14:30:25</div>
                 </div>
                 <div class="order-info-item payment-method" style="display: none;">
                     <div class="order-info-label">支付方式</div>
@@ -1445,14 +1637,14 @@
     <div class="payment-btn-container">
         <div class="payment-total">
             <div class="payment-total-label">应付金额</div>
-            <div class="payment-total-value">¥2,499.00</div>
-            </div>
-        <a href="payment.html?id=2023112208765" class="pay-now-btn">
-            <i class="fas fa-wallet"></i>
+            <div class="payment-total-value" id="payment-amount">¥5,899.00</div>
+        </div>
+        <a href="payment.html?id=2023122001234" class="pay-now-btn">
+            <i class="fas fa-wallet mr-2"></i>
             立即支付
         </a>
-        </div>
-        
+    </div>
+    
     <!-- 消息提示 -->
     <div class="toast-container" id="toastContainer">
         <div class="toast" id="toastMessage"></div>
@@ -1461,11 +1653,32 @@
     <!-- 加载状态 -->
     <div id="loading" class="loading" style="display: none;">
         <div><i class="fas fa-spinner fa-spin" style="font-size: 24px; color: var(--brand-primary);"></i></div>
-            </div>
-            
+    </div>
+    
     <script>
-        // 删除旧的事件处理程序
+        // 页面初始化
         document.addEventListener('DOMContentLoaded', function() {
+            // 添加页面加载指示器
+            const loadingIndicator = document.createElement('div');
+            loadingIndicator.id = 'pageLoadingIndicator';
+            document.body.appendChild(loadingIndicator);
+            
+            // 模拟加载进度
+            let width = 0;
+            const loadingInterval = setInterval(function() {
+                width += 5;
+                loadingIndicator.style.width = width + '%';
+                if (width >= 100) {
+                    clearInterval(loadingInterval);
+                    setTimeout(function() {
+                        loadingIndicator.style.opacity = 0;
+                        setTimeout(function() {
+                            loadingIndicator.remove();
+                        }, 300);
+                    }, 200);
+                }
+            }, 50);
+            
             // 初始化页面
             initPage();
             
@@ -1478,15 +1691,34 @@
                     });
                 });
             }, 100);
+            
+            // 添加查看订单列表示例的按钮
+            const mockListBtn = document.createElement('div');
+            mockListBtn.id = 'mockListBtn';
+            mockListBtn.className = 'fixed bottom-4 right-4 bg-brand-primary text-white rounded-full w-12 h-12 flex items-center justify-center shadow-md z-50';
+            mockListBtn.innerHTML = '<i class="fas fa-list"></i>';
+            mockListBtn.title = '查看订单列表页优化示例';
+            mockListBtn.addEventListener('click', showOrderListExample);
+            document.body.appendChild(mockListBtn);
+            
+            // 将mockListBtn添加到全局作用域以便其他函数访问
+            window.mockListBtn = mockListBtn;
+            
+            // 检查并初始化订单列表示例页中的待评价卡片
+            if (document.getElementById('orderListExample')) {
+                console.log('初始化订单列表示例中的待评价卡片');
+                setupPendingReviewCards();
+            }
         });
         
         function initPage() {
             // 从URL获取订单ID和订单状态
-                const urlParams = new URLSearchParams(window.location.search);
+            const urlParams = new URLSearchParams(window.location.search);
             const orderId = urlParams.get('id');
             const status = urlParams.get('status') || 'pending_payment'; // 默认为待付款
+            const isCustom = urlParams.get('custom') === 'true'; // 是否是定制订单
             
-            console.log('订单详情页 - 订单ID:', orderId, '状态:', status);
+            console.log('订单详情页 - 订单ID:', orderId, '状态:', status, '是否定制:', isCustom);
             
             if (!orderId) {
                 console.error('订单ID不存在');
@@ -1501,19 +1733,1001 @@
             // 更新支付按钮链接
             const payNowBtn = document.querySelector('.pay-now-btn');
             if (payNowBtn && payNowBtn.getAttribute('href') && payNowBtn.getAttribute('href').includes('payment.html')) {
-                payNowBtn.setAttribute('href', `payment.html?id=${orderId}`);
+                payNowBtn.setAttribute('href', `payment.html?id=${orderId}${isCustom ? '&custom=true' : ''}`);
             }
             
             // 设置复制订单号按钮
             setupCopyButtons();
             
             // 根据订单状态更新UI
-            updateUIByOrderStatus(status);
+            if (isCustom) {
+                // 处理定制订单
+                updateCustomOrderUI(status);
+                
+                // 添加定制标识到商品名称旁边
+                addCustomBadgeToProduct();
+            } else {
+                // 处理普通订单
+                updateUIByOrderStatus(status);
+            }
             
             // 实际应用中，这里应该通过API获取订单详情
-            // loadOrderDetail(orderId, status);
+            // loadOrderDetail(orderId, status, isCustom);
         }
         
+        // 处理定制订单UI
+        function updateCustomOrderUI(status) {
+            const statusCard = document.querySelector('.order-status-card');
+            const statusTitle = statusCard.querySelector('.status-title');
+            const statusDesc = statusCard.querySelector('.status-desc');
+            const paymentBtnContainer = document.querySelector('.payment-btn-container');
+            const mainContent = document.querySelector('.container');
+            const paymentMethodItem = document.querySelector('.payment-method');
+            const totalAmountLabel = document.getElementById('total-amount-label');
+            
+            // 根据不同的定制订单状态更新UI
+            switch(status) {
+                case 'custom_pending_price':
+                    // 等待报价状态
+                    updateCustomPendingPriceUI(statusCard, statusTitle, statusDesc, paymentBtnContainer, mainContent, paymentMethodItem, totalAmountLabel);
+                    break;
+                    
+                case 'custom_price_confirming':
+                    // 待确认价格状态
+                    updateCustomPriceConfirmingUI(statusCard, statusTitle, statusDesc, paymentBtnContainer, mainContent, paymentMethodItem, totalAmountLabel);
+                    break;
+                    
+                case 'custom_pending_payment':
+                    // 待付款状态
+                    updateCustomPendingPaymentUI(statusCard, statusTitle, statusDesc, paymentBtnContainer, mainContent, paymentMethodItem, totalAmountLabel);
+                    break;
+                    
+                case 'custom_pending':
+                    // 待发货状态
+                    updateCustomPendingShipmentUI(statusCard, statusTitle, statusDesc, paymentBtnContainer, mainContent, paymentMethodItem, totalAmountLabel);
+                    break;
+                    
+                default:
+                    console.warn('未知定制订单状态:', status);
+                    // 默认使用等待报价状态
+                    updateCustomPendingPriceUI(statusCard, statusTitle, statusDesc, paymentBtnContainer, mainContent, paymentMethodItem, totalAmountLabel);
+            }
+        }
+        
+        // 等待报价状态UI
+        function updateCustomPendingPriceUI(statusCard, statusTitle, statusDesc, paymentBtnContainer, mainContent, paymentMethodItem, totalAmountLabel) {
+            // 更新状态卡片
+            statusCard.className = 'order-status-card custom-pending-price mb-4';
+            statusTitle.textContent = '等待报价';
+            statusDesc.textContent = '客服将在工作日12小时内通过微信与您联系并确认价格。';
+            
+            // 隐藏支付按钮
+            paymentBtnContainer.style.display = 'none';
+            
+            // 隐藏支付方式
+            paymentMethodItem.style.display = 'none';
+            
+            // 修改金额标签为"预估金额"
+            if (totalAmountLabel) {
+                totalAmountLabel.textContent = '价格状态';
+            }
+            
+            // 添加定制信息卡片
+            addCustomConfigCard(mainContent);
+            
+            // 添加等待报价提示信息
+            addPendingPriceNotice(mainContent);
+            
+            // 更新商品价格显示为"待确认"
+            updateProductPriceToTBD();
+            
+            // 添加底部联系客服按钮
+            addCustomerServiceButton();
+        }
+        
+        // 添加等待报价提示信息
+        function addPendingPriceNotice(container) {
+            // 创建价格提示通知
+            const priceNotice = document.createElement('div');
+            priceNotice.className = 'price-update-notice';
+            priceNotice.style.backgroundColor = 'rgba(233, 196, 106, 0.1)';
+            priceNotice.style.borderColor = 'rgba(233, 196, 106, 0.3)';
+            priceNotice.innerHTML = `
+                <i class="fas fa-info-circle" style="color: #E9C46A;"></i>
+                <div class="price-update-text">
+                    <div class="text-sm font-medium mb-1 text-gray-700">价格待确认</div>
+                    <div class="text-xs text-gray-600 leading-relaxed">
+                        由于您选择了定制服务，商品价格需要根据您的定制要求单独报价。客服将尽快与您联系确认最终价格，请留意客服消息。
+                    </div>
+                    <div class="text-xs font-medium text-brand-warning mt-1">
+                        <i class="fas fa-exclamation-circle"></i> 当前页面显示的所有价格信息均为"待确认"状态，最终价格以客服确认为准。
+                    </div>
+                </div>
+            `;
+            
+            // 将价格提示通知插入到商品卡片之后
+            const productCard = container.querySelector('.product-card');
+            if (productCard) {
+                container.insertBefore(priceNotice, productCard.nextSibling);
+            }
+        }
+        
+        // 待确认价格状态UI
+        function updateCustomPriceConfirmingUI(statusCard, statusTitle, statusDesc, paymentBtnContainer, mainContent, paymentMethodItem, totalAmountLabel) {
+            // 更新状态卡片
+            statusCard.className = 'order-status-card custom-price-confirming mb-4';
+            statusTitle.innerHTML = '待确认价格 <span class="price-status-badge updated"><i class="fas fa-sync-alt"></i><span>价格已更新</span></span>';
+            statusDesc.innerHTML = '请在 <span id="price-confirm-countdown" class="font-semibold">71小时55分</span> 内确认价格，确认后可继续支付完成订单。';
+            
+            // 隐藏支付按钮
+            paymentBtnContainer.style.display = 'none';
+            
+            // 隐藏支付方式
+            paymentMethodItem.style.display = 'none';
+            
+            // 修改金额标签为"更新后价格"
+            if (totalAmountLabel) {
+                totalAmountLabel.textContent = '更新后价格';
+            }
+            
+            // 添加定制信息卡片
+            addCustomConfigCard(mainContent);
+            
+            // 更新商品价格显示
+            updateProductPriceWithUpdated('6,299');
+            
+            // 添加价格更新通知
+            addPriceUpdateNotice(mainContent);
+            
+            // 添加确认价格按钮
+            addConfirmPriceButton();
+            
+            // 启动确认价格倒计时
+            startPriceConfirmCountdown();
+        }
+        
+        // 待付款状态UI
+        function updateCustomPendingPaymentUI(statusCard, statusTitle, statusDesc, paymentBtnContainer, mainContent, paymentMethodItem, totalAmountLabel) {
+            // 更新状态卡片
+            statusCard.className = 'order-status-card custom-pending-payment mb-4';
+            statusTitle.textContent = '待付款';
+            statusDesc.innerHTML = '您已确认价格，请于 <span id="payment-countdown">23:58:30</span> 内完成支付，超时订单将自动关闭';
+            
+            // 启动倒计时
+            startPaymentCountdown();
+            
+            // 显示支付按钮
+            paymentBtnContainer.style.display = 'flex';
+            
+            // 隐藏支付方式
+            paymentMethodItem.style.display = 'none';
+            
+            // 修改金额标签为"应付金额"
+            if (totalAmountLabel) {
+                totalAmountLabel.textContent = '应付金额';
+            }
+            
+            // 添加定制信息卡片
+            addCustomConfigCard(mainContent);
+            
+            // 更新商品价格显示
+            updateProductPrice('6,299');
+            
+            // 添加价格确认通知
+            addPriceConfirmedNotice(mainContent);
+        }
+        
+        // 待发货状态UI
+        function updateCustomPendingShipmentUI(statusCard, statusTitle, statusDesc, paymentBtnContainer, mainContent, paymentMethodItem, totalAmountLabel) {
+            // 更新状态卡片
+            statusCard.className = 'order-status-card custom-pending mb-4';
+            statusTitle.innerHTML = '待发货 <span class="custom-order-badge"><i class="fas fa-cut"></i><span>定制</span></span>';
+            statusDesc.textContent = '您的定制产品正在生产中，请耐心等待';
+            
+            // 隐藏支付按钮
+            paymentBtnContainer.style.display = 'none';
+            
+            // 显示支付方式
+            paymentMethodItem.style.display = 'flex';
+            
+            // 修改金额标签为"实付金额"
+            if (totalAmountLabel) {
+                totalAmountLabel.textContent = '实付金额';
+            }
+            
+            // 添加定制信息卡片
+            addCustomConfigCard(mainContent);
+            
+            // 更新商品价格显示
+            updateProductPrice('6,299');
+            
+            // 添加生产进度卡片
+            addCustomProductionProgress(mainContent);
+            
+            // 添加预计发货时间
+            addEstimatedCustomShippingTime(mainContent);
+            
+            // 添加联系客服按钮
+            addViewCustomProgressBtn();
+        }
+        
+        // 添加定制配置信息卡片
+        function addCustomConfigCard(container) {
+            // 创建定制配置卡片
+            const customConfigCard = document.createElement('div');
+            customConfigCard.className = 'custom-detail-card';
+            customConfigCard.innerHTML = `
+                <div class="custom-detail-header">
+                    <i class="fas fa-cog"></i>
+                    <span>定制配置</span>
+                </div>
+                <div class="custom-detail-content">
+                    <div class="custom-config-item">
+                        <div class="custom-config-label">型号</div>
+                        <div class="custom-config-value">北欧简约风三人沙发</div>
+                    </div>
+                    <div class="custom-config-item">
+                        <div class="custom-config-label">面料</div>
+                        <div class="custom-config-value">
+                            <div class="custom-fabric-info">
+                                <div class="custom-fabric-preview">
+                                    <img src="https://images.unsplash.com/photo-1600607686527-6fb886090705?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80" alt="麻质面料">
+                                </div>
+                                <div>
+                                    <div class="custom-fabric-name">麻质混纺面料</div>
+                                    <div class="custom-fabric-code">编号：FB-2023-05</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="custom-config-item">
+                        <div class="custom-config-label">尺寸</div>
+                        <div class="custom-config-value">220cm × 90cm × 85cm（长×宽×高）</div>
+                    </div>
+                    <div class="custom-config-item">
+                        <div class="custom-config-label">配件</div>
+                        <div class="custom-config-value">高弹性记忆棉靠垫 × 5，宽扶手带收纳功能，实木脚</div>
+                    </div>
+                    <div class="custom-config-item">
+                        <div class="custom-config-label">备注</div>
+                        <div class="custom-config-value">底部增加2cm高度，扶手加装木质托盘</div>
+                    </div>
+                </div>
+            `;
+            
+            // 将定制配置卡片插入到商品卡片之前
+            const productCard = container.querySelector('.product-card');
+            if (productCard) {
+                container.insertBefore(customConfigCard, productCard);
+            }
+        }
+        
+        // 更新商品价格显示为"待确认"
+        function updateProductPriceToTBD() {
+            const productPrice = document.querySelector('.product-price');
+            const productAmount = document.getElementById('product-amount');
+            const shippingFee = document.getElementById('shipping-fee');
+            const couponDiscount = document.getElementById('coupon-discount');
+            const totalAmount = document.getElementById('total-amount');
+            const paymentAmount = document.getElementById('payment-amount');
+            
+            // 商品单价显示为"待确认"
+            if (productPrice) {
+                productPrice.innerHTML = '<span class="text-gray-600">待确认</span> <span class="text-xs text-brand-primary-light">(定制价格)</span>';
+                productPrice.style.color = '#888';
+            }
+            
+            // 商品金额显示为"待确认"
+            if (productAmount) {
+                productAmount.textContent = '待确认';
+                productAmount.style.color = '#888';
+            }
+            
+            // 运费显示为"待确认"
+            if (shippingFee) {
+                shippingFee.textContent = '待确认';
+                shippingFee.style.color = '#888';
+            }
+            
+            // 优惠券折扣显示为"待确认"
+            if (couponDiscount) {
+                couponDiscount.textContent = '待确认';
+                couponDiscount.style.color = '#888';
+                couponDiscount.classList.remove('price-deduction');
+            }
+            
+            // 总金额显示为"待确认"
+            if (totalAmount) {
+                totalAmount.textContent = '待确认';
+                totalAmount.style.color = '#888';
+            }
+            
+            // 底部支付金额显示为"待确认"
+            if (paymentAmount) {
+                paymentAmount.textContent = '待确认';
+                paymentAmount.style.color = '#888';
+            }
+        }
+        
+        // 更新商品价格显示（带有原价和更新后的价格）
+        function updateProductPriceWithUpdated(price) {
+            const productPrice = document.querySelector('.product-price');
+            const totalAmount = document.querySelector('.price-item-total div:last-child');
+            const paymentTotalValue = document.querySelector('.payment-total-value');
+            
+            if (productPrice) {
+                productPrice.innerHTML = `
+                    <span class="line-through text-gray-400 text-xs block">原价：待确认</span>
+                    <span class="text-brand-primary">¥${price}</span>
+                `;
+            }
+            
+            if (totalAmount) {
+                totalAmount.textContent = `¥${price}`;
+                totalAmount.style.color = 'var(--brand-primary)';
+            }
+            
+            if (paymentTotalValue) {
+                paymentTotalValue.textContent = `¥${price}`;
+                paymentTotalValue.style.color = 'var(--brand-error)';
+            }
+        }
+        
+        // 更新商品价格显示（正常显示）
+        function updateProductPrice(price) {
+            const productPrice = document.querySelector('.product-price');
+            const totalAmount = document.querySelector('.price-item-total div:last-child');
+            const paymentTotalValue = document.querySelector('.payment-total-value');
+            
+            if (productPrice) {
+                productPrice.textContent = `¥${price}`;
+                productPrice.style.color = '#333';
+            }
+            
+            if (totalAmount) {
+                totalAmount.textContent = `¥${price}`;
+                totalAmount.style.color = 'var(--brand-primary)';
+            }
+            
+            if (paymentTotalValue) {
+                paymentTotalValue.textContent = `¥${price}`;
+            }
+        }
+        
+        // 添加价格更新通知
+        function addPriceUpdateNotice(container) {
+            // 创建价格更新通知
+            const priceUpdateNotice = document.createElement('div');
+            priceUpdateNotice.className = 'price-update-notice';
+            priceUpdateNotice.innerHTML = `
+                <i class="fas fa-info-circle"></i>
+                <div class="price-update-text">
+                    <div class="text-sm font-medium mb-1 text-gray-700">价格已更新</div>
+                    <div class="text-xs text-gray-600 leading-relaxed">
+                        客服已根据您的定制需求更新了价格，请在72小时内确认。确认后可继续支付完成订单。
+                    </div>
+                </div>
+            `;
+            
+            // 将价格更新通知插入到商品卡片之后
+            const productCard = container.querySelector('.product-card');
+            if (productCard) {
+                container.insertBefore(priceUpdateNotice, productCard.nextSibling);
+            }
+        }
+        
+        // 添加价格确认通知
+        function addPriceConfirmedNotice(container) {
+            // 创建价格确认通知
+            const priceUpdateNotice = document.createElement('div');
+            priceUpdateNotice.className = 'price-update-notice confirmed';
+            priceUpdateNotice.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                <div class="price-update-text">
+                    您已确认定制价格。请在24小时内完成支付，超时订单将自动取消。
+                </div>
+            `;
+            
+            // 将价格确认通知插入到商品卡片之后
+            const productCard = container.querySelector('.product-card');
+            if (productCard) {
+                container.insertBefore(priceUpdateNotice, productCard.nextSibling);
+            }
+        }
+        
+        // 添加确认价格按钮
+        function addConfirmPriceButton() {
+            // 创建底部固定的确认价格按钮
+            const confirmPriceBtn = document.createElement('div');
+            confirmPriceBtn.className = 'payment-btn-container';
+            confirmPriceBtn.innerHTML = `
+                <div class="flex flex-col">
+                    <div class="text-xs text-gray-500">最终定制价格</div>
+                    <div class="text-lg font-semibold text-brand-primary">¥6,299</div>
+                </div>
+                <a href="javascript:void(0)" class="pay-now-btn confirm-price-btn" id="confirmPriceBtn" style="color: white;">
+                    确认价格
+                </a>
+            `;
+            
+            // 添加到body
+            document.body.appendChild(confirmPriceBtn);
+            
+            // 添加点击事件
+            document.getElementById('confirmPriceBtn').addEventListener('click', function() {
+                // 显示确认模态框
+                showConfirmPriceModal();
+            });
+        }
+        
+        // 显示确认价格模态框
+        function showConfirmPriceModal() {
+            // 创建模态框
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'modal-overlay';
+            modalOverlay.innerHTML = `
+                <div class="modal-container">
+                    <div class="modal-title">确认定制价格</div>
+                    <div class="modal-content">
+                        <p class="text-sm text-gray-600 mb-4">您即将确认以下定制商品的价格：</p>
+                        <div class="p-4 bg-gray-50 rounded-lg mb-4">
+                            <div class="flex mb-2">
+                                <div class="w-22 h-20 bg-gray-200 rounded-md overflow-hidden mr-4 flex-shrink-0">
+                                    <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80" alt="三人沙发定制" class="w-full h-full object-cover">
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center">
+                                        <div class="text-sm font-medium">北欧简约风三人沙发</div>
+                                        <div class="ml-2 px-1.5 py-0.5 bg-amber-50 text-amber-700 text-xs rounded border border-amber-200 flex items-center">
+                                            <i class="fas fa-cut text-xs mr-1"></i>定制
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center mt-2 mb-1">
+                                        <div class="text-xs text-gray-500 mr-2">面料：</div>
+                                        <div class="flex items-center">
+                                            <div class="w-4 h-4 rounded-full overflow-hidden mr-1 border border-gray-200">
+                                                <img src="https://images.unsplash.com/photo-1600607686527-6fb886090705?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80" alt="麻质面料" class="w-full h-full object-cover">
+                                            </div>
+                                            <div class="text-xs text-gray-700">麻质混纺面料</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="specs-details mt-2 mb-2">
+                                <div class="flex items-center mb-1.5">
+                                    <div class="w-16 flex-shrink-0 text-xs text-gray-500">尺寸：</div>
+                                    <div class="text-xs text-gray-700">220cm × 90cm × 85cm（长×宽×高）</div>
+                                </div>
+                                <div class="flex items-start mb-1.5">
+                                    <div class="w-16 flex-shrink-0 text-xs text-gray-500">配件：</div>
+                                    <div class="text-xs text-gray-700 flex-1">高弹性记忆棉靠垫 × 5，宽扶手带收纳功能，实木脚</div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="w-16 flex-shrink-0 text-xs text-gray-500">备注：</div>
+                                    <div class="text-xs text-gray-700 flex-1">底部增加2cm高度，扶手加装木质托盘</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-3 pt-3 border-t border-gray-200">
+                                <div class="flex justify-between items-center">
+                                    <div class="text-sm text-gray-500">最终定制价格</div>
+                                    <div class="text-lg font-semibold text-brand-primary">¥6,299</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-yellow-50 border-l-2 border-yellow-400 p-3 rounded-md">
+                            <p class="text-xs text-gray-700">确认后，您需要在24小时内完成支付，否则订单将自动取消。</p>
+                        </div>
+                    </div>
+                    <div class="modal-actions mt-6">
+                        <button class="modal-btn modal-btn-cancel" id="modalCancelBtn">再考虑一下</button>
+                        <button class="modal-btn modal-btn-confirm" id="modalConfirmBtn">确认价格</button>
+                    </div>
+                </div>
+            `;
+            
+            // 添加模态框样式
+            const modalStyle = document.createElement('style');
+            modalStyle.textContent = `
+                .modal-overlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: rgba(0, 0, 0, 0.5);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 1000;
+                    opacity: 0;
+                    visibility: hidden;
+                    transition: opacity 0.3s ease, visibility 0.3s ease;
+                }
+                
+                .modal-overlay.active {
+                    opacity: 1;
+                    visibility: visible;
+                }
+                
+                .modal-container {
+                    background-color: white;
+                    width: 90%;
+                    max-width: 360px;
+                    border-radius: 16px;
+                    padding: 20px;
+                    box-shadow: var(--shadow-lg);
+                    transform: translateY(20px);
+                    transition: transform 0.3s ease;
+                }
+                
+                @media (min-width: 400px) {
+                    .modal-container {
+                        width: 85%;
+                        max-width: 400px;
+                        padding: 24px;
+                    }
+                }
+                
+                .modal-overlay.active .modal-container {
+                    transform: translateY(0);
+                }
+                
+                .modal-title {
+                    font-size: 18px;
+                    font-weight: 600;
+                    margin-bottom: 16px;
+                    text-align: center;
+                    color: var(--brand-dark);
+                }
+                
+                .modal-content {
+                    font-size: 14px;
+                    line-height: 1.5;
+                    margin-bottom: 16px;
+                }
+                
+                .modal-actions {
+                    display: flex;
+                    justify-content: space-between;
+                }
+                
+                .modal-btn {
+                    flex: 1;
+                    border-radius: 20px;
+                    padding: 12px 16px;
+                    font-size: 15px;
+                    font-weight: 500;
+                    text-align: center;
+                    transition: all 0.3s ease;
+                    cursor: pointer;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }
+                
+                .modal-btn-cancel {
+                    background-color: var(--brand-light-dark);
+                    color: var(--brand-dark);
+                    margin-right: 12px;
+                }
+                
+                .modal-btn-confirm {
+                    background: var(--brand-gradient-primary);
+                    color: white;
+                }
+            `;
+            
+            document.head.appendChild(modalStyle);
+            document.body.appendChild(modalOverlay);
+            
+            // 显示模态框
+            setTimeout(() => {
+                modalOverlay.classList.add('active');
+            }, 10);
+            
+            // 添加按钮点击事件
+            const cancelBtn = document.getElementById('modalCancelBtn');
+            const confirmBtn = document.getElementById('modalConfirmBtn');
+            
+            cancelBtn.addEventListener('click', function() {
+                modalOverlay.classList.remove('active');
+                setTimeout(() => modalOverlay.remove(), 300);
+            });
+            
+            confirmBtn.addEventListener('click', function() {
+                // 模拟API请求
+                document.getElementById('loading').style.display = 'flex';
+                
+                setTimeout(() => {
+                    document.getElementById('loading').style.display = 'none';
+                    
+                    // 关闭模态框
+                    modalOverlay.classList.remove('active');
+                    setTimeout(() => modalOverlay.remove(), 300);
+                    
+                    // 重定向到待支付状态页面
+                    window.location.href = 'order-detail.html?id=' + getOrderId() + '&status=custom_pending_payment&custom=true';
+                }, 1000);
+            });
+        }
+        
+        // 添加联系客服按钮
+        function addCustomerServiceButton() {
+            // 创建底部固定的客服按钮容器
+            const customerServiceBtn = document.createElement('div');
+            customerServiceBtn.className = 'payment-btn-container';
+            customerServiceBtn.innerHTML = `
+                <div></div>
+                <a href="javascript:void(0)" class="pay-now-btn" id="contactCustomerService">
+                    <i class="fas fa-headset mr-2"></i>
+                    联系客服
+                </a>
+            `;
+            
+            // 添加到body
+            document.body.appendChild(customerServiceBtn);
+            
+            // 添加点击事件
+            document.getElementById('contactCustomerService').addEventListener('click', function() {
+                showToast('正在连接客服...');
+                // 实际应用中，这里应该跳转到客服聊天页面或打开客服模态框
+            });
+        }
+        
+        // 启动确认价格倒计时
+        function startPriceConfirmCountdown() {
+            const countdownElement = document.getElementById('price-confirm-countdown');
+            if (!countdownElement) return;
+            
+            // 模拟倒计时
+            const hours = 23;
+            const minutes = 55;
+            const seconds = 0;
+            
+            let totalSeconds = hours * 3600 + minutes * 60 + seconds;
+            
+            function updateCountdown() {
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+                
+                countdownElement.textContent = `${hours}小时${minutes}分`;
+                
+                if (totalSeconds <= 0) {
+                    clearInterval(countdownInterval);
+                    countdownElement.textContent = '已超时';
+                    countdownElement.style.color = 'red';
+                } else {
+                    totalSeconds--;
+                }
+            }
+            
+            // 初始更新
+            updateCountdown();
+            
+            // 设置倒计时
+            const countdownInterval = setInterval(updateCountdown, 1000);
+        }
+        
+        // 添加查看进度按钮
+        function addViewCustomProgressBtn() {
+            // 创建底部固定的按钮容器
+            const buttonsContainer = document.createElement('div');
+            buttonsContainer.className = 'payment-btn-container';
+            buttonsContainer.style.display = 'flex';
+            buttonsContainer.innerHTML = `
+                <a href="javascript:void(0)" class="btn-outline flex items-center justify-center mr-3 flex-1" id="changeAddressBtn">
+                    <i class="fas fa-map-marker-alt mr-1"></i>
+                    更改地址
+                </a>
+                <a href="javascript:void(0)" class="pay-now-btn flex-1 justify-center" id="contactCustomServiceBtn">
+                    <i class="fas fa-headset mr-1"></i>
+                    联系客服
+                </a>
+            `;
+            
+            // 添加样式（如果尚未添加）
+            if (!document.querySelector('style[data-for="btn-outline"]')) {
+                const style = document.createElement('style');
+                style.setAttribute('data-for', 'btn-outline');
+                style.textContent = `
+                    .btn-outline {
+                        border: 1px solid #ddd;
+                        color: var(--brand-dark);
+                        padding: 10px 16px;
+                        border-radius: 24px;
+                        font-weight: 500;
+                        font-size: 14px;
+                        background: white;
+                        transition: all 0.2s ease;
+                        text-align: center;
+                        text-decoration: none;
+                    }
+                    
+                    .btn-outline:hover {
+                        border-color: var(--brand-primary-light);
+                        color: var(--brand-primary);
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+            
+            // 添加到body
+            document.body.appendChild(buttonsContainer);
+            
+            // 添加点击事件
+            document.getElementById('changeAddressBtn').addEventListener('click', function() {
+                showChangeAddressModal();
+            });
+            
+            document.getElementById('contactCustomServiceBtn').addEventListener('click', function() {
+                showToast('正在连接客服...');
+                // 实际应用中，这里应该跳转到客服聊天页面或打开客服模态框
+            });
+        }
+        
+        // 显示修改地址模态框
+        function showChangeAddressModal() {
+            // 创建模态框
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'modal-overlay';
+            modalOverlay.innerHTML = `
+                <div class="modal-container">
+                    <div class="modal-title">修改收货地址</div>
+                    <div class="modal-content">
+                        <div class="mb-4">
+                            <div class="text-xs text-gray-500 mb-1">当前收货地址</div>
+                            <div class="p-3 bg-gray-50 rounded-md">
+                                <div class="font-medium text-sm">李小明 13800138000</div>
+                                <div class="text-xs text-gray-600 mt-1">广东省深圳市南山区科技园南区4栋1001室</div>
+                            </div>
+                        </div>
+                        
+                        <div class="address-selection">
+                            <div class="text-xs text-gray-500 mb-2">选择新的收货地址</div>
+                            
+                            <div class="address-option selected mb-2">
+                                <div class="address-radio">
+                                    <input type="radio" name="address" id="address1" checked>
+                                    <label for="address1"></label>
+                                </div>
+                                <div class="address-info">
+                                    <div class="font-medium text-sm">李小明 13800138000</div>
+                                    <div class="text-xs text-gray-600 mt-1">广东省深圳市福田区市民中心A栋2001室</div>
+                                </div>
+                            </div>
+                            
+                            <div class="address-option mb-2">
+                                <div class="address-radio">
+                                    <input type="radio" name="address" id="address2">
+                                    <label for="address2"></label>
+                                </div>
+                                <div class="address-info">
+                                    <div class="font-medium text-sm">李小明 13800138000</div>
+                                    <div class="text-xs text-gray-600 mt-1">广东省深圳市罗湖区东门步行街C区122号</div>
+                                </div>
+                            </div>
+                            
+                            <a href="address-list.html" class="text-brand-primary text-xs flex items-center justify-center mt-4">
+                                <i class="fas fa-plus mr-1"></i> 添加新地址
+                            </a>
+                        </div>
+                        
+                        <div class="bg-yellow-50 border border-yellow-100 rounded-md p-3 mt-4">
+                            <div class="flex items-start">
+                                <i class="fas fa-info-circle text-yellow-500 mt-0.5 mr-2"></i>
+                                <div class="text-xs text-gray-700">
+                                    <p>修改收货地址仅在商品发货前有效。如已开始配送，请联系客服处理。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-actions">
+                        <button class="modal-btn modal-btn-cancel" id="modalCancelBtn">取消</button>
+                        <button class="modal-btn modal-btn-confirm" id="modalConfirmBtn" style="color: white;">确认修改</button>
+                    </div>
+                </div>
+            `;
+            
+            // 添加模态框样式
+            const modalStyle = document.createElement('style');
+            modalStyle.textContent = `
+                .address-option {
+                    display: flex;
+                    align-items: flex-start;
+                    padding: 10px;
+                    border: 1px solid #ddd;
+                    border-radius: 8px;
+                    transition: all 0.2s ease;
+                }
+                
+                .address-option.selected {
+                    border-color: var(--brand-primary);
+                    background-color: rgba(42, 157, 143, 0.05);
+                }
+                
+                .address-radio {
+                    margin-right: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                
+                .address-radio input[type="radio"] {
+                    position: absolute;
+                    opacity: 0;
+                }
+                
+                .address-radio label {
+                    position: relative;
+                    cursor: pointer;
+                    padding: 0;
+                    width: 18px;
+                    height: 18px;
+                    border-radius: 50%;
+                    border: 2px solid #ddd;
+                }
+                
+                .address-radio input[type="radio"]:checked + label {
+                    border-color: var(--brand-primary);
+                    background-color: white;
+                }
+                
+                .address-radio input[type="radio"]:checked + label:after {
+                    content: '';
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                    background: var(--brand-primary);
+                }
+                
+                .address-info {
+                    flex: 1;
+                }
+            `;
+            
+            document.head.appendChild(modalStyle);
+            document.body.appendChild(modalOverlay);
+            
+            // 显示模态框
+            setTimeout(() => {
+                modalOverlay.classList.add('active');
+            }, 10);
+            
+            // 添加点击事件监听器
+            const addressOptions = modalOverlay.querySelectorAll('.address-option');
+            addressOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const radio = this.querySelector('input[type="radio"]');
+                    radio.checked = true;
+                    
+                    // 更新选中状态样式
+                    addressOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+            
+            // 添加按钮点击事件
+            const cancelBtn = document.getElementById('modalCancelBtn');
+            const confirmBtn = document.getElementById('modalConfirmBtn');
+            
+            cancelBtn.addEventListener('click', function() {
+                modalOverlay.classList.remove('active');
+                setTimeout(() => modalOverlay.remove(), 300);
+            });
+            
+            confirmBtn.addEventListener('click', function() {
+                // 模拟API请求
+                document.getElementById('loading').style.display = 'flex';
+                
+                setTimeout(() => {
+                    document.getElementById('loading').style.display = 'none';
+                    
+                    // 更新地址显示（实际应用中应根据选择更新）
+                    const addressDetail = document.querySelector('.address-detail');
+                    if (addressDetail) {
+                        const selectedAddress = modalOverlay.querySelector('.address-option.selected .address-info .text-xs').textContent;
+                        addressDetail.textContent = selectedAddress;
+                    }
+                    
+                    // 关闭模态框
+                    modalOverlay.classList.remove('active');
+                    setTimeout(() => modalOverlay.remove(), 300);
+                    
+                    // 显示成功提示
+                    showToast('收货地址已更新');
+                }, 1000);
+            });
+        }
+        
+        // 添加定制商品生产进度
+        // function addCustomProductionProgress(container) {
+        //     // 创建生产进度卡片
+        //     const progressCard = document.createElement('div');
+        //     progressCard.className = 'custom-detail-card';
+        //     progressCard.innerHTML = `
+        //         <div class="custom-detail-header">
+        //             <i class="fas fa-industry"></i>
+        //             <span>生产进度</span>
+        //         </div>
+        //         <div class="custom-detail-content">
+        //             <div class="flex justify-between items-center mb-2">
+        //                 <div class="text-sm font-medium">总体进度</div>
+        //                 <div class="text-sm font-medium text-brand-primary">40%</div>
+        //             </div>
+        //             <div class="progress-bar-container">
+        //                 <div class="progress-bar" style="width: 40%;"></div>
+        //             </div>
+        //             <div class="progress-steps mt-2">
+        //                 <div class="progress-step">
+        //                     <div class="step-dot active"></div>
+        //                     <div class="step-label active">下单</div>
+        //                 </div>
+        //                 <div class="progress-step">
+        //                     <div class="step-dot active"></div>
+        //                     <div class="step-label active">备料</div>
+        //                 </div>
+        //                 <div class="progress-step">
+        //                     <div class="step-dot active"></div>
+        //                     <div class="step-label active">生产</div>
+        //                 </div>
+        //                 <div class="progress-step">
+        //                     <div class="step-dot"></div>
+        //                     <div class="step-label">质检</div>
+        //                 </div>
+        //                 <div class="progress-step">
+        //                     <div class="step-dot"></div>
+        //                     <div class="step-label">发货</div>
+        //                 </div>
+        //             </div>
+                    
+        //             <div class="mt-4 p-3 bg-gray-50 rounded-lg">
+        //                 <div class="text-sm font-medium mb-2">当前阶段：生产中</div>
+        //                 <div class="text-xs text-gray-600">
+        //                     您的定制沙发面料裁剪已完成，正在进行框架组装和面料缝制，预计3天内完成。
+        //                 </div>
+        //             </div>
+        //         </div>
+        //     `;
+            
+        //     // 将生产进度卡片插入到定制配置卡片之后
+        //     const customConfigCard = container.querySelector('.custom-detail-card');
+        //     if (customConfigCard) {
+        //         container.insertBefore(progressCard, customConfigCard.nextSibling);
+        //     }
+        // }
+        
+        // 添加预计发货时间
+        function addEstimatedCustomShippingTime(container) {
+            // 创建预计发货时间元素
+            const estimatedTimeDiv = document.createElement('div');
+            estimatedTimeDiv.className = 'address-card';
+            estimatedTimeDiv.innerHTML = `
+                <div class="address-header">
+                    <div class="address-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="flex-1 font-medium text-sm">预计发货时间</div>
+                </div>
+          
+                <div class="text-xs text-gray-500 mt-2">
+                    定制商品需要8-15个工作日生产周期，请耐心等待
+                </div>
+            `;
+            
+            // 将元素插入到地址卡片之后
+            const addressCard = container.querySelector('.address-card');
+            if (addressCard) {
+                addressCard.parentNode.insertBefore(estimatedTimeDiv, addressCard.nextSibling);
+            }
+        }
+        
+        // 以下是原有的函数，保持不变
         function updateUIByOrderStatus(status) {
             const statusCard = document.querySelector('.order-status-card');
             const statusTitle = statusCard.querySelector('.status-title');
@@ -1893,7 +3107,7 @@
         
         function getOrderId() {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get('id') || '2023112208765';
+            return urlParams.get('id') || '2023122001234';
         }
         
         function setupCopyButtons() {
@@ -2022,7 +3236,6 @@
                                 <div class="progress-stage-content">
                                     <div class="progress-stage-name">裁布排版</div>
                                     <div class="progress-stage-time">2023-11-24 15:30</div>
-                                </div>
             </div>
             
                             <!-- 缝纫 -->
@@ -2316,7 +3529,7 @@
                         font-weight: 600;
                         margin-bottom: 16px;
                         text-align: center;
-                        color: var(--brand-primary);
+                        color: var(--brand-dark);
                     }
                     
                     .modal-content {
@@ -2864,29 +4077,19 @@
             });
         }
 
-        // 在页面加载后立即初始化待评价卡片
-        document.addEventListener('DOMContentLoaded', function() {
-            // 初始化页面
-            initPage();
-            
-            // 添加查看订单列表示例的按钮
-            const mockListBtn = document.createElement('div');
-            mockListBtn.id = 'mockListBtn';
-            mockListBtn.className = 'fixed bottom-4 right-4 bg-brand-primary text-white rounded-full w-12 h-12 flex items-center justify-center shadow-md z-50';
-            mockListBtn.innerHTML = '<i class="fas fa-list"></i>';
-            mockListBtn.title = '查看订单列表页优化示例';
-            mockListBtn.addEventListener('click', showOrderListExample);
-            document.body.appendChild(mockListBtn);
-            
-            // 将mockListBtn添加到全局作用域以便其他函数访问
-            window.mockListBtn = mockListBtn;
-            
-            // 检查并初始化订单列表示例页中的待评价卡片
-            if (document.getElementById('orderListExample')) {
-                console.log('初始化订单列表示例中的待评价卡片');
-                setupPendingReviewCards();
+        // 添加定制标识到商品名称
+        function addCustomBadgeToProduct() {
+            const productName = document.querySelector('.product-name');
+            if (productName) {
+                // 避免重复添加
+                if (!productName.querySelector('.custom-product-badge')) {
+                    const customBadge = document.createElement('span');
+                    customBadge.className = 'custom-product-badge';
+                    customBadge.innerHTML = '<i class="fas fa-cut"></i><span>定制</span>';
+                    productName.appendChild(customBadge);
+                }
             }
-        });
+        }
     </script>
 </body>
 </html> 

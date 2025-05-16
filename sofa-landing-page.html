@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>高端沙发系列 - 为您的家居带来奢华舒适</title>
+    <meta name="description" content="探索我们的高端沙发系列，精选材质，多角度展示，让您的家居焕然一新">
+    <link rel="stylesheet" href="css/sofa-landing.css">
+    <!-- 预加载关键图片 -->
+    <link rel="preload" as="image" href="images/sofa/placeholder-1.webp" type="image/webp">
+    <link rel="preload" as="image" href="images/sofa/placeholder-2.webp" type="image/webp">
+    <link rel="preload" as="image" href="images/sofa/placeholder-3.webp" type="image/webp">
+</head>
+<body>
+    <!-- 初始折叠视图区域 - 占屏幕50%高度 -->
+    <div class="landing-container" id="landing-container">
+        <!-- 顶部视觉区 -->
+        <section class="hero-section">
+            <div class="hero-carousel" id="hero-carousel">
+                <div class="carousel-item active" data-index="0">
+                    <div class="carousel-image-container">
+                        <img class="carousel-image placeholder" src="images/sofa/placeholder-1.webp" alt="沙发正视图">
+                        <img class="carousel-image high-res" data-src="images/sofa_360_1.jpg" alt="沙发正视图">
+                    </div>
+                </div>
+                <div class="carousel-item" data-index="1">
+                    <div class="carousel-image-container">
+                        <img class="carousel-image placeholder" src="images/sofa/placeholder-2.webp" alt="沙发侧视图">
+                        <img class="carousel-image high-res" data-src="images/sofa_360_3.jpg" alt="沙发侧视图">
+                    </div>
+                </div>
+                <div class="carousel-item" data-index="2">
+                    <div class="carousel-image-container">
+                        <img class="carousel-image placeholder" src="images/sofa/placeholder-3.webp" alt="沙发材质特写">
+                        <img class="carousel-image high-res" data-src="images/sofa_360_5.jpg" alt="沙发材质特写">
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-indicators">
+                <span class="indicator active" data-index="0"></span>
+                <span class="indicator" data-index="1"></span>
+                <span class="indicator" data-index="2"></span>
+            </div>
+            <div class="hero-content">
+                <h1 class="hero-title">极致舒适，艺术生活</h1>
+                <p class="hero-subtitle">2023年度Pantone认证色彩，匠心独具的设计语言</p>
+                <button class="cta-button" id="cta-button">立即探索</button>
+            </div>
+        </section>
+        
+        <!-- 上滑提示 -->
+        <div class="swipe-up-hint">
+            <div class="swipe-arrow"></div>
+            <p>上滑查看更多</p>
+        </div>
+
+        <!-- 产品展示区域 - 初始隐藏 -->
+        <section class="products-section" id="products-section">
+            <h2 class="section-title">精选系列</h2>
+            <div class="products-filter">
+                <button class="filter-button active" data-filter="all">全部</button>
+                <button class="filter-button" data-filter="modern">现代系列</button>
+                <button class="filter-button" data-filter="nordic">北欧风格</button>
+                <button class="filter-button" data-filter="minimalist">简约主义</button>
+            </div>
+            
+            <div class="products-grid" id="products-grid">
+                <!-- 产品卡片将通过JavaScript动态加载 -->
+            </div>
+            
+            <div class="loading-indicator" id="loading-indicator">
+                <div class="loading-spinner"></div>
+                <p>加载更多产品...</p>
+            </div>
+        </section>
+        
+        <!-- 材质展示区 -->
+        <section class="materials-section">
+            <h2 class="section-title">匠心材质</h2>
+            <div class="materials-showcase" id="materials-showcase">
+                <div class="material-card" data-material="leather">
+                    <div class="material-image">
+                        <img src="images/sofa/material-leather.webp" alt="头层牛皮">
+                    </div>
+                    <div class="material-info">
+                        <h3>头层牛皮</h3>
+                        <p>经过精细处理的顶级牛皮，触感细腻，历久弥新</p>
+                        <div class="ar-preview">
+                            <span class="ar-icon"></span>
+                            <span>AR预览</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="material-card" data-material="fabric">
+                    <div class="material-image">
+                        <img src="images/sofa/material-fabric.webp" alt="高级面料">
+                    </div>
+                    <div class="material-info">
+                        <h3>高级面料</h3>
+                        <p>进口面料，防污抗皱，舒适透气</p>
+                        <div class="ar-preview">
+                            <span class="ar-icon"></span>
+                            <span>AR预览</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 底部行动区 -->
+        <section class="action-section">
+            <div class="action-content">
+                <h2>限时优惠</h2>
+                <p class="countdown" id="countdown">05:23:45</p>
+                <p class="action-desc">首单立减¥1000，享12期免息</p>
+                <button class="action-button" id="action-button">立即抢购</button>
+            </div>
+        </section>
+        
+        <!-- 底部信息 -->
+        <footer class="page-footer">
+            <div class="footer-content">
+                <p>© 2023 高端家居. 保留所有权利</p>
+                <p>隐私政策 | 服务条款</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- 脚本引用 -->
+    <script src="js/sofa-landing.js" defer></script>
+</body>
+</html> 

@@ -41,6 +41,7 @@
             // 更新底部导航按钮状态
             const prevBtn = document.getElementById('prevStep');
             const nextBtn = document.getElementById('nextStep');
+            const submitBtn = document.getElementById('submitOrder'); // 获取提交按钮
             
             if (prevBtn) {
                 prevBtn.disabled = stepNumber === 1;
@@ -51,8 +52,19 @@
                 }
             }
             
+            // 处理步骤5的特殊情况 - 显示提交按钮，隐藏下一步按钮
+            if (stepNumber === 5 && submitBtn) {
+                console.log('[FIX] 步骤5: 显示提交按钮，隐藏下一步按钮');
+                if (nextBtn) nextBtn.style.display = 'none';
+                submitBtn.style.display = 'block';
+            } else {
+                // 其他步骤显示下一步按钮，隐藏提交按钮
+                if (nextBtn) nextBtn.style.display = 'block';
+                if (submitBtn) submitBtn.style.display = 'none';
+            }
+            
             if (nextBtn) {
-                nextBtn.disabled = stepNumber === 5;
+                // 更新按钮文本和样式，但不处理显示/隐藏逻辑（已在上面处理）
                 if (stepNumber === 5) {
                     nextBtn.textContent = '完成';
                     nextBtn.classList.add('complete');

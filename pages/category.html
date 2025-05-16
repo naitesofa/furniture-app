@@ -2,2309 +2,489 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>家具展厅 - 家逸生活</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../css/common.css">
-    <link href="../css/scrollbar.css" rel="stylesheet">
-    <!-- 引入共享的导航JavaScript文件 -->
-    <script src="../js/navigation.js" defer></script>
-    <style>
-        /* 颜色变量系统 - 与首页保持一致 */
-        :root {
-            --primary-color: #2A9D8F;
-            --secondary-color: #E9C46A;
-            --accent-color: #F4A261;
-            --dark-color: #264653;
-            --light-color: #F8F9FA;
-            --bg-color: #F5F7F8;
-            
-            /* 完整品牌色彩系统 */
-            --brand-primary: #2A9D8F;
-            --brand-primary-light: #4DB6A9;
-            --brand-primary-dark: #1F7A70;
-            --brand-primary-transparent: rgba(42, 157, 143, 0.1);
-            
-            --brand-secondary: #E9C46A;
-            --brand-secondary-light: #F2D68B;
-            --brand-secondary-dark: #D4A93B;
-            
-            --brand-accent: #F4A261;
-            --brand-accent-light: #F7BE8C;
-            --brand-accent-dark: #E68940;
-            
-            --brand-dark: #264653;
-            --brand-dark-light: #3A6A7E;
-            --brand-dark-dark: #1A323C;
-            
-            --brand-light: #F8F9FA;
-            --brand-light-dark: #E9ECEF;
-            
-            --brand-success: #38B2AC;
-            --brand-warning: #F59E0B;
-            --brand-error: #EF4444;
-            --brand-info: #3B82F6;
-            
-            /* 渐变色 */
-            --brand-gradient-primary: linear-gradient(135deg, var(--brand-primary), var(--brand-success));
-            --brand-gradient-secondary: linear-gradient(135deg, var(--brand-secondary), var(--brand-accent));
-            --brand-gradient-dark: linear-gradient(135deg, var(--brand-dark), #3A6A7E);
-            
-            /* 阴影 */
-            --shadow-sm: 0 2px 4px rgba(38, 70, 83, 0.06);
-            --shadow-md: 0 4px 6px rgba(38, 70, 83, 0.1);
-            --shadow-lg: 0 10px 15px rgba(38, 70, 83, 0.1);
-            --shadow-highlight: 0 5px 15px rgba(42, 157, 143, 0.3);
-            
-            /* 边框和圆角 */
-            --border-radius-sm: 8px;
-            --border-radius-md: 12px;
-            --border-radius-lg: 18px;
-            --border-radius-xl: 24px;
-            --border-radius-circle: 50%;
-            
-            /* 间距系统 */
-            --spacing-xs: 4px;
-            --spacing-sm: 8px;
-            --spacing-md: 16px;
-            --spacing-lg: 24px;
-            --spacing-xl: 32px;
-            --spacing-xxl: 48px;
-            
-            /* 动画时间 */
-            --transition-fast: 0.2s;
-            --transition-normal: 0.3s;
-            --transition-slow: 0.5s;
-            
-            /* 贝塞尔曲线 */
-            --cubic-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-            --cubic-smooth: cubic-bezier(0.4, 0.0, 0.2, 1);
-        }
-        
-        /* 基础样式设置 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        body {
-            background-color: var(--neutral-bg);
-            color: var(--neutral-black);
-            line-height: 1.5;
-            font-size: 14px;
-            overflow-x: hidden;
-        }
-        
-        /* 全景视频区域 */
-        .panorama-container {
-            position: relative;
-            width: 100%;
-            height: 35vh; /* 调整高度更紧凑 */
-            overflow: hidden;
-            margin-bottom: var(--spacing-lg);
-            z-index: 3; /* 降低z-index，确保搜索栏始终在上方 */
-            border-radius: 0; /* 去掉圆角 */
-        }
-        
-        .panorama-video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transform: scale(1.05); /* 轻微放大以避免边缘空白 */
-            transition: transform 0.8s cubic-bezier(0.33, 1, 0.68, 1);
-            filter: brightness(1.05) contrast(1.05); /* 增强视频清晰度 */
-        }
-        
-        /* 加深遮罩层以增强文字可读性，使用更优雅的渐变 */
-        .panorama-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(
-                180deg, 
-                rgba(38, 70, 83, 0.3) 0%, 
-                rgba(38, 70, 83, 0.6) 60%, 
-                rgba(38, 70, 83, 0.8) 100%
-            ); /* 调整渐变遮罩 */
-            color: var(--white);
-            text-align: center;
-            padding: var(--spacing-lg);
-            backdrop-filter: blur(1px); /* 轻微模糊效果 */
-            -webkit-backdrop-filter: blur(1px);
-        }
-        
-        .brand-tagline {
-            font-size: 30px; /* 略微减小字体大小 */
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            margin-bottom: var(--spacing-md);
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-            animation: fadeSlideUp 1.2s var(--cubic-bounce) forwards;
-            opacity: 0;
-            transform: translateY(20px);
-            background: linear-gradient(135deg, #fff, #e0e0e0);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-transform: uppercase;
-        }
-        
-        .brand-subtitle {
-            font-size: 14px; /* 略微减小字体大小 */
-            font-weight: 500;
-            max-width: 90%;
-            line-height: 1.6;
-            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-            animation: fadeSlideUp 1.2s var(--cubic-bounce) forwards;
-            animation-delay: 0.3s;
-            opacity: 0;
-            transform: translateY(20px);
-            margin-bottom: var(--spacing-md); /* 减少底部间距 */
-        }
-        
-        /* 添加动画关键帧 */
-        @keyframes fadeSlideUp {
-            0% {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家具分类 - 现代家居</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome 图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- 自定义样式 -->
+    <link rel="stylesheet" href="css/category.css">
+    
+    <!-- Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2A9D8F',
+                        secondary: '#4ecdc4',
+                        accent: '#ffbe76',
+                        dark: '#3A6A7E',
+                    }
+                }
             }
         }
-        
-        @keyframes floatButton {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-5px);
-            }
-        }
-        
-        /* 全新设计的搜索区域 */
-        .search-wrapper {
-            background: #b3e3dd;
-            padding: 12px 16px;
-            position: sticky;
-            top: 0;
-            z-index: 40;
-            margin-top: 0; /* 去掉负边距 */
-            box-shadow: 0 2px 8px rgba(38, 70, 83, 0.15);
-        }
-        
-        .search-container {
-            background: transparent;
-            border-radius: 0;
-            margin: 0;
-            padding: 0;
-            box-shadow: none;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            gap: var(--spacing-sm);
-            border: none;
-            transform: translateY(0);
-            transition: all 0.3s var(--cubic-smooth);
-            animation: none;
-            opacity: 1;
-        }
-        
-        .search-container.sticky {
-            margin: 0;
-            border-radius: 0;
-            box-shadow: none;
-            animation: none;
-            opacity: 1;
-            border-bottom: none;
-        }
-        
-        .search-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: var(--spacing-xs);
-        }
-        
-        .search-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: white;
-        }
-        
-        .filters-button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            font-size: 13px;
-            color: white;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-        
-        .filters-button:active {
-            transform: scale(0.96);
-            background: rgba(255, 255, 255, 0.3);
-        }
-        
-        .search-bar {
-            display: flex;
-            align-items: center;
-            background: white;
-            border-radius: var(--border-radius-md);
-            padding: var(--spacing-sm) var(--spacing-md);
-            transition: all 0.3s var(--cubic-smooth);
-            border: 1px solid transparent;
-            position: relative; /* 添加相对定位 */
-        }
-        
-        .search-bar:focus-within {
-            background: white;
-            border-color: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.15);
-        }
-        
-        .search-icon {
-            color: var(--brand-dark-light);
-            margin-right: var(--spacing-sm);
-            font-size: 16px;
-            flex-shrink: 0;
-            width: 20px; /* 增加宽度 */
-            display: flex;
-            justify-content: center;
-            position: absolute; /* 使用绝对定位 */
-            left: 12px; /* 确保图标位置固定 */
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 1;
-        }
-        
-        .search-input {
-            border: none;
-            outline: none;
-            width: 100%;
-            font-size: 14px;
-            color: var(--brand-dark);
-            background: transparent;
-            padding: 6px 0;
-            padding-left: 36px; /* 为左侧图标预留空间 */
-            padding-right: 40px; /* 为右侧语音按钮预留空间 */
-        }
-        
-        .search-input::placeholder {
-            color: var(--brand-dark-light);
-            opacity: 0.7;
-        }
-        
-        .voice-search {
-            color: var(--brand-primary);
-            background: rgba(42, 157, 143, 0.1);
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            margin-left: 8px;
-            transition: all 0.3s ease;
-            flex-shrink: 0;
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 1;
-        }
-        
-        .voice-search:active {
-            transform: translateY(-50%) scale(0.92);
-            background: rgba(42, 157, 143, 0.2);
-        }
-        
-        /* 类别快捷选择区 */
-        .quick-filters {
-            display: flex;
-            gap: var(--spacing-sm);
-            overflow-x: auto;
-            padding: 4px 0;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-        }
-        
-        .quick-filters::-webkit-scrollbar {
-            display: none;
-        }
-        
-        .filter-pill {
-            padding: 6px 14px;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 500;
-            color: white;
-            white-space: nowrap;
-            scroll-snap-align: start;
-            transition: all 0.2s ease;
-        }
-        
-        .filter-pill.active {
-            background: white;
-            color: var(--brand-primary);
-            border-color: white;
-        }
-        
-        .filter-pill:active {
-            transform: scale(0.96);
-            background: rgba(255, 255, 255, 0.25);
-        }
-        
-        /* 导航栏样式 */
-        .nav-container {
-            margin: var(--spacing-xl) 0 var(--spacing-lg);
-        
-            overflow: hidden;
-        }
-        
-        /* 分类网格容器 */
-        .category-grid-container {
-            position: relative;
-            padding: var(--spacing-md) 0 var(--spacing-lg);
-            margin-bottom: var(--spacing-md);
-            overflow: hidden; /* 确保无限滚动动画不会溢出 */
-        }
-        
-        /* 分类标题 */
-        .section-heading {
-            font-size: 24px;
-            font-weight: 700;
-            margin: var(--spacing-lg) var(--spacing-md) var(--spacing-md);
-            color: var(--neutral-black);
-        }
-        
-        /* 分类网格 - 改为双行无限滚动布局 */
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 160px); /* 增加列数支持无限滚动 */
-            grid-template-rows: repeat(2, auto); /* 固定2行 */
-            column-gap: 20px; /* 增加列间距 */
-            row-gap: 24px; /* 行间距24pt */
-            padding: 0 var(--spacing-md);
-            overflow: visible; /* 改为可见溢出，支持无限滚动 */
-            grid-auto-flow: column; /* 确保先填满列，再添加新行 */
-            width: max-content; /* 确保网格有足够的宽度 */
-            animation: scrollGrid 30s linear infinite; /* 加快滚动速度从40秒减到30秒 */
-            animation-play-state: running; /* 初始时动画运行 */
-        }
-        
-        /* 悬停时暂停动画 */
-        .category-grid-container:hover .category-grid {
-            animation-play-state: paused;
-        }
-        
-        /* 无限滚动动画 */
-        @keyframes scrollGrid {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(calc(-160px * 6 - 20px * 6)); /* 滚动6个项目的距离，包括间距 */
-            }
-        }
-        
-        /* 分类项 - 增强立体感和层次感 */
-        .category-item {
-            scroll-snap-align: start;
-            min-width: 120px;
-            height: auto;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            padding: 10px 14px;
-            background: linear-gradient(145deg, #ffffff, #f5f5f5);
-            border-radius: var(--border-radius-md);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08), 
-                        inset 0 1px 1px rgba(255, 255, 255, 0.9);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            transition: all 0.3s var(--cubic-bounce);
-            position: relative;
-            z-index: 1;
-            transform: translateZ(0); /* 启用3D加速 */
-            transform-style: preserve-3d; /* 保持3D效果 */
-            perspective: 1000px;
-            image-rendering: -webkit-optimize-contrast; /* 提升图像清晰度 */
-            image-rendering: crisp-edges;
-            text-rendering: optimizeLegibility; /* 优化文字渲染 */
-            -webkit-font-smoothing: antialiased; /* 平滑字体 */
-            -moz-osx-font-smoothing: grayscale;
-            will-change: transform; /* 提示浏览器优化变换性能 */
-        }
-        
-        .category-item:hover {
-            background: linear-gradient(145deg, #f8fbfa, #e8fffc);
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-            transform: translateY(-8px) scale(1.03); /* 增加上浮效果和轻微放大 */
-            box-shadow: 0 12px 20px rgba(42, 157, 143, 0.15),
-                        0 4px 8px rgba(0, 0, 0, 0.08),
-                        inset 0 1px 1px rgba(255, 255, 255, 1);
-            z-index: 5; /* 确保悬停项在顶层 */
-        }
-        
-        .category-item:nth-child(odd) {
-            transform: translateY(4px); /* 奇数项下移，增加错落感 */
-        }
-        
-        .category-item:nth-child(odd):hover {
-            transform: translateY(-4px) scale(1.03); /* 保持悬停效果一致 */
-        }
-        
-        /* 分类图标 - 增强立体感和清晰度 */
-        .category-icon {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            margin-right: 10px;
-            border-radius: var(--border-radius-sm);
-            background: linear-gradient(145deg, #ffffff, #f7f7f7);
-            box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.08),
-                        -1px -1px 3px rgba(255, 255, 255, 0.8);
-            padding: 4px;
-            transition: all 0.3s var(--cubic-smooth);
-            transform: translateZ(10px); /* 增加3D效果 */
-            backface-visibility: hidden; /* 防止背面模糊 */
-            overflow: hidden; /* 确保内容不溢出 */
-        }
-        
-        .category-icon img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            transition: transform 0.3s var(--cubic-bounce);
-            image-rendering: -webkit-optimize-contrast; /* 提升图像清晰度 */
-            image-rendering: crisp-edges;
-            filter: none; /* 移除可能导致模糊的阴影滤镜 */
-            transform: translateZ(0); /* 使用GPU加速 */
-        }
-        
-        .category-item:hover .category-icon {
-            background: linear-gradient(145deg, #ffffff, #f7f7f7);
-            box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.1),
-                        -1px -1px 4px rgba(255, 255, 255, 0.9);
-            transform: translateZ(15px) scale(1.05); /* 增加3D效果和轻微放大 */
-        }
-        
-        .category-item:hover .category-icon img {
-            transform: scale(1.08); /* 减小缩放以保持清晰度 */
-        }
-        
-        /* 分类名称 - 增强文字清晰度 */
-        .category-name {
-            font-size: 14px;
-            font-weight: 600;
-            color: #333333; /* 使用更深的颜色提高对比度 */
-            text-align: left;
-            transition: all 0.3s var(--cubic-smooth);
-            text-shadow: none; /* 移除可能导致文字模糊的阴影 */
-            position: relative;
-            transform: translateZ(5px); /* 增加3D效果 */
-            white-space: nowrap; /* 防止文本换行 */
-            letter-spacing: 0.2px; /* 增加字母间距提高可读性 */
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-        
-        .category-item:hover .category-name {
-            color: var(--primary-color);
-            font-weight: 700;
-            text-shadow: none; /* 移除可能导致文字模糊的阴影 */
-            transform: translateZ(8px); /* 增加3D效果 */
-        }
-        
-        /* 分类网格滚动控制 */
-        .scroll-control-container {
-            display: flex;
-            justify-content: center;
-            margin-top: var(--spacing-sm);
-            gap: var(--spacing-xs);
-        }
-        
-        .scroll-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: var(--neutral-light);
-            cursor: pointer;
-            transition: all var(--transition-normal);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .scroll-dot::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--primary-color);
-            border-radius: 50%;
-            transform: scale(0);
-            transition: transform 0.3s ease-out;
-        }
-        
-        .scroll-dot.active {
-            width: 20px;
-            border-radius: var(--border-radius-full);
-            background-color: var(--primary-color);
-        }
-        
-        .scroll-dot:hover::after {
-            transform: scale(1);
-            opacity: 0.5;
-        }
-        
-        /* 响应式调整 */
-        @media (max-width: 480px) {
-            .category-grid {
-                grid-template-columns: repeat(2, 160px); /* 手机状态下每行2列 */
-                grid-template-rows: repeat(2, auto); /* 保持2行 */
-                justify-content: start; /* 从左侧开始排列 */
-            }
-            
-            .category-item {
-                min-width: 140px; /* 确保在小屏幕上有足够的宽度 */
-            }
-        }
-        
-        .sales-banner {
-            width: 100%;
-            margin: var(--spacing-lg) 0;
-            padding: 0 var(--spacing-md);
-        }
-        
-        .sales-banner img {
-            width: 100%;
-            border-radius: var(--border-radius-md);
-            box-shadow: var(--shadow-sm);
-        }
-        
-        /* 价格筛选区域 */
-        .filter-section {
-            padding: 0 var(--spacing-md) var(--spacing-lg);
-        }
-        
-        .filter-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: var(--spacing-sm);
-            color: var(--neutral-black);
-        }
-        
-        .price-range {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-sm);
-            margin-bottom: var(--spacing-md);
-        }
-        
-        .price-input {
-            flex: 1;
-            padding: var(--spacing-sm) var(--spacing-md);
-            border: 1px solid var(--neutral-light);
-            border-radius: var(--border-radius-md);
-            background: var(--white);
-            font-size: 14px;
-            outline: none;
-            transition: all var(--transition-normal);
-        }
-        
-        .price-input:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px var(--primary-light);
-        }
-        
-        .price-divider {
-            color: var(--neutral-medium);
-        }
-        
-        .filter-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: var(--spacing-sm);
-            margin-bottom: var(--spacing-lg);
-        }
-        
-        .filter-tag {
-            padding: var(--spacing-sm) var(--spacing-md);
-            background: var(--white);
-            border: 1px solid var(--neutral-light);
-            border-radius: var(--border-radius-md);
-            font-size: 12px;
-            color: var(--neutral-dark);
-            transition: all var(--transition-normal) var(--cubic-smooth);
-        }
-        
-        .filter-tag.active {
-            background: var(--primary-color);
-            color: var(--white);
-            border-color: var(--primary-color);
-        }
-        
-        .filter-tag:not(.active):hover {
-            border-color: var(--primary-color);
-            color: var(--primary-color);
-        }
-        
-        /* 产品展示区域 */
-        .product-section {
-            padding: 0 var(--spacing-md) var(--spacing-xl);
-        }
-        
-        /* 移除外部容器样式，保留部分样式应用到产品部分 */
-        .product-category {
-            margin-bottom: var(--spacing-xl);
-            position: relative; /* 为滚动指示器提供定位上下文 */
-            overflow: hidden; /* 确保内容不溢出 */
-        }
-        
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--spacing-md);
-            padding: 0 var(--spacing-sm);
-        }
-        
-        .section-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--neutral-black);
-            position: relative;
-            padding-left: 12px;
-            margin-left: -12px;
-        }
-        
-        .section-title::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 4px;
-            height: 18px;
-            background: var(--primary-color);
-            border-radius: 2px;
-        }
-        
-        .section-title::after {
-            content: '';
-            display: block;
-            width: 40px;
-            height: 2px;
-            background: var(--primary-color);
-            margin-top: var(--spacing-xs);
-            border-radius: 2px;
-        }
-        
-        .view-all {
-            color: var(--primary-color);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            transition: all var(--transition-normal);
-            padding: 6px 12px;
-            border-radius: 16px;
-            background: rgba(42, 157, 143, 0.08);
-        }
-        
-        .view-all:hover {
-            color: var(--primary-dark);
-            background: rgba(42, 157, 143, 0.15);
-        }
-        
-        .view-all i {
-            margin-left: var(--spacing-xs);
-            font-size: 12px;
-        }
-        
-        /* 更新产品网格为无限滚动容器 */
-        .product-grid {
-            display: flex;
-            flex-wrap: nowrap;
-            overflow: hidden; /* 隐藏溢出内容而不是允许滚动 */
-            gap: 16px;
-            padding: 10px 0;
-            position: relative;
-            width: max-content; /* 确保网格有足够宽度 */
-            animation: productScroll 30s linear infinite; /* 添加无限滚动动画 */
-            animation-play-state: running;
-            transform: translateZ(0); /* 启用GPU加速 */
-            will-change: transform;
-        }
-        
-        /* 产品网格容器添加悬停暂停效果 */
-        .product-category:hover .product-grid {
-            animation-play-state: paused;
-        }
-        
-        /* 产品无限滚动动画 */
-        @keyframes productScroll {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(calc(-220px * 4 - 16px * 4)); /* 滚动4个卡片的宽度和间距 */
-            }
-        }
-        
-        /* 移除滚动按钮相关样式 */
-        .scroll-button {
-            display: none;
-        }
-        
-        /* 添加渐变边缘效果 */
-        .product-category::before,
-        .product-category::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            height: 100%;
-            width: 60px;
-            z-index: 5;
-            pointer-events: none;
-        }
-        
-        .product-category::before {
-            left: 0;
-            background: linear-gradient(to right, var(--bg-color), transparent);
-        }
-        
-        .product-category::after {
-            right: 0;
-            background: linear-gradient(to left, var(--bg-color), transparent);
-        }
-        
-        /* 优化产品卡片样式以适应无限滚动 */
-        .product-card {
-            flex: 0 0 220px;
-            min-width: 220px;
-            max-width: 220px;
-            transition: transform 0.3s var(--cubic-bounce);
-            z-index: 1;
-        }
-        
-        .product-card:hover {
-            transform: translateY(-8px) scale(1.05);
-            z-index: 5;
-        }
-        
-        /* 添加产品卡片悬浮特效 */
-        .product-card:nth-child(odd) {
-            transform: translateY(3px);
-        }
-        
-        .product-card:nth-child(odd):hover {
-            transform: translateY(-5px) scale(1.05);
-        }
-        
-        .product-image-wrapper {
-            position: relative;
-            padding-top: 100%; /* 1:1 宽高比 */
-            overflow: hidden;
-            background: #f9f9f9;
-        }
-        
-        .product-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s var(--cubic-smooth);
-            image-rendering: -webkit-optimize-contrast;
-            transform: translateZ(0);
-        }
-        
-        .product-card:hover .product-image {
-            transform: scale(1.08);
-        }
-        
-        .discount-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: var(--brand-error);
-            color: white;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 4px 8px;
-            border-radius: var(--border-radius-sm);
-            z-index: 1;
-            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.25);
-        }
-        
-        /* 简化产品信息区域 */
-        .product-info {
-            padding: var(--spacing-md);
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            position: relative;
-            background-color: var(--white); /* 确保背景色与图片区分开 */
-            border-top: 1px solid rgba(0, 0, 0, 0.03); /* 添加微妙的分隔线 */
-        }
-        
-        /* 简化产品标题 */
-        .product-title {
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: var(--spacing-xs);
-            color: var(--neutral-black);
-            display: -webkit-box;
-            -webkit-line-clamp: 1; /* 减少为1行，简化信息 */
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-            line-height: 1.4;
-            height: 20px; /* 减小高度 */
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-        
-        /* 突出价格显示 */
-        .product-price-container {
-            display: flex;
-            align-items: baseline;
-            margin-bottom: var(--spacing-xs);
-        }
-        
-        .product-price {
-            font-size: 18px; /* 调整价格字体 */
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-        
-        .product-original-price {
-            font-size: 12px;
-            color: var(--neutral-medium);
-            text-decoration: line-through;
-            margin-left: var(--spacing-xs);
-        }
-        
-        /* 优化标签显示 */
-        .product-tags {
-            display: flex;
-            gap: var(--spacing-xs);
-            flex-wrap: wrap;
-            margin-top: auto;
-        }
-        
-        .product-tag {
-            padding: 2px 8px;
-            background: var(--primary-light);
-            color: var(--primary-color);
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: 500;
-        }
-        
-        .product-tag.hot {
-            background-color: var(--accent-light);
-            color: var(--accent-dark);
-        }
-        
-        .product-tag.new {
-            background-color: var(--success-color);
-            color: white;
-        }
-        
-        /* 购物车图标优化 */
-        .add-to-cart {
-            position: absolute;
-            bottom: 12px;
-            right: 12px;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-            cursor: pointer;
-            opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.3s var(--cubic-bounce);
-        }
-        
-        .product-card:hover .add-to-cart {
-            opacity: 1;
-            transform: scale(1);
-        }
-        
-        /* 底部导航栏样式已移至common.css */
-        
-        /* 动画和微交互效果 */
-        @keyframes fadeSlideUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .btn-press {
-            cursor: pointer;
-            transition: transform var(--transition-fast) var(--cubic-bounce);
-        }
-
-        .ripple-effect {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.7);
-            transform: scale(0);
-            opacity: 1;
-            animation: ripple 0.6s var(--cubic-smooth);
-            pointer-events: none;
-        }
-
-        @keyframes ripple {
-            to {
-                transform: scale(2);
-                opacity: 0;
-            }
-        }
-
-        /* 响应式设计 */
-        @media (min-width: 768px) {
-            .product-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-            
-            .panorama-container {
-                height: 50vh;
-            }
-            
-            .brand-tagline {
-                font-size: 40px;
-            }
-        }
-
-        /* 移除旧的导航栏样式 */
-        .nav-wrapper {
-            display: none;
-        }
-
-        /* 添加新的标题样式 */
-        .section-heading {
-            font-size: 24px;
-            font-weight: 700;
-            margin: var(--spacing-lg) var(--spacing-md) var(--spacing-md);
-            color: var(--neutral-black);
-        }
-
-        /* 产品推荐项的样式 */
-        .recommendation-tabs {
-            display: flex;
-            overflow-x: auto;
-            padding: 0 var(--spacing-md);
-            margin-bottom: var(--spacing-md);
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-            gap: var(--spacing-sm);
-        }
-
-        .recommendation-tabs::-webkit-scrollbar {
-            display: none;
-        }
-
-        .recommendation-tab {
-            padding: var(--spacing-sm) var(--spacing-md);
-            background: var(--white);
-            border: 1px solid var(--neutral-light);
-            border-radius: 999px;
-            font-size: 14px;
-            white-space: nowrap;
-            color: var(--neutral-dark);
-        }
-
-        .recommendation-tab.active {
-            background: var(--neutral-black);
-            color: var(--white);
-            border-color: var(--neutral-black);
-        }
-
-        /* 页面过渡动画已移至common.css */
-
-        /* 优化产品卡片在不同屏幕尺寸下的显示效果 */
-        @media (min-width: 992px) {
-            .product-card {
-                flex: 0 0 25%; /* 在更大屏幕上每个卡片占25% */
-                min-width: 25%;
-                max-width: 25%;
-            }
-            
-            .product-grid::after {
-                width: 120px; /* 在大屏幕上增加渐变宽度 */
-            }
-        }
-
-        /* 添加产品卡片的加载动画 */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .product-card {
-            animation: fadeIn 0.5s ease-out;
-            animation-fill-mode: backwards;
-        }
-
-        /* 为每个卡片添加不同的延迟，创造级联效果 */
-        .product-grid .product-card:nth-child(1) { animation-delay: 0.1s; }
-        .product-grid .product-card:nth-child(2) { animation-delay: 0.2s; }
-        .product-grid .product-card:nth-child(3) { animation-delay: 0.3s; }
-        .product-grid .product-card:nth-child(4) { animation-delay: 0.4s; }
-
-        /* 添加产品卡片按压效果 */
-        .product-card:active {
-            transform: translateY(-2px) scale(0.98);
-        }
-
-        /* 更新导航栏样式 */
-        .tab-item.active {
-            color: var(--primary-color);
-        }
-
-        .tab-item.active .tab-icon {
-            color: var(--primary-color);
-        }
-
-        /* 更新底部导航栏样式 */
-        .tab-bar {
-            background: white;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-            z-index: 50;
-            border-radius: 20px 20px 0 0;
-            border-top: 1px solid rgba(42, 157, 143, 0.1);
-        }
-        
-        .tab-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            width: 20%;
-            text-decoration: none;
-        }
-        
-        .tab-icon {
-            font-size: 18px;
-            margin-bottom: 4px;
-        }
-        
-        .tab-label {
-            font-size: 12px;
-        }
-        
-        .tab-active {
-            color: var(--primary-color);
-        }
-        
-        .tab-inactive {
-            color: var(--brand-dark-light);
-        }
-
-        .btn-press {
-            cursor: pointer;
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .btn-press:active {
-            transform: scale(0.95);
-        }
-
-        /* 动画和交互优化 */
-        .category-grid-container::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            height: 100%;
-            width: 80px;
-            background: linear-gradient(to right, rgba(245, 247, 248, 0), var(--bg-color) 90%);
-            pointer-events: none;
-            z-index: 10;
-        }
-        
-        .category-grid-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 80px;
-            background: linear-gradient(to left, rgba(245, 247, 248, 0), var(--bg-color) 90%);
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        /* 优化产品卡片样式以解决边缘模糊问题 */
-        .product-card {
-            flex: 0 0 220px;
-            min-width: 220px;
-            max-width: 220px;
-            background: #ffffff;
-            border-radius: 12px;
-            overflow: hidden;
-            position: relative;
-            /* 使用更清晰的阴影和边框 */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-            transition: transform 0.3s var(--cubic-bounce), 
-                        box-shadow 0.3s var(--cubic-bounce);
-            /* 提高渲染质量 */
-            transform: translateZ(0);
-            backface-visibility: hidden;
-            -webkit-font-smoothing: antialiased;
-            z-index: 1;
-            /* 确保卡片有明确的背景色和边界 */
-            isolation: isolate;
-        }
-
-        .product-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 
-                        0 3px 6px rgba(0, 0, 0, 0.1);
-            z-index: 5;
-        }
-
-        /* 优化产品卡片边缘渐变 */
-        .product-category::before,
-        .product-category::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            height: 100%;
-            width: 60px;
-            z-index: 6; /* 提高层级，确保在卡片上方 */
-            pointer-events: none;
-        }
-
-        .product-category::before {
-            left: 0;
-            background: linear-gradient(to right, var(--bg-color) 20%, rgba(245, 247, 248, 0) 100%);
-        }
-
-        .product-category::after {
-            right: 0;
-            background: linear-gradient(to left, var(--bg-color) 20%, rgba(245, 247, 248, 0) 100%);
-        }
-
-        /* 优化产品图片容器边缘 */
-        .product-image-wrapper {
-            position: relative;
-            padding-top: 100%; /* 1:1 宽高比 */
-            overflow: hidden;
-            background: #ffffff;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        /* 提高图片渲染质量 */
-        .product-image {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s var(--cubic-smooth);
-            /* 提高图片清晰度 */
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
-            transform: translateZ(0);
-            will-change: transform;
-        }
-
-        /* 优化产品信息区域 */
-        .product-info {
-            padding: var(--spacing-md);
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            position: relative;
-            background-color: #ffffff;
-            /* 确保边界清晰 */
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        /* 优化价格标签 */
-        .product-price {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary-color);
-            /* 提高文字渲染质量 */
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
-
-        /* 优化折扣标签 */
-        .discount-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: var(--brand-error);
-            color: white;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 4px 8px;
-            border-radius: 6px;
-            z-index: 2;
-            /* 使用更清晰的阴影 */
-            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.25);
-            /* 确保文字清晰 */
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            /* 使用更清晰的边框 */
-            border: 1px solid rgba(239, 68, 68, 0.8);
-        }
-
-        /* 修复无限滚动容器的渲染问题 */
-        .product-grid {
-            display: flex;
-            flex-wrap: nowrap;
-            overflow: hidden;
-            gap: 16px;
-            padding: 10px 0;
-            position: relative;
-            width: max-content;
-            animation: productScroll 40s linear infinite; /* 稍微减慢滚动速度 */
-            animation-play-state: running;
-            /* 优化滚动性能和渲染质量 */
-            transform: translateZ(0);
-            backface-visibility: hidden;
-            will-change: transform;
-            /* 确保子元素不会模糊 */
-            transform-style: flat;
-        }
-
-        /* 调整无限滚动动画 */
-        @keyframes productScroll {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(calc(-220px * 4 - 16px * 4));
-            }
-        }
-
-        /* 确保产品卡片在滚动时保持清晰 */
-        .product-grid > .product-card {
-            /* 确保GPU加速，防止在滚动时模糊 */
-            transform: translateZ(0);
-            will-change: transform;
-            backface-visibility: hidden;
-            /* 确保边缘清晰 */
-            border: 1px solid rgba(0, 0, 0, 0.08);
-        }
-
-        /* 高脚沙发区域也应用无限滚动效果 */
-        .product-category:last-child .scroll-button {
-            display: none; /* 隐藏最后一个产品类别的滚动按钮 */
-        }
-
-        /* 高脚沙发区域复制现有产品卡片并添加到末尾 */
-    </style>
+    </script>
 </head>
-<body>
-    <!-- 搜索栏 -->
-    <div class="search-wrapper">
-        <div class="search-container" id="searchContainer">
-            <!-- <div class="search-top">
-                <h2 class="search-title">家具展厅</h2>
-                <div class="filters-button">
-                    <i class="fas fa-sliders-h"></i>
-                    <span>筛选</span>
-                </div>
-            </div> -->
-            <div class="search-bar">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" class="search-input" placeholder="搜索沙发、材质或风格...">
-                <div class="voice-search">
-                    <i class="fas fa-microphone"></i>
-                </div>
+<style>
+         .mcgina-text-banner {
+            text-align: center;
+            padding: 6px 20px; /* 减少上下内边距，从15px改为6px */
+            margin-bottom: 10px; /* 减少下边距，从20px改为10px */
+            font-size: 16px; /* 略微减小字体大小，从18px改为16px */
+            line-height: 1.5; /* 减小行高，从1.6改为1.5 */
+            color: #2A9D8F;
+            border-bottom: 1px solid rgba(42, 157, 143, 0.2);
+        }
+        @media (max-width: 768px) {
+            .mcgina-text-banner {
+                font-size: 14px; /* 再次减小移动端字体大小，从16px改为15px */
+                padding: 5px 15px; /* 进一步减少移动端内边距，从12px 15px改为5px 15px */
+            }
+            
+            .mcgina-brand-name {
+                font-size: 16px; /* 减小移动端字体大小，从18px改为16px */
+            }
+        }
+        .mcgina-brand-name {
+            font-weight: 700;
+            font-size: 18px; /* 减小字体大小，从20px改为18px */
+        }
+        
+        .mcgina-text-slogan {
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            .mcgina-text-banner {
+                font-size: 14px; /* 再次减小移动端字体大小，从16px改为15px */
+                padding: 5px 15px; /* 进一步减少移动端内边距，从12px 15px改为5px 15px */
+            }
+            
+            .mcgina-brand-name {
+                font-size: 16px; /* 减小移动端字体大小，从18px改为16px */
+            }
+        }
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 50px;
+            padding: 2px 12px; /* 减少内边距，从8px 15px改为5px 12px */
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(42, 157, 143, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+</style>
+<body class="bg-gray-50 font-sans text-gray-800">
+    <!-- 页面容器 -->
+    <div class="max-w-screen-lg mx-auto px-4">
+        <!-- 搜索框 -->
+        <div class="search-container mt-4 mb-2">
+            <div class="search-box ">
+                <i class="fas fa-search search-icon text-primary ml-4"></i>
+                <input type="text" class="search-input w-full py-2 px-3 outline-none text-sm" placeholder="搜索您喜欢的家具...">
+                <!-- <button class="search-button">搜索</button> -->
             </div>
-   
         </div>
-    </div>
-    
-    <!-- 全景视频展示 -->
-    <div class="panorama-container">
-        <video class="panorama-video" autoplay loop muted playsinline>
-            <!-- 替换为本地视频 -->
-            <source src="../vedio/2月16日.mp4" type="video/mp4">
-            <!-- 添加备用视频源 -->
-            <source src="../vedio/dc26600c-24f9-4aec-8c26-01bb237fa3eb.mp4" type="video/mp4">
-            <!-- 兼容提示 -->
-            您的浏览器不支持HTML5视频播放。
-        </video>
-        <div class="panorama-overlay">
-            <h1 class="brand-tagline">精致家居体验馆</h1>
-            <p class="brand-subtitle">家逸沙发，为您精选世界顶级面料与工艺，打造舒适优雅的居家环境</p>
+        
+
+        
+        <!-- 麦吉纳品牌文字宣传 -->
+        <div class="mcgina-text-banner">
+            <span class="mcgina-brand-name"></span><span class="mcgina-text-slogan">以“舒适”为基，科技为础，智能契合时代之美</span>
         </div>
-    </div>
-    
-    <!-- 悬浮导航栏 -->
-    <div class="nav-container">
-        <!-- <h2 class="section-heading">沙发分类</h2> -->
-        <div class="category-grid-container">
-            <div class="category-grid" id="categoryGrid">
-                <!-- 原始分类项 -->
-                <div class="category-item btn-press" data-category="functional">
-                    <div class="category-icon">
-                        <img src="../logo/fun.jpg" alt="功能沙发">
+        
+        
+        <!-- 轮播图部分 -->
+        <div class="relative w-full pb-[100%] rounded-lg overflow-hidden mb-4" id="banner-carousel">
+            <div class="absolute inset-0">
+                <!-- 轮播图内容 -->
+                <div class="carousel-slides h-full w-full">
+                    <div class="slide absolute inset-0 opacity-100 transition-opacity duration-500">
+                        <img src="https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="现代简约客厅" class="w-full h-full object-cover">
+                        <div class="absolute bottom-10 left-6 right-6 text-white z-10">
+                            <h3 class="text-2xl font-bold mb-1">现代简约风格家具</h3>
+                            <p class="text-sm opacity-90">简约不简单，打造高品质生活空间</p>
+                        </div>
                     </div>
-                    <span class="category-name">功能沙发</span>
-                </div>
-                
-                <div class="category-item btn-press" data-category="leather">
-                    <div class="category-icon">
-                        <img src="../logo/zhen.png" alt="真皮沙发">
+                    <div class="slide absolute inset-0 opacity-0 transition-opacity duration-500">
+                        <img src="https://images.pexels.com/photos/1248583/pexels-photo-1248583.jpeg?auto=compress&cs=tinysrgb&w=1500&h=1000&dpr=1" alt="北欧风格卧室" class="w-full h-full object-cover">
+                        <div class="absolute bottom-10 left-6 right-6 text-white z-10">
+                            <h3 class="text-2xl font-bold mb-1">北欧轻奢系列</h3>
+                            <p class="text-sm opacity-90">温馨舒适，尽显品质生活</p>
+                        </div>
                     </div>
-                    <span class="category-name">真皮沙发</span>
-                </div>
-                
-                <div class="category-item btn-press" data-category="fabric">
-                    <div class="category-icon">
-                        <img src="../logo/buyi.png" alt="布艺沙发">
+                    <div class="slide absolute inset-0 opacity-0 transition-opacity duration-500">
+                        <img src="https://images.pexels.com/photos/4352247/pexels-photo-4352247.jpeg?auto=compress&cs=tinysrgb&w=1500&h=1000&dpr=1" alt="高端定制家具" class="w-full h-full object-cover">
+                        <div class="absolute bottom-10 left-6 right-6 text-white z-10">
+                            <h3 class="text-2xl font-bold mb-1">私人定制系列</h3>
+                            <p class="text-sm opacity-90">专属于你的家具定制服务</p>
+                        </div>
                     </div>
-                    <span class="category-name">布艺沙发</span>
-                </div>
-                
-                <div class="category-item btn-press" data-category="compressed">
-                    <div class="category-icon">
-                        <img src="../logo/com.png" alt="压缩沙发">
-                    </div>
-                    <span class="category-name">压缩沙发</span>
-                </div>
-                
-                <div class="category-item btn-press" data-category="simple">
-                    <div class="category-icon">
-                        <img src="../logo/tejia.jpg" alt="简约沙发">
-                    </div>
-                    <span class="category-name">简约沙发</span>
-                </div>
-                
-                <div class="category-item btn-press" data-category="sale">
-                    <div class="category-icon">
-                        <img src="../logo/tejia.jpg" alt="特价沙发">
-                    </div>
-                    <span class="category-name">特价沙发</span>
-                </div>
-                
-                <!-- 新增项目：为无限滚动准备的复制项目 -->
-                <div class="category-item btn-press" data-category="bed">
-                    <div class="category-icon">
-                        <img src="../logo/fun.jpg" alt="沙发床">
-                    </div>
-                    <span class="category-name">沙发床</span>
-                </div>
-                
-                <div class="category-item btn-press" data-category="corner">
-                    <div class="category-icon">
-                        <img src="../logo/zhen.png" alt="转角沙发">
-                    </div>
-                    <span class="category-name">转角沙发</span>
-                </div>
-                
-                <div class="category-item btn-press" data-category="imported">
-                    <div class="category-icon">
-                        <img src="../logo/buyi.png" alt="进口沙发">
-                    </div>
-                    <span class="category-name">进口沙发</span>
-                </div>
-                
-                <div class="category-item btn-press" data-category="luxury">
-                    <div class="category-icon">
-                        <img src="../logo/com.png" alt="轻奢沙发">
-                    </div>
-                    <span class="category-name">轻奢沙发</span>
-                </div>
-                
-                <div class="category-item btn-press" data-category="modern">
-                    <div class="category-icon">
-                        <img src="../logo/tejia.jpg" alt="现代沙发">
-                    </div>
-                    <span class="category-name">现代沙发</span>
-                </div>
-                
-                <div class="category-item btn-press" data-category="nordic">
-                    <div class="category-icon">
-                        <img src="../logo/tejia.jpg" alt="北欧沙发">
-                    </div>
-                    <span class="category-name">北欧沙发</span>
-                </div>
-                
-                <!-- 再次复制原始项目以保证无限滚动效果 -->
-                <div class="category-item btn-press" data-category="functional">
-                    <div class="category-icon">
-                        <img src="../logo/fun.jpg" alt="功能沙发">
-                    </div>
-                    <span class="category-name">功能沙发</span>
-                </div>
-                
-                <div class="category-item btn-press" data-category="leather">
-                    <div class="category-icon">
-                        <img src="../logo/zhen.png" alt="真皮沙发">
-                    </div>
-                    <span class="category-name">真皮沙发</span>
-                </div>
-                
-                <div class="category-item btn-press" data-category="fabric">
-                    <div class="category-icon">
-                        <img src="../logo/buyi.png" alt="布艺沙发">
-                    </div>
-                    <span class="category-name">布艺沙发</span>
-                </div>
-                
-                <div class="category-item btn-press" data-category="compressed">
-                    <div class="category-icon">
-                        <img src="../logo/com.png" alt="压缩沙发">
-                    </div>
-                    <span class="category-name">压缩沙发</span>
-                </div>
-                
-                <div class="category-item btn-press" data-category="simple">
-                    <div class="category-icon">
-                        <img src="../logo/tejia.jpg" alt="简约沙发">
-                    </div>
-                    <span class="category-name">简约沙发</span>
-                </div>
-                
-                <div class="category-item btn-press" data-category="sale">
-                    <div class="category-icon">
-                        <img src="../logo/tejia.jpg" alt="特价沙发">
-                    </div>
-                    <span class="category-name">特价沙发</span>
                 </div>
             </div>
             
-            <!-- 删除滚动点指示器，不再需要因为使用CSS自动滚动 -->
+            <!-- 轮播图指示器 -->
+            <div class="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10" id="carousel-indicators">
+                <button class="w-2 h-2 rounded-full bg-white opacity-100 transition-opacity duration-300"></button>
+                <button class="w-2 h-2 rounded-full bg-white opacity-50 transition-opacity duration-300"></button>
+                <button class="w-2 h-2 rounded-full bg-white opacity-50 transition-opacity duration-300"></button>
+            </div>
+            
+            <!-- 渐变遮罩 -->
+            <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/60 to-transparent z-[2]"></div>
         </div>
-    </div>
-    
-    <!-- 促销横幅 -->
-    <!-- <div class="sales-banner">
-        <img src="https://assets.wfcdn.com/im/17243893/resize-h200-w600%5Ecompr-r85/2464/246474023/webp/St.+Patrick%27s+Day+Picks.webp" alt="促销活动">
-    </div> -->
-    
-    <!-- 个性化推荐 -->
-    <!-- <h2 class="section-heading">Picks Just for You</h2>
-    <div class="recommendation-tabs">
-        <div class="recommendation-tab active">Beds</div>
-        <div class="recommendation-tab">Sofas</div>
-        <div class="recommendation-tab">Sheets & Pillowcases</div>
-        <div class="recommendation-tab">Water</div>
-    </div> -->
-    
-    <!-- 价格筛选区域 -->
-    <!-- <div class="filter-section">
-        <div class="filter-title">价格区间</div>
-        <div class="price-range">
-            <input type="number" class="price-input" placeholder="最低价格">
-            <span class="price-divider">至</span>
-            <input type="number" class="price-input" placeholder="最高价格">
+        
+        <!-- 高定沙发区域 -->
+        <div class="mb-6">
+            <div class="flex justify-between items-center bg-primary/5 rounded-xl p-3 mb-3 cursor-pointer" id="toggle-premium-sofa">
+                <div class="flex items-center">
+                    <i class="fas fa-bolt text-primary mr-2"></i>
+                    <h2 class="text-lg font-semibold">高定沙发</h2>
+                </div>
+                <div class="text-primary">
+                    <i class="fas fa-arrow-circle-right"></i>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-1 aspect-square">
+                <a href="#" class="relative overflow-hidden rounded">
+                    <img src="../images/308_LX_04.png" alt="北欧风格真皮沙发" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                </a>
+                <a href="#" class="relative overflow-hidden rounded">
+                    <img src="../images/308_main.png" alt="现代布艺沙发" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                </a>
+                <a href="#" class="relative overflow-hidden rounded">
+                    <img src="../images/L-340B.jpg" alt="智能按摩功能沙发" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                </a>
+                <a href="#" class="relative overflow-hidden rounded">
+                    <img src="../images/935_FA3071_1.png" alt="轻奢转角沙发" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                </a>
+            </div>
+        </div>
+        
+        <!-- 小户型必选区域 -->
+        <div class="mb-6">
+            <div class="flex justify-between items-center bg-primary/5 rounded-xl p-3 mb-3 cursor-pointer" id="toggle-small-apartment">
+                <div class="flex items-center">
+                    <i class="fas fa-star text-primary mr-2"></i>
+                    <h2 class="text-lg font-semibold">小户型必选</h2>
+                </div>
+                <div class="text-primary">
+                    <i class="fas fa-arrow-circle-right"></i>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-1 aspect-square">
+                <a href="#" class="relative overflow-hidden rounded">
+                    <img src="https://images.unsplash.com/photo-1519947486511-46149fa0a254?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80" alt="北欧简约餐椅" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                </a>
+                <a href="#" class="relative overflow-hidden rounded">
+                    <img src="https://images.unsplash.com/photo-1530603907829-762c68074412?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80" alt="日式实木茶几" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                </a>
+                <a href="#" class="relative overflow-hidden rounded">
+                    <img src="https://images.unsplash.com/photo-1540932239986-30128078f3c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80" alt="现代轻奢台灯" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                </a>
+                <a href="#" class="relative overflow-hidden rounded">
+                    <img src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80" alt="工业风书架" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                </a>
+            </div>
+        </div>
+        
+        <!-- 优品上新展示区 - 高端设计模块 -->
+        <div class="mb-6">
+            <!-- 精致标题区域 -->
+            <div class="relative mb-4">
+                <div class="flex items-center justify-between py-2 px-3 bg-gradient-to-r from-primary/10 to-transparent rounded-lg">
+                    <div class="flex items-center">
+                        <div class="w-1 h-6 bg-primary rounded-full mr-2"></div>
+                        <h2 class="text-xl font-bold text-gray-800 tracking-wide relative">
+                            <span class="relative z-10">优品上新</span>
+                            <span class="absolute -bottom-1 left-0 w-full h-2 bg-primary/20 -z-10 rounded"></span>
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 高端产品展示区 - 竖屏海报 -->
+            <div class="w-full mb-2">
+                <div class="relative overflow-hidden rounded-lg shadow-sm">
+                    <div class="aspect-square w-full">
+                        <img src="../images/image119096.jpg" 
+                             alt="轻奢现代沙发" 
+                             class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 智能床区域 -->
+        <div class="mb-6">
+            <a href="#" class="block">
+                <div class="flex justify-between items-center bg-primary/5 rounded-xl p-3 mb-3">
+                    <div class="flex items-center">
+                        <i class="fas fa-cogs text-primary mr-2"></i>
+                        <h2 class="text-lg font-semibold">智能床</h2>
+                    </div>
+                    <div class="text-primary">
+                        <i class="fas fa-arrow-circle-right"></i>
+                    </div>
+                </div>
+            </a>
+            
+            <div class="grid grid-cols-2 gap-1 aspect-square">
+                <a href="#" class="relative overflow-hidden rounded">
+                    <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" alt="多功能休闲床" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                </a>
+                <a href="#" class="relative overflow-hidden rounded">
+                    <img src="https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" alt="电动按摩床" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                </a>
+                <a href="#" class="relative overflow-hidden rounded">
+                    <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" alt="智能可调节床" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                </a>
+                <a href="#" class="relative overflow-hidden rounded">
+                    <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80" alt="变形多用途床" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                </a>
+            </div>
+        </div>
+        
+        <!-- 真皮沙发区域 -->
+        <!-- <div class="mb-6">
+            <a href="#" class="block">
+                <div class="flex justify-between items-center bg-primary/5 rounded-xl p-3 mb-3">
+                    <div class="flex items-center">
+                        <i class="fas fa-star text-primary mr-2"></i>
+                        <h2 class="text-lg font-semibold">真皮沙发</h2>
+                    </div>
+                    <div class="text-primary">
+                        <i class="fas fa-arrow-circle-right"></i>
+                    </div>
+                </div>
+            </a>
+            
+            <div class="grid grid-cols-2 gap-1 aspect-square">
+                <a href="#" class="relative overflow-hidden rounded">
+                    <img src="https://images.pexels.com/photos/276583/pexels-photo-276583.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="北欧风格真皮沙发" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                </a>
+                <a href="#" class="relative overflow-hidden rounded">
+                    <img src="https://images.pexels.com/photos/1571463/pexels-photo-1571463.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="轻奢真皮沙发" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                </a>
+                <a href="#" class="relative overflow-hidden rounded">
+                    <img src="https://images.pexels.com/photos/6489127/pexels-photo-6489127.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="现代真皮沙发" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                </a>
+                <a href="#" class="relative overflow-hidden rounded">
+                    <img src="https://images.pexels.com/photos/4846461/pexels-photo-4846461.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="工业风真皮沙发" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                </a>
+            </div>
         </div> -->
         
-        <!-- <div class="filter-title">快速筛选</div>
-        <div class="filter-tags">
-            <div class="filter-tag active btn-press">全部价格</div>
-            <div class="filter-tag btn-press">¥0-1000</div>
-            <div class="filter-tag btn-press">¥1000-3000</div>
-            <div class="filter-tag btn-press">¥3000-5000</div>
-            <div class="filter-tag btn-press">¥5000以上</div>
+        <!-- 沙发选购指南 -->
+        <div class="bg-white rounded-lg shadow-sm p-5 mb-6">
+            <div class="mb-4">
+                <h2 class="flex items-center text-xl font-semibold">
+                    <i class="fas fa-compass text-primary mr-2"></i>
+                    沙发选购指南
+                </h2>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xl">
+                        <i class="fas fa-ruler-combined"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold mb-2">如何测量空间?</h3>
+                        <p class="text-gray-600 text-sm mb-2">在选购沙发前，请确保测量您的空间尺寸，包括门宽、走廊和电梯尺寸，以确保沙发能顺利送达您的家中。</p>
+                        <a href="#" class="text-primary text-sm flex items-center hover:underline">
+                            查看详细指南
+                            <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="flex gap-4">
+                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xl">
+                        <i class="fas fa-couch"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold mb-2">材质选择指南</h3>
+                        <p class="text-gray-600 text-sm mb-2">不同材质的沙发有不同的特点和保养方法。皮质耐用但价格较高，布艺舒适但需要定期清洁。</p>
+                        <a href="#" class="text-primary text-sm flex items-center hover:underline">
+                            了解更多
+                            <i class="fas fa-chevron-right ml-1 text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div> -->
+        
+        <!-- 定制推荐 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden  md:mb-6">
+            <div class="grid md:grid-cols-2">
+                <div class="h-48 md:h-full relative">
+                    <img src="https://images.pexels.com/photos/1350789/pexels-photo-1350789.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="定制沙发服务" class="w-full h-full object-cover">
+                </div>
+                <div class="p-5">
+                    <h2 class="text-xl font-semibold mb-2">为您的空间打造专属沙发</h2>
+                    <p class="text-gray-600 text-sm mb-4">无法找到完美匹配的沙发? 我们提供专业定制服务，从尺寸、材质到颜色，都可以按照您的需求定制。</p>
+                    
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                <i class="fas fa-ruler"></i>
+                            </div>
+                            <span class="text-sm">尺寸定制</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                <i class="fas fa-palette"></i>
+                            </div>
+                            <span class="text-sm">颜色选择</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                <i class="fas fa-cubes"></i>
+                            </div>
+                            <span class="text-sm">材质搭配</span>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                <i class="fas fa-pencil-alt"></i>
+                            </div>
+                            <span class="text-sm">细节定制</span>
+                        </div>
+                    </div>
+                    
+                    <button class="bg-primary text-white py-2 px-4 rounded-md flex items-center justify-center w-full md:w-auto">
+                        预约设计顾问
+                        <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+            </div>
+        </div>
+    </div>
     
-    <!-- 产品展示区域 -->
-    <div class="product-section">
-        <!-- 功能沙发区域 -->
-        <div class="product-category">
-            <div class="section-header">
-                <h2 class="section-title">功能沙发</h2>
-                <a href="#" class="view-all">查看全部 <i class="fas fa-chevron-right"></i></a>
-            </div>
-            
-            <!-- 移除滚动按钮 -->
-            
-            <div class="product-grid">
-                <!-- 原有产品卡片 -->
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=300&auto=format&fit=crop" alt="现代多功能沙发" class="product-image">
-                        <div class="discount-badge">-20%</div>
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
+    <!-- 麦吉纳品牌介绍区域 -->
+    <div class="max-w-screen-lg mx-auto px-4 mb-20">
+        <div class="bg-white rounded-lg overflow-hidden shadow-sm">
+            <div class="p-6 bg-gradient-to-br from-primary/5 to-gray-50">
+                <div class="flex flex-col items-center text-center mb-5">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">麦吉纳家居</h2>
+                    <div class="w-16 h-0.5 bg-primary mb-4"></div>
+                    <p class="text-gray-600 leading-relaxed mb-5">
+                        以“舒适”为基，科技为础，<br>
+                        智能契合时代之美
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-4 mb-5">
+                    <div class="bg-white p-3 rounded-lg shadow-sm text-center">
+                        <div class="text-primary mb-1">
+                            <i class="fas fa-couch text-xl"></i>
+                        </div>
+                        <p class="text-sm font-medium text-gray-800">年产2万套</p>
+                        <p class="text-xs text-gray-500">沙发</p>
                     </div>
-                    <div class="product-info">
-                        <h3 class="product-title">现代多功能沙发 - 可调节靠背</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥3,599</div>
-                            <div class="product-original-price">¥4,499</div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm text-center">
+                        <div class="text-primary mb-1">
+                            <i class="fas fa-industry text-xl"></i>
                         </div>
-                        <div class="product-tags">
-                            <span class="product-tag">多功能</span>
-                            <span class="product-tag hot">热销</span>
+                        <p class="text-sm font-medium text-gray-800">40年</p>
+                        <p class="text-xs text-gray-500">工厂历史</p>
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm text-center">
+                        <div class="text-primary mb-1">
+                            <i class="fas fa-lightbulb text-xl"></i>
                         </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
+                        <p class="text-sm font-medium text-gray-800">300+</p>
+                        <p class="text-xs text-gray-500">设计专利</p>
                     </div>
                 </div>
                 
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=300&auto=format&fit=crop" alt="电动功能沙发" class="product-image">
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">电动功能沙发 - 一键躺卧模式</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥4,299</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">电动</span>
-                            <span class="product-tag new">新品</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
+                <!-- <div class="bg-primary/10 p-4 rounded-lg">
+                    <p class="text-sm text-gray-700 leading-relaxed">
+                        麦吉纳家居致力于打造舒适、智能、环保的现代家居生活方式，让每个人都能轻松拥有自己想要的美好家居生活。
+                    </p>
+                </div> -->
                 
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=300&auto=format&fit=crop" alt="多功能按摩沙发" class="product-image">
-                        <div class="discount-badge">新品</div>
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">多功能按摩沙发 - 智能控制</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥5,699</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">按摩</span>
-                            <span class="product-tag new">智能</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-                
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=300&auto=format&fit=crop" alt="功能转角沙发" class="product-image">
-                        <div class="discount-badge">-15%</div>
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">功能转角沙发 - 多人座位</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥6,299</div>
-                            <div class="product-original-price">¥7,499</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">转角</span>
-                            <span class="product-tag hot">热销</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-                
-                <!-- 复制之前的产品卡片以实现无限滚动效果 -->
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=300&auto=format&fit=crop" alt="现代多功能沙发" class="product-image">
-                        <div class="discount-badge">-20%</div>
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">现代多功能沙发 - 可调节靠背</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥3,599</div>
-                            <div class="product-original-price">¥4,499</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">多功能</span>
-                            <span class="product-tag hot">热销</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-                
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=300&auto=format&fit=crop" alt="电动功能沙发" class="product-image">
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">电动功能沙发 - 一键躺卧模式</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥4,299</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">电动</span>
-                            <span class="product-tag new">新品</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-                
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=300&auto=format&fit=crop" alt="多功能按摩沙发" class="product-image">
-                        <div class="discount-badge">新品</div>
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">多功能按摩沙发 - 智能控制</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥5,699</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">按摩</span>
-                            <span class="product-tag new">智能</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-                
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=300&auto=format&fit=crop" alt="功能转角沙发" class="product-image">
-                        <div class="discount-badge">-15%</div>
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">功能转角沙发 - 多人座位</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥6,299</div>
-                            <div class="product-original-price">¥7,499</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">转角</span>
-                            <span class="product-tag hot">热销</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 拉床沙发区域 -->
-        <div class="product-category">
-            <div class="section-header">
-                <h2 class="section-title">拉床沙发</h2>
-                <a href="#" class="view-all">查看全部 <i class="fas fa-chevron-right"></i></a>
-            </div>
-            
-            <!-- 移除滚动按钮 -->
-            
-            <div class="product-grid">
-                <!-- 原有产品卡片 -->
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1567016432779-094069958ea5?w=300&auto=format&fit=crop" alt="北欧风拉床沙发" class="product-image">
-                        <div class="discount-badge">-15%</div>
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">北欧风拉床沙发 - 双人可折叠</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥2,799</div>
-                            <div class="product-original-price">¥3,299</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">可折叠</span>
-                            <span class="product-tag">双人</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-                
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=300&auto=format&fit=crop" alt="简约布艺沙发床" class="product-image">
-                        <div class="discount-badge">-25%</div>
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">简约布艺沙发床 - 多功能收纳</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥1,999</div>
-                            <div class="product-original-price">¥2,699</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">收纳</span>
-                            <span class="product-tag hot">特价</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-                
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1567016432779-094069958ea5?w=300&auto=format&fit=crop" alt="日式简约拉床" class="product-image">
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">日式简约拉床 - 榻榻米风格</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥3,199</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">日式</span>
-                            <span class="product-tag new">新品</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-                
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=300&auto=format&fit=crop" alt="儿童拉床沙发" class="product-image">
-                        <div class="discount-badge">-10%</div>
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">儿童拉床沙发 - 卡通图案</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥1,599</div>
-                            <div class="product-original-price">¥1,799</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">儿童</span>
-                            <span class="product-tag hot">可爱</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-                
-                <!-- 复制产品卡片以实现无限滚动效果 -->
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1567016432779-094069958ea5?w=300&auto=format&fit=crop" alt="北欧风拉床沙发" class="product-image">
-                        <div class="discount-badge">-15%</div>
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">北欧风拉床沙发 - 双人可折叠</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥2,799</div>
-                            <div class="product-original-price">¥3,299</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">可折叠</span>
-                            <span class="product-tag">双人</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-                
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=300&auto=format&fit=crop" alt="简约布艺沙发床" class="product-image">
-                        <div class="discount-badge">-25%</div>
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">简约布艺沙发床 - 多功能收纳</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥1,999</div>
-                            <div class="product-original-price">¥2,699</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">收纳</span>
-                            <span class="product-tag hot">特价</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-                
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1567016432779-094069958ea5?w=300&auto=format&fit=crop" alt="日式简约拉床" class="product-image">
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">日式简约拉床 - 榻榻米风格</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥3,199</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">日式</span>
-                            <span class="product-tag new">新品</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-                
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1540574163026-643ea20ade25?w=300&auto=format&fit=crop" alt="儿童拉床沙发" class="product-image">
-                        <div class="discount-badge">-10%</div>
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">儿童拉床沙发 - 卡通图案</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥1,599</div>
-                            <div class="product-original-price">¥1,799</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">儿童</span>
-                            <span class="product-tag hot">可爱</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 高脚沙发区域 -->
-        <div class="product-category">
-            <div class="section-header">
-                <h2 class="section-title">高脚沙发</h2>
-                <a href="#" class="view-all">查看全部 <i class="fas fa-chevron-right"></i></a>
-            </div>
-            
-            <!-- 移除滚动按钮 -->
-            
-            <div class="product-grid">
-                <!-- 原有产品卡片 -->
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1506377295352-e3154d43ea9e?w=300&auto=format&fit=crop" alt="北欧风高脚沙发" class="product-image">
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">北欧风高脚沙发 - 实木腿</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥2,299</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">实木</span>
-                            <span class="product-tag">耐用</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-                
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1519947486511-46149fa0a254?w=300&auto=format&fit=crop" alt="现代轻奢高脚沙发" class="product-image">
-                        <div class="discount-badge">限量版</div>
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">现代轻奢高脚沙发 - 金属电镀脚</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥3,199</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">轻奢</span>
-                            <span class="product-tag new">限量</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-                
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1506377295352-e3154d43ea9e?w=300&auto=format&fit=crop" alt="轻奢布艺高脚沙发" class="product-image">
-                        <div class="discount-badge">-30%</div>
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">轻奢布艺高脚沙发 - 羽绒填充</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥4,199</div>
-                            <div class="product-original-price">¥5,999</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">舒适</span>
-                            <span class="product-tag hot">羽绒</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-                
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1519947486511-46149fa0a254?w=300&auto=format&fit=crop" alt="工业风高脚沙发" class="product-image">
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">工业风高脚沙发 - 铁艺支架</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥2,699</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">工业风</span>
-                            <span class="product-tag new">铁艺</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-                
-                <!-- 复制产品卡片以实现无限滚动效果 -->
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1506377295352-e3154d43ea9e?w=300&auto=format&fit=crop" alt="北欧风高脚沙发" class="product-image">
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">北欧风高脚沙发 - 实木腿</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥2,299</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">实木</span>
-                            <span class="product-tag">耐用</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-                
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1519947486511-46149fa0a254?w=300&auto=format&fit=crop" alt="现代轻奢高脚沙发" class="product-image">
-                        <div class="discount-badge">限量版</div>
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">现代轻奢高脚沙发 - 金属电镀脚</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥3,199</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">轻奢</span>
-                            <span class="product-tag new">限量</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-                
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1506377295352-e3154d43ea9e?w=300&auto=format&fit=crop" alt="轻奢布艺高脚沙发" class="product-image">
-                        <div class="discount-badge">-30%</div>
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">轻奢布艺高脚沙发 - 羽绒填充</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥4,199</div>
-                            <div class="product-original-price">¥5,999</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">舒适</span>
-                            <span class="product-tag hot">羽绒</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
-                
-                <div class="product-card btn-press">
-                    <div class="product-image-wrapper">
-                        <img src="https://images.unsplash.com/photo-1519947486511-46149fa0a254?w=300&auto=format&fit=crop" alt="工业风高脚沙发" class="product-image">
-                        <div class="heart-icon"><i class="far fa-heart"></i></div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">工业风高脚沙发 - 铁艺支架</h3>
-                        <div class="product-price-container">
-                            <div class="product-price">¥2,699</div>
-                        </div>
-                        <div class="product-tags">
-                            <span class="product-tag">工业风</span>
-                            <span class="product-tag new">铁艺</span>
-                        </div>
-                        <div class="add-to-cart"><i class="fas fa-shopping-cart"></i></div>
-                    </div>
-                </div>
+                <!-- <div class="mt-5 text-center">
+                    <a href="#" class="inline-block px-6 py-2 bg-primary text-white rounded-full text-sm hover:bg-primary/90 transition duration-300">
+                        立即探索 <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div> -->
             </div>
         </div>
     </div>
     
     <!-- 底部导航栏 -->
-    <div class="tab-bar">
-        <a href="home.html" class="tab-item">
-            <i class="fas fa-home tab-icon tab-inactive"></i>
-            <span class="tab-label tab-inactive">首页</span>
+    <div class="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.05)] h-[70px] flex items-center justify-around rounded-t-3xl border-t border-primary/10 z-50">
+        <a href="#" class="flex flex-col items-center justify-center w-1/5">
+            <i class="fas fa-home text-lg mb-1 text-gray-600"></i>
+            <span class="text-xs text-gray-600">首页</span>
         </a>
-        <a href="category.html" class="tab-item">
-            <i class="fas fa-th-large tab-icon tab-active"></i>
-            <span class="tab-label tab-active">分类</span>
+        <a href="#" class="flex flex-col items-center justify-center w-1/5">
+            <i class="fas fa-store text-lg mb-1 text-primary"></i>
+            <span class="text-xs text-primary">展厅</span>
         </a>
-        <a href="cart.html" class="tab-item">
-            <i class="fas fa-shopping-cart tab-icon tab-inactive"></i>
-            <span class="tab-label tab-inactive">购物车</span>
+        <a href="#" class="flex flex-col items-center justify-center w-1/5">
+            <i class="fas fa-magic text-lg mb-1 text-gray-600"></i>
+            <span class="text-xs text-gray-600">定制</span>
         </a>
-        <a href="profile.html" class="tab-item">
-            <i class="fas fa-user tab-icon tab-inactive"></i>
-            <span class="tab-label tab-inactive">我的</span>
+        <a href="#" class="flex flex-col items-center justify-center w-1/5 relative">
+            <i class="fas fa-shopping-cart text-lg mb-1 text-gray-600"></i>
+            <span id="cart-badge" class="absolute top-[-8px] right-[calc(50%-16px)] bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center opacity-0 scale-0 transition-all duration-300"></span>
+            <span class="text-xs text-gray-600">购物车</span>
+        </a>
+        <a href="#" class="flex flex-col items-center justify-center w-1/5">
+            <i class="fas fa-user text-lg mb-1 text-gray-600"></i>
+            <span class="text-xs text-gray-600">我的</span>
         </a>
     </div>
-
-    <!-- 引入jQuery库 -->
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-
-    <script>
-        // 搜索框已经是平铺式设计，不需要额外的吸顶效果逻辑
-        // 仅保留其他功能
-
-        // 快速筛选标签点击效果
-        const filterPills = document.querySelectorAll('.filter-pill');
-        filterPills.forEach(pill => {
-            pill.addEventListener('click', function() {
-                // 移除所有活跃状态
-                filterPills.forEach(p => p.classList.remove('active'));
-                // 添加当前活跃状态
-                this.classList.add('active');
-                
-                // 在此处可以添加筛选逻辑
-                const filterText = this.textContent.trim();
-                console.log('筛选条件:', filterText);
-                
-                // 假装在筛选 - 添加一些视觉反馈
-                const productCards = document.querySelectorAll('.product-card');
-                if (productCards.length) {
-                    productCards.forEach(card => {
-                        card.style.opacity = '0.5';
-                        setTimeout(() => {
-                            card.style.opacity = '1';
-                        }, 300);
-                    });
-                }
-            });
-        });
-
-        // 语音搜索按钮效果
-        const voiceButton = document.querySelector('.voice-search');
-        if (voiceButton) {
-            voiceButton.addEventListener('click', function() {
-                // 这里可以添加语音识别API调用
-                alert('语音搜索功能正在开发中...');
-            });
-        }
-
-        // 筛选按钮效果
-        const filtersButton = document.querySelector('.filters-button');
-        if (filtersButton) {
-            filtersButton.addEventListener('click', function() {
-                // 这里可以弹出筛选面板
-                alert('更多筛选选项将在此显示');
-            });
-        }
+    
+    <!-- 浮动客服按钮 -->
+    <a href="#" id="customer-service-btn" class="fixed right-4 bottom-20 w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center z-50 transition-all duration-300 hover:shadow-lg">
+        <div class="relative">
+            <i class="fas fa-headset text-primary text-xl"></i>
+            <span class="absolute top-[-3px] right-[-3px] w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+        </div>
+    </a>
+    
+    <!-- 模态框 -->
+    <div id="product-modal" class="fixed inset-0 z-[1000] hidden">
+        <!-- 背景遮罩 -->
+        <div id="modal-backdrop" class="absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-300"></div>
         
-        // 让分类网格可以滚动
-        document.addEventListener('DOMContentLoaded', function() {
-            const categoryGrid = document.getElementById('categoryGrid');
+        <!-- 模态框内容 -->
+        <div id="modal-content" class="absolute left-0 right-0 bottom-0 h-[83vh] bg-white/98 rounded-t-[20px] shadow-[0_-4px_20px_rgba(0,0,0,0.15)] overflow-y-auto transform translate-y-full transition-transform duration-400">
+            <!-- 模态框头部 -->
+            <div class="relative flex justify-between items-center p-4 border-b border-gray-100">
+                <!-- 拖动条 -->
+                <div class="absolute top-[-10px] left-1/2 transform -translate-x-1/2 w-10 h-[5px] bg-gray-300 rounded-full"></div>
+                
+                <h3 id="modal-title" class="text-xl font-semibold text-primary">产品展示</h3>
+                
+                <button id="close-modal" class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center transition-all duration-300 hover:bg-primary hover:text-white hover:rotate-90">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
             
-            // 为分类项添加点击事件
-            const categoryItems = document.querySelectorAll('.category-item');
-            categoryItems.forEach(item => {
-                item.addEventListener('click', function(event) {
-                    const category = this.getAttribute('data-category');
-                    console.log('选择分类:', category);
-                    
-                    // 添加点击反馈效果
-                    addRippleEffect(this, event);
-                    
-                    // 在当前页面显示对应分类的产品
-                    filterProductsByCategory(category);
-                });
-            });
-            
-            // 添加涟漪效果
-            function addRippleEffect(element, event) {
-                const ripple = document.createElement('span');
-                ripple.classList.add('ripple-effect');
-                
-                const rect = element.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
-                
-                ripple.style.width = ripple.style.height = `${size}px`;
-                ripple.style.left = `${event.clientX - rect.left - size / 2}px`;
-                ripple.style.top = `${event.clientY - rect.top - size / 2}px`;
-                
-                element.appendChild(ripple);
-                
-                setTimeout(() => {
-                    ripple.remove();
-                }, 600);
-            }
-            
-            // 按分类筛选产品
-            function filterProductsByCategory(category) {
-                const productCards = document.querySelectorAll('.product-card');
-                
-                // 可以根据分类筛选产品卡片
-                productCards.forEach(card => {
-                    // 假设产品卡片有data-category属性
-                    const cardCategory = card.getAttribute('data-category');
-                    
-                    // 如果选择"all"或卡片类别匹配所选类别，则显示
-                    if (category === 'all' || cardCategory === category) {
-                        card.style.display = 'flex';
-                        // 添加动画效果
-                        card.style.animation = 'fadeIn 0.5s ease forwards';
-                    } else {
-                        // 否则隐藏
-                        card.style.display = 'none';
-                    }
-                });
-                
-                // 如果没有可见产品，显示提示
-                const visibleProducts = document.querySelectorAll('.product-card[style*="display: flex"]');
-                if (visibleProducts.length === 0) {
-                    console.log('没有找到该分类的产品');
-                }
-            }
-        });
-
-        // 产品卡片水平滚动功能
-        document.addEventListener('DOMContentLoaded', function() {
-            // 为分类项添加点击事件
-            const categoryItems = document.querySelectorAll('.category-item');
-            categoryItems.forEach(item => {
-                item.addEventListener('click', function(event) {
-                    const category = this.getAttribute('data-category');
-                    console.log('选择分类:', category);
-                    
-                    // 添加点击反馈效果
-                    addRippleEffect(this, event);
-                    
-                    // 在当前页面显示对应分类的产品
-                    filterProductsByCategory(category);
-                });
-            });
-            
-            // 添加涟漪效果
-            function addRippleEffect(element, event) {
-                const ripple = document.createElement('span');
-                ripple.classList.add('ripple-effect');
-                
-                const rect = element.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
-                
-                ripple.style.width = ripple.style.height = `${size}px`;
-                ripple.style.left = `${event.clientX - rect.left - size / 2}px`;
-                ripple.style.top = `${event.clientY - rect.top - size / 2}px`;
-                
-                element.appendChild(ripple);
-                
-                setTimeout(() => {
-                    ripple.remove();
-                }, 600);
-            }
-            
-            // 按分类筛选产品
-            function filterProductsByCategory(category) {
-                const productCards = document.querySelectorAll('.product-card');
-                
-                // 可以根据分类筛选产品卡片
-                productCards.forEach(card => {
-                    // 假设产品卡片有data-category属性
-                    const cardCategory = card.getAttribute('data-category');
-                    
-                    // 如果选择"all"或卡片类别匹配所选类别，则显示
-                    if (category === 'all' || cardCategory === category) {
-                        card.style.display = 'flex';
-                        // 添加动画效果
-                        card.style.animation = 'fadeIn 0.5s ease forwards';
-                    } else {
-                        // 否则隐藏
-                        card.style.display = 'none';
-                    }
-                });
-                
-                // 如果没有可见产品，显示提示
-                const visibleProducts = document.querySelectorAll('.product-card[style*="display: flex"]');
-                if (visibleProducts.length === 0) {
-                    console.log('没有找到该分类的产品');
-                }
-            }
-            
-            // 优化产品卡片渲染
-            const productCards = document.querySelectorAll('.product-card');
-            productCards.forEach(card => {
-                // 确保图片加载后有更好的渲染效果
-                const image = card.querySelector('.product-image');
-                if (image) {
-                    image.onload = function() {
-                        image.style.opacity = '1';
-                    };
-                    image.style.opacity = '0.9';
-                    image.style.transition = 'opacity 0.3s ease';
-                }
-                
-                // 为产品卡片添加点击事件
-                card.addEventListener('click', function() {
-                    // 在这里可以添加跳转到产品详情页的逻辑
-                    console.log('查看产品详情:', card.querySelector('.product-title').textContent);
-                });
-            });
-            
-            // 为产品区域添加鼠标进入暂停滚动、鼠标离开恢复滚动的功能
-            const productSections = document.querySelectorAll('.product-category');
-            productSections.forEach(section => {
-                const grid = section.querySelector('.product-grid');
-                
-                section.addEventListener('mouseenter', () => {
-                    grid.style.animationPlayState = 'paused';
-                });
-                
-                section.addEventListener('mouseleave', () => {
-                    grid.style.animationPlayState = 'running';
-                });
-            });
-        });
-    </script>
+            <!-- 模态框内容区 -->
+            <div id="modal-products" class="grid grid-cols-2 gap-3 p-4">
+                <!-- 产品将由JavaScript动态生成 -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast消息 -->
+    <div id="toast-message" class="fixed bottom-20 left-1/2 transform -translate-x-1/2 translate-y-[100px] bg-primary/90 text-white py-3 px-6 rounded-full text-sm font-medium shadow-lg z-[2000] opacity-0 transition-all duration-300"></div>
+    
+    <!-- 引入JavaScript -->
+    <script src="js/category.js"></script>
 </body>
 </html> 

@@ -1,0 +1,82 @@
+<!-- 麦吉纳宣传卡片更新指南 -->
+
+<h1>麦吉纳宣传卡片简化方案</h1>
+
+<p>按照需求，我们已经将麦吉纳宣传卡片简化为只保留核心宣传语"聚焦软体家具创新，做精准爆款提供商"，移除了品牌识别区、行业领先等其他内容。</p>
+
+<h2>更新步骤：</h2>
+
+<ol>
+  <li>打开 <code>pages/categorynew.html</code> 文件</li>
+  <li>找到第3689行左右的麦吉纳宣传卡片代码</li>
+  <li>将整个宣传卡片部分替换为以下简化版代码</li>
+</ol>
+
+<h2>更新代码：</h2>
+
+<pre>
+&lt;!-- 麦吉纳小程序宣传卡片 (简化版) --&gt;
+&lt;div class="mcgina-promo-card"&gt;
+    &lt;div class="mcgina-promo-content"&gt;
+        &lt;p class="mcgina-core-slogan"&gt;聚焦软体家具创新，做精准爆款提供商&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;!-- 装饰元素 --&gt;
+    &lt;div class="mcgina-decoration mcgina-deco-circle"&gt;&lt;/div&gt;
+    &lt;div class="mcgina-decoration mcgina-deco-circle second"&gt;&lt;/div&gt;
+    &lt;div class="mcgina-decoration mcgina-deco-line"&gt;&lt;/div&gt;
+    &lt;!-- 波浪效果 --&gt;
+    &lt;div class="mcgina-wave"&gt;&lt;/div&gt;
+    &lt;div class="mcgina-wave wave-2"&gt;&lt;/div&gt;
+    &lt;!-- 闪亮特效 --&gt;
+    &lt;div class="mcgina-shine"&gt;&lt;/div&gt;
+&lt;/div&gt;
+</pre>
+
+<h2>CSS样式修改：</h2>
+
+<p>在现有的CSS基础上，需要添加以下CSS样式（可以添加到第3420行左右的麦吉纳宣传卡片特殊样式部分）：</p>
+
+<pre>
+/* 核心宣传语简化样式 */
+.mcgina-core-slogan {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin: 0;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    background: linear-gradient(90deg, #ffffff, #ffe1a8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    display: inline-block;
+}
+
+.mcgina-core-slogan::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background-color: var(--accent-color);
+    border-radius: 3px;
+}
+
+/* 更新宣传卡片内容布局 */
+.mcgina-promo-content {
+    justify-content: center; /* 居中显示宣传语 */
+}
+
+/* 手机屏幕适配 */
+@media (max-width: 768px) {
+    .mcgina-core-slogan {
+        font-size: 22px;
+    }
+}
+</pre>
+
+<h2>结果预览：</h2>
+
+<p>更新后，宣传卡片将只显示核心宣传语"聚焦软体家具创新，做精准爆款提供商"，保留原有的背景渐变、波浪动画和装饰元素，但移除了品牌识别区、徽章等其他内容，使设计更加简洁明了，聚焦核心信息。</p> 

@@ -1,0 +1,1622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>沙发适用场景 - 家逸生活</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="../css/common.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            color: #333;
+            background-color: #f5f7fa;
+            padding-bottom: 80px;
+        }
+        
+        .nav-bar {
+            background-color: white;
+            border-bottom: 1px solid #e0e0e0;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .main-content {
+            margin-top: 60px;
+            padding: 15px;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .scene-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #36454f;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title i {
+            color: #4aad92;
+            margin-right: 8px;
+        }
+        
+        .scene-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+        }
+        
+        .scene-tag {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            padding: 15px 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+            position: relative;
+        }
+        
+        .scene-tag:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-color: #4aad92;
+        }
+        
+        .scene-tag.active {
+            background-color: rgba(74, 173, 146, 0.05);
+            border-color: #4aad92;
+            box-shadow: 0 2px 10px rgba(74, 173, 146, 0.15);
+        }
+        
+        .scene-tag i {
+            font-size: 28px;
+            color: #4aad92;
+            margin-bottom: 10px;
+            background-color: rgba(74, 173, 146, 0.1);
+            padding: 12px;
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .scene-tag:hover i {
+            background-color: rgba(74, 173, 146, 0.2);
+            transform: scale(1.05);
+        }
+        
+        .scene-tag span {
+            font-weight: 500;
+            color: #36454f;
+        }
+        
+        .scene-description {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        .scene-detail-container {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px dashed #e0e0e0;
+        }
+        
+        .scene-detail {
+            display: none;
+        }
+        
+        .scene-detail.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .scene-detail-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #4aad92;
+            display: flex;
+            align-items: center;
+        }
+        
+        .scene-detail-title i {
+            margin-right: 8px;
+        }
+        
+        .scene-detail-content {
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .download-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4aad92;
+            font-size: 12px;
+            border: 1px solid rgba(74, 173, 146, 0.3);
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+        
+        .scene-tag:hover .download-btn {
+            opacity: 1;
+        }
+        
+        .bottom-actions {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+        
+        .action-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .cancel-btn {
+            color: #666;
+            background-color: #f1f1f1;
+        }
+        
+        .confirm-btn {
+            background: linear-gradient(to right, #4aad92, #2c9678);
+            color: white;
+        }
+        
+        .modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: 12px;
+            max-width: 90%;
+            width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-title {
+            font-weight: 600;
+            font-size: 18px;
+            color: #333;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .code-block {
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            margin: 10px 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .copy-btn {
+            display: inline-block;
+            padding: 8px 15px;
+            background: #4aad92;
+            color: white;
+            border-radius: 4px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @media (max-width: 640px) {
+            .scene-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .sofa-type-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        /* 自定义滚动提示动画 */
+        @keyframes scrollHint {
+            0% { transform: translateY(0); }
+            25% { transform: translateY(10px); }
+            50% { transform: translateY(0); }
+            75% { transform: translateY(10px); }
+            100% { transform: translateY(0); }
+        }
+        
+        .scroll-hint {
+            color: #4aad92;
+            animation: scrollHint 2s ease-in-out;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 640px) {
+            .sofa-type-grid .scene-tag {
+                min-width: 150px;
+            }
+            
+            .sofa-preview-img-container {
+                height: 100px;
+            }
+            
+            #previewSofaSvg {
+                max-width: 200px;
+            }
+        }
+        
+        /* 功能图标特殊样式 */
+        .function-icon {
+            background: linear-gradient(135deg, #f0f7f4, #e6f2ed);
+        }
+        
+        /* 沙发SVG预览样式 - 垂直布局，每张图片占一行 */
+        .sofa-type-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            padding: 10px 0;
+            overflow-y: auto;
+            max-height: 600px;
+        }
+        
+        .sofa-type-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .sofa-type-grid::-webkit-scrollbar-thumb {
+            background-color: rgba(74, 173, 146, 0.3);
+            border-radius: 3px;
+        }
+        
+        .sofa-type-grid::-webkit-scrollbar-track {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .sofa-type-grid .scene-tag {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            padding: 15px;
+        }
+        
+        .sofa-preview-img-container {
+            width: 150px;
+            height: 120px;
+            margin: 0 20px 0 0;
+        }
+        
+        .sofa-type-grid .scene-tag .scene-description {
+            margin-top: 5px;
+        }
+        
+        /* 调整沙发预览图片在垂直布局中的样式 */
+        .sofa-type-grid .scene-tag span {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+        
+        /* 手机端响应式调整 */
+        @media (max-width: 640px) {
+            .sofa-type-grid .scene-tag {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .sofa-preview-img-container {
+                width: 90%;
+                margin: 10px auto 15px;
+            }
+        }
+        
+        /* 沙发预览图片放大 */
+        #previewSofaSvg {
+            max-width: 300px;
+            height: auto;
+            margin: 0 auto;
+            transition: transform 0.3s ease;
+        }
+        
+        #svgDownloadModal .text-center:hover #previewSofaSvg {
+            transform: scale(1.05);
+        }
+        
+        /* 禁用按钮样式 */
+        .copy-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background-color: #a0aec0;
+        }
+        
+        /* 图片加载提示 */
+        .loading-text {
+            font-style: italic;
+            color: #718096;
+        }
+        
+        /* 加强错误显示 */
+        .error-message {
+            color: #e53e3e;
+            margin-top: 8px;
+            font-size: 0.9rem;
+        }
+        
+        /* 提供备用下载提示 */
+        .alternate-download {
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: #4a5568;
+            font-style: italic;
+        }
+        
+        /* 模态框样式 */
+        #svgDownloadModal .text-center {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .sofa-preview-tag {
+            cursor: pointer;
+        }
+        
+        .sofa-type-img {
+            max-width: 100%;
+            max-height: 100%;
+            transition: transform 0.3s ease;
+        }
+        
+        .sofa-preview-tag:hover .sofa-type-img {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <div class="nav-bar">
+        <div class="flex items-center px-4 h-full">
+            <a href="javascript:history.back()" class="text-gray-500">
+                <i class="fas fa-arrow-left text-lg"></i>
+            </a>
+            <div class="text-center flex-1 font-medium">沙发适用场景</div>
+            <div class="w-5"></div><!-- 占位元素，平衡布局 -->
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="page-header">
+            <h1 class="text-xl font-bold text-gray-800">沙发适用场景选择</h1>
+            <p class="text-sm text-gray-500 mt-2">选择您的沙发主要使用场景，我们将为您推荐合适的沙发类型和面料</p>
+        </div>
+        
+        <div class="scene-container">
+            <div class="section-title">
+                <i class="fas fa-home"></i> 选择适用场景（可多选）
+            </div>
+            
+            <div class="scene-grid">
+                <!-- 原有场景 -->
+                <div class="scene-tag" data-scene="living-room" data-icon="fa-couch">
+                    <button class="download-btn" onclick="showDownloadModal('living-room')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <i class="fas fa-couch"></i>
+                    <span>客厅沙发</span>
+                    <div class="scene-description">日常家庭休息娱乐</div>
+                </div>
+                
+                <div class="scene-tag" data-scene="kids-room" data-icon="fa-child">
+                    <button class="download-btn" onclick="showDownloadModal('kids-room')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <i class="fas fa-child"></i>
+                    <span>儿童房家具</span>
+                    <div class="scene-description">适合儿童活动区域</div>
+                </div>
+                
+                <div class="scene-tag" data-scene="pet-friendly" data-icon="fa-paw">
+                    <button class="download-btn" onclick="showDownloadModal('pet-friendly')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <i class="fas fa-paw"></i>
+                    <span>宠物友好型</span>
+                    <div class="scene-description">耐磨防抓耐脏面料</div>
+                </div>
+                
+                <!-- 新增场景 -->
+                <div class="scene-tag" data-scene="office-lounge" data-icon="fa-coffee">
+                    <button class="download-btn" onclick="showDownloadModal('office-lounge')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <i class="fas fa-coffee"></i>
+                    <span>办公休息区</span>
+                    <div class="scene-description">商务休闲接待区域</div>
+                </div>
+                
+                <div class="scene-tag" data-scene="guest-house" data-icon="fa-bed">
+                    <button class="download-btn" onclick="showDownloadModal('guest-house')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <i class="fas fa-bed"></i>
+                    <span>民宿客房</span>
+                    <div class="scene-description">兼具舒适与实用性</div>
+                </div>
+                
+                <div class="scene-tag" data-scene="small-apartment" data-icon="fa-home">
+                    <button class="download-btn" onclick="showDownloadModal('small-apartment')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <i class="fas fa-home"></i>
+                    <span>小户型公寓</span>
+                    <div class="scene-description">紧凑空间最优化利用</div>
+                </div>
+                
+                <div class="scene-tag" data-scene="elderly-friendly" data-icon="fa-wheelchair">
+                    <button class="download-btn" onclick="showDownloadModal('elderly-friendly')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <i class="fas fa-wheelchair"></i>
+                    <span>老人友好型</span>
+                    <div class="scene-description">易起身高度与支撑</div>
+                </div>
+                
+                <div class="scene-tag" data-scene="entertainment" data-icon="fa-film">
+                    <button class="download-btn" onclick="showDownloadModal('entertainment')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <i class="fas fa-film"></i>
+                    <span>影音娱乐区</span>
+                    <div class="scene-description">舒适观影体验保障</div>
+                </div>
+                
+                <!-- 新增场景：自然环保 -->
+                <div class="scene-tag" data-scene="eco-friendly" data-icon="fa-leaf">
+                    <button class="download-btn" onclick="showDownloadModal('eco-friendly')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <i class="fas fa-leaf"></i>
+                    <span>自然环保</span>
+                    <div class="scene-description">简约自然装修风格</div>
+                </div>
+                
+                <!-- 新增场景：多功能客房 -->
+                <div class="scene-tag" data-scene="multi-function" data-icon="fa-exchange-alt">
+                    <button class="download-btn" onclick="showDownloadModal('multi-function')">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <i class="fas fa-exchange-alt"></i>
+                    <span>多功能客房</span>
+                    <div class="scene-description">隐藏拉床两用设计</div>
+                </div>
+            </div>
+            
+            <div class="scene-detail-container">
+                <div class="scene-detail" data-detail="living-room">
+                    <div class="scene-detail-title"><i class="fas fa-couch"></i>客厅沙发</div>
+                    <div class="scene-detail-content">
+                        作为日常起居和招待客人的核心空间，客厅沙发需要兼顾舒适性与美观性。推荐选择耐用面料，适中软硬度和合适的尺寸，既能满足日常休息需求，又能适应各种社交场合。
+                    </div>
+                </div>
+                
+                <div class="scene-detail" data-detail="kids-room">
+                    <div class="scene-detail-title"><i class="fas fa-child"></i>儿童房家具</div>
+                    <div class="scene-detail-content">
+                        放置在儿童活动区域的沙发需要特别注重安全和易清洁特性。推荐选择可拆洗面料，无尖锐边角设计，且具有一定耐磨性能，以应对孩子们的各种活动和可能的污渍。
+                    </div>
+                </div>
+                
+                <div class="scene-detail" data-detail="pet-friendly">
+                    <div class="scene-detail-title"><i class="fas fa-paw"></i>宠物友好型</div>
+                    <div class="scene-detail-content">
+                        有宠物的家庭需要特别耐用的沙发。推荐选择防刮耐磨、易清洁的面料，如微纤皮革或特殊处理的布艺面料，同时避免使用容易勾线或积累宠物毛发的材质。
+                    </div>
+                </div>
+                
+                <div class="scene-detail" data-detail="office-lounge">
+                    <div class="scene-detail-title"><i class="fas fa-coffee"></i>办公休息区</div>
+                    <div class="scene-detail-content">
+                        办公环境中的休息区沙发需要兼顾专业形象和舒适度。推荐选择商务风格设计，易清洁且耐用的面料，适中的软硬度可以在短暂休息中提供足够的支撑和放松效果。
+                    </div>
+                </div>
+                
+                <div class="scene-detail" data-detail="guest-house">
+                    <div class="scene-detail-title"><i class="fas fa-bed"></i>民宿客房</div>
+                    <div class="scene-detail-content">
+                        民宿环境需要高效实用且有特色的沙发。推荐选择多功能设计（如沙发床），易清洁面料，风格上可根据民宿整体定位选择乡村、现代或北欧等不同风格。
+                    </div>
+                </div>
+                
+                <div class="scene-detail" data-detail="small-apartment">
+                    <div class="scene-detail-title"><i class="fas fa-home"></i>小户型公寓</div>
+                    <div class="scene-detail-content">
+                        小面积居住空间需要巧妙利用每一寸区域。推荐选择体积适中、储物功能丰富的紧凑型沙发，可考虑转角设计或模块化组合，最大化利用有限空间。
+                    </div>
+                </div>
+                
+                <div class="scene-detail" data-detail="elderly-friendly">
+                    <div class="scene-detail-title"><i class="fas fa-wheelchair"></i>老人友好型</div>
+                    <div class="scene-detail-content">
+                        适合老年人使用的沙发需特别注重易起身设计。推荐选择座高略高、坐感偏硬的沙发，带扶手设计有助于起身支撑，面料应避免光滑材质，防止滑倒风险。
+                    </div>
+                </div>
+                
+                <div class="scene-detail" data-detail="entertainment">
+                    <div class="scene-detail-title"><i class="fas fa-film"></i>影音娱乐区</div>
+                    <div class="scene-detail-content">
+                        专为观影和游戏设计的沙发需要提供长时间的舒适体验。推荐选择带有可调节靠背、脚托的功能沙发，或剧院式排列的组合沙发，提供沉浸式的娱乐体验。
+                    </div>
+                </div>
+                
+                <!-- 自然环保场景详情 -->
+                <div class="scene-detail" data-detail="eco-friendly">
+                    <div class="scene-detail-title"><i class="fas fa-leaf"></i>自然环保</div>
+                    <div class="scene-detail-content">
+                        追求自然环保理念的居住空间需选择与之相匹配的沙发。推荐使用可持续材料如有机棉、亚麻、竹纤维或回收材料制成的沙发，色调以米色、灰色、绿色等自然色为主，简约线条设计与自然装修风格相得益彰。
+                    </div>
+                </div>
+                
+                <!-- 多功能客房场景详情 -->
+                <div class="scene-detail" data-detail="multi-function">
+                    <div class="scene-detail-title"><i class="fas fa-exchange-alt"></i>多功能客房</div>
+                    <div class="scene-detail-content">
+                        适合需要灵活利用空间的家庭，沙发可以在日常作为普通座椅使用，需要时可拉出隐藏床铺接待客人过夜。推荐选择结构稳固、拉伸机构流畅的拉床设计，并配备舒适的床垫，确保客人有良好的睡眠体验。
+                    </div>
+                </div>
+                
+                <!-- 默认提示 -->
+                <div class="scene-detail active" data-detail="default">
+                    <div class="scene-detail-title"><i class="fas fa-info-circle"></i>场景提示</div>
+                    <div class="scene-detail-content">
+                        请在上方选择您的沙发主要使用场景，我们将为您展示详细的场景特点和沙发推荐。您可以选择多个场景，我们会综合考虑为您推荐最适合的沙发类型和面料。点击每个场景右上角的下载图标可获取该场景的HTML代码。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 沙发预览图展示与下载 -->
+    <div class="scene-container">
+        <div class="section-title">
+            <i class="fas fa-couch"></i> 沙发SVG图标预览与下载
+        </div>
+        
+        <div class="flex justify-between items-center mb-2">
+            <div class="text-sm text-gray-500">
+                <i class="fas fa-arrow-down mr-1 scroll-hint"></i> 上下滚动查看更多沙发样式
+            </div>
+            <div class="text-sm text-primary">
+                <i class="fas fa-expand-alt mr-1"></i> 点击图标查看大图
+            </div>
+        </div>
+        
+        <div class="scene-grid sofa-type-grid">
+            <!-- 单人位沙发 -->
+            <div class="scene-tag sofa-preview-tag" data-sofa-type="single">
+                <button class="download-btn" onclick="downloadSofaSvg('single')">
+                    <i class="fas fa-download"></i>
+                </button>
+                <div class="sofa-preview-img-container">
+                    <img src="../img/sofa-types/single.svg" alt="单人位沙发" class="sofa-type-img">
+                </div>
+                <span>单人位沙发</span>
+                <div class="scene-description">适合小户型/书房</div>
+            </div>
+            
+            <!-- 双人位沙发 -->
+            <div class="scene-tag sofa-preview-tag" data-sofa-type="double">
+                <button class="download-btn" onclick="downloadSofaSvg('double')">
+                    <i class="fas fa-download"></i>
+                </button>
+                <div class="sofa-preview-img-container">
+                    <img src="../img/sofa-types/double.svg" alt="双人位沙发" class="sofa-type-img">
+                </div>
+                <span>双人位沙发</span>
+                <div class="scene-description">适合15-20㎡客厅</div>
+            </div>
+            
+            <!-- 三人位沙发 -->
+            <div class="scene-tag sofa-preview-tag" data-sofa-type="triple">
+                <button class="download-btn" onclick="downloadSofaSvg('triple')">
+                    <i class="fas fa-download"></i>
+                </button>
+                <div class="sofa-preview-img-container">
+                    <img src="../img/sofa-types/triple.svg" alt="三人位沙发" class="sofa-type-img">
+                </div>
+                <span>三人位沙发</span>
+                <div class="scene-description">适合20-25㎡客厅</div>
+            </div>
+            
+            <!-- 四人位沙发 -->
+            <div class="scene-tag sofa-preview-tag" data-sofa-type="quad">
+                <button class="download-btn" onclick="downloadSofaSvg('quad')">
+                    <i class="fas fa-download"></i>
+                </button>
+                <div class="sofa-preview-img-container">
+                    <img src="../img/sofa-types/quad.svg" alt="四人位沙发" class="sofa-type-img">
+                </div>
+                <span>四人位沙发</span>
+                <div class="scene-description">适合25㎡以上客厅</div>
+            </div>
+            
+            <!-- 三人位+左妃位沙发 -->
+            <div class="scene-tag sofa-preview-tag" data-sofa-type="triple-left">
+                <button class="download-btn" onclick="downloadSofaSvg('triple-left')">
+                    <i class="fas fa-download"></i>
+                </button>
+                <div class="sofa-preview-img-container">
+                    <img src="../img/sofa-types/triple-left.svg" alt="3+右妃位沙发" class="sofa-type-img">
+                </div>
+                <span>3+右妃位沙发</span>
+                <div class="scene-description">适合L型空间</div>
+            </div>
+            
+            <!-- 三人位+右妃位沙发 -->
+            <div class="scene-tag sofa-preview-tag" data-sofa-type="triple-right">
+                <button class="download-btn" onclick="downloadSofaSvg('triple-right')">
+                    <i class="fas fa-download"></i>
+                </button>
+                <div class="sofa-preview-img-container">
+                    <img src="../img/sofa-types/triple-right.svg" alt="3+左妃位沙发" class="sofa-type-img">
+                </div>
+                <span>3+左妃位沙发</span>
+                <div class="scene-description">适合L型空间</div>
+            </div>
+            
+            <!-- 单人位隐藏拉床 改为单人床 -->
+            <div class="scene-tag sofa-preview-tag" data-sofa-type="single-pullout">
+                <button class="download-btn" onclick="downloadSofaSvg('single-pullout')">
+                    <i class="fas fa-download"></i>
+                </button>
+                <div class="sofa-preview-img-container">
+                    <img src="../img/sofa-types/single-pullout.svg" alt="单人位拉床" class="sofa-type-img">
+                </div>
+                <span>单人位拉床</span>
+                <div class="scene-description">适合小型客房/书房</div>
+            </div>
+            
+            <!-- 双人位隐藏拉床 改为双人床 -->
+            <div class="scene-tag sofa-preview-tag" data-sofa-type="double-pullout">
+                <button class="download-btn" onclick="downloadSofaSvg('double-pullout')">
+                    <i class="fas fa-download"></i>
+                </button>
+                <div class="sofa-preview-img-container">
+                    <img src="../img/sofa-types/double-pullout.svg" alt="双人位拉床" class="sofa-type-img">
+                </div>
+                <span>双人位拉床</span>
+                <div class="scene-description">适合中型客房/书房</div>
+            </div>
+            
+            <!-- 三人位隐藏拉床 改为三人床 -->
+            <div class="scene-tag sofa-preview-tag" data-sofa-type="triple-pullout">
+                <button class="download-btn" onclick="downloadSofaSvg('triple-pullout')">
+                    <i class="fas fa-download"></i>
+                </button>
+                <div class="sofa-preview-img-container">
+                    <img src="../img/sofa-types/triple-pullout.svg" alt="三人位拉床" class="sofa-type-img">
+                </div>
+                <span>三人位拉床</span>
+                <div class="scene-description">适合大型客厅/会客厅</div>
+            </div>
+        </div>
+        
+        <!-- 床型说明 替换原拉床功能说明 -->
+        <div class="bg-blue-50 p-4 rounded-lg mt-4 mb-4">
+            <div class="flex items-center mb-2">
+                <i class="fas fa-info-circle text-blue-500 mr-2"></i>
+                <h3 class="text-md font-medium text-blue-700">拉床功能说明</h3>
+            </div>
+            <p class="text-sm text-gray-600">
+                拉床沙发是一种多功能家具，平时可作为普通沙发使用，需要时可拉出隐藏的床架部分，快速转变为临时床铺。
+                拉床机构通常隐藏在沙发座位下方，拉出时会有额外的支撑腿确保稳固性。这种设计特别适合空间有限的小户型或需要临时客床的家庭，
+                既节省空间又兼具实用性，是现代家居的理想选择。
+            </p>
+        </div>
+
+        <div class="scene-detail-container">
+            <div class="scene-detail active" data-detail="sofa-preview-info">
+                <div class="scene-detail-title"><i class="fas fa-info-circle"></i>SVG图标说明</div>
+                <div class="scene-detail-content">
+                    这些沙发SVG图标可用于您的网站、演示文稿或设计项目。点击各图标右上角的下载按钮即可获取该SVG文件。这些图标具有清晰的线条和简约的风格，适合各种设计场景。SVG格式可以无损缩放到任意尺寸。
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 沙发SVG下载模态框 -->
+    <div class="modal-backdrop" id="svgDownloadModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">下载沙发SVG图标</div>
+                <button class="close-btn" onclick="closeSvgModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <strong id="sofaTypeName">沙发类型</strong>
+                    <p class="text-sm text-gray-500 mt-1" id="sofaTypeDescription">适用场景描述</p>
+                </div>
+                
+                <div class="text-center mb-4 p-6 bg-gray-50 rounded-lg">
+                    <img id="previewSofaSvg" src="" alt="沙发预览" style="max-width: 100%; margin: 0 auto;">
+                </div>
+                
+                <div class="mb-4">
+                    <h3 class="text-md font-medium mb-2">SVG 代码</h3>
+                    <div class="code-block" id="svgCode"></div>
+                    <div class="flex gap-2 mt-2">
+                        <button class="copy-btn" onclick="copyToClipboard('svgCode')">
+                            <i class="fas fa-copy mr-1"></i> 复制SVG代码
+                        </button>
+                        <button class="copy-btn" style="background-color: #4361ee;" onclick="downloadSofaSvgFile()">
+                            <i class="fas fa-download mr-1"></i> 下载SVG文件
+                        </button>
+                    </div>
+                    <div class="alternate-download mt-2">
+                        <i class="fas fa-info-circle mr-1"></i> 提示：如果下载按钮无效，您也可以右键点击上方预览图，选择"图片另存为..."
+                    </div>
+                </div>
+                
+                <div class="bg-gray-50 p-3 rounded-lg text-sm text-gray-600 mb-2">
+                    <p><i class="fas fa-info-circle mr-1 text-blue-500"></i> SVG图标可以无损缩放，适用于网页设计、打印材料和移动应用等。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 底部操作栏 -->
+    <div class="bottom-actions">
+        <button class="action-btn cancel-btn" onclick="history.back()">
+            <i class="fas fa-arrow-left mr-1"></i> 返回
+        </button>
+        <button class="action-btn confirm-btn" onclick="window.location.href='sofa-custom.html'">
+            <i class="fas fa-check mr-1"></i> 确认选择场景
+        </button>
+    </div>
+    
+    <!-- 下载代码模态框 -->
+    <div class="modal-backdrop" id="downloadModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">下载场景代码</div>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <strong id="sceneName">场景名称</strong>
+                    <p class="text-sm text-gray-500 mt-1" id="sceneDescription">场景描述</p>
+                </div>
+                
+                <div class="mb-4">
+                    <h3 class="text-md font-medium mb-2">HTML 代码 (含样式)</h3>
+                    <div class="code-block" id="htmlCode"></div>
+                    <div class="flex gap-2 mt-2">
+                        <button class="copy-btn" onclick="copyToClipboard('htmlCode')">
+                            <i class="fas fa-copy mr-1"></i> 复制代码
+                        </button>
+                        <button class="copy-btn" style="background-color: #4361ee;" onclick="downloadHtmlFile()">
+                            <i class="fas fa-download mr-1"></i> 下载HTML文件
+                        </button>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <h3 class="text-md font-medium mb-2">富文本版本 (无需Font Awesome)</h3>
+                    <div class="code-block" id="richTextCode"></div>
+                    <div class="flex gap-2 mt-2">
+                        <button class="copy-btn" onclick="copyToClipboard('richTextCode')">
+                            <i class="fas fa-copy mr-1"></i> 复制富文本代码
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2">
+                        * 此版本使用Unicode符号替代Font Awesome图标，适合插入Word、富文本编辑器等
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sceneTags = document.querySelectorAll('.scene-tag');
+            const sceneDetails = document.querySelectorAll('.scene-detail');
+            const defaultDetail = document.querySelector('.scene-detail[data-detail="default"]');
+            
+            // 场景数据
+            const sceneData = {
+                'living-room': {
+                    name: '客厅沙发',
+                    icon: 'fa-couch',
+                    description: '日常家庭休息娱乐',
+                    detail: '作为日常起居和招待客人的核心空间，客厅沙发需要兼顾舒适性与美观性。推荐选择耐用面料，适中软硬度和合适的尺寸，既能满足日常休息需求，又能适应各种社交场合。'
+                },
+                'kids-room': {
+                    name: '儿童房家具',
+                    icon: 'fa-child',
+                    description: '适合儿童活动区域',
+                    detail: '放置在儿童活动区域的沙发需要特别注重安全和易清洁特性。推荐选择可拆洗面料，无尖锐边角设计，且具有一定耐磨性能，以应对孩子们的各种活动和可能的污渍。'
+                },
+                'pet-friendly': {
+                    name: '宠物友好型',
+                    icon: 'fa-paw',
+                    description: '耐磨防抓耐脏面料',
+                    detail: '有宠物的家庭需要特别耐用的沙发。推荐选择防刮耐磨、易清洁的面料，如微纤皮革或特殊处理的布艺面料，同时避免使用容易勾线或积累宠物毛发的材质。'
+                },
+                'office-lounge': {
+                    name: '办公休息区',
+                    icon: 'fa-coffee',
+                    description: '商务休闲接待区域',
+                    detail: '办公环境中的休息区沙发需要兼顾专业形象和舒适度。推荐选择商务风格设计，易清洁且耐用的面料，适中的软硬度可以在短暂休息中提供足够的支撑和放松效果。'
+                },
+                'guest-house': {
+                    name: '民宿客房',
+                    icon: 'fa-bed',
+                    description: '兼具舒适与实用性',
+                    detail: '民宿环境需要高效实用且有特色的沙发。推荐选择多功能设计（如沙发床），易清洁面料，风格上可根据民宿整体定位选择乡村、现代或北欧等不同风格。'
+                },
+                'small-apartment': {
+                    name: '小户型公寓',
+                    icon: 'fa-home',
+                    description: '紧凑空间最优化利用',
+                    detail: '小面积居住空间需要巧妙利用每一寸区域。推荐选择体积适中、储物功能丰富的紧凑型沙发，可考虑转角设计或模块化组合，最大化利用有限空间。'
+                },
+                'elderly-friendly': {
+                    name: '老人友好型',
+                    icon: 'fa-wheelchair',
+                    description: '易起身高度与支撑',
+                    detail: '适合老年人使用的沙发需特别注重易起身设计。推荐选择座高略高、坐感偏硬的沙发，带扶手设计有助于起身支撑，面料应避免光滑材质，防止滑倒风险。'
+                },
+                'entertainment': {
+                    name: '影音娱乐区',
+                    icon: 'fa-film',
+                    description: '舒适观影体验保障',
+                    detail: '专为观影和游戏设计的沙发需要提供长时间的舒适体验。推荐选择带有可调节靠背、脚托的功能沙发，或剧院式排列的组合沙发，提供沉浸式的娱乐体验。'
+                },
+                'eco-friendly': {
+                    name: '自然环保',
+                    icon: 'fa-leaf',
+                    description: '简约自然装修风格',
+                    detail: '追求自然环保理念的居住空间需选择与之相匹配的沙发。推荐使用可持续材料如有机棉、亚麻、竹纤维或回收材料制成的沙发，色调以米色、灰色、绿色等自然色为主，简约线条设计与自然装修风格相得益彰。'
+                },
+                'multi-function': {
+                    name: '多功能客房',
+                    icon: 'fa-exchange-alt',
+                    description: '隐藏拉床两用设计',
+                    detail: '适合需要灵活利用空间的家庭，沙发可以在日常作为普通座椅使用，需要时可拉出隐藏床铺接待客人过夜。推荐选择结构稳固、拉伸机构流畅的拉床设计，并配备舒适的床垫，确保客人有良好的睡眠体验。'
+                }
+            };
+            
+            // 点击场景标签的处理
+            sceneTags.forEach(tag => {
+                tag.addEventListener('click', function(e) {
+                    // 如果点击的是下载按钮，不触发选中
+                    if (e.target.closest('.download-btn')) {
+                        return;
+                    }
+                    
+                    const sceneType = this.getAttribute('data-scene');
+                    
+                    // 切换当前标签的选中状态
+                    this.classList.toggle('active');
+                    
+                    // 隐藏所有详情
+                    sceneDetails.forEach(detail => {
+                        detail.classList.remove('active');
+                    });
+                    
+                    // 如果当前标签被选中，显示对应详情
+                    if (this.classList.contains('active')) {
+                        const targetDetail = document.querySelector(`.scene-detail[data-detail="${sceneType}"]`);
+                        if (targetDetail) {
+                            targetDetail.classList.add('active');
+                        }
+                    } else {
+                        // 检查是否有其他选中的标签
+                        const activeTag = document.querySelector('.scene-tag.active');
+                        if (activeTag) {
+                            const activeScene = activeTag.getAttribute('data-scene');
+                            const activeDetail = document.querySelector(`.scene-detail[data-detail="${activeScene}"]`);
+                            if (activeDetail) {
+                                activeDetail.classList.add('active');
+                            }
+                        } else {
+                            // 如果没有选中的标签，显示默认提示
+                            defaultDetail.classList.add('active');
+                        }
+                    }
+                });
+            });
+            
+            // 确认按钮处理
+            const confirmBtn = document.querySelector('.confirm-btn');
+            confirmBtn.addEventListener('click', function() {
+                const selectedScenes = [];
+                document.querySelectorAll('.scene-tag.active').forEach(tag => {
+                    selectedScenes.push(tag.getAttribute('data-scene'));
+                });
+                
+                if (selectedScenes.length === 0) {
+                    alert('请至少选择一个适用场景');
+                    return;
+                }
+                
+                // 保存选择的场景到本地存储
+                localStorage.setItem('selectedSofaScenes', JSON.stringify(selectedScenes.map(scene => sceneData[scene].name)));
+                
+                // 显示选择的场景
+                alert('您已选择以下场景：' + selectedScenes.map(scene => sceneData[scene].name).join('、'));
+                
+                // 跳转到沙发定制页面
+                window.location.href = 'sofa-custom.html';
+            });
+            
+            // 设置全局变量
+            window.sceneData = sceneData;
+        });
+        
+        // 获取场景对应的Unicode符号
+        function getUnicodeSymbol(icon) {
+            // 将Font Awesome图标映射到Unicode符号
+            const iconMap = {
+                'fa-couch': '🛋️',
+                'fa-child': '👶',
+                'fa-paw': '🐾',
+                'fa-coffee': '☕',
+                'fa-bed': '🛏️',
+                'fa-home': '🏠',
+                'fa-wheelchair': '♿',
+                'fa-film': '🎬',
+                'fa-info-circle': 'ℹ️',
+                'fa-tags': '🏷️',
+                'fa-arrow-left': '←',
+                'fa-check': '✓',
+                'fa-download': '⬇️',
+                'fa-copy': '📋',
+                'fa-leaf': '🍃',
+                'fa-exchange-alt': '🔄'
+            };
+            
+            return iconMap[icon] || '●'; // 默认圆点符号
+        }
+        
+        // 显示下载模态框
+        function showDownloadModal(sceneId) {
+            const modal = document.getElementById('downloadModal');
+            const sceneData = window.sceneData[sceneId];
+            
+            if (!sceneData) return;
+            
+            // 更新模态框内容
+            document.getElementById('sceneName').textContent = sceneData.name;
+            document.getElementById('sceneDescription').textContent = sceneData.description;
+            
+            // 生成包含内联CSS的HTML代码
+            const inlineHtmlCode = `<!-- ${sceneData.name} 场景组件 -->
+<div class="scene-tag">
+    <i class="fas ${sceneData.icon}"></i>
+    <span>${sceneData.name}</span>
+    <div class="scene-description">${sceneData.description}</div>
+</div>
+
+<div class="scene-detail">
+    <div class="scene-detail-title"><i class="fas ${sceneData.icon}"></i>${sceneData.name}</div>
+    <div class="scene-detail-content">
+        ${sceneData.detail}
+    </div>
+</div>
+
+<style>
+/* ${sceneData.name} 场景样式 */
+.scene-tag {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    padding: 15px 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-align: center;
+}
+
+.scene-tag:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-color: #4aad92;
+}
+
+.scene-tag.active {
+    background-color: rgba(74, 173, 146, 0.05);
+    border-color: #4aad92;
+    box-shadow: 0 2px 10px rgba(74, 173, 146, 0.15);
+}
+
+.scene-tag i {
+    font-size: 28px;
+    color: #4aad92;
+    margin-bottom: 10px;
+    background-color: rgba(74, 173, 146, 0.1);
+    padding: 12px;
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.scene-tag span {
+    font-weight: 500;
+    color: #36454f;
+}
+
+.scene-description {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #666;
+    line-height: 1.3;
+}
+
+.scene-detail {
+    margin-top: 15px;
+}
+
+.scene-detail-title {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #4aad92;
+    display: flex;
+    align-items: center;
+}
+
+.scene-detail-title i {
+    margin-right: 8px;
+}
+
+.scene-detail-content {
+    line-height: 1.6;
+    color: #555;
+}
+</style>`;
+
+            // 生成富文本友好版本 (使用Unicode符号代替Font Awesome)
+            const unicodeSymbol = getUnicodeSymbol(sceneData.icon);
+            const richTextCode = `<!-- ${sceneData.name} 场景组件 - 富文本版 -->
+<!-- 如需将多个场景并排显示，请复制多个场景代码放在同一个容器内 -->
+<div style="display: inline-block; vertical-align: top; box-sizing: border-box; background-color: #fff; border-radius: 8px; border: 1px solid #e0e0e0; padding: 10px 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); text-align: center; width: 32%; margin: 0.5%;">
+    <div style="font-size: 22px; color: #4aad92; margin-bottom: 5px; background-color: rgba(74, 173, 146, 0.1); padding: 5px; border-radius: 50%; width: 36px; height: 36px; margin: 0 auto; text-align: center; line-height: 1.3;">
+        ${unicodeSymbol}
+    </div>
+    <div style="font-weight: 500; color: #36454f; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${sceneData.name}</div>
+    <div style="margin-top: 3px; font-size: 9px; color: #666; line-height: 1.2; height: 22px; overflow: hidden;">${sceneData.description}</div>
+</div>
+`;
+
+            // 生成三栏容器模板
+            const threeColumnContainerCode = `<!-- 三栏布局容器 - 将场景代码粘贴在这里 -->
+<div style="display: flex; flex-wrap: wrap; justify-content: flex-start; width: 100%; margin: 0 auto; box-sizing: border-box; padding: 0;">
+    <!-- 在此处粘贴多个场景代码，每三个为一行 -->
+    
+</div>`;
+
+            // 将代码添加到HTML元素中
+            document.getElementById('htmlCode').textContent = inlineHtmlCode;
+            document.getElementById('richTextCode').textContent = richTextCode;
+            
+            // 添加一个三栏容器的代码按钮
+            if (!document.getElementById('threeColumnContainerBtn')) {
+                const btnContainer = document.querySelector('button[onclick="copyToClipboard(\'richTextCode\')"]').parentElement;
+                
+                const threeColumnBtn = document.createElement('button');
+                threeColumnBtn.id = 'threeColumnContainerBtn';
+                threeColumnBtn.className = 'copy-btn';
+                threeColumnBtn.style.backgroundColor = '#6366f1';
+                threeColumnBtn.innerHTML = '<i class="fas fa-copy mr-1"></i> 复制三栏容器';
+                threeColumnBtn.onclick = function() {
+                    navigator.clipboard.writeText(threeColumnContainerCode).then(() => {
+                        threeColumnBtn.innerHTML = '<i class="fas fa-check mr-1"></i> 已复制';
+                        threeColumnBtn.style.backgroundColor = '#38a169';
+                        
+                        setTimeout(() => {
+                            threeColumnBtn.innerHTML = '<i class="fas fa-copy mr-1"></i> 复制三栏容器';
+                            threeColumnBtn.style.backgroundColor = '#6366f1';
+                        }, 2000);
+                    }).catch(err => {
+                        console.error('复制失败:', err);
+                        alert('复制失败，请手动复制');
+                    });
+                };
+                
+                if (document.getElementById('responsiveContainerBtn')) {
+                    document.getElementById('responsiveContainerBtn').remove();
+                }
+                
+                btnContainer.appendChild(threeColumnBtn);
+                
+                // 更新说明文字
+                const infoText = document.querySelector('.text-xs.text-gray-500.mt-1');
+                if (infoText) {
+                    infoText.textContent = '先复制三栏容器代码，再复制场景代码，放入三栏容器中';
+                } else {
+                    const newInfoText = document.createElement('p');
+                    newInfoText.className = 'text-xs text-gray-500 mt-1';
+                    newInfoText.textContent = '先复制三栏容器代码，再复制场景代码，放入三栏容器中';
+                    btnContainer.after(newInfoText);
+                }
+            }
+            
+            // 存储当前场景数据供下载使用
+            window.currentSceneData = sceneData;
+            
+            // 显示模态框
+            modal.style.display = 'flex';
+        }
+        
+        // 关闭模态框
+        function closeModal() {
+            document.getElementById('downloadModal').style.display = 'none';
+        }
+        
+        // 复制代码到剪贴板
+        function copyToClipboard(elementId) {
+            const codeElement = document.getElementById(elementId);
+            const text = codeElement.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                // 创建临时提示元素
+                const copyBtn = document.querySelector(`button[onclick="copyToClipboard('${elementId}')"]`);
+                const originalText = copyBtn.innerHTML;
+                
+                copyBtn.innerHTML = '<i class="fas fa-check mr-1"></i> 已复制';
+                copyBtn.style.backgroundColor = '#38a169';
+                
+                // 2秒后恢复原样
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                    copyBtn.style.backgroundColor = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('复制失败:', err);
+                alert('复制失败，请手动复制');
+            });
+        }
+        
+        // 点击模态框背景关闭模态框
+        document.getElementById('downloadModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+        
+        // 下载HTML文件
+        function downloadHtmlFile() {
+            if (!window.currentSceneData) return;
+            
+            const sceneData = window.currentSceneData;
+            
+            // 创建完整的HTML文档
+            const fullHtmlContent = `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${sceneData.name} - 沙发适用场景</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body style="font-family: 'Helvetica Neue', Arial, sans-serif; padding: 20px; background-color: #f5f7fa;">
+    <h1 style="text-align: center; color: #36454f; margin-bottom: 20px;">${sceneData.name} - 沙发适用场景</h1>
+    
+    <div style="max-width: 800px; margin: 0 auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1); padding: 20px;">
+        <!-- ${sceneData.name} 场景组件 -->
+        <div class="scene-tag">
+            <i class="fas ${sceneData.icon}"></i>
+            <span>${sceneData.name}</span>
+            <div class="scene-description">${sceneData.description}</div>
+        </div>
+        
+        <div class="scene-detail" style="margin-top: 30px;">
+            <div class="scene-detail-title"><i class="fas ${sceneData.icon}"></i>${sceneData.name}</div>
+            <div class="scene-detail-content">
+                ${sceneData.detail}
+            </div>
+        </div>
+        
+        <style>
+        /* ${sceneData.name} 场景样式 */
+        .scene-tag {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+            padding: 15px 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+            max-width: 200px;
+            margin: 0 auto;
+        }
+        
+        .scene-tag:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-color: #4aad92;
+        }
+        
+        .scene-tag i {
+            font-size: 28px;
+            color: #4aad92;
+            margin-bottom: 10px;
+            background-color: rgba(74, 173, 146, 0.1);
+            padding: 12px;
+            border-radius: 50%;
+            width: 55px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .scene-tag span {
+            font-weight: 500;
+            color: #36454f;
+        }
+        
+        .scene-description {
+            margin-top: 6px;
+            font-size: 12px;
+            color: #666;
+            line-height: 1.3;
+        }
+        
+        .scene-detail {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            border: 1px dashed #e0e0e0;
+        }
+        
+        .scene-detail-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #4aad92;
+            display: flex;
+            align-items: center;
+        }
+        
+        .scene-detail-title i {
+            margin-right: 8px;
+        }
+        
+        .scene-detail-content {
+            line-height: 1.6;
+            color: #555;
+        }
+        </style>
+    </div>
+    
+    <footer style="text-align: center; margin-top: 30px; color: #666; font-size: 12px;">
+        &copy; 家逸生活 - 沙发适用场景组件
+    </footer>
+</body>
+</html>`;
+            
+            // 创建Blob对象
+            const blob = new Blob([fullHtmlContent], { type: 'text/html' });
+            
+            // 创建下载链接
+            const downloadLink = document.createElement('a');
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.download = `${sceneData.name}-沙发场景.html`;
+            
+            // 添加到DOM并触发点击事件
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            
+            // 清理
+            document.body.removeChild(downloadLink);
+            setTimeout(() => URL.revokeObjectURL(downloadLink.href), 100);
+            
+            // 显示成功消息
+            const downloadBtn = document.querySelector('button[onclick="downloadHtmlFile()"]');
+            const originalText = downloadBtn.innerHTML;
+            
+            downloadBtn.innerHTML = '<i class="fas fa-check mr-1"></i> 下载成功';
+            downloadBtn.style.backgroundColor = '#38a169';
+            
+            // 2秒后恢复原样
+            setTimeout(() => {
+                downloadBtn.innerHTML = originalText;
+                downloadBtn.style.backgroundColor = '#4361ee';
+            }, 2000);
+        }
+        
+        // 下载沙发SVG图标
+        const sofaTypeData = {
+            'single': {
+                name: '单人位沙发',
+                description: '适合小户型/书房'
+            },
+            'double': {
+                name: '双人位沙发',
+                description: '适合15-20㎡客厅'
+            },
+            'triple': {
+                name: '三人位沙发',
+                description: '适合20-25㎡客厅'
+            },
+            'quad': {
+                name: '四人位沙发',
+                description: '适合25㎡以上客厅'
+            },
+            'triple-left': {
+                name: '3+左妃位沙发',
+                description: '适合L型空间'
+            },
+            'triple-right': {
+                name: '3+右妃位沙发',
+                description: '适合L型空间'
+            },
+            'single-pullout': {
+                name: '单人位拉床',
+                description: '适合小型客房/书房'
+            },
+            'double-pullout': {
+                name: '双人位拉床',
+                description: '适合中型客房/书房'
+            },
+            'triple-pullout': {
+                name: '三人位拉床',
+                description: '适合大型客厅/会客厅'
+            }
+        };
+        
+        // 显示沙发SVG下载模态框
+        async function downloadSofaSvg(sofaType) {
+            const modal = document.getElementById('svgDownloadModal');
+            const sofaData = sofaTypeData[sofaType];
+            
+            if (!sofaData) return;
+            
+            // 更新模态框内容
+            document.getElementById('sofaTypeName').textContent = sofaData.name;
+            document.getElementById('sofaTypeDescription').textContent = sofaData.description;
+            
+            // 设置预览图
+            const previewImg = document.getElementById('previewSofaSvg');
+            previewImg.src = `../img/sofa-types/${sofaType}.svg`;
+            
+            try {
+                // 显示加载状态
+                const svgCodeBlock = document.getElementById('svgCode');
+                svgCodeBlock.textContent = '正在加载SVG内容...';
+                
+                // 获取SVG文件内容 - 添加缓存破坏参数防止缓存问题
+                const response = await fetch(`../img/sofa-types/${sofaType}.svg?v=${new Date().getTime()}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP错误: ${response.status}`);
+                }
+                
+                const svgText = await response.text();
+                
+                // 检查SVG内容是否合法
+                if (!svgText || svgText.trim().length === 0 || !svgText.includes('<svg')) {
+                    throw new Error('获取到的SVG内容无效');
+                }
+                
+                // 显示SVG代码
+                svgCodeBlock.textContent = svgText;
+                
+                // 存储当前沙发类型数据供下载使用
+                window.currentSofaType = sofaType;
+                window.currentSvgText = svgText;
+                
+                // 启用下载按钮
+                const downloadBtn = document.querySelector('button[onclick="downloadSofaSvgFile()"]');
+                downloadBtn.disabled = false;
+                downloadBtn.style.opacity = '1';
+                
+                // 显示模态框
+                modal.style.display = 'flex';
+            } catch (error) {
+                console.error('获取SVG文件失败:', error);
+                
+                // 在模态框中显示错误信息
+                document.getElementById('svgCode').textContent = `获取SVG文件失败: ${error.message}\n请检查网络连接或稍后再试。`;
+                
+                // 禁用下载按钮
+                const downloadBtn = document.querySelector('button[onclick="downloadSofaSvgFile()"]');
+                downloadBtn.disabled = true;
+                downloadBtn.style.opacity = '0.5';
+                
+                // 仍然显示模态框以便用户看到错误信息
+                modal.style.display = 'flex';
+            }
+        }
+        
+        // 关闭沙发SVG模态框
+        function closeSvgModal() {
+            document.getElementById('svgDownloadModal').style.display = 'none';
+        }
+        
+        // 下载沙发SVG文件
+        function downloadSofaSvgFile() {
+            if (!window.currentSofaType || !window.currentSvgText) {
+                alert('SVG内容不可用，请刷新页面重试');
+                return;
+            }
+            
+            const sofaType = window.currentSofaType;
+            const svgText = window.currentSvgText;
+            const sofaData = sofaTypeData[sofaType];
+            
+            try {
+                // 创建Blob对象
+                const blob = new Blob([svgText], { type: 'image/svg+xml' });
+                
+                // 创建下载链接
+                const downloadLink = document.createElement('a');
+                
+                // 使用更可靠的方式创建URL
+                const url = window.URL || window.webkitURL || window;
+                downloadLink.href = url.createObjectURL(blob);
+                downloadLink.download = `${sofaData.name}.svg`;
+                
+                // 设置更多属性增加兼容性
+                downloadLink.type = 'image/svg+xml';
+                downloadLink.target = '_blank';
+                downloadLink.rel = 'noopener noreferrer';
+                downloadLink.style.display = 'none';
+                
+                // 添加到DOM并触发点击事件
+                document.body.appendChild(downloadLink);
+                
+                // 设置超时，确保下载触发
+                setTimeout(() => {
+                    downloadLink.click();
+                    
+                    // 延迟移除，确保下载有足够时间开始
+                    setTimeout(() => {
+                        document.body.removeChild(downloadLink);
+                        
+                        // 延迟释放URL对象
+                        setTimeout(() => {
+                            url.revokeObjectURL(downloadLink.href);
+                        }, 1000);
+                    }, 1000);
+                }, 100);
+                
+                // 显示成功消息
+                const downloadBtn = document.querySelector('button[onclick="downloadSofaSvgFile()"]');
+                const originalText = downloadBtn.innerHTML;
+                
+                downloadBtn.innerHTML = '<i class="fas fa-check mr-1"></i> 下载中...';
+                downloadBtn.style.backgroundColor = '#38a169';
+                
+                // 2秒后恢复原样
+                setTimeout(() => {
+                    downloadBtn.innerHTML = originalText;
+                    downloadBtn.style.backgroundColor = '#4361ee';
+                }, 2000);
+            } catch (error) {
+                console.error('下载SVG文件失败:', error);
+                alert(`下载失败: ${error.message}\n请尝试右键点击预览图并选择"图片另存为..."`);
+                
+                // 提供备用方案 - 直接打开SVG在新窗口
+                window.open(`../img/sofa-types/${sofaType}.svg`, '_blank');
+            }
+        }
+        
+        // 点击沙发SVG模态框背景关闭模态框
+        document.getElementById('svgDownloadModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSvgModal();
+            }
+        });
+        
+        // 为沙发预览标签添加点击事件
+        document.querySelectorAll('.sofa-preview-tag').forEach(tag => {
+            tag.addEventListener('click', function(e) {
+                // 如果点击的是下载按钮，不触发预览
+                if (e.target.closest('.download-btn')) {
+                    return;
+                }
+                
+                const sofaType = this.getAttribute('data-sofa-type');
+                downloadSofaSvg(sofaType);
+            });
+        });
+    </script>
+</body>
+</html> 

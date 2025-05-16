@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="120" viewBox="0 0 200 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 拉床框架 -->
+  <rect x="65" y="15" width="70" height="90" fill="#D9EAE5" stroke="#333" stroke-width="1.5"/>
+  
+  <!-- 床垫表面 -->
+  <rect x="70" y="20" width="60" height="80" fill="#FFFFFF" stroke="#333" stroke-width="0.5" stroke-dasharray="2 2"/>
+  
+  <!-- 床垫纹理线 -->
+  <line x1="70" y1="60" x2="130" y2="60" stroke="#333" stroke-width="0.5" stroke-dasharray="3 3"/>
+  
+  <!-- 床垫中线 -->
+  <line x1="100" y1="20" x2="100" y2="100" stroke="#333" stroke-width="0.5" stroke-dasharray="2 2"/>
+</svg> 

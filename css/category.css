@@ -1,0 +1,173 @@
+/* 隐藏滚动条但保持滚动功能 */
+body, #modal-content {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;     /* Firefox */
+}
+
+body::-webkit-scrollbar, 
+#modal-content::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari, Opera */
+}
+
+/* 轮播图渐变动画 */
+.carousel-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    display: flex;
+    align-items: center;
+}
+
+.carousel-slide.active {
+    opacity: 1;
+    z-index: 1;
+}
+
+/* 产品图片懒加载效果 - 优化版 */
+.lazy-image {
+    opacity: 1; /* 改为默认显示 */
+    transition: opacity 0.5s ease, filter 0.5s ease;
+    filter: blur(5px); /* 添加模糊效果 */
+    background-color: #f5f5f5;
+    min-height: 100px; /* 确保有最小高度 */
+}
+
+.lazy-image.loaded {
+    opacity: 1;
+    filter: blur(0px); /* 加载完成时移除模糊 */
+}
+
+/* 修改为精简的图片占位效果 */
+a.relative {
+    background-color: #f8f8f8;
+    position: relative;
+    display: block;
+}
+
+/* 为图片容器添加闪光效果 */
+.img-shimmer {
+    position: relative;
+    overflow: hidden;
+    background-color: #f5f5f5; /* 添加背景色 */
+}
+
+.img-shimmer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+    animation: shimmer 1.5s infinite;
+    z-index: 1;
+}
+
+@keyframes shimmer {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* 模态框动画 */
+#product-modal.show #modal-backdrop {
+    opacity: 1;
+}
+
+#product-modal.show #modal-content {
+    transform: translateY(0);
+}
+
+/* 底部导航栏按钮按压效果 */
+.tab-btn-press {
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.tab-btn-press:active {
+    transform: scale(0.95);
+}
+
+/* 购物车标记动画 */
+#cart-badge.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+#cart-badge.pulse {
+    animation: cart-pulse 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes cart-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.4); }
+    100% { transform: scale(1); }
+}
+
+/* Toast消息动画 */
+#toast-message.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+/* 客服按钮动画 */
+#customer-service-btn.animate-bounce {
+    animation: bounce 0.5s ease;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* 图片卡片链接悬停效果 */
+.category-item-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #2A9D8F, #ffbe76);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    transform-origin: left;
+}
+
+.category-item-link:hover::after {
+    transform: scaleX(1);
+}
+
+/* 为每个区域标题添加动画效果 */
+.section-title-hover:hover i {
+    transform: scale(1.2);
+    transition: transform 0.3s ease;
+}
+
+.view-more-hover:hover i {
+    transform: translateX(4px);
+    transition: transform 0.3s ease;
+}
+
+/* 修复图片闪烁问题 */
+img {
+    backface-visibility: hidden; /* 防止图片闪烁 */
+    transform: translateZ(0); /* 启用GPU加速 */
+    -webkit-font-smoothing: antialiased;
+}
+
+/* 修复初始加载时的问题 */
+.grid {
+    min-height: 100px; /* 确保网格有最小高度 */
+}
+
+/* 为轮播图添加占位背景 */
+#banner-carousel {
+    background-color: #f0f0f0;
+} 
