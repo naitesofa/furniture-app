@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>麦吉纳宣传卡片替换指南</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #2A9D8F;
+            border-bottom: 2px solid #2A9D8F;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #2A9D8F;
+            margin-top: 30px;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border: 1px solid #ddd;
+        }
+        code {
+            font-family: Consolas, Monaco, 'Andale Mono', monospace;
+            color: #333;
+        }
+        .note {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .success {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        ol li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>麦吉纳宣传卡片替换指南</h1>
+        
+        <p>按照客户要求，我们已经将麦吉纳宣传卡片简化为只保留核心宣传语"聚焦软体家具创新，做精准爆款提供商"，并移除了品牌识别区、行业领先等其他内容。</p>
+        
+        <div class="note">
+            <strong>注意：</strong> 我们已经备份了原始文件 <code>categorynew.html</code> 到 <code>categorynew_backup.html</code>，以防需要恢复。
+        </div>
+        
+        <h2>替换步骤</h2>
+        
+        <ol>
+            <li>打开 <code>pages/categorynew.html</code> 文件</li>
+            <li>找到以下麦吉纳宣传卡片代码（大约在第3690行附近）：
+                <pre><code>&lt;!-- 麦吉纳小程序宣传卡片 (新增) --&gt;
+&lt;div class="mcgina-promo-card"&gt;
+    &lt;div class="mcgina-promo-content"&gt;
+        &lt;div class="mcgina-promo-text mcgina-focused-text"&gt;
+            &lt;div class="mcgina-slogan-wrapper"&gt;
+                &lt;span class="mcgina-slogan-prefix"&gt;麦吉纳&lt;/span&gt;
+                &lt;p class="mcgina-core-slogan"&gt;聚焦软体家具创新，做精准爆款提供商&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;div class="mcgina-promo-badges"&gt;
+                &lt;span class="mcgina-badge"&gt;&lt;i class="fas fa-crown"&gt;&lt;/i&gt; 行业领先&lt;/span&gt;
+                &lt;span class="mcgina-badge"&gt;&lt;i class="fas fa-award"&gt;&lt;/i&gt; 品质保障&lt;/span&gt;
+                &lt;span class="mcgina-badge"&gt;&lt;i class="fas fa-gem"&gt;&lt;/i&gt; 精选设计&lt;/span&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="mcgina-brand-container"&gt;
+            &lt;div class="mcgina-year"&gt;SINCE 2018&lt;/div&gt;
+            &lt;div class="mcgina-logo"&gt;麦吉纳&lt;/div&gt;
+            &lt;div class="mcgina-brand-slogan"&gt;创新·品质·专业&lt;/div&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+            </li>
+            <li>将上述代码完全删除，并替换为以下简化版代码：
+                <pre><code>&lt;!-- 麦吉纳小程序宣传卡片 (简化版) --&gt;
+&lt;div class="mcgina-promo-card"&gt;
+    &lt;div class="mcgina-promo-content"&gt;
+        &lt;p class="mcgina-core-slogan"&gt;聚焦软体家具创新，做精准爆款提供商&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;!-- 装饰元素 --&gt;
+    &lt;div class="mcgina-decoration mcgina-deco-circle"&gt;&lt;/div&gt;
+    &lt;div class="mcgina-decoration mcgina-deco-circle second"&gt;&lt;/div&gt;
+    &lt;!-- 波浪效果 --&gt;
+    &lt;div class="mcgina-wave"&gt;&lt;/div&gt;
+    &lt;div class="mcgina-wave wave-2"&gt;&lt;/div&gt;
+    &lt;!-- 闪亮特效 --&gt;
+    &lt;div class="mcgina-shine"&gt;&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+            </li>
+            <li>如果在 <code>&lt;head&gt;</code> 区域没有找到 <code>mcgina-core-slogan</code> 的样式定义，请在 CSS 部分（约在第3400行附近）添加以下样式：
+                <pre><code>/* 核心宣传语样式 */
+.mcgina-core-slogan {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.4;
+    margin: 0;
+    text-align: center;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    background: linear-gradient(90deg, #ffffff, #ffe1a8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    display: inline-block;
+}
+
+.mcgina-core-slogan::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 3px;
+    background-color: var(--accent-color);
+    border-radius: 3px;
+}
+
+/* 更新宣传卡片内容布局 */
+.mcgina-promo-content {
+    justify-content: center; /* 居中显示宣传语 */
+}
+
+/* 手机屏幕适配 */
+@media (max-width: 768px) {
+    .mcgina-core-slogan {
+        font-size: 22px;
+    }
+}</code></pre>
+            </li>
+            <li>保存文件并刷新页面查看效果</li>
+        </ol>
+        
+        <h2>替换后效果</h2>
+        
+        <p>替换完成后，麦吉纳宣传卡片将只显示核心宣传语"聚焦软体家具创新，做精准爆款提供商"，并保留原有的背景渐变、装饰元素和动画效果，但移除了品牌识别区、徽章等其他内容。</p>
+        
+        <div class="success">
+            <strong>提示：</strong> 如需恢复原始宣传卡片，可以将 <code>categorynew_backup.html</code> 中的相关代码复制回 <code>categorynew.html</code>。
+        </div>
+        
+        <h2>参考文件</h2>
+        
+        <p>我们已经创建了几个参考文件，以便您查看和比较：</p>
+        
+        <ul>
+            <li><code>mcgina-simplified.html</code> - 包含完整的简化版宣传卡片及相关样式</li>
+            <li><code>mcgina-code-only.html</code> - 仅包含简化版卡片的HTML和CSS代码，便于复制粘贴</li>
+            <li><code>mcgina-update-instructions.html</code> - 详细的更新步骤说明</li>
+            <li><code>categorynew_backup.html</code> - 原始文件的备份</li>
+        </ul>
+    </div>
+</body>
+</html> 

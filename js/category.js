@@ -6,6 +6,8 @@
 document.addEventListener('DOMContentLoaded', function() {
     // 初始化各模块
     initBannerCarousel();
+    initNewArrivalsCarousel(); // 调用新的轮播初始化函数
+    initProductCardScroll(); // 初始化产品卡片横向滚动功能
     initLazyLoading();
     initProductShowcase();
     updateCartBadge();
@@ -135,6 +137,235 @@ function initBannerCarousel() {
     setInterval(() => {
         goToSlide((currentSlide + 1) % totalSlides);
     }, 5000);
+}
+
+// 新的"优品上新"轮播组件的JavaScript逻辑
+function initNewArrivalsCarousel() {
+    console.log('Initializing New Arrivals Carousel...'); // 调试日志
+    
+    const carousel = document.getElementById('new-arrivals-carousel');
+    if (!carousel) {
+        console.warn('New Arrivals Carousel not found, skipping initialization.');
+        return;
+    }
+
+    const slidesContainer = carousel.querySelector('.carousel-slides-new');
+    const slides = carousel.querySelectorAll('.carousel-slide-new');
+    const prevButton = document.getElementById('prev-new-arrivals');
+    const nextButton = document.getElementById('next-new-arrivals');
+    const indicatorsContainer = document.getElementById('indicators-new-arrivals');
+
+    if (!slidesContainer || slides.length === 0 || !prevButton || !nextButton || !indicatorsContainer) {
+        console.warn('New Arrivals Carousel elements not found or incomplete. Initialization skipped.');
+        return;
+    }
+
+    console.log(`Found ${slides.length} slides in the carousel`); // 调试日志
+
+    let currentIndex = 0;
+    const totalSlides = slides.length;
+    let autoPlayInterval = null;
+    const autoPlayDelay = 4000; // 4 seconds for auto-play
+
+    // Create indicators
+    indicatorsContainer.innerHTML = ''; // Clear any existing indicators
+    for (let i = 0; i < totalSlides; i++) {
+        const button = document.createElement('button');
+        button.classList.add('w-2.5', 'h-2.5', 'rounded-full', 'transition-all', 'duration-300', 'cursor-pointer');
+        if (i === 0) {
+            button.classList.add('bg-white', 'scale-125');
+        } else {
+            button.classList.add('bg-white/50', 'hover:bg-white/70');
+        }
+        button.dataset.slideTo = i;
+        button.setAttribute('aria-label', `Go to slide ${i + 1}`);
+        button.addEventListener('click', () => {
+            goToSlide(i);
+            resetAutoPlay(); // Reset timer when user interacts
+        });
+        indicatorsContainer.appendChild(button);
+    }
+    const indicatorButtons = indicatorsContainer.querySelectorAll('button');
+
+    function updateIndicators() {
+        indicatorButtons.forEach((button, index) => {
+            button.classList.toggle('bg-white', index === currentIndex);
+            button.classList.toggle('scale-125', index === currentIndex);
+            button.classList.toggle('bg-white/50', index !== currentIndex);
+            button.classList.toggle('hover:bg-white/70', index !== currentIndex);
+        });
+    }
+
+    function goToSlide(index) {
+        // Ensure index is within bounds and wraps around
+        currentIndex = (index + totalSlides) % totalSlides;
+        // 直接设置 transform 属性
+        slidesContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+        updateIndicators();
+    }
+
+    function nextSlide() {
+        goToSlide(currentIndex + 1);
+    }
+
+    function prevSlide() {
+        goToSlide(currentIndex - 1);
+    }
+
+    function startAutoPlay() {
+        if (autoPlayInterval) {
+            stopAutoPlay(); // Clear existing interval before starting a new one
+        }
+        autoPlayInterval = setInterval(() => {
+            nextSlide();
+        }, autoPlayDelay);
+        console.log('Auto play started'); // 调试日志
+    }
+
+    function stopAutoPlay() {
+        if (autoPlayInterval) {
+            clearInterval(autoPlayInterval);
+            autoPlayInterval = null;
+            console.log('Auto play stopped'); // 调试日志
+        }
+    }
+
+    function resetAutoPlay() {
+        stopAutoPlay();
+        startAutoPlay();
+    }
+
+    // Event Listeners for prev/next buttons
+    prevButton.addEventListener('click', () => {
+        prevSlide();
+        resetAutoPlay();
+    });
+
+    nextButton.addEventListener('click', () => {
+        nextSlide();
+        resetAutoPlay();
+    });
+
+    // Pause on hover
+    carousel.addEventListener('mouseenter', stopAutoPlay);
+    carousel.addEventListener('mouseleave', startAutoPlay);
+
+    // Initial setup
+    goToSlide(0); // Ensure first slide is correctly positioned and indicators set
+    
+    // 延迟一下再启动自动播放，确保页面已经加载完成
+    setTimeout(() => {
+        startAutoPlay();
+    }, 1000);
+}
+
+/**
+ * 初始化产品卡片横向滚动功能
+ */
+function initProductCardScroll() {
+    const scrollLeftBtn = document.getElementById('scroll-left');
+    const scrollRightBtn = document.getElementById('scroll-right');
+    const cardContainer = document.querySelector('.product-card-container');
+    const cardParent = cardContainer ? cardContainer.parentElement : null;
+    
+    if (!scrollLeftBtn || !scrollRightBtn || !cardContainer || !cardParent) {
+        console.warn('Product card scroll elements not found. Initialization skipped.');
+        return;
+    }
+    
+    // 设置滚动步长 (一次滚动一个卡片的宽度)
+    const cardWidth = cardParent.clientWidth / 2; // 一个卡片占据一半宽度
+    
+    // 滚动到左边
+    scrollLeftBtn.addEventListener('click', () => {
+        cardParent.scrollBy({
+            left: -cardWidth,
+            behavior: 'smooth'
+        });
+    });
+    
+    // 滚动到右边
+    scrollRightBtn.addEventListener('click', () => {
+        cardParent.scrollBy({
+            left: cardWidth,
+            behavior: 'smooth'
+        });
+    });
+    
+    // 检查是否需要显示或隐藏滚动按钮
+    function checkScrollButtons() {
+        // 检查是否已经滚动到最左边
+        if (cardParent.scrollLeft <= 10) {
+            scrollLeftBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        } else {
+            scrollLeftBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+        
+        // 检查是否已经滚动到最右边
+        if (cardParent.scrollLeft + cardParent.clientWidth >= cardParent.scrollWidth - 10) {
+            scrollRightBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        } else {
+            scrollRightBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+    }
+    
+    // 初始检查按钮状态
+    checkScrollButtons();
+    
+    // 滚动时检查按钮状态
+    cardParent.addEventListener('scroll', checkScrollButtons);
+    
+    // 窗口大小改变时重新检查
+    window.addEventListener('resize', checkScrollButtons);
+    
+    // 为产品卡片添加鼠标悬停效果
+    const productCards = document.querySelectorAll('.product-card');
+    productCards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.classList.add('transform', 'scale-[1.02]', 'shadow-md');
+            stopAutoScroll(); // 鼠标悬停时暂停自动滚动
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            card.classList.remove('transform', 'scale-[1.02]', 'shadow-md');
+            startAutoScroll(); // 鼠标移开时恢复自动滚动
+        });
+    });
+    
+    // 自动滚动功能
+    let autoScrollInterval;
+    const autoScrollDelay = 3000; // 3秒滚动一次
+    
+    function autoScroll() {
+        // 如果滚动到最右边，则返回到最左边
+        if (cardParent.scrollLeft + cardParent.clientWidth >= cardParent.scrollWidth - 10) {
+            cardParent.scrollTo({ left: 0, behavior: 'smooth' });
+        } else {
+            // 否则滚动一个卡片的宽度
+            cardParent.scrollBy({ left: cardWidth, behavior: 'smooth' });
+        }
+    }
+    
+    function startAutoScroll() {
+        stopAutoScroll(); // 清除现有定时器
+        autoScrollInterval = setInterval(autoScroll, autoScrollDelay);
+    }
+    
+    function stopAutoScroll() {
+        clearInterval(autoScrollInterval);
+    }
+    
+    // 启动自动滚动
+    startAutoScroll();
+    
+    // 页面不可见时暂停自动滚动
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            stopAutoScroll();
+        } else {
+            startAutoScroll();
+        }
+    });
 }
 
 /**

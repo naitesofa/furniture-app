@@ -11,6 +11,15 @@
     <!-- Font Awesome 图标 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    
+    <!-- 高质量字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <!-- 自定义样式 -->
     <link rel="stylesheet" href="css/category.css">
     
@@ -24,6 +33,18 @@
                         secondary: '#4ecdc4',
                         accent: '#ffbe76',
                         dark: '#3A6A7E',
+                    },
+                    fontFamily: {
+                        'sans': ['Noto Sans SC', 'sans-serif'],
+                        'serif': ['Noto Serif SC', 'serif']
+                    },
+                    letterSpacing: {
+                        'wider': '0.05em',
+                        'widest': '0.1em'
+                    },
+                    lineHeight: {
+                        'snug': '1.375',
+                        'relaxed': '1.625'
                     }
                 }
             }
@@ -39,6 +60,15 @@
             line-height: 1.5; /* 减小行高，从1.6改为1.5 */
             color: #2A9D8F;
             border-bottom: 1px solid rgba(42, 157, 143, 0.2);
+        }
+        
+        /* 隐藏横向滚动条 */
+        .hide-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
         }
         @media (max-width: 768px) {
             .mcgina-text-banner {
@@ -81,10 +111,51 @@
             position: relative;
             overflow: hidden;
         }
+
+                /* Marquee styles for chair products */
+                .chair-marquee-section .marquee-container {
+            /* 使用自适应高度，让图片决定高度 */
+            overflow: hidden;
+        }
+        .chair-marquee-section .marquee-track {
+            /* 5 images, each taking up (48% width + 2% margin-right) = 50% of a two-image view. */
+            /* Total width for one set = 5 * 50% = 250% of the container. */
+            /* Cloned set makes it 500% of the container. */
+            width: calc(5 * (48% + 2%) * 2); 
+            animation: marqueeAnimationChair 25s linear infinite;
+            will-change: transform; /* Improves animation performance */
+            display: flex;
+            align-items: center; /* 垂直居中图片 */
+        }
+        .chair-marquee-section .marquee-item {
+            /* width: 48%;  */
+            /* To show two items, each takes up almost half the container width */
+            /* margin-right: 2%;  */
+            /* Gap between items */
+            height: 140px; /* 固定高度 */
+            object-fit: contain; /* 确保图片完整显示，不裁剪 */
+            border-radius: 0.5rem; /* rounded-lg */
+            flex-shrink: 0; /* Prevent items from shrinking */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Subtle shadow */
+            padding: 10px; /* 添加内边距，让图片有呼吸空间 */
+        }
+        /* Pause animation on hover */
+        .chair-marquee-section .marquee-container:hover .marquee-track {
+            animation-play-state: paused;
+        }
+        @keyframes marqueeAnimationChair {
+            0% {
+                transform: translateX(0%);
+            }
+            100% {
+                /* Move by the width of one set of original images */
+                transform: translateX(-50%); 
+            }
+        }
 </style>
 <body class="bg-gray-50 font-sans text-gray-800">
     <!-- 页面容器 -->
-    <div class="max-w-screen-lg mx-auto px-4">
+    <div class="max-w-screen-lg mx-auto px-2">
         <!-- 搜索框 -->
         <div class="search-container mt-4 mb-2">
             <div class="search-box ">
@@ -103,268 +174,494 @@
         
         
         <!-- 轮播图部分 -->
-        <div class="relative w-full pb-[100%] rounded-lg overflow-hidden mb-4" id="banner-carousel">
-            <div class="absolute inset-0">
-                <!-- 轮播图内容 -->
+        <!-- 移动端首页轮播图 -->
+        <div class="relative w-full mb-5" id="banner-carousel">
+            <!-- 轮播容器 -->
+            <div class="relative overflow-hidden rounded-2xl shadow-lg" style="height: 75vh; max-height: 580px;">
+                <!-- 轮播内容 -->
                 <div class="carousel-slides h-full w-full">
-                    <div class="slide absolute inset-0 opacity-100 transition-opacity duration-500">
-                        <img src="https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1200" alt="现代简约客厅" class="w-full h-full object-cover">
-                        <div class="absolute bottom-10 left-6 right-6 text-white z-10">
-                            <h3 class="text-2xl font-bold mb-1">现代简约风格家具</h3>
-                            <p class="text-sm opacity-90">简约不简单，打造高品质生活空间</p>
-                        </div>
-                    </div>
-                    <div class="slide absolute inset-0 opacity-0 transition-opacity duration-500">
-                        <img src="https://images.pexels.com/photos/1248583/pexels-photo-1248583.jpeg?auto=compress&cs=tinysrgb&w=1500&h=1000&dpr=1" alt="北欧风格卧室" class="w-full h-full object-cover">
-                        <div class="absolute bottom-10 left-6 right-6 text-white z-10">
-                            <h3 class="text-2xl font-bold mb-1">北欧轻奢系列</h3>
-                            <p class="text-sm opacity-90">温馨舒适，尽显品质生活</p>
-                        </div>
-                    </div>
-                    <div class="slide absolute inset-0 opacity-0 transition-opacity duration-500">
-                        <img src="https://images.pexels.com/photos/4352247/pexels-photo-4352247.jpeg?auto=compress&cs=tinysrgb&w=1500&h=1000&dpr=1" alt="高端定制家具" class="w-full h-full object-cover">
-                        <div class="absolute bottom-10 left-6 right-6 text-white z-10">
-                            <h3 class="text-2xl font-bold mb-1">私人定制系列</h3>
-                            <p class="text-sm opacity-90">专属于你的家具定制服务</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 轮播图指示器 -->
-            <div class="absolute bottom-3 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10" id="carousel-indicators">
-                <button class="w-2 h-2 rounded-full bg-white opacity-100 transition-opacity duration-300"></button>
-                <button class="w-2 h-2 rounded-full bg-white opacity-50 transition-opacity duration-300"></button>
-                <button class="w-2 h-2 rounded-full bg-white opacity-50 transition-opacity duration-300"></button>
-            </div>
-            
-            <!-- 渐变遮罩 -->
-            <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/60 to-transparent z-[2]"></div>
-        </div>
-        
-        <!-- 高定沙发区域 -->
-        <div class="mb-6">
-            <div class="flex justify-between items-center bg-primary/5 rounded-xl p-3 mb-3 cursor-pointer" id="toggle-premium-sofa">
-                <div class="flex items-center">
-                    <i class="fas fa-bolt text-primary mr-2"></i>
-                    <h2 class="text-lg font-semibold">高定沙发</h2>
-                </div>
-                <div class="text-primary">
-                    <i class="fas fa-arrow-circle-right"></i>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-1 aspect-square">
-                <a href="#" class="relative overflow-hidden rounded">
-                    <img src="../images/308_LX_04.png" alt="北欧风格真皮沙发" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                </a>
-                <a href="#" class="relative overflow-hidden rounded">
-                    <img src="../images/308_main.png" alt="现代布艺沙发" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                </a>
-                <a href="#" class="relative overflow-hidden rounded">
-                    <img src="../images/L-340B.jpg" alt="智能按摩功能沙发" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                </a>
-                <a href="#" class="relative overflow-hidden rounded">
-                    <img src="../images/935_FA3071_1.png" alt="轻奢转角沙发" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                </a>
-            </div>
-        </div>
-        
-        <!-- 小户型必选区域 -->
-        <div class="mb-6">
-            <div class="flex justify-between items-center bg-primary/5 rounded-xl p-3 mb-3 cursor-pointer" id="toggle-small-apartment">
-                <div class="flex items-center">
-                    <i class="fas fa-star text-primary mr-2"></i>
-                    <h2 class="text-lg font-semibold">小户型必选</h2>
-                </div>
-                <div class="text-primary">
-                    <i class="fas fa-arrow-circle-right"></i>
-                </div>
-            </div>
-            
-            <div class="grid grid-cols-2 gap-1 aspect-square">
-                <a href="#" class="relative overflow-hidden rounded">
-                    <img src="https://images.unsplash.com/photo-1519947486511-46149fa0a254?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80" alt="北欧简约餐椅" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                </a>
-                <a href="#" class="relative overflow-hidden rounded">
-                    <img src="https://images.unsplash.com/photo-1530603907829-762c68074412?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80" alt="日式实木茶几" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                </a>
-                <a href="#" class="relative overflow-hidden rounded">
-                    <img src="https://images.unsplash.com/photo-1540932239986-30128078f3c5?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80" alt="现代轻奢台灯" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                </a>
-                <a href="#" class="relative overflow-hidden rounded">
-                    <img src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80" alt="工业风书架" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                </a>
-            </div>
-        </div>
-        
-        <!-- 优品上新展示区 - 高端设计模块 -->
-        <div class="mb-6">
-            <!-- 精致标题区域 -->
-            <div class="relative mb-4">
-                <div class="flex items-center justify-between py-2 px-3 bg-gradient-to-r from-primary/10 to-transparent rounded-lg">
-                    <div class="flex items-center">
-                        <div class="w-1 h-6 bg-primary rounded-full mr-2"></div>
-                        <h2 class="text-xl font-bold text-gray-800 tracking-wide relative">
-                            <span class="relative z-10">优品上新</span>
-                            <span class="absolute -bottom-1 left-0 w-full h-2 bg-primary/20 -z-10 rounded"></span>
-                        </h2>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- 高端产品展示区 - 竖屏海报 -->
-            <div class="w-full mb-2">
-                <div class="relative overflow-hidden rounded-lg shadow-sm">
-                    <div class="aspect-square w-full">
-                        <img src="../images/image119096.jpg" 
-                             alt="轻奢现代沙发" 
+                    <!-- 幻灯片 1 -->
+                    <div class="slide absolute inset-0 opacity-100 transition-all duration-700 ease-in-out transform scale-100">
+                        <img src="https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1200" 
+                             alt="现代简约客厅" 
                              class="w-full h-full object-cover">
+                        
+                        <!-- 文字内容容器 -->
+                        <div class="absolute inset-x-0 bottom-0 p-6 z-10">
+                            <!-- 标题和副标题 -->
+                            <h3 class="font-['Noto_Serif_SC'] text-2xl font-bold text-white tracking-wide leading-tight mb-2">现代简约风格</h3>
+                            <p class="font-['Noto_Sans_SC'] text-sm font-light text-white/90 tracking-wide mb-4">简约不简单，打造高品质生活空间</p>
+                            
+                            <!-- 探索按钮 -->
+                            <button class="bg-white/20 backdrop-blur-sm text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-white/30 transition-colors duration-300 flex items-center">
+                                探索更多
+                                <span class="material-icons-round text-sm ml-1">arrow_forward</span>
+                            </button>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 智能床区域 -->
-        <div class="mb-6">
-            <a href="#" class="block">
-                <div class="flex justify-between items-center bg-primary/5 rounded-xl p-3 mb-3">
-                    <div class="flex items-center">
-                        <i class="fas fa-cogs text-primary mr-2"></i>
-                        <h2 class="text-lg font-semibold">智能床</h2>
+                    
+                    <!-- 幻灯片 2 -->
+                    <div class="slide absolute inset-0 opacity-0 transition-all duration-700 ease-in-out transform scale-105">
+                        <img src="https://images.pexels.com/photos/1248583/pexels-photo-1248583.jpeg?auto=compress&cs=tinysrgb&w=1500&h=1000&dpr=1" 
+                             alt="北欧风格卧室" 
+                             class="w-full h-full object-cover">
+                        
+                        <!-- 文字内容容器 -->
+                        <div class="absolute inset-x-0 bottom-0 p-6 z-10">
+                            <!-- 标题和副标题 -->
+                            <h3 class="font-['Noto_Serif_SC'] text-2xl font-bold text-white tracking-wide leading-tight mb-2">北欧轻奢系列</h3>
+                            <p class="font-['Noto_Sans_SC'] text-sm font-light text-white/90 tracking-wide mb-4">温馨舒适，尽显品质生活</p>
+                            
+                            <!-- 探索按钮 -->
+                            <button class="bg-white/20 backdrop-blur-sm text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-white/30 transition-colors duration-300 flex items-center">
+                                探索更多
+                                <span class="material-icons-round text-sm ml-1">arrow_forward</span>
+                            </button>
+                        </div>
                     </div>
-                    <div class="text-primary">
-                        <i class="fas fa-arrow-circle-right"></i>
-                    </div>
-                </div>
-            </a>
-            
-            <div class="grid grid-cols-2 gap-1 aspect-square">
-                <a href="#" class="relative overflow-hidden rounded">
-                    <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" alt="多功能休闲床" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                </a>
-                <a href="#" class="relative overflow-hidden rounded">
-                    <img src="https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" alt="电动按摩床" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                </a>
-                <a href="#" class="relative overflow-hidden rounded">
-                    <img src="https://images.unsplash.com/photo-1540518614846-7eded433c457?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80" alt="智能可调节床" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                </a>
-                <a href="#" class="relative overflow-hidden rounded">
-                    <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80" alt="变形多用途床" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                </a>
-            </div>
-        </div>
-        
-        <!-- 真皮沙发区域 -->
-        <!-- <div class="mb-6">
-            <a href="#" class="block">
-                <div class="flex justify-between items-center bg-primary/5 rounded-xl p-3 mb-3">
-                    <div class="flex items-center">
-                        <i class="fas fa-star text-primary mr-2"></i>
-                        <h2 class="text-lg font-semibold">真皮沙发</h2>
-                    </div>
-                    <div class="text-primary">
-                        <i class="fas fa-arrow-circle-right"></i>
-                    </div>
-                </div>
-            </a>
-            
-            <div class="grid grid-cols-2 gap-1 aspect-square">
-                <a href="#" class="relative overflow-hidden rounded">
-                    <img src="https://images.pexels.com/photos/276583/pexels-photo-276583.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="北欧风格真皮沙发" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                </a>
-                <a href="#" class="relative overflow-hidden rounded">
-                    <img src="https://images.pexels.com/photos/1571463/pexels-photo-1571463.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="轻奢真皮沙发" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                </a>
-                <a href="#" class="relative overflow-hidden rounded">
-                    <img src="https://images.pexels.com/photos/6489127/pexels-photo-6489127.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="现代真皮沙发" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                </a>
-                <a href="#" class="relative overflow-hidden rounded">
-                    <img src="https://images.pexels.com/photos/4846461/pexels-photo-4846461.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="工业风真皮沙发" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
-                </a>
-            </div>
-        </div> -->
-        
-        <!-- 沙发选购指南 -->
-        <div class="bg-white rounded-lg shadow-sm p-5 mb-6">
-            <div class="mb-4">
-                <h2 class="flex items-center text-xl font-semibold">
-                    <i class="fas fa-compass text-primary mr-2"></i>
-                    沙发选购指南
-                </h2>
-            </div>
-            
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="flex gap-4">
-                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xl">
-                        <i class="fas fa-ruler-combined"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold mb-2">如何测量空间?</h3>
-                        <p class="text-gray-600 text-sm mb-2">在选购沙发前，请确保测量您的空间尺寸，包括门宽、走廊和电梯尺寸，以确保沙发能顺利送达您的家中。</p>
-                        <a href="#" class="text-primary text-sm flex items-center hover:underline">
-                            查看详细指南
-                            <i class="fas fa-chevron-right ml-1 text-xs"></i>
-                        </a>
+                    
+                    <!-- 幻灯片 3 -->
+                    <div class="slide absolute inset-0 opacity-0 transition-all duration-700 ease-in-out transform scale-105">
+                        <img src="https://images.pexels.com/photos/4352247/pexels-photo-4352247.jpeg?auto=compress&cs=tinysrgb&w=1500&h=1000&dpr=1" 
+                             alt="高端定制家具" 
+                             class="w-full h-full object-cover">
+                        
+                        <!-- 文字内容容器 -->
+                        <div class="absolute inset-x-0 bottom-0 p-6 z-10">
+                            <!-- 标题和副标题 -->
+                            <h3 class="font-['Noto_Serif_SC'] text-2xl font-bold text-white tracking-wide leading-tight mb-2">私人定制系列</h3>
+                            <p class="font-['Noto_Sans_SC'] text-sm font-light text-white/90 tracking-wide mb-4">专属于你的家具定制服务</p>
+                            
+                            <!-- 探索按钮 -->
+                            <button class="bg-white/20 backdrop-blur-sm text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-white/30 transition-colors duration-300 flex items-center">
+                                探索更多
+                                <span class="material-icons-round text-sm ml-1">arrow_forward</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="flex gap-4">
-                    <div class="flex-shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xl">
-                        <i class="fas fa-couch"></i>
+                <!-- 轮播指示器 -->
+                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-3 z-10" id="carousel-indicators">
+                    <button class="w-2.5 h-2.5 rounded-full bg-white opacity-100 transition-all duration-300 scale-110"></button>
+                    <button class="w-2.5 h-2.5 rounded-full bg-white opacity-60 transition-all duration-300"></button>
+                    <button class="w-2.5 h-2.5 rounded-full bg-white opacity-60 transition-all duration-300"></button>
+                </div>
+                
+                <!-- 渐变遮罩 -->
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-[2]"></div>
+                
+                <!-- 触控区域 - 左右滑动 -->
+                <div class="absolute inset-y-0 left-0 w-1/5 z-10 opacity-0" id="prev-slide"></div>
+                <div class="absolute inset-y-0 right-0 w-1/5 z-10 opacity-0" id="next-slide"></div>
+            </div>
+        </div>
+        
+        <!-- 轮播图脚本 -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const slides = document.querySelectorAll('#banner-carousel .slide');
+                const indicators = document.querySelectorAll('#carousel-indicators button');
+                const prevSlide = document.getElementById('prev-slide');
+                const nextSlide = document.getElementById('next-slide');
+                
+                let currentSlide = 0;
+                const slideCount = slides.length;
+                let slideInterval = setInterval(goToNextSlide, 4000);
+                let touchStartX = 0;
+                let touchEndX = 0;
+                
+                // 更新幻灯片和指示器状态
+                function showSlide(index) {
+                    // 隐藏所有幻灯片
+                    slides.forEach(slide => {
+                        slide.style.opacity = '0';
+                        slide.style.transform = 'scale(1.05)';
+                    });
+                    
+                    // 重置所有指示器
+                    indicators.forEach(indicator => {
+                        indicator.style.opacity = '0.6';
+                        indicator.style.transform = 'scale(1)';
+                    });
+                    
+                    // 显示当前幻灯片
+                    slides[index].style.opacity = '1';
+                    slides[index].style.transform = 'scale(1)';
+                    
+                    // 高亮当前指示器
+                    indicators[index].style.opacity = '1';
+                    indicators[index].style.transform = 'scale(1.1)';
+                    
+                    // 更新当前幻灯片索引
+                    currentSlide = index;
+                }
+                
+                // 下一张幻灯片
+                function goToNextSlide() {
+                    showSlide((currentSlide + 1) % slideCount);
+                }
+                
+                // 上一张幻灯片
+                function goToPrevSlide() {
+                    showSlide((currentSlide - 1 + slideCount) % slideCount);
+                }
+                
+                // 点击指示器切换幻灯片
+                indicators.forEach((indicator, index) => {
+                    indicator.addEventListener('click', () => {
+                        clearInterval(slideInterval);
+                        showSlide(index);
+                        slideInterval = setInterval(goToNextSlide, 4000);
+                    });
+                });
+                
+                // 左右区域点击切换
+                prevSlide.addEventListener('click', () => {
+                    clearInterval(slideInterval);
+                    goToPrevSlide();
+                    slideInterval = setInterval(goToNextSlide, 4000);
+                });
+                
+                nextSlide.addEventListener('click', () => {
+                    clearInterval(slideInterval);
+                    goToNextSlide();
+                    slideInterval = setInterval(goToNextSlide, 4000);
+                });
+                
+                // 触控滑动支持
+                const carousel = document.querySelector('#banner-carousel');
+                
+                carousel.addEventListener('touchstart', (e) => {
+                    touchStartX = e.changedTouches[0].screenX;
+                    clearInterval(slideInterval);
+                }, { passive: true });
+                
+                carousel.addEventListener('touchend', (e) => {
+                    touchEndX = e.changedTouches[0].screenX;
+                    handleSwipe();
+                    slideInterval = setInterval(goToNextSlide, 4000);
+                }, { passive: true });
+                
+                function handleSwipe() {
+                    const swipeThreshold = 50; // 滑动阈值
+                    if (touchEndX < touchStartX - swipeThreshold) {
+                        // 向左滑动 -> 下一张
+                        goToNextSlide();
+                    } else if (touchEndX > touchStartX + swipeThreshold) {
+                        // 向右滑动 -> 上一张
+                        goToPrevSlide();
+                    }
+                }
+            });
+        </script>
+        
+        <!-- 客厅沙发区域 -->
+        <div class="mb-6">
+                <div class="relative overflow-hidden bg-gradient-to-r from-primary/8 to-transparent p-3 mb-4 rounded-xl shadow-sm cursor-pointer active:shadow-md transition-all duration-150 ease-in-out active:transform active:scale-[0.99]" id="toggle-premium-sofa">
+                    <!-- 装饰元素 - 左侧装饰线 -->
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary/40 via-primary/20 to-transparent rounded-full"></div>
+                    
+                    <div class="relative flex items-center justify-between">
+                        <!-- 宣传标语 -->
+                        <div class="flex-1">
+                            <h3 class="font-['Noto_Serif_SC'] text-xl font-medium text-gray-800 tracking-wider leading-relaxed">沙发之上，舒适即家</h3>
+                            <!-- <p class="font-['Noto_Sans_SC'] text-sm text-gray-600 font-light tracking-wide mt-1 leading-snug">每一处细节，都是为了您的舒适体验</p> -->
+                            <div class="h-0.5 w-24 bg-primary/40 mt-2 rounded-full"></div>
+                        </div>
+                        
+                        <!-- 右侧装饰元素 -->
+                        <div class="w-8 h-8 bg-gradient-to-br from-primary/20 to-transparent rounded-full opacity-60"></div>
                     </div>
-                    <div>
-                        <h3 class="font-semibold mb-2">材质选择指南</h3>
-                        <p class="text-gray-600 text-sm mb-2">不同材质的沙发有不同的特点和保养方法。皮质耐用但价格较高，布艺舒适但需要定期清洁。</p>
-                        <a href="#" class="text-primary text-sm flex items-center hover:underline">
-                            了解更多
-                            <i class="fas fa-chevron-right ml-1 text-xs"></i>
-                        </a>
-                    </div>
+                </div>
+            
+            <div class="bg-white rounded-lg shadow-sm">
+                <div class="grid grid-cols-2 gap-1 aspect-square">
+                    <a href="#" class="relative overflow-hidden ">
+                        <img src="../images/sy/fu1.jpg" alt="北欧风格真皮沙发" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                    </a>
+                    <a href="#" class="relative overflow-hidden ">
+                        <img src="../images/sy/fu7.jpg" alt="现代布艺沙发" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                    </a>
+                    <a href="#" class="relative overflow-hidden ">
+                        <img src="../images/sy/899.png" alt="智能按摩功能沙发" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                    </a>
+                    <a href="#" class="relative overflow-hidden ">
+                        <img src="../images/sy/968.png" alt="轻奢转角沙发" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                    </a>
                 </div>
             </div>
         </div>
         
+        <!-- 优品上新区域 - 包含海报图片 -->
+        <div class="">
+            <!-- 精致标题区域 -->
+            <div class="relative mb-4">
+                <div class="relative overflow-hidden bg-gradient-to-r from-primary/8 to-transparent p-3 rounded-xl shadow-sm cursor-pointer active:shadow-md transition-all duration-150 ease-in-out active:transform active:scale-[0.99]">
+                    <!-- 装饰元素 - 左侧装饰线 -->
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary/40 via-primary/20 to-transparent rounded-full"></div>
+                    
+                    <div class="relative flex items-center justify-between">
+                        <!-- 宣传标语 -->
+                        <div class="flex-1">
+                            <h3 class="font-['Noto_Serif_SC'] text-xl font-medium text-gray-800 tracking-wider whitespace-nowrap">极简首发，重塑客厅呼吸感</h3>
+                            <div class="h-0.5 w-32 bg-primary/40 mt-2 rounded-full"></div> <!-- 精致的下划线装饰 -->
+                        </div>
+                        
+                        <!-- 右侧装饰元素 -->
+                        <div class="w-8 h-8 bg-gradient-to-br from-primary/20 to-transparent rounded-full opacity-60"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 轮播组件 -->
+            <div class="relative w-full overflow-hidden rounded-xl shadow-lg mb-6" style="height: 380px;">
+                <!-- 轮播容器 -->
+                <div class="premium-carousel relative h-full w-full">
+                    <!-- 轮播图片 1 -->
+                    <div class="carousel-slide absolute inset-0 opacity-100 transition-opacity duration-700 ease-in-out">
+                        <img src="../images/898.jpg" alt="北欧轻奢沙发" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
+                            <div class="absolute bottom-0 left-0 w-full p-8">
+                                <!-- <h3 class="text-white text-2xl font-semibold tracking-wide mb-2">北欧轻奢系列</h3> -->
+                                <p class="text-white/90 text-base max-w-md">简约不简单，每一处细节都是设计师的匠心独运</p>
+                                <!-- <div class="mt-4">
+                                    <button class="bg-white/20 backdrop-blur-sm text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-white/30 transition-colors duration-300">探索更多</button>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 轮播图片 2 -->
+                    <!-- <div class="carousel-slide absolute inset-0 opacity-0 transition-opacity duration-700 ease-in-out">
+                        <img src="../images/899-1.jpg" alt="现代极简沙发" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
+                            <div class="absolute bottom-0 left-0 w-full p-8">
+                                <h3 class="text-white text-2xl font-semibold tracking-wide mb-2">现代极简主义</h3>
+                                <p class="text-white/90 text-base max-w-md">让生活回归本质，享受简约与品质并存的家居体验</p>
+                                <div class="mt-4">
+                                    <button class="bg-white/20 backdrop-blur-sm text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-white/30 transition-colors duration-300">探索更多</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    
+                    <!-- 轮播图片 3 -->
+                    <!-- <div class="carousel-slide absolute inset-0 opacity-0 transition-opacity duration-700 ease-in-out">
+                        <img src="../images/897.jpg" alt="轻奢设计沙发" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent">
+                            <div class="absolute bottom-0 left-0 w-full p-8">
+                                <h3 class="text-white text-2xl font-semibold tracking-wide mb-2">轻奢设计师系列</h3>
+                                <p class="text-white/90 text-base max-w-md">为您的生活空间注入设计师的灵感与情调</p>
+                                <div class="mt-4">
+                                    <button class="bg-white/20 backdrop-blur-sm text-white px-5 py-2 rounded-full text-sm font-medium hover:bg-white/30 transition-colors duration-300">探索更多</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    
+                    <!-- 移除轮播指示器和导航按钮，适配手机APP界面 -->
+                </div>
+            </div>
+            
+            <!-- 添加轮播脚本 -->
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const slides = document.querySelectorAll('.premium-carousel .carousel-slide');
+                    
+                    let currentSlide = 0;
+                    const slideCount = slides.length;
+                    
+                    // 自动轮播 - 切换时间从5秒改为3秒
+                    let slideInterval = setInterval(nextSlide, 3000);
+                    
+                    function showSlide(index) {
+                        // 隐藏所有幻灯片
+                        slides.forEach(slide => {
+                            slide.style.opacity = '0';
+                        });
+                        
+                        // 显示当前幻灯片
+                        slides[index].style.opacity = '1';
+                        
+                        // 更新当前幻灯片索引
+                        currentSlide = index;
+                    }
+                    
+                    function nextSlide() {
+                        showSlide((currentSlide + 1) % slideCount);
+                    }
+                    
+                    // 触摸轮播图片时暂停自动轮播（适配手机触控）
+                    const carousel = document.querySelector('.premium-carousel');
+                    carousel.addEventListener('touchstart', () => {
+                        clearInterval(slideInterval);
+                    });
+                    
+                    carousel.addEventListener('touchend', () => {
+                        slideInterval = setInterval(nextSlide, 3000);
+                    });
+                });
+            </script>
+            
+        </div>
+        
+        <!-- 智能床区域 -->
+        <div class="">
+            <a href="#" class="block">
+                <div class="relative overflow-hidden bg-gradient-to-r from-primary/8 to-transparent p-3 mb-4 rounded-xl shadow-sm cursor-pointer active:shadow-md transition-all duration-150 ease-in-out active:transform active:scale-[0.99]">
+                    <!-- 装饰元素 - 左侧装饰线 -->
+                    <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary/40 via-primary/20 to-transparent rounded-full"></div>
+                    
+                    <div class="relative flex items-center justify-between">
+                        <!-- 智能床标题 -->
+                        <div class="flex-1">
+                            <h3 class="font-['Noto_Serif_SC'] text-xl font-medium text-gray-800 tracking-wider whitespace-nowrap">智能床</h3>
+                            <p class="font-['Noto_Sans_SC'] text-sm text-gray-600 font-light tracking-wide mt-1 leading-snug">科技重塑睡眠体验</p>
+                            <div class="h-0.5 w-28 bg-primary/40 mt-2 rounded-full"></div> <!-- 精致的下划线装饰 -->
+                        </div>
+                        
+                        <!-- 右侧装饰元素 -->
+                        <div class="w-8 h-8 bg-gradient-to-br from-primary/20 to-transparent rounded-full opacity-60"></div>
+                    </div>
+                </div>
+            </a>
+            
+            <!-- 视频背景模块 -->
+            <div class="relative w-full overflow-hidden rounded-lg shadow-lg mb-4">
+                <div class="relative" style="padding-bottom: 144.44%;"> <!-- 9:13的比例，13/9 = 1.4444... -->
+                    <video class="absolute inset-0 w-full h-full object-cover" autoplay loop muted playsinline>
+                        <source src="../videos/bed.mp4" type="video/mp4">
+                        您的浏览器不支持视频标签。
+                    </video>
+                    <div class="absolute inset-0 bg-black/10"></div>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-lg shadow-sm">
+                <div class="flex flex-col gap-1">
+                    <!-- Large Image -->
+                    <a href="#" class="relative overflow-hidden aspect-[4/3]">
+                        <img src="../images/bed/1.jpg" alt="豪华智能床" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                    </a>
+                    <!-- Container for two small images -->
+                    <div class="flex gap-1">
+                        <a href="#" class="flex-1 relative overflow-hidden aspect-square">
+                            <img src="../images/bed/2403.jpg" alt="现代智能床" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                        </a>
+                        <a href="#" class="flex-1 relative overflow-hidden aspect-square">
+                            <img src="../images/bed/2405.jpg" alt="舒适智能床" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
+                        </a>
+                    </div>
+                </div>
+            </div>
+    
+        </div>
+        <!-- 单椅区域 -->
+        <div class="mt-6">
+            <!-- 沙发椅标题 -->
+            <div class="relative overflow-hidden bg-gradient-to-r from-primary/8 to-transparent p-3 mb-4 rounded-xl shadow-sm cursor-pointer active:shadow-md transition-all duration-150 ease-in-out active:transform active:scale-[0.99]">
+                <!-- 装饰元素 - 左侧装饰线 -->
+                <div class="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary/40 via-primary/20 to-transparent rounded-full"></div>
+                
+                <div class="relative flex items-center justify-between">
+                    <!-- 沙发椅标题 -->
+                    <div class="flex-1">
+                        <h3 class="font-['Noto_Serif_SC'] text-xl font-medium text-gray-800 tracking-wider whitespace-nowrap">精致单椅</h3>
+                        <p class="font-['Noto_Sans_SC'] text-sm text-gray-600 font-light tracking-wide mt-1 leading-snug">设计与舒适的艺术品</p>
+                        <div class="h-0.5 w-24 bg-primary/40 mt-2 rounded-full"></div> <!-- 精致的下划线装饰 -->
+                    </div>
+                    
+                    <!-- 右侧装饰元素 -->
+                    <div class="w-8 h-8 bg-gradient-to-br from-primary/20 to-transparent rounded-full opacity-60"></div>
+                </div>
+            </div>
+            
+            <div class="relative overflow-hidden rounded-lg shadow-sm">
+                <img src="../images/1_01.jpg" 
+                     alt="椅子海报" 
+                     class="w-full h-auto object-cover">
+            </div>
+        </div>
+                      <!-- 椅子产品循环展示区域 -->
+                      <div class=" chair-marquee-section">
+                        <div class="marquee-container relative w-full bg-gray-50"> <!-- Added bg-gray-50 and py-4 for slight background and padding -->
+                            <div class="marquee-track flex">
+                                <!-- Original Images -->
+                                <div class="marquee-item  flex items-center justify-center">
+                                    <img src="../images/椅子/800x800-1.png" alt="椅子 产品 1" class="max-h-full max-w-full object-contain">
+                                </div>
+                                <div class="marquee-item  flex items-center justify-center">
+                                    <img src="../images/椅子/800x800-2.png" alt="椅子 产品 2" class="max-h-full max-w-full object-contain">
+                                </div>
+                                <div class="marquee-item  flex items-center justify-center">
+                                    <img src="../images/椅子/800x800-3.png" alt="椅子 产品 3" class="max-h-full max-w-full object-contain">
+                                </div>
+                                <div class="marquee-item  flex items-center justify-center">
+                                    <img src="../images/椅子/J11.png" alt="椅子 产品 4" class="max-h-full max-w-full object-contain">
+                                </div>
+                                <div class="marquee-item  flex items-center justify-center">
+                                    <img src="../images/椅子/j26 (2).png" alt="椅子 产品 5" class="max-h-full max-w-full object-contain">
+                                </div>
+                                <!-- Cloned Images for seamless loop -->
+                                <div class="marquee-item  flex items-center justify-center">
+                                    <img src="../images/椅子/800x800-1.png" alt="椅子 产品 1" class="max-h-full max-w-full object-contain">
+                                </div>
+                                <div class="marquee-item  flex items-center justify-center">
+                                    <img src="../images/椅子/800x800-2.png" alt="椅子 产品 2" class="max-h-full max-w-full object-contain">
+                                </div>
+                                <div class="marquee-item  flex items-center justify-center">
+                                    <img src="../images/椅子/800x800-3.png" alt="椅子 产品 3" class="max-h-full max-w-full object-contain">
+                                </div>
+                                <div class="marquee-item  flex items-center justify-center">
+                                    <img src="../images/椅子/J11.png" alt="椅子 产品 4" class="max-h-full max-w-full object-contain">
+                                </div>
+                                <div class="marquee-item  flex items-center justify-center">
+                                    <img src="../images/椅子/j26 (2).png" alt="椅子 产品 5" class="max-h-full max-w-full object-contain">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
         <!-- 定制推荐 -->
         <div class="bg-white rounded-lg shadow-sm overflow-hidden  md:mb-6">
             <div class="grid md:grid-cols-2">
-                <div class="h-48 md:h-full relative">
-                    <img src="https://images.pexels.com/photos/1350789/pexels-photo-1350789.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="定制沙发服务" class="w-full h-full object-cover">
-                </div>
+                <!-- <div class="h-48 md:h-full relative">
+                    <img src="../images/22.jpg" alt="定制沙发服务" class="w-full h-full object-cover">
+                </div> -->
                 <div class="p-5">
-                    <h2 class="text-xl font-semibold mb-2">为您的空间打造专属沙发</h2>
-                    <p class="text-gray-600 text-sm mb-4">无法找到完美匹配的沙发? 我们提供专业定制服务，从尺寸、材质到颜色，都可以按照您的需求定制。</p>
+                    <h2 class="font-['Noto_Serif_SC'] text-xl font-medium text-gray-800 tracking-wider leading-tight mb-3">为您的空间打造专属沙发</h2>
+                    <p class="font-['Noto_Sans_SC'] text-gray-600 text-sm font-light tracking-wide leading-relaxed mb-4">无法找到完美匹配的沙发? 我们提供专业定制服务，从尺寸、材质到颜色，都可以按照您的需求定制。</p>
                     
                     <div class="grid grid-cols-2 gap-3 mb-4">
                         <div class="flex items-center gap-2">
                             <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                                 <i class="fas fa-ruler"></i>
                             </div>
-                            <span class="text-sm">尺寸定制</span>
+                            <span class="font-['Noto_Sans_SC'] text-sm font-normal tracking-wide">尺寸定制</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                                 <i class="fas fa-palette"></i>
                             </div>
-                            <span class="text-sm">颜色选择</span>
+                            <span class="font-['Noto_Sans_SC'] text-sm font-normal tracking-wide">颜色选择</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                                 <i class="fas fa-cubes"></i>
                             </div>
-                            <span class="text-sm">材质搭配</span>
+                            <span class="font-['Noto_Sans_SC'] text-sm font-normal tracking-wide">材质搭配</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                                 <i class="fas fa-pencil-alt"></i>
                             </div>
-                            <span class="text-sm">细节定制</span>
+                            <span class="font-['Noto_Sans_SC'] text-sm font-normal tracking-wide">细节定制</span>
                         </div>
                     </div>
                     
-                    <button class="bg-primary text-white py-2 px-4 rounded-md flex items-center justify-center w-full md:w-auto">
-                        预约设计顾问
-                        <i class="fas fa-arrow-right ml-2"></i>
+                    <button class="bg-primary text-white py-2.5 px-5 rounded-full flex items-center justify-center w-full shadow-sm hover:shadow-md transition-all duration-300 ease-in-out">
+                        <span class="font-['Noto_Sans_SC'] font-medium tracking-wide">预约设计顾问</span>
+                        <i class="fas fa-arrow-right ml-2 text-sm"></i>
                     </button>
             </div>
         </div>
@@ -374,51 +671,29 @@
     <div class="max-w-screen-lg mx-auto px-4 mb-20">
         <div class="bg-white rounded-lg overflow-hidden shadow-sm">
             <div class="p-6 bg-gradient-to-br from-primary/5 to-gray-50">
-                <div class="flex flex-col items-center text-center mb-5">
+                <div class="flex flex-col items-center text-center mb-4">
                     <h2 class="text-2xl font-bold text-gray-800 mb-2">麦吉纳家居</h2>
                     <div class="w-16 h-0.5 bg-primary mb-4"></div>
-                    <p class="text-gray-600 leading-relaxed mb-5">
+                    <p class="text-gray-600 leading-relaxed mb-4">
                         以“舒适”为基，科技为础，<br>
                         智能契合时代之美
                     </p>
                 </div>
                 
-                <div class="grid grid-cols-3 gap-4 mb-5">
-                    <div class="bg-white p-3 rounded-lg shadow-sm text-center">
-                        <div class="text-primary mb-1">
-                            <i class="fas fa-couch text-xl"></i>
-                        </div>
-                        <p class="text-sm font-medium text-gray-800">年产2万套</p>
-                        <p class="text-xs text-gray-500">沙发</p>
+                <div class="flex justify-center gap-12 mb-6">
+                    <div>
+                        <span class="text-2xl font-bold text-primary">200000+</span>
+                        <span class="text-sm font-medium text-gray-700 ml-2">沙发交付量</span>
                     </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm text-center">
-                        <div class="text-primary mb-1">
-                            <i class="fas fa-industry text-xl"></i>
-                        </div>
-                        <p class="text-sm font-medium text-gray-800">40年</p>
-                        <p class="text-xs text-gray-500">工厂历史</p>
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm text-center">
-                        <div class="text-primary mb-1">
-                            <i class="fas fa-lightbulb text-xl"></i>
-                        </div>
-                        <p class="text-sm font-medium text-gray-800">300+</p>
-                        <p class="text-xs text-gray-500">设计专利</p>
+                    <div>
+                        <span class="text-2xl font-bold text-primary">300+</span>
+                        <span class="text-sm font-medium text-gray-700 ml-2">设计专利</span>
                     </div>
                 </div>
-                
-                <!-- <div class="bg-primary/10 p-4 rounded-lg">
-                    <p class="text-sm text-gray-700 leading-relaxed">
-                        麦吉纳家居致力于打造舒适、智能、环保的现代家居生活方式，让每个人都能轻松拥有自己想要的美好家居生活。
-                    </p>
-                </div> -->
-                
-                <!-- <div class="mt-5 text-center">
-                    <a href="#" class="inline-block px-6 py-2 bg-primary text-white rounded-full text-sm hover:bg-primary/90 transition duration-300">
-                        立即探索 <i class="fas fa-arrow-right ml-1"></i>
-                    </a>
-                </div> -->
             </div>
+        </div>
+        <div class="marquee-item  flex items-center justify-center">
+            <img src="../images/sa.png" alt="椅子 产品 5" class="max-h-full max-w-full object-contain">
         </div>
     </div>
     
@@ -448,12 +723,12 @@
     </div>
     
     <!-- 浮动客服按钮 -->
-    <a href="#" id="customer-service-btn" class="fixed right-4 bottom-20 w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center z-50 transition-all duration-300 hover:shadow-lg">
+    <!-- <a href="#" id="customer-service-btn" class="fixed right-4 bottom-20 w-12 h-12 rounded-full bg-white shadow-md flex items-center justify-center z-50 transition-all duration-300 hover:shadow-lg">
         <div class="relative">
             <i class="fas fa-headset text-primary text-xl"></i>
             <span class="absolute top-[-3px] right-[-3px] w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
         </div>
-    </a>
+    </a> -->
     
     <!-- 模态框 -->
     <div id="product-modal" class="fixed inset-0 z-[1000] hidden">
@@ -487,4 +762,4 @@
     <!-- 引入JavaScript -->
     <script src="js/category.js"></script>
 </body>
-</html> 
+</html>
