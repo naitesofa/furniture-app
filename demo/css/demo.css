@@ -1,0 +1,421 @@
+/* 全局样式 */
+:root {
+    --primary-color: #3b82f6;
+    --secondary-color: #10b981;
+    --accent-color: #f59e0b;
+    --text-primary: #1f2937;
+    --text-secondary: #6b7280;
+    --border-color: #e5e7eb;
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    --border-radius: 0.5rem;
+    --transition: all 0.3s ease;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text-primary);
+}
+
+/* 视频容器样式 */
+.video-container {
+    position: relative;
+    background: #000;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.video-container video {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 500px;
+    object-fit: cover;
+}
+
+/* 场景切换指示器 */
+.scene-indicator {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: var(--transition);
+    pointer-events: none;
+    z-index: 10;
+}
+
+.scene-indicator.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.scene-indicator-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.scene-indicator i {
+    animation: pulse 2s infinite;
+}
+
+/* 时间轴样式 */
+.timeline-container {
+    width: 100%;
+}
+
+.timeline {
+    position: relative;
+    height: 60px;
+    background: #f8fafc;
+    border-radius: var(--border-radius);
+    border: 2px solid var(--border-color);
+    overflow: hidden;
+}
+
+.timeline-segment {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.timeline-segment:hover {
+    transform: scale(1.02);
+    z-index: 2;
+}
+
+.timeline-segment.bedroom {
+    background: linear-gradient(135deg, #8b5cf6, #a855f7);
+}
+
+.timeline-segment.living-room {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.timeline-segment.kitchen {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.timeline-segment.dining-room {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.timeline-segment.active {
+    box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.5);
+    transform: scale(1.05);
+    z-index: 3;
+}
+
+.timeline-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: rgba(59, 130, 246, 0.3);
+    transition: width 0.1s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* 产品网格样式 */
+.products-grid {
+    min-height: 300px;
+    transition: var(--transition);
+}
+
+.products-grid.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.products-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+    animation: fadeInUp 0.6s ease;
+}
+
+.product-card {
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    cursor: pointer;
+    border: 1px solid var(--border-color);
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--primary-color);
+}
+
+.product-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.05);
+}
+
+.product-info {
+    padding: 16px;
+}
+
+.product-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.product-price {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+}
+
+.product-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 12px;
+}
+
+.product-tag {
+    background: #f3f4f6;
+    color: var(--text-secondary);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.product-description {
+    color: var(--text-secondary);
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+/* 空状态样式 */
+.empty-state {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+    color: var(--text-secondary);
+}
+
+/* 加载指示器 */
+.loading-spinner {
+    display: inline-block;
+}
+
+.loading-spinner i {
+    animation: spin 1s linear infinite;
+}
+
+/* 产品模态框样式 */
+.product-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.product-modal.hidden {
+    display: none;
+}
+
+.product-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.product-modal-content {
+    position: relative;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+    max-width: 800px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalSlideIn 0.3s ease;
+}
+
+.product-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: between;
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.product-modal-header h3 {
+    flex: 1;
+    margin: 0;
+    color: var(--text-primary);
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
+    transition: var(--transition);
+}
+
+.close-button:hover {
+    background: #f3f4f6;
+    color: var(--text-primary);
+}
+
+.product-modal-body {
+    padding: 20px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .products-container {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 16px;
+    }
+    
+    .timeline {
+        height: 50px;
+    }
+    
+    .timeline-segment {
+        font-size: 10px;
+    }
+    
+    .product-modal-content {
+        margin: 10px;
+        max-height: 95vh;
+    }
+    
+    .product-modal-body .grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .products-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .timeline {
+        height: 40px;
+    }
+    
+    .timeline-segment {
+        font-size: 9px;
+    }
+}
+
+/* 动画关键帧 */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 工具类 */
+.fade-in {
+    animation: fadeInUp 0.6s ease;
+}
+
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.scale-in {
+    animation: scaleIn 0.3s ease;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+} 

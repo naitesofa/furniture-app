@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频联动产品展示</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* 颜色变量定义 */
+        :root {
+            --primary: #2A9D8F;
+            --primary-light: rgba(42, 157, 143, 0.1);
+        }
+        
+        /* primary颜色类 */
+        .text-primary {
+            color: var(--primary);
+        }
+        
+        .border-primary\/10 {
+            border-color: var(--primary-light);
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        /* 移动端视频样式 */
+        .mobile-video-container {
+            position: relative;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 0 16px;
+            height: 60vh;
+        }
+        
+        .mobile-video-container video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* 场景指示器 */
+        .scene-indicator {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .scene-indicator.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* 移动端时间轴 */
+        .mobile-timeline {
+            height: 40px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            overflow: hidden;
+            position: relative;
+            margin: 0 16px;
+        }
+        
+        .timeline-segment {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-segment.living-room {
+            background: linear-gradient(135deg, #10b981, #059669);
+        }
+        
+        .timeline-segment.bedroom {
+            background: linear-gradient(135deg, #8b5cf6, #a855f7);
+        }
+        
+        .timeline-segment.dining-room {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+        
+        .timeline-segment.kitchen {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+        }
+        
+        .timeline-segment.active {
+            box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.8);
+            transform: scale(1.02);
+            z-index: 3;
+        }
+        
+        .timeline-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: rgba(59, 130, 246, 0.3);
+            transition: width 0.1s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        /* 产品滚动展示样式 */
+        .products-scroll {
+            position: relative;
+            height: calc(100vh - 62vh - 80px - 70px); /* 减去底部导航栏的70px */
+            background: white;
+            margin: 0 16px;
+            border-radius: 12px;
+            margin-bottom: 70px; /* 为底部导航栏留出空间 */
+        }
+        
+        .scroll-container {
+            display: flex;
+            width: 200%; /* 双倍宽度以容纳两组产品 */
+            height: 100%;
+            animation: scrollLeft 12s linear infinite;
+            gap: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+            padding-top: 0;
+        }
+        
+        .scroll-item {
+            flex: 0 0 auto;
+            width: 150px;
+            height: 150px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .scroll-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        
+        .product-image-scroll {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .scroll-item:hover .product-image-scroll {
+            transform: scale(1.05);
+        }
+        
+        @keyframes scrollLeft {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%); /* 移动50%实现无缝循环 */
+            }
+        }
+        
+        /* 暂停滚动效果 */
+        .scroll-container:hover {
+            animation-play-state: paused;
+        }
+        
+        /* 移动端模态框 */
+        .mobile-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        
+        .mobile-modal.hidden {
+            display: none;
+        }
+        
+        .mobile-modal-content {
+            background: white;
+            width: 100%;
+            max-height: 80vh;
+            border-radius: 20px 20px 0 0;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+        
+        .mobile-modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+        }
+        
+        .mobile-modal-body {
+            padding: 16px;
+        }
+        
+        /* 动画效果 */
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .fade-out {
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .stagger-animation {
+            animation: staggerIn 0.5s ease forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .stagger-animation:nth-child(1) { animation-delay: 0.1s; }
+        .stagger-animation:nth-child(2) { animation-delay: 0.2s; }
+        .stagger-animation:nth-child(3) { animation-delay: 0.3s; }
+        .stagger-animation:nth-child(4) { animation-delay: 0.4s; }
+        
+        @keyframes staggerIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* 底部安全区域 */
+        .safe-area-bottom {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        
+        .product-showcase {
+            height: calc(38vh - 80px); /* 38vh = 100vh - 62vh */
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 16px 16px 0 0;
+        }
+        
+        /* 视频缩略图导航 */
+        .video-thumbs-container {
+            overflow-x: auto;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE and Edge */
+        }
+        
+        .video-thumbs-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+        
+        .video-thumb {
+            flex: 0 0 auto;
+            width: 64px; /* 从80px减小到64px */
+            cursor: pointer;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+        
+        .video-thumb.active {
+            opacity: 1;
+            transform: scale(1.05);
+        }
+        
+        .video-thumb img {
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .video-thumb.active img {
+            border-color: var(--primary);
+        }
+        
+        /* 风格选择器样式 */
+        .style-selector {
+            white-space: nowrap;
+        }
+        
+        .hide-scrollbar {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .style-btn {
+            transition: all 0.25s ease;
+            border: none;
+            outline: none;
+            position: relative;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+        }
+        
+        .style-btn:after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            height: 2px;
+            width: 12px;
+            background-color: var(--primary);
+            transition: transform 0.3s ease;
+            border-radius: 1px;
+        }
+        
+        .style-btn.active {
+            font-weight: 500;
+            box-shadow: 0 1px 3px rgba(42, 157, 143, 0.1);
+        }
+        
+        .style-btn.active:after {
+            transform: translateX(-50%) scaleX(1);
+        }
+        
+        /* 风格选择面板样式 */
+        #style-panel {
+            z-index: 1000;
+        }
+        
+        #style-panel > div {
+            transform: translateY(-100%); /* 初始位置在屏幕上方 */
+            transition: transform 0.3s ease;
+        }
+        
+        .style-option {
+            transition: all 0.15s ease;
+        }
+        
+        .style-option:active {
+            transform: scale(0.97);
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+    </style>
+</head>
+<body>
+    <!-- 带搜索框的顶部导航 -->
+    <div class="bg-white border-b border-gray-100 sticky top-0 z-50">
+        <!-- 页面标题和分享按钮 -->
+        <!-- <div class="flex items-center justify-between px-4 py-3">
+            <h1 class="text-lg font-medium text-gray-800">家居风格展示</h1>
+            <button class="text-gray-600 flex items-center justify-center w-8 h-8">
+                <i class="fas fa-share-alt"></i>
+            </button> -->
+        </div>
+        
+        <!-- 搜索框 -->
+        <div class="px-4 pb-3">
+            <div id="search-box" class="relative flex items-center bg-gray-50 rounded-full px-3 py-2 border border-gray-100 cursor-pointer hover:bg-gray-100 transition-colors">
+                <i class="fas fa-search text-gray-400 mr-2"></i>
+                <input type="text" readonly placeholder="选择家居风格..." class="bg-transparent w-full text-sm outline-none cursor-pointer" id="style-search-input">
+                <i class="fas fa-chevron-down text-xs text-gray-400"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- 风格选择面板 (初始隐藏) -->
+    <div id="style-panel" class="fixed inset-0 bg-black bg-opacity-30 z-50 hidden">
+        <div class="absolute top-0 left-0 right-0 bg-white max-h-[90vh] overflow-y-auto rounded-b-xl shadow-xl">
+            <div class="p-3 border-b border-gray-100 relative">
+                <!-- 居中标题 -->
+                <h3 class="text-base font-medium text-gray-800 text-center">选择家居风格</h3>
+                <!-- 右侧关闭按钮 -->
+                <button id="close-panel" class="absolute right-3 top-1/2 transform -translate-y-1/2 w-8 h-8 flex items-center justify-center text-gray-500 bg-gray-50 rounded-full">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <!-- 风格分类列表 -->
+            <div class="px-4 py-3">
+                <!-- 美式风格分类 -->
+                <div class="mb-4">
+                    <h4 class="text-sm font-medium mb-2 text-gray-500 px-1">美式风格</h4>
+                    <div class="grid grid-cols-3 gap-2.5">
+                        <button class="style-option py-2.5 px-1 bg-gray-50 rounded-lg text-center hover:bg-gray-100 active:bg-gray-200 transition-colors" data-video="videos/traditional-american.mp4">
+                            <span class="text-xs font-medium text-gray-700">传统美式</span>
+                        </button>
+                        <button class="style-option py-2.5 px-1 bg-gray-50 rounded-lg text-center hover:bg-gray-100 active:bg-gray-200 transition-colors" data-video="videos/country-american.mp4">
+                            <span class="text-xs font-medium text-gray-700">美式乡村</span>
+                        </button>
+                        <button class="style-option py-2.5 px-1 bg-gray-50 rounded-lg text-center hover:bg-gray-100 active:bg-gray-200 transition-colors" data-video="videos/modern-american.mp4">
+                            <span class="text-xs font-medium text-gray-700">美式现代</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 轻奢风格分类 -->
+                <div class="mb-4">
+                    <h4 class="text-sm font-medium mb-2 text-gray-500 px-1">轻奢风格</h4>
+                    <div class="grid grid-cols-3 gap-2.5">
+                        <button class="style-option py-2.5 px-1 bg-gray-50 rounded-lg text-center hover:bg-gray-100 active:bg-gray-200 transition-colors" data-video="videos/modern-luxury.mp4">
+                            <span class="text-xs font-medium text-gray-700">现代轻奢</span>
+                        </button>
+                        <button class="style-option py-2.5 px-1 bg-gray-50 rounded-lg text-center hover:bg-gray-100 active:bg-gray-200 transition-colors" data-video="videos/italian-luxury.mp4">
+                            <span class="text-xs font-medium text-gray-700">意式轻奢</span>
+                        </button>
+                        <button class="style-option py-2.5 px-1 bg-gray-50 rounded-lg text-center hover:bg-gray-100 active:bg-gray-200 transition-colors" data-video="videos/italian-luxury.mp4">
+                            <span class="text-xs font-medium text-gray-700">美式轻奢</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 北欧风格分类 -->
+                <div class="mb-4">
+                    <h4 class="text-sm font-medium mb-2 text-gray-500 px-1">北欧风格</h4>
+                    <div class="grid grid-cols-3 gap-2.5">
+                        <button class="style-option py-2.5 px-1 bg-gray-50 rounded-lg text-center hover:bg-gray-100 active:bg-gray-200 transition-colors" data-video="videos/nordic-simple.mp4">
+                            <span class="text-xs font-medium text-gray-700">北欧简约</span>
+                        </button>
+                        <button class="style-option py-2.5 px-1 bg-gray-50 rounded-lg text-center hover:bg-gray-100 active:bg-gray-200 transition-colors" data-video="videos/nordic-modern.mp4">
+                            <span class="text-xs font-medium text-gray-700">现代北欧</span>
+                        </button>
+                        <button class="style-option py-2.5 px-1 bg-gray-50 rounded-lg text-center hover:bg-gray-100 active:bg-gray-200 transition-colors" data-video="videos/japanese-modern.mp4">
+                            <span class="text-xs font-medium text-gray-700">北欧极简风</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 中式风格分类 -->
+                <div class="mb-4">
+                    <h4 class="text-sm font-medium mb-2 text-gray-500 px-1">中式风格</h4>
+                    <div class="grid grid-cols-3 gap-2.5">
+                        <button class="style-option py-2.5 px-1 bg-gray-50 rounded-lg text-center hover:bg-gray-100 active:bg-gray-200 transition-colors" data-video="videos/traditional-chinese.mp4">
+                            <span class="text-xs font-medium text-gray-700">传统中式</span>
+                        </button>
+                        <button class="style-option py-2.5 px-1 bg-gray-50 rounded-lg text-center hover:bg-gray-100 active:bg-gray-200 transition-colors" data-video="videos/neo-chinese.mp4">
+                            <span class="text-xs font-medium text-gray-700">新中式</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 日式风格分类 -->
+                <div class="mb-4">
+                    <h4 class="text-sm font-medium mb-2 text-gray-500 px-1">日式风格</h4>
+                    <div class="grid grid-cols-3 gap-2.5">
+                        <button class="style-option py-2.5 px-1 bg-gray-50 rounded-lg text-center hover:bg-gray-100 active:bg-gray-200 transition-colors" data-video="videos/japanese-zen.mp4">
+                            <span class="text-xs font-medium text-gray-700">日式禅风</span>
+                        </button>
+                        <button class="style-option py-2.5 px-1 bg-gray-50 rounded-lg text-center hover:bg-gray-100 active:bg-gray-200 transition-colors" data-video="videos/japanese-modern.mp4">
+                            <span class="text-xs font-medium text-gray-700">现代日式</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 视频区域 直接放在顶部导航下方 -->
+    <div class="bg-white" style="padding-bottom: 1.4rem;">
+        <!-- 视频播放器 -->
+        <div class="mobile-video-container">
+            <video 
+                id="main-video" 
+                controls
+                autoplay
+                muted
+                poster="images/video-poster.jpg"
+                preload="metadata"
+                playsinline
+                webkit-playsinline
+                loop
+            >
+                <source src="videos/home-showcase.mp4" type="video/mp4">
+                <p class="text-center py-8 text-gray-500">您的浏览器不支持视频播放</p>
+            </video>
+            
+            <!-- 场景切换提示 -->
+            <div id="scene-indicator" class="scene-indicator">
+                <span>场景切换中...</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 产品展示区域 -->
+    <div class="bg-white">
+        <!-- 产品滚动展示 -->
+        <div id="products-scroll" class="products-scroll">
+            <div id="scroll-container" class="scroll-container">
+                <!-- 滚动内容将通过JavaScript动态生成 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部安全区域 -->
+    <div class="safe-area-bottom"></div>
+
+    <!-- 底部导航栏 -->
+    <div style="height: 56px;" class="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.05)] h-[70px] flex items-center justify-around rounded-t-3xl border-t border-primary/10 z-50">
+        <a href="#" class="flex flex-col items-center justify-center w-1/5">
+            <i class="fas fa-home text-lg mb-1 text-gray-600"></i>
+            <span class="text-xs text-gray-600">首页</span>
+        </a>
+        <a href="#" class="flex flex-col items-center justify-center w-1/5">
+            <i class="fas fa-store text-lg mb-1 text-primary"></i>
+            <span class="text-xs text-primary">展厅</span>
+        </a>
+        <a href="#" class="flex flex-col items-center justify-center w-1/5">
+            <i class="fas fa-magic text-lg mb-1 text-gray-600"></i>
+            <span class="text-xs text-gray-600">定制</span>
+        </a>
+        <a href="#" class="flex flex-col items-center justify-center w-1/5 relative">
+            <i class="fas fa-shopping-cart text-lg mb-1 text-gray-600"></i>
+            <span id="cart-badge" class="absolute top-[-8px] right-[calc(50%-16px)] bg-red-500 text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center opacity-0 scale-0 transition-all duration-300"></span>
+            <span class="text-xs text-gray-600">购物车</span>
+        </a>
+        <a href="#" class="flex flex-col items-center justify-center w-1/5">
+            <i class="fas fa-user text-lg mb-1 text-gray-600"></i>
+            <span class="text-xs text-gray-600">我的</span>
+        </a>
+    </div>
+
+    <script>
+        // 移动端视频联动产品展示
+        class MobileVideoProductDemo {
+            constructor() {
+                this.videoConfig = null;
+                this.products = null;
+                this.currentScene = null;
+                this.video = null;
+                this.isInitialized = false;
+                this.scrollProducts = [];
+                this.currentVideoSrc = null;
+                
+                this.init();
+            }
+            
+            async init() {
+                try {
+                    await this.loadData();
+                    this.initElements();
+                    this.setupEventListeners();
+                    this.initTimeline();
+                    
+                    // 初始化时显示所有产品
+                    this.scrollProducts = this.products.products;
+                    this.renderScrollProducts();
+                    
+                    this.isInitialized = true;
+                    console.log('移动端视频产品联动系统初始化完成');
+                } catch (error) {
+                    console.error('初始化失败:', error);
+                    this.showError('系统初始化失败，请刷新页面重试');
+                }
+            }
+            
+            async loadData() {
+                console.log('开始加载数据...');
+                
+                // 静态视频配置数据
+                this.videoConfig = {
+                    "duration": 60,
+                    "scenes": [
+                        {
+                            "id": "scene_1",
+                            "startTime": 0,
+                            "endTime": 15,
+                            "sceneType": "living_room",
+                            "sceneName": "客厅场景",
+                            "description": "现代简约客厅，展示沙发、茶几等家具",
+                            "products": ["sofa", "coffee_table", "tv_stand", "floor_lamp"]
+                        },
+                        {
+                            "id": "scene_2", 
+                            "startTime": 15,
+                            "endTime": 30,
+                            "sceneType": "bedroom",
+                            "sceneName": "卧室场景",
+                            "description": "温馨舒适的卧室空间，展示床具和储物家具",
+                            "products": ["bed", "nightstand", "wardrobe", "dresser"]
+                        },
+                        {
+                            "id": "scene_3",
+                            "startTime": 30,
+                            "endTime": 45,
+                            "sceneType": "dining_room", 
+                            "sceneName": "餐厅场景",
+                            "description": "优雅的用餐空间，展示餐桌椅和储物柜",
+                            "products": ["dining_table", "dining_chair", "sideboard", "pendant_light"]
+                        },
+                        {
+                            "id": "scene_4",
+                            "startTime": 45,
+                            "endTime": 60,
+                            "sceneType": "kitchen",
+                            "sceneName": "厨房场景", 
+                            "description": "现代化厨房空间，展示橱柜和厨房用具",
+                            "products": ["kitchen_cabinet", "kitchen_island", "bar_stool", "range_hood"]
+                        }
+                    ]
+                };
+                
+                // 静态产品数据
+                this.products = {
+                    "products": [
+                        // 客厅产品
+                        {
+                            "productId": "sofa_001",
+                            "name": "现代简约三人沙发",
+                            "category": "sofa",
+                            "sceneType": "living_room",
+                            "price": 3999,
+                            "originalPrice": 4999,
+                            "images": ["living-room/sofa_modern_gray.jpg", "living-room/sofa_modern_gray_2.jpg"],
+                            "description": "采用高品质布艺面料，内置高密度海绵，提供极致舒适体验。",
+                            "tags": ["现代", "简约", "三人座", "布艺"],
+                            "specifications": {
+                                "尺寸": "220cm × 90cm × 85cm",
+                                "材质": "优质布艺 + 实木框架",
+                                "颜色": "深灰色",
+                                "重量": "45kg"
+                            },
+                            "features": ["可拆洗", "防污面料", "人体工学设计"],
+                            "inStock": true,
+                            "rating": 4.8,
+                            "reviewCount": 156
+                        },
+                        {
+                            "productId": "coffee_table_001",
+                            "name": "北欧风格茶几",
+                            "category": "coffee_table", 
+                            "sceneType": "living_room",
+                            "price": 899,
+                            "originalPrice": 1299,
+                            "images": ["living-room/coffee_table_nordic.jpg", "living-room/coffee_table_nordic_2.jpg"],
+                            "description": "简洁的北欧设计，实木材质，环保健康。",
+                            "tags": ["北欧", "实木", "储物", "环保"],
+                            "specifications": {
+                                "尺寸": "120cm × 60cm × 45cm",
+                                "材质": "橡木实木",
+                                "颜色": "原木色",
+                                "重量": "18kg"
+                            },
+                            "features": ["储物功能", "环保材质", "防水处理"],
+                            "inStock": true,
+                            "rating": 4.6,
+                            "reviewCount": 89
+                        },
+                        {
+                            "productId": "tv_stand_001",
+                            "name": "现代电视柜",
+                            "category": "tv_stand",
+                            "sceneType": "living_room",
+                            "price": 1599,
+                            "originalPrice": 1999,
+                            "images": ["living-room/tv_stand_modern.jpg", "living-room/tv_stand_modern_2.jpg"],
+                            "description": "简约现代设计，多层储物空间，支持65寸以下电视。",
+                            "tags": ["现代", "储物", "线缆管理", "大容量"],
+                            "specifications": {
+                                "尺寸": "180cm × 40cm × 55cm",
+                                "材质": "密度板 + 钢化玻璃",
+                                "颜色": "白色 + 黑色",
+                                "重量": "35kg"
+                            },
+                            "features": ["多层储物", "线缆管理", "钢化玻璃"],
+                            "inStock": true,
+                            "rating": 4.7,
+                            "reviewCount": 124
+                        },
+                        {
+                            "productId": "floor_lamp_001",
+                            "name": "北欧落地灯",
+                            "category": "floor_lamp",
+                            "sceneType": "living_room",
+                            "price": 599,
+                            "originalPrice": 799,
+                            "images": ["living-room/floor_lamp_nordic.jpg", "living-room/floor_lamp_nordic_2.jpg"],
+                            "description": "简约北欧风格，温暖光线，可调节亮度。",
+                            "tags": ["北欧", "可调光", "实木", "布艺"],
+                            "specifications": {
+                                "尺寸": "直径35cm × 高度160cm",
+                                "材质": "实木 + 布艺",
+                                "颜色": "原木色 + 米白色",
+                                "功率": "15W LED"
+                            },
+                            "features": ["可调光", "护眼光源", "稳固底座"],
+                            "inStock": true,
+                            "rating": 4.5,
+                            "reviewCount": 67
+                        },
+                        // 卧室产品
+                        {
+                            "productId": "bed_001",
+                            "name": "简约双人床",
+                            "category": "bed",
+                            "sceneType": "bedroom",
+                            "price": 2899,
+                            "originalPrice": 3599,
+                            "images": ["bedroom/bed_simple_double.jpg", "bedroom/bed_simple_double_2.jpg"],
+                            "description": "简约现代设计，实木床架，透气床板。",
+                            "tags": ["简约", "双人", "实木", "透气"],
+                            "specifications": {
+                                "尺寸": "180cm × 200cm × 85cm",
+                                "材质": "橡木实木",
+                                "颜色": "原木色",
+                                "重量": "55kg"
+                            },
+                            "features": ["透气床板", "环保材质", "稳固结构"],
+                            "inStock": true,
+                            "rating": 4.9,
+                            "reviewCount": 203
+                        },
+                        {
+                            "productId": "nightstand_001",
+                            "name": "现代床头柜",
+                            "category": "nightstand",
+                            "sceneType": "bedroom",
+                            "price": 599,
+                            "originalPrice": 799,
+                            "images": ["bedroom/nightstand_modern.jpg", "bedroom/nightstand_modern_2.jpg"],
+                            "description": "简约设计，两层储物空间，内置USB充电口。",
+                            "tags": ["现代", "储物", "USB充电", "搭配"],
+                            "specifications": {
+                                "尺寸": "50cm × 40cm × 55cm",
+                                "材质": "密度板",
+                                "颜色": "白色",
+                                "重量": "12kg"
+                            },
+                            "features": ["USB充电口", "双层储物", "静音滑轨"],
+                            "inStock": true,
+                            "rating": 4.4,
+                            "reviewCount": 78
+                        },
+                        // 餐厅产品
+                        {
+                            "productId": "dining_table_001",
+                            "name": "实木餐桌",
+                            "category": "dining_table",
+                            "sceneType": "dining_room",
+                            "price": 2599,
+                            "originalPrice": 3299,
+                            "images": ["dining-room/dining_table_wood.jpg", "dining-room/dining_table_wood_2.jpg"],
+                            "description": "优质实木制作，可容纳6人用餐，适合家庭聚餐。",
+                            "tags": ["实木", "六人座", "聚餐", "耐用"],
+                            "specifications": {
+                                "尺寸": "160cm × 90cm × 75cm",
+                                "材质": "橡木实木",
+                                "颜色": "原木色",
+                                "重量": "42kg"
+                            },
+                            "features": ["实木材质", "环保漆面", "稳固结构"],
+                            "inStock": true,
+                            "rating": 4.7,
+                            "reviewCount": 112
+                        },
+                        {
+                            "productId": "dining_chair_001",
+                            "name": "现代餐椅",
+                            "category": "dining_chair",
+                            "sceneType": "dining_room",
+                            "price": 399,
+                            "originalPrice": 599,
+                            "images": ["dining-room/dining_chair_modern.jpg", "dining-room/dining_chair_modern_2.jpg"],
+                            "description": "人体工学设计，舒适坐感，与餐桌完美搭配。",
+                            "tags": ["现代", "人体工学", "舒适", "搭配"],
+                            "specifications": {
+                                "尺寸": "45cm × 50cm × 85cm",
+                                "材质": "实木 + 布艺",
+                                "颜色": "原木色 + 灰色",
+                                "重量": "8kg"
+                            },
+                            "features": ["人体工学", "舒适坐垫", "稳固底座"],
+                            "inStock": true,
+                            "rating": 4.5,
+                            "reviewCount": 89
+                        },
+                        // 厨房产品
+                        {
+                            "productId": "kitchen_cabinet_001",
+                            "name": "现代整体橱柜",
+                            "category": "kitchen_cabinet",
+                            "sceneType": "kitchen",
+                            "price": 8999,
+                            "originalPrice": 12999,
+                            "images": ["kitchen/kitchen_cabinet.jpg", "kitchen/kitchen_cabinet_2.jpg"],
+                            "description": "现代简约设计，大容量储物空间，石英石台面，环保材质。",
+                            "tags": ["现代", "整体", "石英石", "环保"],
+                            "specifications": {
+                                "尺寸": "300cm × 60cm × 85cm",
+                                "材质": "实木颗粒板 + 石英石台面",
+                                "颜色": "白色 + 木纹色",
+                                "重量": "180kg"
+                            },
+                            "features": ["石英石台面", "软关门铰链", "大容量储物"],
+                            "inStock": true,
+                            "rating": 4.8,
+                            "reviewCount": 234
+                        },
+                        {
+                            "productId": "kitchen_island_001",
+                            "name": "多功能厨房岛台",
+                            "category": "kitchen_island",
+                            "sceneType": "kitchen",
+                            "price": 4599,
+                            "originalPrice": 6299,
+                            "images": ["kitchen/kitchen_island.jpg", "kitchen/kitchen_island_2.jpg"],
+                            "description": "多功能设计，可作为操作台、用餐台和储物柜，提升厨房空间利用率。",
+                            "tags": ["多功能", "岛台", "储物", "实用"],
+                            "specifications": {
+                                "尺寸": "120cm × 80cm × 90cm",
+                                "材质": "实木 + 石英石台面",
+                                "颜色": "原木色 + 白色",
+                                "重量": "85kg"
+                            },
+                            "features": ["多功能设计", "移动轮子", "大理石台面"],
+                            "inStock": true,
+                            "rating": 4.6,
+                            "reviewCount": 156
+                        },
+                        {
+                            "productId": "bar_stool_001",
+                            "name": "现代吧台椅",
+                            "category": "bar_stool",
+                            "sceneType": "kitchen",
+                            "price": 299,
+                            "originalPrice": 499,
+                            "images": ["kitchen/bar_stool.jpg", "kitchen/bar_stool_2.jpg"],
+                            "description": "简约现代设计，可调节高度，舒适坐感，适合吧台和高桌使用。",
+                            "tags": ["现代", "可调节", "吧台", "舒适"],
+                            "specifications": {
+                                "尺寸": "40cm × 40cm × 60-80cm",
+                                "材质": "PU皮革 + 金属支架",
+                                "颜色": "黑色",
+                                "重量": "8kg"
+                            },
+                            "features": ["高度可调", "360度旋转", "防滑底座"],
+                            "inStock": true,
+                            "rating": 4.4,
+                            "reviewCount": 98
+                        },
+                        {
+                            "productId": "range_hood_001",
+                            "name": "智能抽油烟机",
+                            "category": "range_hood",
+                            "sceneType": "kitchen",
+                            "price": 2299,
+                            "originalPrice": 3299,
+                            "images": ["kitchen/range_hood.jpg", "kitchen/range_hood_2.jpg"],
+                            "description": "智能感应控制，强劲吸力，低噪音设计，有效净化厨房空气。",
+                            "tags": ["智能", "强劲吸力", "低噪音", "净化"],
+                            "specifications": {
+                                "尺寸": "90cm × 50cm × 15cm",
+                                "材质": "不锈钢 + 钢化玻璃",
+                                "颜色": "不锈钢色",
+                                "功率": "220W"
+                            },
+                            "features": ["智能感应", "一键清洗", "LED照明"],
+                            "inStock": true,
+                            "rating": 4.7,
+                            "reviewCount": 187
+                        }
+                    ]
+                };
+                
+                console.log('静态数据加载完成:', {
+                    scenes: this.videoConfig.scenes.length,
+                    products: this.products.products.length
+                });
+            }
+            
+            initElements() {
+                this.video = document.getElementById('main-video');
+                this.timelineElement = document.getElementById('timeline');
+                this.scrollContainer = document.getElementById('scroll-container');
+                this.sceneIndicator = document.getElementById('scene-indicator');
+                
+                // 新增的风格选择相关元素
+                this.searchBox = document.getElementById('search-box');
+                this.searchInput = document.getElementById('style-search-input');
+                this.stylePanel = document.getElementById('style-panel');
+                this.closePanel = document.getElementById('close-panel');
+                this.styleOptions = document.querySelectorAll('.style-option');
+                
+                if (!this.video || !this.scrollContainer) {
+                    throw new Error('关键DOM元素未找到');
+                }
+                
+                console.log('搜索框元素:', this.searchBox);
+                console.log('风格面板元素:', this.stylePanel);
+            }
+            
+            setupEventListeners() {
+                this.video.addEventListener('timeupdate', () => {
+                    this.handleTimeUpdate();
+                });
+                
+                this.video.addEventListener('play', () => {
+                    this.handleVideoPlay();
+                });
+                
+                // 点击搜索框打开风格面板
+                if (this.searchBox) {
+                    console.log('绑定搜索框点击事件');
+                    this.searchBox.addEventListener('click', () => {
+                        console.log('搜索框被点击');
+                        this.openStylePanel();
+                    });
+                }
+                
+                // 关闭风格面板
+                if (this.closePanel) {
+                    this.closePanel.addEventListener('click', () => {
+                        this.closeStylePanel();
+                    });
+                }
+                
+                // 点击风格选项
+                if (this.styleOptions) {
+                    this.styleOptions.forEach(option => {
+                        option.addEventListener('click', () => {
+                            this.selectStyle(option);
+                        });
+                    });
+                }
+                
+                // 点击遮罩层关闭面板
+                if (this.stylePanel) {
+                    this.stylePanel.addEventListener('click', (e) => {
+                        if (e.target === this.stylePanel) {
+                            this.closeStylePanel();
+                        }
+                    });
+                }
+            }
+            
+            initTimeline() {
+                if (!this.timelineElement || !this.videoConfig) return;
+                
+                this.timelineElement.innerHTML = '';
+                
+                const progressBar = document.createElement('div');
+                progressBar.className = 'timeline-progress';
+                progressBar.id = 'timeline-progress';
+                this.timelineElement.appendChild(progressBar);
+                
+                this.videoConfig.scenes.forEach(scene => {
+                    const segment = document.createElement('div');
+                    segment.className = `timeline-segment ${scene.sceneType}`;
+                    segment.style.left = `${(scene.startTime / this.videoConfig.duration) * 100}%`;
+                    segment.style.width = `${((scene.endTime - scene.startTime) / this.videoConfig.duration) * 100}%`;
+                    segment.textContent = scene.sceneName;
+                    
+                    segment.addEventListener('click', () => {
+                        if (this.video) {
+                            this.video.currentTime = scene.startTime;
+                        }
+                    });
+                    
+                    this.timelineElement.appendChild(segment);
+                });
+            }
+            
+            handleTimeUpdate() {
+                if (!this.video || !this.videoConfig) return;
+                
+                const currentTime = this.video.currentTime;
+                this.updateProgressBar(currentTime);
+                this.checkSceneChange(currentTime);
+            }
+            
+            updateProgressBar(currentTime) {
+                const progressBar = document.getElementById('timeline-progress');
+                if (progressBar && this.video) {
+                    const progress = (currentTime / this.video.duration) * 100;
+                    progressBar.style.width = `${progress}%`;
+                }
+            }
+            
+            checkSceneChange(currentTime) {
+                const newScene = this.videoConfig.scenes.find(scene => 
+                    currentTime >= scene.startTime && currentTime < scene.endTime
+                );
+                
+                if (newScene && newScene.id !== this.currentScene?.id) {
+                    this.switchScene(newScene);
+                }
+            }
+            
+            async switchScene(scene) {
+                console.log('切换场景:', scene.sceneName);
+                
+                this.currentScene = scene;
+                this.updateTimelineActive(scene);
+                this.showSceneChangeAnimation(scene);
+                await this.loadSceneProducts(scene);
+            }
+            
+            updateTimelineActive(scene) {
+                document.querySelectorAll('.timeline-segment').forEach(segment => {
+                    segment.classList.remove('active');
+                });
+                
+                const activeSegment = document.querySelector(`.timeline-segment.${scene.sceneType}`);
+                if (activeSegment) {
+                    activeSegment.classList.add('active');
+                }
+            }
+            
+            showSceneChangeAnimation(scene) {
+                if (this.sceneIndicator) {
+                    this.sceneIndicator.querySelector('span').textContent = `切换到${scene.sceneName}`;
+                    this.sceneIndicator.classList.add('show');
+                    
+                    setTimeout(() => {
+                        this.sceneIndicator.classList.remove('show');
+                    }, 2000);
+                }
+            }
+            
+            async loadSceneProducts(scene) {
+                if (!this.products || !scene.products) return;
+                
+                const sceneProducts = this.products.products.filter(product => 
+                    scene.products.includes(product.category) && 
+                    product.sceneType === scene.sceneType
+                );
+                
+                this.scrollProducts = sceneProducts;
+                this.renderScrollProducts();
+            }
+            
+            renderScrollProducts() {
+                if (!this.scrollContainer || !this.scrollProducts.length) return;
+                
+                this.scrollContainer.innerHTML = '';
+                
+                // 创建两组相同的产品项以实现无缝循环
+                const createProductItems = () => {
+                    this.scrollProducts.forEach((product, index) => {
+                        const scrollItem = document.createElement('div');
+                        scrollItem.className = 'scroll-item';
+                        scrollItem.innerHTML = `
+                            <img src="images/${product.images[0]}" alt="${product.name}" class="product-image-scroll" loading="lazy">
+                        `;
+                        this.scrollContainer.appendChild(scrollItem);
+                    });
+                };
+                
+                // 创建第一组
+                createProductItems();
+                // 创建第二组（用于无缝循环）
+                createProductItems();
+                
+                // 根据产品数量调整动画时长
+                const animationDuration = Math.max(10, this.scrollProducts.length * 2);
+                this.scrollContainer.style.animationDuration = `${animationDuration}s`;
+            }
+            
+            async renderProducts(products) {
+                // 兼容原有调用，现在使用滚动展示
+                this.scrollProducts = products;
+                this.renderScrollProducts();
+            }
+            
+            handleVideoPlay() {
+                console.log('视频开始播放');
+                if (!this.currentScene && this.video) {
+                    this.checkSceneChange(this.video.currentTime);
+                }
+            }
+            
+            showError(message) {
+                console.error(message);
+                if (this.scrollContainer) {
+                    this.scrollContainer.innerHTML = `
+                        <div class="scroll-item">
+                            <div class="text-center py-12">
+                                <i class="fas fa-exclamation-triangle text-4xl text-red-300 mb-4"></i>
+                                <h3 class="text-lg font-medium text-red-500 mb-2">加载失败</h3>
+                                <p class="text-red-400">${message}</p>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+            
+            formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+            
+            // 打开风格选择面板
+            openStylePanel() {
+                console.log('尝试打开风格面板');
+                if (!this.stylePanel) {
+                    console.error('风格面板元素未找到');
+                    return;
+                }
+                
+                this.stylePanel.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // 防止背景滚动
+                
+                // 添加动画效果
+                setTimeout(() => {
+                    const panel = this.stylePanel.querySelector('div');
+                    if (panel) {
+                        panel.style.transition = 'transform 0.3s ease';
+                        panel.style.transform = 'translateY(0)';
+                    }
+                }, 10);
+            }
+            
+            // 关闭风格选择面板
+            closeStylePanel() {
+                if (!this.stylePanel) return;
+                
+                const panel = this.stylePanel.querySelector('div');
+                if (panel) {
+                    panel.style.transition = 'transform 0.3s ease';
+                    panel.style.transform = 'translateY(-100%)'; // 向上隐藏
+                }
+                
+                setTimeout(() => {
+                    this.stylePanel.classList.add('hidden');
+                    document.body.style.overflow = '';
+                }, 300);
+            }
+            
+            // 选择风格
+            selectStyle(optionElement) {
+                // 获取视频源
+                const videoSrc = optionElement.getAttribute('data-video');
+                const styleName = optionElement.querySelector('span').textContent;
+                
+                // 更新搜索框显示选中的风格
+                if (this.searchInput) {
+                    this.searchInput.value = styleName;
+                }
+                
+                // 避免重复加载相同视频
+                if (this.currentVideoSrc === videoSrc) {
+                    this.closeStylePanel();
+                    return;
+                }
+                
+                this.currentVideoSrc = videoSrc;
+                
+                // 保存当前播放状态
+                const wasPlaying = !this.video.paused;
+                
+                // 更新视频源
+                this.video.src = videoSrc;
+                
+                // 加载新视频
+                this.video.load();
+                
+                // 如果之前是播放状态，则自动播放新视频
+                if (wasPlaying) {
+                    this.video.play();
+                }
+                
+                // 重置当前场景
+                this.currentScene = null;
+                
+                // 显示场景切换提示
+                if (this.sceneIndicator) {
+                    this.sceneIndicator.querySelector('span').textContent = `切换到${styleName}`;
+                    this.sceneIndicator.classList.add('show');
+                    
+                    setTimeout(() => {
+                        this.sceneIndicator.classList.remove('show');
+                    }, 2000);
+                }
+                
+                // 关闭面板
+                this.closeStylePanel();
+            }
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            window.mobileVideoProductDemo = new MobileVideoProductDemo();
+        });
+    </script>
+</body>
+</html> 
+
+<!-- 顶部导航 -->

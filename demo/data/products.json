@@ -1,0 +1,367 @@
+{
+  "products": [
+    {
+      "productId": "sofa_001",
+      "name": "现代简约三人沙发",
+      "category": "sofa",
+      "sceneType": "living_room",
+      "price": 3999,
+      "originalPrice": 4999,
+      "images": [
+        "living-room/sofa_modern_gray.jpg",
+        "living-room/sofa_modern_gray_2.jpg"
+      ],
+      "description": "采用高品质布艺面料，内置高密度海绵，提供极致舒适体验。简约设计风格，适合现代家居。",
+      "tags": ["现代", "简约", "三人座", "布艺"],
+      "specifications": {
+        "尺寸": "220cm × 90cm × 85cm",
+        "材质": "优质布艺 + 实木框架",
+        "颜色": "深灰色",
+        "重量": "45kg"
+      },
+      "features": ["可拆洗", "防污面料", "人体工学设计"],
+      "inStock": true,
+      "rating": 4.8,
+      "reviewCount": 156
+    },
+    {
+      "productId": "coffee_table_001",
+      "name": "北欧风格茶几",
+      "category": "coffee_table", 
+      "sceneType": "living_room",
+      "price": 899,
+      "originalPrice": 1299,
+      "images": [
+        "living-room/coffee_table_nordic.jpg",
+        "living-room/coffee_table_nordic_2.jpg"
+      ],
+      "description": "简洁的北欧设计，实木材质，环保健康。下层储物空间，实用美观。",
+      "tags": ["北欧", "实木", "储物", "环保"],
+      "specifications": {
+        "尺寸": "120cm × 60cm × 45cm",
+        "材质": "橡木实木",
+        "颜色": "原木色",
+        "重量": "18kg"
+      },
+      "features": ["储物功能", "环保材质", "防水处理"],
+      "inStock": true,
+      "rating": 4.6,
+      "reviewCount": 89
+    },
+    {
+      "productId": "tv_stand_001",
+      "name": "现代电视柜",
+      "category": "tv_stand",
+      "sceneType": "living_room", 
+      "price": 1599,
+      "originalPrice": 1999,
+      "images": [
+        "living-room/tv_stand_modern.jpg",
+        "living-room/tv_stand_modern_2.jpg"
+      ],
+      "description": "简约现代设计，多层储物空间，支持65寸以下电视。隐藏式线缆管理。",
+      "tags": ["现代", "储物", "线缆管理", "大容量"],
+      "specifications": {
+        "尺寸": "180cm × 40cm × 55cm",
+        "材质": "密度板 + 钢化玻璃",
+        "颜色": "白色 + 黑色",
+        "重量": "35kg"
+      },
+      "features": ["多层储物", "线缆管理", "钢化玻璃"],
+      "inStock": true,
+      "rating": 4.7,
+      "reviewCount": 124
+    },
+    {
+      "productId": "floor_lamp_001",
+      "name": "北欧落地灯",
+      "category": "floor_lamp",
+      "sceneType": "living_room",
+      "price": 599,
+      "originalPrice": 799,
+      "images": [
+        "living-room/floor_lamp_nordic.jpg",
+        "living-room/floor_lamp_nordic_2.jpg"
+      ],
+      "description": "简约北欧风格，温暖光线，可调节亮度。实木支架，布艺灯罩。",
+      "tags": ["北欧", "可调光", "实木", "布艺"],
+      "specifications": {
+        "尺寸": "直径35cm × 高度160cm",
+        "材质": "实木 + 布艺",
+        "颜色": "原木色 + 米白色",
+        "功率": "15W LED"
+      },
+      "features": ["可调光", "护眼光源", "稳固底座"],
+      "inStock": true,
+      "rating": 4.5,
+      "reviewCount": 67
+    },
+    {
+      "productId": "bed_001",
+      "name": "简约双人床",
+      "category": "bed",
+      "sceneType": "bedroom",
+      "price": 2899,
+      "originalPrice": 3599,
+      "images": [
+        "bedroom/bed_simple_double.jpg",
+        "bedroom/bed_simple_double_2.jpg"
+      ],
+      "description": "简约现代设计，实木床架，透气床板。1.8米双人床，适合现代卧室。",
+      "tags": ["简约", "双人", "实木", "透气"],
+      "specifications": {
+        "尺寸": "180cm × 200cm × 85cm",
+        "材质": "橡木实木",
+        "颜色": "原木色",
+        "重量": "55kg"
+      },
+      "features": ["透气床板", "环保材质", "稳固结构"],
+      "inStock": true,
+      "rating": 4.9,
+      "reviewCount": 203
+    },
+    {
+      "productId": "nightstand_001",
+      "name": "现代床头柜",
+      "category": "nightstand",
+      "sceneType": "bedroom",
+      "price": 599,
+      "originalPrice": 799,
+      "images": [
+        "bedroom/nightstand_modern.jpg",
+        "bedroom/nightstand_modern_2.jpg"
+      ],
+      "description": "简约设计，两层储物空间，内置USB充电口。与床品完美搭配。",
+      "tags": ["现代", "储物", "USB充电", "搭配"],
+      "specifications": {
+        "尺寸": "50cm × 40cm × 55cm",
+        "材质": "密度板",
+        "颜色": "白色",
+        "重量": "12kg"
+      },
+      "features": ["USB充电口", "双层储物", "静音滑轨"],
+      "inStock": true,
+      "rating": 4.4,
+      "reviewCount": 78
+    },
+    {
+      "productId": "wardrobe_001",
+      "name": "现代衣柜",
+      "category": "wardrobe",
+      "sceneType": "bedroom",
+      "price": 4999,
+      "originalPrice": 6299,
+      "images": [
+        "bedroom/wardrobe_modern.jpg",
+        "bedroom/wardrobe_modern_2.jpg"
+      ],
+      "description": "大容量设计，多功能分区，推拉门设计节省空间。内置LED灯带。",
+      "tags": ["大容量", "推拉门", "LED灯", "分区"],
+      "specifications": {
+        "尺寸": "240cm × 60cm × 220cm",
+        "材质": "密度板 + 钢化玻璃",
+        "颜色": "白色 + 镜面",
+        "重量": "85kg"
+      },
+      "features": ["LED灯带", "静音滑轨", "多功能分区"],
+      "inStock": true,
+      "rating": 4.7,
+      "reviewCount": 145
+    },
+    {
+      "productId": "dresser_001",
+      "name": "梳妆台",
+      "category": "dresser",
+      "sceneType": "bedroom",
+      "price": 1299,
+      "originalPrice": 1699,
+      "images": [
+        "bedroom/dresser_elegant.jpg",
+        "bedroom/dresser_elegant_2.jpg"
+      ],
+      "description": "优雅设计，大面积镜面，多抽屉储物。内置化妆品收纳格。",
+      "tags": ["优雅", "大镜面", "多抽屉", "收纳"],
+      "specifications": {
+        "尺寸": "120cm × 45cm × 75cm",
+        "材质": "密度板 + 镜面",
+        "颜色": "白色",
+        "重量": "28kg"
+      },
+      "features": ["大面积镜面", "多抽屉", "收纳格"],
+      "inStock": true,
+      "rating": 4.6,
+      "reviewCount": 92
+    },
+    {
+      "productId": "dining_table_001",
+      "name": "实木餐桌",
+      "category": "dining_table",
+      "sceneType": "dining_room",
+      "price": 2599,
+      "originalPrice": 3299,
+      "images": [
+        "dining-room/dining_table_wood.jpg",
+        "dining-room/dining_table_wood_2.jpg"
+      ],
+      "description": "优质橡木制作，可容纳6人用餐。表面防水处理，易于清洁。",
+      "tags": ["实木", "6人", "防水", "易清洁"],
+      "specifications": {
+        "尺寸": "160cm × 90cm × 75cm",
+        "材质": "橡木实木",
+        "颜色": "原木色",
+        "重量": "42kg"
+      },
+      "features": ["防水处理", "环保材质", "稳固结构"],
+      "inStock": true,
+      "rating": 4.8,
+      "reviewCount": 167
+    },
+    {
+      "productId": "dining_chair_001",
+      "name": "现代餐椅",
+      "category": "dining_chair",
+      "sceneType": "dining_room",
+      "price": 399,
+      "originalPrice": 599,
+      "images": [
+        "dining-room/dining_chair_modern.jpg",
+        "dining-room/dining_chair_modern_2.jpg"
+      ],
+      "description": "人体工学设计，舒适坐感。实木腿部，布艺坐垫，可拆洗。",
+      "tags": ["人体工学", "舒适", "可拆洗", "实木"],
+      "specifications": {
+        "尺寸": "45cm × 50cm × 85cm",
+        "材质": "实木 + 布艺",
+        "颜色": "灰色",
+        "重量": "6kg"
+      },
+      "features": ["人体工学", "可拆洗", "防滑脚垫"],
+      "inStock": true,
+      "rating": 4.5,
+      "reviewCount": 134
+    },
+    {
+      "productId": "kitchen_cabinet_001",
+      "name": "现代厨房橱柜",
+      "category": "kitchen_cabinet",
+      "sceneType": "kitchen",
+      "price": 8999,
+      "originalPrice": 11999,
+      "images": [
+        "kitchen/kitchen_cabinet.jpg",
+        "kitchen/kitchen_cabinet_2.jpg"
+      ],
+      "description": "现代简约设计，优质板材制作，大容量储物空间。包含上下柜体，台面采用石英石材质。",
+      "tags": ["现代", "大容量", "石英石台面", "环保"],
+      "specifications": {
+        "尺寸": "300cm × 60cm × 240cm",
+        "材质": "多层实木板 + 石英石台面",
+        "颜色": "白色 + 木纹色",
+        "重量": "120kg"
+      },
+      "features": ["大容量储物", "石英石台面", "静音铰链"],
+      "inStock": true,
+      "rating": 4.7,
+      "reviewCount": 89
+    },
+    {
+      "productId": "kitchen_island_001",
+      "name": "多功能厨房岛台",
+      "category": "kitchen_island",
+      "sceneType": "kitchen",
+      "price": 5999,
+      "originalPrice": 7999,
+      "images": [
+        "kitchen/kitchen_island.jpg",
+        "kitchen/kitchen_island_2.jpg"
+      ],
+      "description": "多功能厨房岛台，集储物、操作、用餐于一体。内置电源插座，方便小家电使用。",
+      "tags": ["多功能", "储物", "操作台", "用餐"],
+      "specifications": {
+        "尺寸": "150cm × 80cm × 90cm",
+        "材质": "实木 + 石英石台面",
+        "颜色": "原木色 + 白色",
+        "重量": "65kg"
+      },
+      "features": ["多功能设计", "内置插座", "大理石台面"],
+      "inStock": true,
+      "rating": 4.8,
+      "reviewCount": 76
+    },
+    {
+      "productId": "bar_stool_001",
+      "name": "现代吧台椅",
+      "category": "bar_stool",
+      "sceneType": "kitchen",
+      "price": 699,
+      "originalPrice": 999,
+      "images": [
+        "kitchen/bar_stool.jpg",
+        "kitchen/bar_stool_2.jpg"
+      ],
+      "description": "现代简约设计，可调节高度，360度旋转。PU皮质坐垫，舒适耐用。",
+      "tags": ["可调节", "旋转", "PU皮质", "现代"],
+      "specifications": {
+        "尺寸": "40cm × 40cm × 60-80cm",
+        "材质": "金属支架 + PU皮质",
+        "颜色": "黑色",
+        "重量": "8kg"
+      },
+      "features": ["高度可调", "360度旋转", "防滑底座"],
+      "inStock": true,
+      "rating": 4.6,
+      "reviewCount": 112
+    },
+    {
+      "productId": "range_hood_001",
+      "name": "欧式抽油烟机",
+      "category": "range_hood",
+      "sceneType": "kitchen",
+      "price": 2899,
+      "originalPrice": 3899,
+      "images": [
+        "kitchen/range_hood.jpg",
+        "kitchen/range_hood_2.jpg"
+      ],
+      "description": "大吸力设计，静音运行。不锈钢材质，易清洁。LED照明，烹饪更便利。",
+      "tags": ["大吸力", "静音", "不锈钢", "LED照明"],
+      "specifications": {
+        "尺寸": "90cm × 50cm × 15cm",
+        "材质": "不锈钢",
+        "颜色": "银色",
+        "功率": "220W"
+      },
+      "features": ["大吸力", "静音设计", "LED照明"],
+      "inStock": true,
+      "rating": 4.7,
+      "reviewCount": 158
+    }
+  ],
+  "categories": {
+    "living_room": {
+      "name": "客厅家具",
+      "description": "现代客厅必备家具",
+      "icon": "fas fa-couch"
+    },
+    "bedroom": {
+      "name": "卧室家具", 
+      "description": "舒适卧室家具系列",
+      "icon": "fas fa-bed"
+    },
+    "dining_room": {
+      "name": "餐厅家具",
+      "description": "优雅用餐空间家具",
+      "icon": "fas fa-utensils"
+    },
+    "kitchen": {
+      "name": "厨房家具",
+      "description": "现代厨房设备",
+      "icon": "fas fa-blender"
+    }
+  },
+  "metadata": {
+    "version": "1.0",
+    "totalProducts": 14,
+    "lastUpdated": "2024-01-01"
+  }
+} 

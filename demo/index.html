@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频联动产品展示 - Demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link href="css/demo.css" rel="stylesheet">
+    <link href="css/animations.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    <!-- 头部标题 -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-6xl mx-auto px-4 py-4">
+            <h1 class="text-2xl font-bold text-gray-800">
+                <i class="fas fa-play-circle text-blue-600 mr-2"></i>
+                视频联动产品展示 Demo
+            </h1>
+            <p class="text-gray-600 mt-1">观看视频，下方产品会根据场景自动切换</p>
+        </div>
+    </header>
+
+    <!-- 主内容区域 -->
+    <main class="max-w-6xl mx-auto px-4 py-6">
+        <!-- 视频播放区域 -->
+        <section class="video-section mb-8">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <!-- 视频标题和信息 -->
+                <div class="px-6 py-4 border-b bg-gradient-to-r from-blue-50 to-indigo-50">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-2">家居场景展示</h2>
+                    <div class="flex items-center text-sm text-gray-600 space-x-4">
+                        <span id="current-scene" class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full">
+                            <i class="fas fa-home mr-1"></i>
+                            准备播放...
+                        </span>
+                        <span id="video-duration" class="text-gray-500">时长: --:--</span>
+                    </div>
+                </div>
+                
+                <!-- 视频播放器 -->
+                <div class="video-container relative">
+                    <video 
+                        id="main-video" 
+                        class="w-full h-auto"
+                        controls
+                        poster="images/video-poster.jpg"
+                        preload="metadata"
+                    >
+                        <source src="videos/home-showcase.mp4" type="video/mp4">
+                        <p class="text-center py-8 text-gray-500">您的浏览器不支持视频播放</p>
+                    </video>
+                    
+                    <!-- 场景切换提示 -->
+                    <div id="scene-indicator" class="scene-indicator">
+                        <div class="scene-indicator-content">
+                            <i class="fas fa-magic"></i>
+                            <span>场景切换中...</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 视频进度和场景时间轴 -->
+                <div class="px-6 py-4 bg-gray-50">
+                    <div class="timeline-container">
+                        <div class="timeline-header mb-3">
+                            <h3 class="text-sm font-medium text-gray-700">场景时间轴</h3>
+                        </div>
+                        <div id="timeline" class="timeline">
+                            <!-- 时间轴将通过JavaScript动态生成 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 产品展示区域 -->
+        <section class="products-section">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                <!-- 产品区域标题 -->
+                <div class="px-6 py-4 border-b bg-gradient-to-r from-green-50 to-emerald-50">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h2 class="text-xl font-semibold text-gray-800">相关产品推荐</h2>
+                            <p id="products-description" class="text-gray-600 mt-1">
+                                根据视频场景为您推荐相关产品
+                            </p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span id="products-count" class="text-sm text-gray-500">0 件商品</span>
+                            <div id="loading-indicator" class="loading-spinner hidden">
+                                <i class="fas fa-spinner fa-spin text-blue-500"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 产品网格 -->
+                <div class="p-6">
+                    <div id="products-grid" class="products-grid">
+                        <!-- 初始状态 -->
+                        <div class="empty-state">
+                            <div class="text-center py-12">
+                                <i class="fas fa-play text-4xl text-gray-300 mb-4"></i>
+                                <h3 class="text-lg font-medium text-gray-500 mb-2">开始播放视频</h3>
+                                <p class="text-gray-400">产品将根据视频场景自动展示</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 功能说明 -->
+        <section class="mt-8">
+            <div class="bg-blue-50 rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-blue-800 mb-3">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    功能说明
+                </h3>
+                <div class="grid md:grid-cols-3 gap-4 text-sm">
+                    <div class="flex items-start space-x-2">
+                        <i class="fas fa-video text-blue-600 mt-1"></i>
+                        <div>
+                            <p class="font-medium text-blue-800">智能识别</p>
+                            <p class="text-blue-600">根据视频播放进度识别当前场景</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-2">
+                        <i class="fas fa-sync-alt text-blue-600 mt-1"></i>
+                        <div>
+                            <p class="font-medium text-blue-800">实时联动</p>
+                            <p class="text-blue-600">产品展示与视频内容实时同步</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-2">
+                        <i class="fas fa-shopping-cart text-blue-600 mt-1"></i>
+                        <div>
+                            <p class="font-medium text-blue-800">购买引导</p>
+                            <p class="text-blue-600">点击产品可查看详细信息</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 产品详情模态框 -->
+    <div id="product-modal" class="product-modal hidden">
+        <div class="product-modal-overlay"></div>
+        <div class="product-modal-content">
+            <div class="product-modal-header">
+                <h3 id="modal-product-name" class="text-xl font-semibold"></h3>
+                <button id="close-modal" class="close-button">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="product-modal-body">
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <img id="modal-product-image" src="" alt="" class="w-full rounded-lg">
+                    </div>
+                    <div>
+                        <div id="modal-product-details" class="space-y-4">
+                            <!-- 产品详情将通过JavaScript填充 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript文件 -->
+    <script src="js/video-listener.js"></script>
+    <script src="js/scene-manager.js"></script>
+    <script src="js/product-display.js"></script>
+    <script src="js/demo.js"></script>
+</body>
+</html> 

@@ -1,0 +1,58 @@
+{
+  "videoId": "home_showcase_001",
+  "title": "家居场景展示",
+  "description": "展示现代家居的不同空间场景",
+  "duration": 60,
+  "scenes": [
+    {
+      "id": "scene_1",
+      "startTime": 0,
+      "endTime": 15,
+      "sceneType": "living_room",
+      "sceneName": "客厅场景",
+      "description": "现代简约客厅，展示沙发、茶几等家具",
+      "products": ["sofa", "coffee_table", "tv_stand", "floor_lamp"],
+      "primaryColor": "#10b981",
+      "tags": ["现代", "简约", "客厅", "休闲"]
+    },
+    {
+      "id": "scene_2", 
+      "startTime": 15,
+      "endTime": 30,
+      "sceneType": "bedroom",
+      "sceneName": "卧室场景",
+      "description": "温馨舒适的卧室空间，展示床具和储物家具",
+      "products": ["bed", "nightstand", "wardrobe", "dresser"],
+      "primaryColor": "#8b5cf6",
+      "tags": ["温馨", "舒适", "卧室", "休息"]
+    },
+    {
+      "id": "scene_3",
+      "startTime": 30,
+      "endTime": 45,
+      "sceneType": "dining_room", 
+      "sceneName": "餐厅场景",
+      "description": "优雅的用餐空间，展示餐桌椅和储物柜",
+      "products": ["dining_table", "dining_chair", "sideboard", "pendant_light"],
+      "primaryColor": "#ef4444",
+      "tags": ["优雅", "用餐", "餐厅", "聚会"]
+    },
+    {
+      "id": "scene_4",
+      "startTime": 45,
+      "endTime": 60,
+      "sceneType": "kitchen",
+      "sceneName": "厨房场景", 
+      "description": "现代化厨房空间，展示橱柜和厨房用具",
+      "products": ["kitchen_cabinet", "kitchen_island", "bar_stool", "range_hood"],
+      "primaryColor": "#f59e0b",
+      "tags": ["现代", "实用", "厨房", "烹饪"]
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "createdAt": "2024-01-01",
+    "updatedAt": "2024-01-01",
+    "author": "Demo Team"
+  }
+} 
