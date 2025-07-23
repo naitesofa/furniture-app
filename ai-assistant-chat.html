@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI对话 - 小麦</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      background-color: #f8f8f8;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    }
+    .chat-bubble-ai {
+      border-radius: 18px 18px 18px 4px;
+      background-color: #f1f1f1;
+    }
+    .chat-bubble-user {
+      border-radius: 18px 18px 4px 18px;
+      background-color: #e7f3ff;
+    }
+    .bottom-safe-area {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+  </style>
+</head>
+<body class="h-screen flex flex-col">
+  <!-- 顶部导航栏 -->
+  <header class="bg-white shadow-sm fixed top-0 left-0 right-0 z-10">
+    <div class="flex items-center justify-between px-4 py-3">
+      <button class="text-gray-600">
+        <i class="fas fa-arrow-left text-lg"></i>
+      </button>
+      <h1 class="text-lg font-medium flex items-center">
+        小麦
+      </h1>
+      <button class="text-gray-600" id="menuButton">
+        <i class="fas fa-th text-lg"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- 功能菜单 (默认隐藏) -->
+  <div id="functionMenu" class="fixed right-0 top-12 bg-white shadow-lg rounded-l-lg z-20 transform translate-x-full transition-transform duration-300 w-3/4">
+    <div class="p-4">
+      <h3 class="font-medium text-gray-800 mb-3">功能选择</h3>
+      <ul>
+        <li class="py-2 border-b">
+          <a href="ai-assistant-chat.html" class="flex items-center text-gray-700 active-function">
+            <i class="fas fa-comments w-8 text-blue-500"></i>
+            <span>AI对话</span>
+          </a>
+        </li>
+        <li class="py-2 border-b">
+          <a href="ai-pricing.html" class="flex items-center text-gray-700">
+            <i class="fas fa-calculator w-8 text-orange-500"></i>
+            <span>AI报价</span>
+          </a>
+        </li>
+        <li class="py-2 border-b">
+          <a href="ai-design.html" class="flex items-center text-gray-700">
+            <i class="fas fa-paint-brush w-8 text-purple-500"></i>
+            <span>AI设计</span>
+          </a>
+        </li>
+        <li class="py-2 border-b">
+          <a href="ai-diagnosis.html" class="flex items-center text-gray-700">
+            <i class="fas fa-home w-8 text-green-500"></i>
+            <span>户型诊断</span>
+          </a>
+        </li>
+        <li class="py-2">
+          <a href="ai-video.html" class="flex items-center text-gray-700">
+            <i class="fas fa-film w-8 text-red-500"></i>
+            <span>图生视频</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 聊天内容区域 -->
+  <div class="chat-container flex-1 overflow-y-auto pb-24 px-4">
+    <!-- 聊天消息会在这里动态添加 -->
+  </div>
+
+  <!-- 功能选择区域 -->
+  <div class="fixed bottom-16 left-0 right-0 bg-transparent px-4 mb-1">
+    <div class="flex justify-evenly pb-1">
+      <button class="bg-white shadow-sm rounded-xl px-4 py-1.5 text-sm text-blue-500 font-medium flex items-center">
+        <i class="fas fa-comments mr-1.5"></i>
+        AI对话
+      </button>
+      <button class="bg-white shadow-sm rounded-xl px-4 py-1.5 text-sm text-gray-600 flex items-center">
+        <i class="fas fa-calculator mr-1.5"></i>
+        AI报价
+      </button>
+      <button class="bg-white shadow-sm rounded-xl px-4 py-1.5 text-sm text-gray-600 flex items-center">
+        <i class="fas fa-paint-brush mr-1.5"></i>
+        AI设计
+      </button>
+      <button class="bg-white shadow-sm rounded-xl px-4 py-1.5 text-sm text-gray-600 flex items-center">
+        <i class="fas fa-home mr-1.5"></i>
+        户型
+      </button>
+    </div>
+  </div>
+
+  <!-- 底部输入区域 -->
+  <div class="fixed bottom-0 left-0 right-0 bg-transparent p-2 bottom-safe-area" style="margin-bottom: 0.5rem;">
+    <div class="bg-blue-50 rounded-full flex items-center px-4 py-1 shadow-sm">
+      <!-- <button class="p-2 text-blue-500">
+        <i class="fas fa-comment-alt"></i>
+      </button> -->
+      <div class="flex-1 ml-2">
+        <input type="text" placeholder="有问题尽管问我" class="bg-transparent w-full focus:outline-none text-gray-600">
+        <!-- <p class="text-xs text-gray-400">AI助手随时为您服务</p> -->
+      </div>
+      <button class="p-2 text-blue-500">
+        <i class="fas fa-camera"></i>
+      </button>
+      <button class="p-2 text-blue-500 ml-1" id="sendButton">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // 初始化聊天界面
+    document.addEventListener('DOMContentLoaded', () => {
+      // 添加一些示例消息
+      addMessage('你好，我是小麦，你的智能家居助手。有什么可以帮到你？', 'ai');
+    });
+    
+    // 添加消息到聊天区域
+    function addMessage(text, sender) {
+      const chatContainer = document.querySelector('.chat-container');
+      const messageDiv = document.createElement('div');
+      
+      messageDiv.className = sender === 'user' 
+        ? 'chat-message user-message flex justify-end mb-4' 
+        : 'chat-message ai-message flex mb-4';
+      
+      const messageContent = sender === 'user'
+        ? `<div class="max-w-[80%] bg-blue-500 text-white rounded-2xl rounded-tr-sm px-4 py-2">${text}</div>`
+        : `<div class="avatar-small mr-2 flex-shrink-0">
+             <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80" alt="AI" class="w-8 h-8 rounded-full">
+           </div>
+           <div class="max-w-[80%] bg-gray-100 text-gray-800 rounded-2xl rounded-tl-sm px-4 py-2">${text}</div>`;
+      
+      messageDiv.innerHTML = messageContent;
+      chatContainer.appendChild(messageDiv);
+      
+      // 滚动到底部
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+    
+    // 发送消息函数
+    function sendMessage() {
+      const inputField = document.querySelector('.flex-1 input');
+      if (inputField.value.trim() !== '') {
+        const message = inputField.value;
+        addMessage(message, 'user');
+        inputField.value = '';
+        
+        // 模拟AI回复
+        setTimeout(() => {
+          addMessage('我正在处理您的问题，请稍等...', 'ai');
+        }, 1000);
+      }
+    }
+    
+    // 处理消息发送 - 回车键
+    const inputField = document.querySelector('.flex-1 input');
+    inputField.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+    
+    // 发送按钮点击事件
+    const sendButton = document.getElementById('sendButton');
+    if (sendButton) {
+      sendButton.addEventListener('click', () => {
+        sendMessage();
+      });
+    }
+
+    // 功能按钮点击事件
+    const functionButtons = document.querySelectorAll('.fixed.bottom-16 button');
+    functionButtons.forEach((button, index) => {
+      button.addEventListener('click', () => {
+        const pages = ['ai-assistant-chat.html', 'ai-pricing.html', 'ai-design.html', 'ai-diagnosis.html', 'ai-video.html'];
+        if (index < pages.length) {
+          window.location.href = pages[index];
+        }
+        
+        // 更新按钮样式
+        functionButtons.forEach(btn => {
+          btn.classList.remove('text-blue-500');
+          btn.classList.add('text-gray-600');
+        });
+        button.classList.remove('text-gray-600');
+        button.classList.add('text-blue-500');
+      });
+    });
+    
+    // 返回按钮点击事件
+    const backButton = document.getElementById('backButton');
+    if (backButton) {
+      backButton.addEventListener('click', () => {
+        window.location.href = 'ai-assistant.html';
+      });
+    }
+  </script>
+</body>
+</html> 

@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI设计</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="ai-design.css">
+  <link rel="stylesheet" href="example-gallery.css">
+  <link rel="stylesheet" href="dual-progress-bar.css">
+  <link rel="stylesheet" href="css/flip-card-progress.css">
+  <link rel="stylesheet" href="css/flip-card-mobile.css">
+  <link rel="stylesheet" href="css/design-type-switcher.css">
+  <style>
+    :root {
+      --main-color: #2a9d8f; /* 活力松石绿 - 主色/用户 */
+      --accent-color: #e9c46a; /* 温暖鹅卵黄 - 辅助/强调 */
+      --ai-color: #FFFFFF; /* 纯净白 - AI/中性 */
+      --bg-color: #F7FAFA; /* 薄荷雾 - 页面背景 */
+      --text-main: #264653; /* 深海石墨 - 主要文字 */
+      --text-secondary: #889096; /* 中性灰 - 次要文字/图标 */
+      --inactive-btn: #DCE1E3; /* 非激活按钮背景色 */
+      --menu-hover: rgba(42, 157, 143, 0.08); /* 菜单悬停背景色 */
+      --menu-active: #EAF6F5; /* 菜单激活背景色 */
+      --safe-area-bottom: env(safe-area-inset-bottom, 0px); /* 底部安全区域 */
+    }
+    
+    /* 统一底部面板样式 */
+    .unified-bottom-panel {
+      background-color: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(42, 157, 143, 0.08);
+      padding: 8px 0 0;
+      padding-bottom: calc(8px + var(--safe-area-bottom)); /* 添加底部安全区域 */
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      overflow: hidden;
+    }
+    
+    /* 主内容区域底部留白，避免被底部面板遮挡 */
+    main {
+      padding-bottom: 160px; /* 为底部面板预留空间 */
+    }
+    
+    /* 输入框样式优化 */
+    .input-container {
+      padding: 0 12px 12px;
+    }
+    
+    /* 输入区域包装器样式 - 新增 */
+    .input-area-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .input-field {
+      background-color: var(--bg-color);
+      border: 1px solid rgba(42, 157, 143, 0.15);
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      padding: 8px 12px;
+      flex: 1; /* 让输入框占据剩余空间 */
+    }
+    
+    .input-field:focus-within {
+      border-color: var(--main-color);
+      box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.1), inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* 输入框左侧图标 */
+    .input-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      color: var(--accent-color); /* 使用温暖鹅卵黄色 */
+      margin-left: 4px;
+    }
+    
+    /* 切换按钮样式 - 外部版 */
+    .switch-btn-outside {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: rgba(42, 157, 143, 0.08);
+      color: var(--main-color);
+      transition: all 0.2s ease;
+      flex-shrink: 0; /* 防止按钮被压缩 */
+    }
+    
+    .switch-btn-outside i {
+      font-size: 18px;
+    }
+    
+    .switch-btn-outside:active {
+      background-color: rgba(42, 157, 143, 0.15);
+      transform: scale(0.95);
+    }
+    
+    /* 切换按钮样式 - 扩展输入区内 */
+    .switch-btn-expanded {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: rgba(42, 157, 143, 0.08);
+      color: var(--main-color);
+      transition: all 0.2s ease;
+    }
+    
+    .switch-btn-expanded i {
+      font-size: 16px;
+    }
+    
+    .switch-btn-expanded:active {
+      background-color: rgba(42, 157, 143, 0.15);
+      transform: scale(0.95);
+    }
+    
+    /* 加号按钮样式 */
+    .add-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: rgba(42, 157, 143, 0.08);
+      color: var(--main-color);
+      transition: all 0.2s ease;
+    }
+    
+    .add-btn:active {
+      background-color: rgba(42, 157, 143, 0.15);
+      transform: scale(0.95);
+    }
+    
+    .add-btn-expanded {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: rgba(42, 157, 143, 0.08);
+      color: var(--main-color);
+      transition: all 0.2s ease;
+    }
+    
+    .add-btn-expanded:active {
+      background-color: rgba(42, 157, 143, 0.15);
+      transform: scale(0.95);
+    }
+    
+    /* 输入文本样式 */
+    .input-text {
+      color: var(--text-main);
+      font-size: 15px;
+    }
+    
+    .input-text::placeholder {
+      color: var(--text-secondary);
+    }
+    
+    /* 扩展输入区样式优化 */
+    .expanded-input {
+      background-color: var(--bg-color);
+      border: 1px solid rgba(42, 157, 143, 0.15);
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      padding: 12px 16px;
+      margin-top: 10px; /* 与上方输入区域保持一定距离 */
+    }
+    
+    .expanded-input-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .expanded-textarea {
+      padding: 8px 0;
+      line-height: 1.5;
+      resize: none;
+      font-size: 15px;
+      color: var(--text-main);
+      min-height: 80px;
+    }
+    
+    .expanded-textarea::placeholder {
+      color: var(--text-secondary);
+    }
+    
+    /* 智能输入栏样式 */
+    .smart-input-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+    }
+
+    /* New styles for the welcome screen */
+    .welcome-container {
+      width: 100%;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .design-card {
+      background-size: cover;
+      background-position: center;
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      height: 120px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .design-card:active {
+        transform: scale(0.98);
+    }
+
+    .design-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 10%, transparent 70%);
+      z-index: 1;
+    }
+
+    .design-card.split::before {
+        z-index: 2;
+    }
+    
+    .card-background-halves {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        z-index: 1;
+    }
+
+    .card-half {
+        width: 50%;
+        height: 100%;
+        background-size: cover;
+        background-position: center;
+    }
+
+    .design-card-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .design-card.split .design-card-content {
+        z-index: 3;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 20px;
+    }
+
+    .design-card-title {
+      font-size: 20px;
+      font-weight: bold;
+      line-height: 1.2;
+    }
+
+    .design-card-subtitle {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .inspiration-section {
+      padding: 0 16px;
+      margin-top: 16px; /* Added for more breathing room */
+    }
+    
+    .inspiration-title {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text-main);
+      margin-bottom: 12px;
+    }
+
+    .inspiration-tags-wrapper {
+      position: relative;
+    }
+
+    .inspiration-tags-wrapper::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 10px; /* Match padding-bottom of .inspiration-tags */
+      width: 40px;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0), white 80%);
+      pointer-events: none;
+    }
+
+    .inspiration-tags {
+      display: flex;
+      overflow-x: auto;
+      gap: 10px;
+      padding-bottom: 10px; /* For scrollbar */
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+
+    .inspiration-tags::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, and Opera */
+    }
+
+    .inspiration-tag {
+      background-color: var(--bg-color);
+      border: 1px solid rgba(42, 157, 143, 0.15);
+      color: var(--text-main);
+      padding: 8px 14px;
+      border-radius: 20px;
+      font-size: 14px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .inspiration-tag:active {
+        background-color: rgba(42, 157, 143, 0.1);
+    }
+
+  </style>
+</head>
+<body class="h-screen flex flex-col bg-white">
+  <!-- 顶部状态栏 -->
+  <header class="pt-2 px-4 pb-4">
+    <div class="flex items-center justify-between">
+      <button class="p-2" id="backButton">
+        <i class="fas fa-arrow-left text-xl"></i>
+      </button>
+      <h1 class="text-xl font-medium">AI设计</h1>
+      <button class="p-2" id="menuButton">
+        <img src="images/fenlei.svg" alt="菜单" class="w-6 h-6">
+      </button>
+    </div>
+  </header>
+
+  <!-- 功能菜单 (默认隐藏) -->
+  <div id="functionMenu" class="fixed right-0 top-0 h-full bg-mintfog shadow-lg z-50 transform translate-x-full transition-all duration-300 w-full">
+    <div class="flex flex-col h-full">
+      <!-- 菜单头部 -->
+      <div class="menu-header">
+        <div class="menu-header-content">
+          <!-- 用户信息和关闭按钮区域 -->
+          <div class="menu-header-row">
+            <div class="user-profile">
+              <div class="user-avatar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <div class="user-info">
+                <div class="user-name text-neutral-gray">访客用户</div>
+              </div>
+            </div>
+            <button id="closeMenuButton" class="menu-close-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+              
+      <!-- 菜单内容 -->
+      <div class="flex-1 overflow-y-auto">
+        <div class="px-2 pt-1">
+          <div class="menu-section mb-2">
+            <h4 class="menu-section-title">智能助手</h4>
+            <ul>
+              <li>
+                <a href="ai-assistant.html" class="menu-item">
+                  <div class="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                  </div>
+                  <span>新对话</span>
+                </a>
+              </li>
+              <li>
+                <a href="ai-pricing.html" class="menu-item">
+                  <div class="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                      <line x1="12" y1="4" x2="12" y2="20"></line>
+                      <path d="M18 8h.01M18 12h.01M18 16h.01"></path>
+                      <path d="M6 8h4M6 12h4M6 16h4"></path>
+                    </svg>
+                  </div>
+                  <span>AI报价</span>
+                </a>
+              </li>
+              <li>
+                <a href="ai-design.html" class="menu-item active">
+                  <span class="current-indicator"></span>
+                  <div class="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2a9d8f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                      <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                      <path d="M2 2l7.586 7.586"></path>
+                      <circle cx="11" cy="11" r="2"></circle>
+                    </svg>
+                  </div>
+                  <span>AI设计</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="menu-section mb-2">
+            <h4 class="menu-section-title">高级功能</h4>
+            <ul>
+              <li>
+                <a href="ai-diagnosis.html" class="menu-item">
+                  <div class="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                      <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                  </div>
+                  <span>户型诊断</span>
+                </a>
+              </li>
+              <li>
+                <a href="ai-video.html" class="menu-item">
+                  <div class="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+                      <line x1="7" y1="2" x2="7" y2="22"></line>
+                      <line x1="17" y1="2" x2="17" y2="22"></line>
+                      <line x1="2" y1="12" x2="22" y2="12"></line>
+                      <line x1="2" y1="7" x2="7" y2="7"></line>
+                      <line x1="2" y1="17" x2="7" y2="17"></line>
+                      <line x1="17" y1="17" x2="22" y2="17"></line>
+                      <line x1="17" y1="7" x2="22" y2="7"></line>
+                    </svg>
+                  </div>
+                  <span>图生视频</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- 分隔线 -->
+          <div class="border-t border-gray-100 my-1 mx-3"></div>
+          
+          <!-- 设置部分 -->
+          <div class="menu-section mb-2">
+            <h4 class="menu-section-title">其他</h4>
+            <ul>
+              <li>
+                <a href="#" class="menu-item" id="settingsMenuItem">
+                  <div class="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="3"></circle>
+                      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                  </div>
+                  <span>设置</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- 分隔线 -->
+          <div class="border-t border-gray-100 my-1 mx-3"></div>
+          
+          <!-- 最近对话部分 -->
+          <div class="menu-section mb-4">
+            <h4 class="menu-section-title">最近对话</h4>
+            <ul>
+              <li>
+                <a href="#" class="menu-item recent-chat">
+                  <div class="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                  </div>
+                  <div class="flex-1 overflow-hidden">
+                    <div class="font-medium text-sm">装修设计流行趋势</div>
+                    <div class="text-xs text-gray-500 truncate">今天 15:04</div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="#" class="menu-item recent-chat">
+                  <div class="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                  </div>
+                  <div class="flex-1 overflow-hidden">
+                    <div class="font-medium text-sm">沙发价格咨询</div>
+                    <div class="text-xs text-gray-500 truncate">昨天 10:23</div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="#" class="menu-item recent-chat">
+                  <div class="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                  </div>
+                  <div class="flex-1 overflow-hidden">
+                    <div class="font-medium text-sm">法式风格客厅设计</div>
+                    <div class="text-xs text-gray-500 truncate">3天前</div>
+                  </div>
+                </a>
+              </li>
+              <!-- 查看更多按钮 -->
+              <li>
+                <a href="#" class="menu-item" id="viewAllChatsBtn">
+                  <div class="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                      <path d="M12 2v10l4 4"></path>
+                    </svg>
+                  </div>
+                  <span>查看更多</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 菜单遮罩层 -->
+  <div id="menuOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-[998] hidden transition-opacity duration-300 opacity-0"></div>
+
+  <!-- 设置页面 (默认隐藏) -->
+  <div id="settingsPage" class="fixed inset-0 bg-white z-40 transform translate-y-full transition-all duration-300">
+    <div class="flex flex-col h-full">
+      <!-- 设置页面头部 -->
+      <div class="settings-header">
+        <div class="flex items-center justify-between px-4 py-3">
+          <button id="closeSettingsButton" class="p-2 rounded-full bg-gray-100">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+          <h3 class="text-xl font-medium">设置</h3>
+          <div class="w-10"></div> <!-- 占位元素保持标题居中 -->
+        </div>
+      </div>
+      
+      <!-- 设置内容区域 -->
+      <div class="flex-1 overflow-y-auto">
+        <!-- 个人信息设置 -->
+        <div class="settings-section">
+          <h4 class="settings-section-title">个人信息</h4>
+          <div class="settings-item">
+            <div class="settings-item-left">
+              <div class="settings-icon bg-blue-50">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <div class="settings-item-content">
+                <div class="settings-item-title">头像</div>
+                <div class="settings-item-desc">修改您的个人头像</div>
+              </div>
+            </div>
+            <div class="settings-item-right">
+              <div class="user-avatar-small">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-icon">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-left">
+              <div class="settings-icon bg-blue-50">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <div class="settings-item-content">
+                <div class="settings-item-title">昵称</div>
+                <div class="settings-item-desc">修改您的显示昵称</div>
+              </div>
+            </div>
+            <div class="settings-item-right">
+              <div class="settings-item-value">访客用户</div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-icon">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 沉浸式创作模式面板 -->
+  <div id="creativePanel" class="creative-panel">
+    <div class="creative-panel-content creative-panel-flex-container">
+      <!-- 上半部分（图片+文本） -->
+      <div class="creative-panel-upper">
+        <!-- 参考图区域 -->
+        <div class="reference-area">
+          <!-- 上传图片按钮和示例图容器 -->
+          <div class="reference-controls">
+            <!-- 上传图片按钮/参考图预览区域 -->
+            <div class="upload-preview-container">
+              <!-- 上传图片按钮 - 默认显示 -->
+              <label for="localFileUpload" class="local-upload-btn" id="uploadImageBtn">
+                <i class="fas fa-upload"></i>
+                <span>上传图片</span>
+              </label>
+              <input type="file" id="localFileUpload" accept="image/*" class="hidden">
+              
+              <!-- 参考图预览区域 - 默认隐藏 -->
+              <div class="reference-preview hidden" id="referencePreview">
+                <img src="#" alt="参考图片" id="referenceImage">
+                <button class="remove-reference-btn">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+            
+            <!-- 快速选择示例图 - 直接展示 -->
+            <div class="example-thumbs-row">
+              <!-- 示例图会由JavaScript动态生成 -->
+            </div>
+          </div>
+        </div>
+        
+        <!-- 主文本编辑区 -->
+        <div class="text-edit-area">
+          <!-- 隐藏的textarea用于存储原始文本 -->
+          <textarea id="creativeTextarea" class="creative-textarea hidden">毛坯图生成设计图，风格简约、户型客厅</textarea>
+          <!-- 可视化编辑区域 -->
+          <div id="formattedTextArea" class="formatted-text-area">
+            <!-- 模板区域 - 不可编辑 -->
+            <div id="templateArea" class="template-area" contenteditable="false"></div>
+            
+            <!-- 用户编辑区域 - 可编辑 -->
+            <div id="userEditArea" class="user-edit-area" contenteditable="true"></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 下半部分（按钮+选项） -->
+      <div class="creative-panel-lower">
+        <!-- AI参数工具栏 -->
+        <div class="ai-tools-bar">
+          <!-- 模板选择按钮组 -->
+          <div class="template-buttons">
+            <!-- 底部按钮行 -->
+            <div class="room-buttons">
+              <button class="room-btn" data-room="设计">设计</button>
+              <button class="room-btn" data-room="风格/户型">风格/户型</button>
+              <button class="room-btn" data-room="比例">3:4</button>
+              
+              <!-- 生成按钮 -->
+              <button class="generate-btn" id="generateBtn">
+                <span>生成</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 键盘选项面板 - 移到创作面板内部 -->
+        <div class="keyboard-options-panel" id="keyboardOptionsPanel">
+          <div class="options-scroll-container">
+            <!-- 设计类型选项 -->
+            <div class="options-section" id="designSection">
+              <h4 class="options-title">设计类型</h4>
+              <div class="options-grid" id="designGrid">
+                <!-- 设计选项将在这里动态添加 -->
+              </div>
+            </div>
+            
+            <!-- 风格选项 -->
+            <div class="options-section" id="styleSection">
+              <h4 class="options-title">风格</h4>
+              <div class="options-grid" id="styleGrid">
+                <!-- 风格选项将在这里动态添加 -->
+              </div>
+            </div>
+            
+            <!-- 户型选项 -->
+            <div class="options-section" id="roomSection">
+              <h4 class="options-title">户型</h4>
+              <div class="options-grid" id="roomGrid">
+                <!-- 户型选项将在这里动态添加 -->
+              </div>
+            </div>
+            
+            <!-- 比例选项 -->
+            <div class="options-section" id="ratioSection">
+              <h4 class="options-title">选择生成比例</h4>
+              <div class="options-grid" id="ratioGrid">
+                <!-- 比例选项将在这里动态添加 -->
+              </div>
+            </div>
+            
+            <!-- 水印选项 -->
+            <div class="options-section" id="watermarkSection">
+              <div class="watermark-options">
+                <div class="watermark-toggle-row">
+                  <span class="toggle-label">启用水印</span>
+                  <label class="switch">
+                    <input type="checkbox" id="watermarkToggle">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 关闭按钮 -->
+      <button class="close-creative-btn" id="closeCreativeBtn">
+        <i class="fas fa-chevron-down"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- 主要内容区域 -->
+  <main class="flex-1 overflow-y-auto w-full">
+    <div class="welcome-container">
+      <!-- 核心功能区 -->
+      <div class="flex flex-col gap-4">
+        <div class="design-card" style="background-image: url('https://images.unsplash.com/photo-1554995207-c18c203602cb?w=500&q=80');">
+          <div class="design-card-content">
+            <h3 class="design-card-title">毛坯房设计</h3>
+            <p class="design-card-subtitle">从零开始，规划您的梦想空间</p>
+          </div>
+        </div>
+        <div class="design-card" style="background-image: url('https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=500&q=80');">
+          <div class="design-card-content">
+            <h3 class="design-card-title">旧屋翻新</h3>
+            <p class="design-card-subtitle">赋予旧空间新生，重塑家的温馨</p>
+          </div>
+        </div>
+        <div class="design-card" style="background-image: url('images/AIdesign/新房软装 (1).jpg');">
+          <div class="design-card-content">
+            <h3 class="design-card-title">软装搭配</h3>
+            <p class="design-card-subtitle">用风格定义生活，AI填充理想家具</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 灵感启发区 -->
+      <div class="inspiration-section">
+        <h4 class="inspiration-title">从一个风格开始探索</h4>
+        <div class="inspiration-tags-wrapper">
+          <div class="inspiration-tags">
+            <span class="inspiration-tag">日式原木风客厅</span>
+            <span class="inspiration-tag">赛博朋克风卧室</span>
+            <span class="inspiration-tag">奶油风主卧怎么搭</span>
+            <span class="inspiration-tag">把我的客厅改成工业风</span>
+            <span class="inspiration-tag">儿童房设计</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 智能输入栏 -->
+  <footer id="smartInputBar" class="smart-input-bar">
+    <div class="unified-bottom-panel">
+      <!-- 输入框区域 -->
+      <div class="p-2 bottom-safe-area input-container" style="margin-bottom: 0.5rem;">
+        <div class="input-area-wrapper">
+          <!-- 左侧切换按钮 - 移到输入框外 -->
+          <button class="switch-btn-outside flex-shrink-0" id="typeToggleBtn" aria-label="切换设计类型">
+            <i class="fas fa-sliders-h"></i>
+          </button>
+          
+          <!-- 输入框 -->
+          <div class="rounded-full flex items-center px-4 py-1 shadow-sm input-field" id="inputFieldContainer">
+            <!-- 添加魔杖图标 -->
+            <div class="input-icon">
+              <i class="fas fa-wand-magic-sparkles"></i>
+            </div>
+            <!-- 中间输入区 -->
+            <div class="flex-1 ml-2">
+              <input type="text" id="composer" placeholder="想象您的房间风格..." class="bg-transparent w-full focus:outline-none input-text">
+            </div>
+            
+            <!-- 右侧加号按钮 -->
+            <button class="p-2 add-btn" id="addBtn">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- 扩展输入区 (默认隐藏) -->
+        <div class="expanded-input rounded-3xl shadow-md p-2 hidden">
+          <div class="expanded-input-header">
+            <!-- 添加魔杖图标到扩展输入区 -->
+            <div class="input-icon">
+              <i class="fas fa-wand-magic-sparkles"></i>
+            </div>
+          </div>
+          <textarea placeholder="描述房间风格或上传参考图..." class="bg-transparent w-full focus:outline-none expanded-textarea" style="height: 55px;"></textarea>
+          
+          <div class="flex justify-between items-center mt-2">
+            <div class="flex space-x-3">
+              <button class="p-1 switch-btn-expanded" id="expandedTypeToggleBtn">
+                <i class="fas fa-sliders-h"></i>
+              </button>
+            </div>
+            <button class="p-1 add-btn-expanded" id="expandedAddBtn">
+              <i class="fas fa-plus text-sm"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 底部抽屉选择菜单 (默认隐藏) -->
+  <div id="bottomSheet" class="bottom-sheet">
+    <div class="bottom-sheet-header">
+      <h3 id="sheetTitle" class="sheet-title">选择选项</h3>
+      <button id="closeSheetBtn" class="close-sheet-btn">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div id="sheetOptions" class="sheet-options">
+      <!-- 选项将在这里动态生成 -->
+    </div>
+  </div>
+  
+  <script src="ai-design.js"></script>
+  <script src="example-gallery.js"></script>
+  <script src="dual-progress-bar.js"></script>
+  <script src="progress-implementation.js"></script>
+  <script src="js/flip-card-progress.js"></script>
+  <script src="js/flip-card-actions.js"></script>
+  <script src="js/flip-card-integration.js"></script>
+  <script src="js/design-type-switcher.js"></script>
+  <script>
+    // 绑定左侧按钮
+    document.addEventListener('DOMContentLoaded', function(){
+      // 获取DOM元素
+      const inputField = document.querySelector('.input-text');
+      const addButton = document.querySelector('.add-btn');
+      const addButtonExpanded = document.querySelector('.add-btn-expanded');
+      const switchBtn = document.getElementById('typeToggleBtn');
+      const expandedSwitchBtn = document.getElementById('expandedTypeToggleBtn');
+      const inputFieldContainer = document.getElementById('inputFieldContainer');
+      const inputAreaWrapper = document.querySelector('.input-area-wrapper');
+      const composer = document.getElementById('composer');
+      const smartInputBar = document.getElementById('smartInputBar');
+      const creativePanel = document.getElementById('creativePanel');
+      
+      // 监听创作面板状态变化
+      if(creativePanel) {
+        // 创建一个MutationObserver来监听创作面板的class变化
+        const observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            if (mutation.attributeName === 'class') {
+              const isActive = creativePanel.classList.contains('active');
+              // 当创作面板激活时，隐藏底部输入框
+              if(smartInputBar) {
+                smartInputBar.style.display = isActive ? 'none' : '';
+              }
+            }
+          });
+        });
+        
+        // 开始观察创作面板的class变化
+        observer.observe(creativePanel, { attributes: true });
+      }
+      
+      // 等待ai-design.js加载完成后再修改函数
+      setTimeout(function() {
+        // 自定义openCreativeMode函数，在原函数基础上添加隐藏底部输入框的功能
+        if(typeof window.openCreativeMode === 'function') {
+          const originalOpenCreativeMode = window.openCreativeMode;
+          window.openCreativeMode = function() {
+            // 调用原始函数
+            originalOpenCreativeMode.apply(this, arguments);
+            
+            // 隐藏底部输入框
+            if(smartInputBar) {
+              smartInputBar.style.display = 'none';
+            }
+          };
+        }
+        
+        // 自定义closeCreativeMode函数，在原函数基础上添加显示底部输入框的功能
+        if(typeof window.closeCreativeMode === 'function') {
+          const originalCloseCreativeMode = window.closeCreativeMode;
+          window.closeCreativeMode = function() {
+            // 调用原始函数
+            originalCloseCreativeMode.apply(this, arguments);
+            
+            // 显示底部输入框
+            if(smartInputBar) {
+              smartInputBar.style.display = '';
+            }
+          };
+        }
+      }, 500); // 给予足够的时间加载外部JS
+      
+      // 输入框点击事件 - 打开创作面板
+      if(composer) {
+        composer.addEventListener('click', function() {
+          // 直接隐藏底部输入框
+          if(smartInputBar) {
+            smartInputBar.style.display = 'none';
+          }
+          
+          // 调用openCreativeMode函数
+          if(typeof window.openCreativeMode === 'function') {
+            window.openCreativeMode();
+          }
+        });
+      }
+      
+      // 输入框容器点击事件 - 打开创作面板
+      if(inputFieldContainer) {
+        inputFieldContainer.addEventListener('click', function(e) {
+          // 如果点击的是输入框容器本身（不是其中的按钮），打开创作面板
+          if (e.target === this || e.target === composer) {
+            // 直接隐藏底部输入框
+            if(smartInputBar) {
+              smartInputBar.style.display = 'none';
+            }
+            
+            // 调用openCreativeMode函数
+            if(typeof window.openCreativeMode === 'function') {
+              window.openCreativeMode();
+            }
+          }
+        });
+      }
+      
+      // 输入框聚焦事件
+      if(inputField) {
+        inputField.addEventListener('focus', function() {
+          // 直接隐藏底部输入框
+          if(smartInputBar) {
+            smartInputBar.style.display = 'none';
+          }
+          
+          // 调用openCreativeMode函数
+          if(typeof window.openCreativeMode === 'function') {
+            window.openCreativeMode();
+          }
+        });
+      }
+      
+      // 切换按钮点击事件
+      if(switchBtn) {
+        switchBtn.onclick = function(e) {
+          // 阻止事件冒泡，防止触发输入框的点击事件
+          e.stopPropagation();
+          
+          showDesignTypeMenu(window.currentDesignType||'rough', function(type){
+            window.currentDesignType = type;
+            if(typeof openDesignPanel==='function') openDesignPanel(type);
+          });
+        };
+      }
+      
+      // 扩展输入区切换按钮点击事件
+      if(expandedSwitchBtn) {
+        expandedSwitchBtn.onclick = function(e) {
+          // 阻止事件冒泡
+          e.stopPropagation();
+          
+          showDesignTypeMenu(window.currentDesignType||'rough', function(type){
+            window.currentDesignType = type;
+            if(typeof openDesignPanel==='function') openDesignPanel(type);
+          });
+        };
+      }
+      
+      // 加号按钮点击事件
+      if(addButton) {
+        addButton.addEventListener('click', function(e) {
+          // 阻止事件冒泡
+          e.stopPropagation();
+          
+          // 直接隐藏底部输入框
+          if(smartInputBar) {
+            smartInputBar.style.display = 'none';
+          }
+          
+          // 调用openCreativeMode函数
+          if(typeof window.openCreativeMode === 'function') {
+            window.openCreativeMode();
+          }
+        });
+      }
+      
+      // 扩展输入区加号按钮点击事件
+      if(addButtonExpanded) {
+        addButtonExpanded.addEventListener('click', function(e) {
+          // 阻止事件冒泡
+          e.stopPropagation();
+          
+          // 直接隐藏底部输入框
+          if(smartInputBar) {
+            smartInputBar.style.display = 'none';
+          }
+          
+          // 调用openCreativeMode函数
+          if(typeof window.openCreativeMode === 'function') {
+            window.openCreativeMode();
+          }
+        });
+      }
+      
+      // 灵感标签点击事件
+      const inspirationTags = document.querySelectorAll('.inspiration-tag');
+      const composerInput = document.getElementById('composer');
+      inspirationTags.forEach(tag => {
+        tag.addEventListener('click', function() {
+          composerInput.value = this.innerText;
+          composerInput.focus();
+          // 可以在这里触发打开创作面板的逻辑
+           if(typeof window.openCreativeMode === 'function') {
+            // 延迟一点，让用户看到输入框的变化
+            setTimeout(() => {
+                smartInputBar.style.display = 'none';
+                window.openCreativeMode();
+            }, 100);
+          }
+        });
+      });
+
+      // 监听关闭创作面板按钮
+      const closeCreativeBtn = document.getElementById('closeCreativeBtn');
+      if(closeCreativeBtn) {
+        closeCreativeBtn.addEventListener('click', function() {
+          // 显示底部输入框
+          if(smartInputBar) {
+            smartInputBar.style.display = '';
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html> 

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI设计</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="ai-design.css">
+  <link rel="stylesheet" href="example-gallery.css">
+  <link rel="stylesheet" href="dual-progress-bar.css">
+  <link rel="stylesheet" href="css/flip-card-progress.css">
+  <link rel="stylesheet" href="css/flip-card-mobile.css">
+  <link rel="stylesheet" href="css/design-type-switcher.css">
+</head>
+<body class="h-screen flex flex-col">
+  <!-- 顶部状态栏 -->
+  <header class="pt-2 px-4 pb-4">
+    <div class="flex items-center justify-between">
+      <button class="p-2" id="backButton">
+        <i class="fas fa-arrow-left text-xl"></i>
+      </button>
+      <h1 class="text-xl font-medium">AI设计</h1>
+      <button class="p-2" id="menuButton">
+        <img src="images/fenlei.svg" alt="菜单" class="w-6 h-6">
+      </button>
+    </div>
+  </header>
+
+  <!-- 功能菜单 (默认隐藏) -->
+  <div id="functionMenu" class="fixed right-0 top-0 h-full bg-mintfog shadow-lg z-50 transform translate-x-full transition-all duration-300 w-full">
+    <div class="flex flex-col h-full">
+      <!-- 菜单头部 -->
+      <div class="menu-header">
+        <div class="menu-header-content">
+          <!-- 用户信息和关闭按钮区域 -->
+          <div class="menu-header-row">
+            <div class="user-profile">
+              <div class="user-avatar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <div class="user-info">
+                <div class="user-name text-neutral-gray">访客用户</div>
+              </div>
+            </div>
+            <button id="closeMenuButton" class="menu-close-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+              
+      <!-- 菜单内容 -->
+      <div class="flex-1 overflow-y-auto">
+        <div class="px-2 pt-1">
+          <div class="menu-section mb-2">
+            <h4 class="menu-section-title">智能助手</h4>
+            <ul>
+              <li>
+                <a href="ai-assistant.html" class="menu-item">
+                  <div class="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                  </div>
+                  <span>新对话</span>
+                </a>
+              </li>
+              <li>
+                <a href="ai-pricing.html" class="menu-item">
+                  <div class="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                      <line x1="12" y1="4" x2="12" y2="20"></line>
+                      <path d="M18 8h.01M18 12h.01M18 16h.01"></path>
+                      <path d="M6 8h4M6 12h4M6 16h4"></path>
+                    </svg>
+                  </div>
+                  <span>AI报价</span>
+                </a>
+              </li>
+              <li>
+                <a href="ai-design.html" class="menu-item active">
+                  <span class="current-indicator"></span>
+                  <div class="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2a9d8f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                      <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                      <path d="M2 2l7.586 7.586"></path>
+                      <circle cx="11" cy="11" r="2"></circle>
+                    </svg>
+                  </div>
+                  <span>AI设计</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          
+          <div class="menu-section mb-2">
+            <h4 class="menu-section-title">高级功能</h4>
+            <ul>
+              <li>
+                <a href="ai-diagnosis.html" class="menu-item">
+                  <div class="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                      <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                  </div>
+                  <span>户型诊断</span>
+                </a>
+              </li>
+              <li>
+                <a href="ai-video.html" class="menu-item">
+                  <div class="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+                      <line x1="7" y1="2" x2="7" y2="22"></line>
+                      <line x1="17" y1="2" x2="17" y2="22"></line>
+                      <line x1="2" y1="12" x2="22" y2="12"></line>
+                      <line x1="2" y1="7" x2="7" y2="7"></line>
+                      <line x1="2" y1="17" x2="7" y2="17"></line>
+                      <line x1="17" y1="17" x2="22" y2="17"></line>
+                      <line x1="17" y1="7" x2="22" y2="7"></line>
+                    </svg>
+                  </div>
+                  <span>图生视频</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- 分隔线 -->
+          <div class="border-t border-gray-100 my-1 mx-3"></div>
+          
+          <!-- 设置部分 -->
+          <div class="menu-section mb-2">
+            <h4 class="menu-section-title">其他</h4>
+            <ul>
+              <li>
+                <a href="#" class="menu-item" id="settingsMenuItem">
+                  <div class="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="3"></circle>
+                      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                  </div>
+                  <span>设置</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- 分隔线 -->
+          <div class="border-t border-gray-100 my-1 mx-3"></div>
+          
+          <!-- 最近对话部分 -->
+          <div class="menu-section mb-4">
+            <h4 class="menu-section-title">最近对话</h4>
+            <ul>
+              <li>
+                <a href="#" class="menu-item recent-chat">
+                  <div class="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                  </div>
+                  <div class="flex-1 overflow-hidden">
+                    <div class="font-medium text-sm">装修设计流行趋势</div>
+                    <div class="text-xs text-gray-500 truncate">今天 15:04</div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="#" class="menu-item recent-chat">
+                  <div class="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                  </div>
+                  <div class="flex-1 overflow-hidden">
+                    <div class="font-medium text-sm">沙发价格咨询</div>
+                    <div class="text-xs text-gray-500 truncate">昨天 10:23</div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a href="#" class="menu-item recent-chat">
+                  <div class="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                  </div>
+                  <div class="flex-1 overflow-hidden">
+                    <div class="font-medium text-sm">法式风格客厅设计</div>
+                    <div class="text-xs text-gray-500 truncate">3天前</div>
+                  </div>
+                </a>
+              </li>
+              <!-- 查看更多按钮 -->
+              <li>
+                <a href="#" class="menu-item" id="viewAllChatsBtn">
+                  <div class="menu-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                      <path d="M12 2v10l4 4"></path>
+                    </svg>
+                  </div>
+                  <span>查看更多</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 菜单遮罩层 -->
+  <div id="menuOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-[998] hidden transition-opacity duration-300 opacity-0"></div>
+
+  <!-- 设置页面 (默认隐藏) -->
+  <div id="settingsPage" class="fixed inset-0 bg-white z-40 transform translate-y-full transition-all duration-300">
+    <div class="flex flex-col h-full">
+      <!-- 设置页面头部 -->
+      <div class="settings-header">
+        <div class="flex items-center justify-between px-4 py-3">
+          <button id="closeSettingsButton" class="p-2 rounded-full bg-gray-100">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+          <h3 class="text-xl font-medium">设置</h3>
+          <div class="w-10"></div> <!-- 占位元素保持标题居中 -->
+        </div>
+      </div>
+      
+      <!-- 设置内容区域 -->
+      <div class="flex-1 overflow-y-auto">
+        <!-- 个人信息设置 -->
+        <div class="settings-section">
+          <h4 class="settings-section-title">个人信息</h4>
+          <div class="settings-item">
+            <div class="settings-item-left">
+              <div class="settings-icon bg-blue-50">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <div class="settings-item-content">
+                <div class="settings-item-title">头像</div>
+                <div class="settings-item-desc">修改您的个人头像</div>
+              </div>
+            </div>
+            <div class="settings-item-right">
+              <div class="user-avatar-small">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-icon">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+          </div>
+          <div class="settings-item">
+            <div class="settings-item-left">
+              <div class="settings-icon bg-blue-50">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </div>
+              <div class="settings-item-content">
+                <div class="settings-item-title">昵称</div>
+                <div class="settings-item-desc">修改您的显示昵称</div>
+              </div>
+            </div>
+            <div class="settings-item-right">
+              <div class="settings-item-value">访客用户</div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chevron-icon">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 沉浸式创作模式面板 -->
+  <div id="creativePanel" class="creative-panel">
+    <div class="creative-panel-content creative-panel-flex-container">
+      <!-- 上半部分（图片+文本） -->
+      <div class="creative-panel-upper">
+        <!-- 参考图区域 -->
+        <div class="reference-area">
+          <!-- 上传图片按钮和示例图容器 -->
+          <div class="reference-controls">
+            <!-- 上传图片按钮/参考图预览区域 -->
+            <div class="upload-preview-container">
+              <!-- 上传图片按钮 - 默认显示 -->
+              <label for="localFileUpload" class="local-upload-btn" id="uploadImageBtn">
+                <i class="fas fa-upload"></i>
+                <span>上传图片</span>
+              </label>
+              <input type="file" id="localFileUpload" accept="image/*" class="hidden">
+              
+              <!-- 参考图预览区域 - 默认隐藏 -->
+              <div class="reference-preview hidden" id="referencePreview">
+                <img src="#" alt="参考图片" id="referenceImage">
+                <button class="remove-reference-btn">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+            
+            <!-- 快速选择示例图 - 直接展示 -->
+            <div class="example-thumbs-row">
+              <!-- 示例图会由JavaScript动态生成 -->
+            </div>
+          </div>
+        </div>
+        
+        <!-- 主文本编辑区 -->
+        <div class="text-edit-area">
+          <!-- 隐藏的textarea用于存储原始文本 -->
+          <textarea id="creativeTextarea" class="creative-textarea hidden">毛坯图生成设计图，风格简约、户型客厅</textarea>
+          <!-- 可视化编辑区域 -->
+          <div id="formattedTextArea" class="formatted-text-area">
+            <!-- 模板区域 - 不可编辑 -->
+            <div id="templateArea" class="template-area" contenteditable="false"></div>
+            
+            <!-- 用户编辑区域 - 可编辑 -->
+            <div id="userEditArea" class="user-edit-area" contenteditable="true"></div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 下半部分（按钮+选项） -->
+      <div class="creative-panel-lower">
+        <!-- AI参数工具栏 -->
+        <div class="ai-tools-bar">
+          <!-- 模板选择按钮组 -->
+          <div class="template-buttons">
+            <!-- 底部按钮行 -->
+            <div class="room-buttons">
+              <button class="room-btn" data-room="设计">设计</button>
+              <button class="room-btn" data-room="风格/户型">风格/户型</button>
+              <button class="room-btn" data-room="比例">3:4</button>
+              
+              <!-- 生成按钮 -->
+              <button class="generate-btn" id="generateBtn">
+                <span>生成</span>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 键盘选项面板 - 移到创作面板内部 -->
+        <div class="keyboard-options-panel" id="keyboardOptionsPanel">
+          <div class="options-scroll-container">
+            <!-- 设计类型选项 -->
+            <div class="options-section" id="designSection">
+              <h4 class="options-title">设计类型</h4>
+              <div class="options-grid" id="designGrid">
+                <!-- 设计选项将在这里动态添加 -->
+              </div>
+            </div>
+            
+            <!-- 风格选项 -->
+            <div class="options-section" id="styleSection">
+              <h4 class="options-title">风格</h4>
+              <div class="options-grid" id="styleGrid">
+                <!-- 风格选项将在这里动态添加 -->
+              </div>
+            </div>
+            
+            <!-- 户型选项 -->
+            <div class="options-section" id="roomSection">
+              <h4 class="options-title">户型</h4>
+              <div class="options-grid" id="roomGrid">
+                <!-- 户型选项将在这里动态添加 -->
+              </div>
+            </div>
+            
+            <!-- 比例选项 -->
+            <div class="options-section" id="ratioSection">
+              <h4 class="options-title">选择生成比例</h4>
+              <div class="options-grid" id="ratioGrid">
+                <!-- 比例选项将在这里动态添加 -->
+              </div>
+            </div>
+            
+            <!-- 水印选项 -->
+            <div class="options-section" id="watermarkSection">
+              <div class="watermark-options">
+                <div class="watermark-toggle-row">
+                  <span class="toggle-label">启用水印</span>
+                  <label class="switch">
+                    <input type="checkbox" id="watermarkToggle">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 关闭按钮 -->
+      <button class="close-creative-btn" id="closeCreativeBtn">
+        <i class="fas fa-chevron-down"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- 主要内容区域 -->
+  <main class="flex-1 flex flex-col items-center justify-center overflow-y-auto" style="padding: 0.5rem 0rem;">
+    <!-- 欢迎信息或AI设计结果将显示在这里 -->
+    <div class="text-center">
+      <h2 class="text-xl font-medium text-gray-700">AI 设计</h2>
+      <p class="text-gray-500 mt-2">描述您的设计想法，或上传图片开始创作</p>
+    </div>
+  </main>
+
+  <!-- 智能输入栏 -->
+  <footer id="smartInputBar" class="smart-input-bar">
+    <div class="flex items-start p-2">
+      <!-- 左侧功能切换按钮 -->
+      <button class="function-btn flex-shrink-0" id="typeToggleBtn" aria-label="切换设计类型">
+        <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M42 19H5.99998" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M30 7L42 19" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M6.79897 29H42.799" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M6.79895 29L18.799 41" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <!-- 中间复合输入区 -->
+  
+        <!-- <div id="pillsContainer" class="pills-container"></div> -->
+        <textarea id="composer" class="composer-textarea ai-composer-input" placeholder="描述你的画面" rows="1"></textarea>
+      
+
+      <!-- 右侧发送按钮 -->
+      <!-- <button class="action-btn flex-shrink-0 mr-1" id="sendBtn" disabled>
+        <i class="fas fa-arrow-up"></i>
+      </button> -->
+
+      <!-- 右侧上传按钮 -->
+      <!-- <button class="action-btn flex-shrink-0" id="uploadBtn">
+        <i class="fas fa-plus"></i>
+      </button> -->
+    </div>
+  </footer>
+
+  <!-- 底部抽屉选择菜单 (默认隐藏) -->
+  <div id="bottomSheet" class="bottom-sheet">
+    <div class="bottom-sheet-header">
+      <h3 id="sheetTitle" class="sheet-title">选择选项</h3>
+      <button id="closeSheetBtn" class="close-sheet-btn">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div id="sheetOptions" class="sheet-options">
+      <!-- 选项将在这里动态生成 -->
+    </div>
+  </div>
+  
+  <script src="ai-design.js"></script>
+  <script src="example-gallery.js"></script>
+  <script src="dual-progress-bar.js"></script>
+  <script src="progress-implementation.js"></script>
+  <script src="js/flip-card-progress.js"></script>
+  <script src="js/flip-card-actions.js"></script>
+  <script src="js/flip-card-integration.js"></script>
+  <script src="js/design-type-switcher.js"></script>
+  <script>
+    // 绑定左侧按钮
+    document.addEventListener('DOMContentLoaded', function(){
+      var btn = document.getElementById('typeToggleBtn');
+      if(btn){
+        btn.onclick = function(){
+          showDesignTypeMenu(window.currentDesignType||'rough', function(type){
+            window.currentDesignType = type;
+            if(typeof openDesignPanel==='function') openDesignPanel(type);
+          });
+        };
+      }
+    });
+  </script>
+</body>
+</html> 

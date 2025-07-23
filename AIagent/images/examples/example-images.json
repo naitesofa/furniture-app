@@ -1,0 +1,56 @@
+[
+  {
+    "id": "living-room-1",
+    "thumbnail": "images/examples/thumbnails/living-room-1.jpg",
+    "fullImage": "images/examples/living-room-1.jpg",
+    "type": "客厅",
+    "description": "90平米现代简约客厅毛坯",
+    "source": "Unsplash",
+    "sourceUrl": "https://unsplash.com/photos/empty-living-room-vfIx29EsLHA"
+  },
+  {
+    "id": "living-room-2",
+    "thumbnail": "images/examples/thumbnails/living-room-2.jpg",
+    "fullImage": "images/examples/living-room-2.jpg",
+    "type": "客厅",
+    "description": "120平米开放式客厅毛坯",
+    "source": "Unsplash",
+    "sourceUrl": "https://unsplash.com/photos/a-room-filled-with-furniture-and-a-table-lbi9B6wsHPo"
+  },
+  {
+    "id": "bedroom-1",
+    "thumbnail": "images/examples/thumbnails/bedroom-1.jpg",
+    "fullImage": "images/examples/bedroom-1.jpg",
+    "type": "卧室",
+    "description": "主卧室毛坯空间",
+    "source": "Unsplash",
+    "sourceUrl": "https://unsplash.com/photos/gray-bed-in-bedroom-R5v8Xtc0ecg"
+  },
+  {
+    "id": "kitchen-1",
+    "thumbnail": "images/examples/thumbnails/kitchen-1.jpg",
+    "fullImage": "images/examples/kitchen-1.jpg",
+    "type": "厨房",
+    "description": "开放式厨房毛坯",
+    "source": "Unsplash",
+    "sourceUrl": "https://unsplash.com/photos/white-wooden-kitchen-cabinet-7iuasVqkUjs"
+  },
+  {
+    "id": "bathroom-1",
+    "thumbnail": "images/examples/thumbnails/bathroom-1.jpg",
+    "fullImage": "images/examples/bathroom-1.jpg",
+    "type": "卫生间",
+    "description": "现代风格卫生间毛坯",
+    "source": "Unsplash",
+    "sourceUrl": "https://unsplash.com/photos/white-ceramic-sink-near-white-ceramic-sink-g51F6-WYzyU"
+  },
+  {
+    "id": "study-room-1",
+    "thumbnail": "images/examples/thumbnails/study-room-1.jpg",
+    "fullImage": "images/examples/study-room-1.jpg",
+    "type": "书房",
+    "description": "简约风格书房毛坯",
+    "source": "Unsplash",
+    "sourceUrl": "https://unsplash.com/photos/yellow-rolling-chair-near-window-9yI8eQ9mdvY"
+  }
+] 

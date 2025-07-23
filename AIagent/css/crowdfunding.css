@@ -1,0 +1,1023 @@
+/* 高科技主题颜色变量 */
+:root {
+    --primary-color: #00E5FF;
+    --secondary-color: #6C63FF;
+    --accent-color: #FF2E63;
+    --dark-color: #191D2B;
+    --light-color: #F8F9FA;
+    --bg-color: #0A0E17;
+    
+    /* 完整高科技色彩系统 */
+    --brand-primary: #00E5FF;
+    --brand-primary-light: #80FAFF;
+    --brand-primary-dark: #00ACD1;
+    --brand-primary-transparent: rgba(0, 229, 255, 0.1);
+    
+    --brand-secondary: #6C63FF;
+    --brand-secondary-light: #9D97FF;
+    --brand-secondary-dark: #4B40FF;
+    
+    --brand-accent: #FF2E63;
+    --brand-accent-light: #FF8DA8;
+    --brand-accent-dark: #D10032;
+    
+    --brand-dark: #191D2B;
+    --brand-dark-light: #252A3A;
+    --brand-dark-dark: #0D0F17;
+    
+    --brand-light: #F8F9FA;
+    --brand-light-dark: #E9ECEF;
+    
+    --brand-success: #00F58C;
+    --brand-warning: #FFB800;
+    --brand-error: #FF427F;
+    --brand-info: #3B82F6;
+}
+
+body {
+    background-color: var(--bg-color);
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior-y: contain;
+    color: #fff;
+}
+
+/* 众筹项目卡片样式 */
+.crowdfunding-card {
+    display: flex;
+    background: linear-gradient(145deg, #10141F, #171C29);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3), 0 0 10px rgba(0, 229, 255, 0.1);
+    margin-bottom: 16px;
+    transform: translateZ(0);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    position: relative;
+    height: 160px;
+}
+
+.crowdfunding-card:active {
+    transform: scale(0.98) translateY(2px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2), 0 0 5px rgba(0, 229, 255, 0.1);
+}
+
+.crowdfunding-card::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--brand-primary), transparent);
+    opacity: 0.5;
+    z-index: 1;
+}
+
+/* 进度条样式 */
+.progress-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.progress-container {
+    flex: 1;
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--brand-primary), var(--brand-info));
+    border-radius: 4px;
+    transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, 
+                rgba(255, 255, 255, 0) 0%, 
+                rgba(255, 255, 255, 0.3) 50%, 
+                rgba(255, 255, 255, 0) 100%);
+    animation: progressGlow 1.5s infinite;
+}
+
+.funding-percent {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    white-space: nowrap;
+}
+
+@keyframes progressGlow {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* 倒计时样式 */
+.countdown-container {
+    display: inline-flex;
+    gap: 4px;
+}
+
+.countdown-item {
+    background: linear-gradient(145deg, var(--brand-dark-light), var(--brand-dark));
+    color: var(--brand-primary);
+    min-width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 229, 255, 0.2);
+}
+
+.countdown-separator {
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    color: var(--brand-primary);
+}
+
+/* 标签样式 */
+.status-tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    letter-spacing: 0.5px;
+}
+
+/* 状态图标 */
+.status-tag::before {
+    display: inline-block;
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    margin-right: 3px;
+    font-size: 9px;
+}
+
+.status-preheating {
+    background-color: rgba(255, 184, 0, 0.15);
+    color: var(--brand-warning);
+    border: 1px solid rgba(255, 184, 0, 0.3);
+}
+
+.status-ongoing {
+    background-color: rgba(0, 229, 255, 0.15);
+    color: var(--brand-primary);
+    border: 1px solid rgba(0, 229, 255, 0.3);
+}
+
+.status-success {
+    background-color: rgba(0, 245, 140, 0.15);
+    color: var(--brand-success);
+    border: 1px solid rgba(0, 245, 140, 0.3);
+}
+
+.status-production {
+    background-color: rgba(108, 99, 255, 0.15);
+    color: var(--brand-secondary);
+    border: 1px solid rgba(108, 99, 255, 0.3);
+}
+
+.status-shipping {
+    background-color: rgba(255, 184, 0, 0.15);
+    color: var(--brand-warning);
+    border: 1px solid rgba(255, 184, 0, 0.3);
+}
+
+/* 页面标签导航 */
+.tab-nav {
+    display: flex;
+    background: rgba(25, 29, 43, 0.8);
+    padding: 3px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    position: relative;
+    height: 44px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tab-nav-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+    z-index: 1;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+}
+
+.tab-nav-item.active {
+    color: white;
+}
+
+.tab-slider {
+    position: absolute;
+    height: 80%;
+    top: 10%;
+    left: 0;
+    width: 25%;
+    background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
+    border-radius: 10px;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 0;
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+}
+
+/* 搜索框样式 */
+.search-container {
+    padding: 12px 16px;
+    background-color: transparent;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    background: rgba(25, 29, 43, 0.8);
+    border-radius: 20px;
+    padding: 8px 12px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.search-box i {
+    color: var(--brand-primary);
+    margin: 0 6px;
+}
+
+.search-box input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 4px 8px;
+    font-size: 14px;
+    outline: none;
+    color: white;
+}
+
+.search-box input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* 轮播广告样式 */
+.banner-container {
+    position: relative;
+    height: 60vw;
+    overflow: hidden;
+    margin-bottom: 12px;
+    border-radius: 16px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    margin: 0 16px 0px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.banner-wrapper {
+    display: flex;
+    height: 100%;
+    width: 200%;
+    transition: transform 0.3s ease;
+}
+
+.banner-slide {
+    width: 50%;
+    flex-shrink: 0;
+    position: relative;
+}
+
+.banner-slide::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(0deg, rgba(10, 14, 23, 0.7) 0%, rgba(10, 14, 23, 0) 40%);
+    pointer-events: none;
+}
+
+.banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.banner-pagination {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    z-index: 1;
+}
+
+.banner-bullet {
+    width: 20px;
+    height: 3px;
+    border-radius: 1.5px;
+    background-color: rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.banner-bullet.active {
+    background-color: var(--brand-primary);
+    width: 30px;
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+}
+
+/* 列表样式 */
+.crowdfunding-list {
+    padding: 0 16px;
+}
+
+/* 加载更多样式 */
+.loading-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px 0;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+}
+
+.loading-spinner {
+    margin-right: 8px;
+    color: var(--brand-primary);
+}
+
+/* 底部导航样式 */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    background: rgba(25, 29, 43, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    height: 60px;
+    z-index: 100;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.bottom-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.bottom-nav-item i {
+    font-size: 22px;
+    margin-bottom: 4px;
+    transition: all 0.3s ease;
+}
+
+.bottom-nav-item.active {
+    color: var(--brand-primary);
+}
+
+.bottom-nav-item.active i {
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+}
+
+/* 项目标题样式 */
+.project-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 6px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 项目描述样式 */
+.project-desc {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 8px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 骨架屏样式 */
+.skeleton {
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.1) 37%, rgba(255, 255, 255, 0.05) 63%);
+    background-size: 400% 100%;
+    animation: skeleton-loading 1.4s ease infinite;
+    border-radius: 4px;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0 50%;
+    }
+}
+
+/* 暗黑模式下的小屏适配 */
+@media (max-width: 360px) {
+    .tab-nav-item {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 320px) {
+    .tab-nav-item {
+        font-size: 11px;
+    }
+    .project-title {
+        font-size: 15px;
+    }
+}
+
+@media (hover: hover) {
+    .crowdfunding-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(0,0,0,0.3), 0 0 15px rgba(0, 229, 255, 0.2);
+    }
+    
+    .bottom-nav-item:hover {
+        color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .bottom-nav-item.active:hover {
+        color: var(--brand-primary-light);
+    }
+}
+
+/* 页面标题样式 */
+.header {
+    background: linear-gradient(to right, var(--brand-dark-dark), var(--brand-dark));
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.header-title {
+    color: white;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+}
+
+.tech-title {
+    color: var(--brand-primary);
+    margin-right: 5px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    position: relative;
+}
+
+.tech-title::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--brand-primary), transparent);
+}
+
+.header-left i, .header-right i {
+    color: var(--brand-primary);
+}
+
+/* Banner内容样式 */
+.banner-content {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 2;
+}
+
+.banner-badge {
+    display: inline-block;
+    background: rgba(0, 229, 255, 0.2);
+    color: var(--brand-primary);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+}
+
+.banner-title {
+    color: white;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.banner-subtitle {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* 特色标签样式 */
+.feature-tags {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 16px;
+    margin-bottom: 16px;
+}
+
+.feature-tag {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(25, 29, 43, 0.8);
+    padding: 12px;
+    border-radius: 12px;
+    width: 22%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+}
+
+.feature-tag:active {
+    transform: scale(0.95);
+}
+
+.feature-tag i {
+    font-size: 22px;
+    color: var(--brand-primary);
+    margin-bottom: 8px;
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+}
+
+.feature-tag span {
+    font-size: 12px;
+    color: white;
+    font-weight: 500;
+}
+
+/* 卡片左右布局样式 */
+.card-image-container {
+    width: 45%;
+    min-width: 130px;
+    max-width: 180px;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px 0 0 12px;
+}
+
+.card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+    border-radius: 12px 0 0 12px;
+}
+
+.crowdfunding-card:hover .card-image {
+    transform: scale(1.05);
+}
+
+.card-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 5;
+}
+
+/* 点赞按钮样式 */
+.like-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-light);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.like-btn i {
+    margin-right: 4px;
+    font-size: 12px;
+    color: #f34f78;
+}
+
+.like-btn:active {
+    transform: scale(0.96);
+}
+
+.like-btn.liked {
+    background-color: rgba(243, 79, 120, 0.15);
+    border-color: rgba(243, 79, 120, 0.3);
+    color: #f34f78;
+}
+
+/* 心形动画 */
+@keyframes heart-pulse {
+    0% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.4);
+    }
+    50% {
+        transform: scale(1);
+    }
+    75% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.heart-pulse {
+    animation: heart-pulse 0.8s ease-in-out;
+    display: inline-block;
+}
+
+/* 支持按钮样式 */
+.support-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 10px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 600;
+    background: linear-gradient(to right, var(--brand-primary), var(--brand-primary-light));
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.support-btn:active {
+    transform: scale(0.96);
+}
+
+.tech-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.tech-circle {
+    position: absolute;
+    border: 1px solid rgba(0, 229, 255, 0.2);
+    border-radius: 50%;
+}
+
+.tech-circle:nth-child(1) {
+    width: 150px;
+    height: 150px;
+    top: -30px;
+    left: -30px;
+    opacity: 0.3;
+}
+
+.tech-circle:nth-child(2) {
+    width: 100px;
+    height: 100px;
+    bottom: -20px;
+    right: -20px;
+    opacity: 0.2;
+}
+
+.card-content {
+    width: 55%;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-bottom {
+    margin-top: auto;
+}
+
+/* 高亮文本 */
+.highlight {
+    color: var(--brand-primary);
+    font-weight: 700;
+    margin: 0 4px;
+}
+
+.funding-amount {
+    color: var(--brand-primary);
+    font-size: 16px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+.funding-amount::before {
+    content: '早鸟价';
+    font-size: 10px;
+    padding: 2px 4px;
+    background: rgba(0, 229, 255, 0.15);
+    border-radius: 4px;
+    margin-right: 4px;
+    font-weight: normal;
+    color: var(--brand-primary);
+}
+
+.backers {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* 页面内容 */
+.content {
+    padding-bottom: 70px;
+    position: relative;
+}
+
+.content::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 229, 255, 0.03) 0%, transparent 20%),
+        radial-gradient(circle at 90% 60%, rgba(108, 99, 255, 0.03) 0%, transparent 20%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* 响应式调整 */
+@media (min-width: 768px) {
+    .feature-tag {
+        padding: 16px;
+    }
+    
+    .feature-tag i {
+        font-size: 28px;
+    }
+    
+    .feature-tag span {
+        font-size: 14px;
+    }
+    
+    .banner-title {
+        font-size: 28px;
+    }
+    
+    .banner-subtitle {
+        font-size: 16px;
+    }
+    .crowdfunding-card {
+        height: 165px;
+    }
+    .project-title {
+        font-size: 15px;
+    }
+    .project-desc {
+        font-size: 13px;
+    }
+}
+
+/* 动态呼吸光效 */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(0, 229, 255, 0.6);
+    }
+    100% {
+        box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+    }
+}
+
+.bottom-nav-item.active i {
+    animation: pulse 2s infinite;
+}
+
+/* 响应式调整 */
+@media (max-width: 375px) {
+    .card-image-container {
+        width: 40%;
+        min-width: 120px;
+    }
+    .card-content {
+        width: 60%;
+        padding: 10px;
+    }
+    .project-title {
+        font-size: 13px;
+        -webkit-line-clamp: 1;
+        margin-bottom: 4px;
+    }
+    .project-desc {
+        font-size: 11px;
+        -webkit-line-clamp: 1;
+        margin-bottom: 6px;
+    }
+    .funding-amount {
+        font-size: 14px;
+    }
+    
+    .funding-amount::before {
+        font-size: 9px;
+        padding: 1px 3px;
+    }
+    
+    .progress-wrapper {
+        gap: 6px;
+    }
+    
+    .funding-percent {
+        font-size: 12px;
+    }
+    
+    .support-btn {
+        padding: 4px 10px;
+        font-size: 11px;
+    }
+    
+    .countdown-item {
+        min-width: 22px;
+        height: 22px;
+        font-size: 11px;
+    }
+}
+
+/* 支持信息和时间信息 */
+.support-info, .time-info {
+    display: flex;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.6);
+    gap: 4px;
+}
+
+.support-info i, .time-info i {
+    color: var(--brand-primary);
+    font-size: 10px;
+}
+
+.support-info span, .time-info span {
+    font-size: 11px;
+}
+
+/* 预热状态相关样式 */
+.preheating-notice {
+    background: rgba(25, 29, 43, 0.95);
+    border-radius: 16px;
+    margin: 16px;
+    padding: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 184, 0, 0.2);
+}
+
+.preheating-status {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.status-badge {
+    background-color: rgba(255, 184, 0, 0.15);
+    color: var(--brand-warning);
+    border: 1px solid rgba(255, 184, 0, 0.3);
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-right: 10px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.status-badge::before {
+    content: "\f624"; /* fa-fire-alt */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    margin-right: 3px;
+    font-size: 9px;
+    color: var(--brand-warning);
+}
+
+.preheating-text {
+    font-size: 12px;
+    color: var(--text-light);
+}
+
+.preheating-like {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 12px;
+}
+
+.like-btn-large {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 24px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--text-light);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-bottom: 10px;
+    width: 80%;
+    max-width: 200px;
+    transition: all 0.3s ease;
+}
+
+.like-btn-large i {
+    margin-right: 8px;
+    font-size: 16px;
+    color: #f34f78;
+}
+
+.like-btn-large:active {
+    transform: scale(0.96);
+}
+
+.like-btn-large.liked {
+    background-color: rgba(243, 79, 120, 0.15);
+    border-color: rgba(243, 79, 120, 0.3);
+    color: #f34f78;
+}
+
+.like-count {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 4px;
+}
+
+.early-support-notice {
+    font-size: 10px;
+    color: var(--brand-warning);
+    margin-top: 4px;
+    font-weight: 600;
+} 

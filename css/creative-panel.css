@@ -1,0 +1,427 @@
+/* 创作面板遮罩层 */
+.creative-panel-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75); /* 增加不透明度 */
+  z-index: 998;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(2px); /* 添加模糊效果 */
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.creative-panel-overlay.active {
+  display: block;
+  opacity: 1;
+}
+
+/* 创作模式提示 */
+.creative-mode-hint {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+  font-size: 14px;
+  opacity: 0;
+  animation: fadeInOut 3s ease-in-out forwards;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.hint-icon {
+  font-size: 16px;
+  color: #ffeb3b;
+}
+
+.hint-text {
+  font-weight: 500;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; }
+  20% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { opacity: 0.5; }
+}
+
+/* 创作面板 */
+.creative-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border-radius: 16px 16px 0 0;
+  padding: 16px;
+  z-index: 999;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.15); /* 增强阴影效果 */
+  display: flex;
+  flex-direction: column; /* 确保内容可以正确布局 */
+}
+
+.creative-panel.active {
+  transform: translateY(0);
+}
+
+/* 顶部关闭手柄 */
+.close-handle {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 4px;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+/* 面板内容区 */
+.panel-content {
+  padding: 18px 16px 14px 16px; /* 减少内边距 */
+  overflow-y: auto;
+  flex: 1; /* 使内容区域可以弹性伸缩 */
+  display: flex;
+  flex-direction: column; /* 垂直布局 */
+  position: relative; /* 为子元素定位提供参考 */
+}
+
+/* 上传区域 */
+.upload-area {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 上传按钮容器 */
+.upload-btn-container {
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
+/* 上传按钮 */
+.upload-btn {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  background-color: #f7f7f9;
+  border: 1px dashed #dcdce6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.upload-btn:hover {
+  background-color: #f0f0f5;
+}
+
+.upload-btn i {
+  font-size: 20px;
+  color: #889096;
+  margin-bottom: 4px;
+}
+
+.upload-btn span {
+  font-size: 12px;
+  color: #999;
+}
+
+/* 帧预览容器 */
+.frames-preview-container {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 帧预览 */
+.frame-preview {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* 帧图片容器 */
+.frame-image-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+/* 帧图片 */
+.frame-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 帧标签 */
+.frame-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  font-size: 10px;
+  padding: 2px 0;
+  text-align: center;
+}
+
+/* 删除帧按钮 */
+.remove-frame-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  font-size: 10px;
+  padding: 0;
+}
+
+/* 右侧预览区 */
+.upload-preview {
+  position: relative;
+  width: 70px; /* 减小宽度 */
+  height: 70px; /* 减小高度 */
+  margin-right: 10px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.upload-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  padding: 0;
+}
+
+/* 描述文本区 */
+
+
+.prompt-textarea {
+  width: 100%;
+  height: 98px; /* 减少高度 */
+  /* padding: 10px; 减少内边距 */
+  /* border: 1px solid #e0e0e0; */
+  border-radius: 8px;
+
+  resize: none;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333;
+  transition: all 0.2s ease;
+  padding: 0px;
+  border: none;
+}
+
+.prompt-textarea:focus {
+  outline: none;
+
+}
+
+/* 操作按钮行 */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  /* margin-bottom: 12px; 减少底部间距 */
+  flex-shrink: 0; /* 防止被压缩 */
+  justify-content: space-between; /* 使按钮分布在两端 */
+}
+
+/* 左侧按钮组 */
+.action-buttons-left {
+  display: flex;
+  gap: 8px;
+}
+
+.action-btn {
+  flex: none; /* 移除弹性布局 */
+  width: 50px; /* 设置固定宽度 */
+  height: 39px; /* 保持原有高度 */
+  background-color: white;
+  border: 1px solid #2a9d8f;
+  border-radius: 6px;
+  color: #889096;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap; /* 防止文本换行 */
+  padding: 0 10px;
+}
+
+/* .action-btn.active {
+  background-color: #2a9d8f;
+  border-color: #2a9d8f;
+  color: white;
+} */
+
+.generate-btn {
+  flex: none;
+  width: 63px;
+  height: 41px;
+  background-color: #2a9d8f;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(42, 157, 143, 0.2);
+  white-space: nowrap;
+  transition: all 0.3s ease;
+  margin-left: auto; /* 将生成按钮推到最右边 */
+}
+
+/* 创建一个键盘占位区，即使参数区隐藏时也预留输入法键盘的空间 */
+.keyboard-placeholder {
+  height: 200px; /* 减少高度 */
+  flex-shrink: 0; /* 防止被压缩 */
+  width: 100%;
+  display: block;
+}
+
+/* 参数选择区 */
+.params-area {
+  background-color: #fff; /* 更接近键盘的背景色 */
+  border-radius: 8px 8px 0 0; /* 顶部圆角，底部平直 */
+  /* padding: 8px; 减少内边距 */
+  height: 200px; /* 减少高度 */
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); /* 添加顶部阴影 */
+  margin: 0 -16px 0 -16px; /* 修改外边距，只对左右和顶部应用，不再使用底部负边距 */
+  width: calc(100% + 32px); /* 确保宽度正确 */
+  position: absolute; /* 改为绝对定位 */
+  bottom: 0; /* 固定在面板底部 */
+  left: 0; /* 确保横向对齐 */
+  z-index: 10;
+  transition: transform 0.3s ease, opacity 0.2s ease; /* 添加透明度过渡效果 */
+}
+
+/* 参数选择区 - 隐藏状态 */
+.params-area.hidden {
+  opacity: 0; /* 使用透明度而非display:none */
+  pointer-events: none; /* 防止点击 */
+  visibility: hidden; /* 隐藏但保持布局 */
+}
+
+/* 键盘样式的行 */
+.keyboard-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+
+
+/* 选项标签样式更像键盘按键 */
+.option-tag {
+  padding: 14px 16px; /* 高一些的按键 */
+  background-color: #f8f9fa; /* 浅色背景 */
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #212529;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+  text-align: center; /* 居中文本 */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* 添加轻微阴影 */
+  user-select: none; /* 防止文本选择 */
+}
+
+.option-tag:active {
+  background-color: #e9ecef;
+  transform: translateY(1px);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.option-tag.active {
+  background-color: #2a9d8f;
+  border-color: #2a9d8f;
+  color: white;
+}
+
+.param-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-height: 140px;
+}
+
+.option-title {
+  width: 100%;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #666;
+}
+
+.options-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+}
+
+/* 适配不同屏幕尺寸 */
+@media (max-width: 360px) {
+  .option-tag {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+} 

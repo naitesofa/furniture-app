@@ -1,0 +1,91 @@
+/* 
+ * 悬浮操作按钮样式
+ * 设计双图输出区左下角的悬浮操作控制条
+ */
+
+/* 悬浮操作控制条容器 */
+.floating-actions-bar {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  display: flex;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 20px;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+/* 悬浮状态 */
+.floating-actions-bar:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+/* 操作按钮样式 */
+.floating-action-btn {
+  display: flex;
+  align-items: center;
+  border: none;
+  background: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #2A9D8F;
+  cursor: pointer;
+  border-radius: 16px;
+  transition: all 0.2s ease;
+}
+
+/* 按钮图标 */
+.floating-action-btn i {
+  margin-right: 6px;
+  font-size: 16px;
+}
+
+/* 按钮悬浮状态 */
+.floating-action-btn:hover {
+  background-color: rgba(42, 157, 143, 0.1);
+}
+
+/* 按钮点击状态 */
+.floating-action-btn:active {
+  transform: scale(0.95);
+}
+
+/* 编辑按钮 */
+.edit-btn {
+  color: #264653;
+}
+
+/* 再生成按钮 */
+.regenerate-btn {
+  color: #2A9D8F;
+}
+
+/* 结果区域容器修改，使其成为相对定位容器 */
+.flip-card-progress-container {
+  position: relative;
+  margin-bottom: 12px; /* 为悬浮按钮留出空间 */
+}
+
+/* 去除卡片间明显分隔 */
+.flip-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin: 0 2px; /* 仅保留微小间距 */
+}
+
+/* 整体双图容器效果 */
+.unified-design-container {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  background-color: white;
+  padding: 2px;
+} 

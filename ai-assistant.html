@@ -1,0 +1,1853 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>智能体 - 小麦</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --main-color: #2a9d8f; /* 活力松石绿 - 主色/用户 */
+      --main-color-10: rgba(42, 157, 143, 0.1); /* 10%透明度 */
+      --main-color-15: rgba(42, 157, 143, 0.15); /* 15%透明度 */
+      --main-color-20: rgba(42, 157, 143, 0.2); /* 20%透明度 */
+      --main-color-light: #40b3a2; /* 浅松石绿 - 渐变用 */
+      
+      --accent-color: #e9c46a; /* 温暖鹅卵黄 - 辅助/强调 */
+      --accent-color-10: rgba(233, 196, 106, 0.1); /* 10%透明度 */
+      --accent-color-15: rgba(233, 196, 106, 0.15); /* 15%透明度 */
+      --accent-color-20: rgba(233, 196, 106, 0.2); /* 20%透明度 */
+      --accent-color-light: #f4a261; /* 浅鹅卵黄 - 渐变用 */
+      
+      --video-color: #457b9d; /* 视频功能色 - 蓝色 */
+      --video-color-10: rgba(69, 123, 157, 0.1); /* 10%透明度 */
+      --video-color-15: rgba(69, 123, 157, 0.15); /* 15%透明度 */
+      --video-color-light: #1d3557; /* 深蓝色 - 渐变用 */
+      
+      --floorplan-color: #845ec2; /* 户型功能色 - 紫色 */
+      --floorplan-color-10: rgba(132, 94, 194, 0.1); /* 10%透明度 */
+      --floorplan-color-15: rgba(132, 94, 194, 0.15); /* 15%透明度 */
+      --floorplan-color-light: #b39cd0; /* 浅紫色 - 渐变用 */
+      
+      --ai-color: #FFFFFF; /* 纯净白 - AI/中性 */
+      --bg-color: #F7FAFA; /* 薄荷雾 - 页面背景 */
+      --bg-color-card: #FCFDFD; /* 卡片背景色 - 比背景略亮 */
+      
+      --text-main: #264653; /* 深海石墨 - 主要文字 */
+      --text-secondary: #889096; /* 中性灰 - 次要文字/图标 */
+      --text-tertiary: #acb5bd; /* 浅灰 - 第三级文字 */
+      
+      --inactive-btn: #DCE1E3; /* 非激活按钮背景色 */
+      --menu-hover: rgba(42, 157, 143, 0.08); /* 菜单悬停背景色 */
+      --menu-active: #EAF6F5; /* 菜单激活背景色 */
+      --safe-area-bottom: env(safe-area-inset-bottom, 0px); /* 底部安全区域 */
+      
+      --card-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* 卡片阴影 */
+      --card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.08); /* 卡片悬停阴影 */
+    }
+    
+    .bg-mintfog {
+      background-color: #F7FAFA;
+    }
+
+    /* 隐藏所有垂直滚动条 */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+    
+    * {
+      -ms-overflow-style: none;  /* IE 和 Edge */
+      scrollbar-width: none;  /* Firefox */
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    /* 确保输入框固定在底部 */
+    body {
+      padding-bottom: 60px !important; /* 使用!important确保不被覆盖 */
+      min-height: 100vh;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: "SF Pro Text", "PingFang SC", "Helvetica Neue", Arial, "Microsoft YaHei", sans-serif;
+    }
+    
+    main {
+      background-color: var(--bg-color);
+      padding-bottom: 160px; /* 为底部面板预留空间 */
+    }
+
+    header {
+      background-color: var(--ai-color);
+    }
+
+    header h1, header button {
+      color: var(--text-main);
+    }
+
+    header button i {
+      color: var(--text-secondary);
+    }
+
+    /* 聊天区域和消息气泡样式 */
+    .chat-container {
+      padding: 10px 0;
+    }
+
+    .message {
+      max-width: 85%;
+      margin-bottom: 16px;
+      padding: 8px 12px;
+      border-radius: 18px;
+      position: relative;
+      line-height: 1.6;
+      font-size: 16px;
+      letter-spacing: 0.01em;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    
+    .ai-message {
+      max-width: 98%;
+    }
+
+    .message p {
+      margin-bottom: 8px;
+    }
+
+    .message p:last-child {
+      margin-bottom: 0;
+    }
+
+    .ai-message {
+      background-color: var(--ai-color);
+      color: var(--text-main);
+      align-self: flex-start;
+      margin-right: auto;
+      border-bottom-left-radius: 4px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .message-user {
+      background-color: var(--main-color);
+      color: var(--ai-color);
+      align-self: flex-end;
+      margin-left: auto;
+      border-bottom-right-radius: 4px;
+      font-weight: 450;
+    }
+
+    /* 消息元数据样式 */
+    .message-meta {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      gap: 8px;
+      line-height: 1.4;
+    }
+
+    .ai-message .message-meta {
+      color: rgba(38, 70, 83, 0.65);
+    }
+
+    .message-user .message-meta {
+      color: rgba(255, 255, 255, 0.8);
+    }
+    
+    /* 用户消息操作按钮默认隐藏 */
+    .message-user .message-action-btn {
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    
+    /* 用户消息悬停或点击时显示操作按钮 */
+    .message-user:hover .message-action-btn,
+    .message-user:active .message-action-btn,
+    .message-user.show-actions .message-action-btn {
+      opacity: 0.7;
+    }
+
+    /* 操作按钮美化 */
+    .message-action-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: transparent;
+      transition: all 0.2s ease;
+      opacity: 0.7;
+    }
+    
+    .message-action-btn:active {
+      transform: scale(0.92);
+      opacity: 1;
+    }
+    
+    .message-user .message-action-btn {
+      color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .ai-message .message-action-btn {
+      color: var(--text-secondary);
+    }
+    
+    .message-action-btn svg {
+      width: 14px;
+      height: 14px;
+      stroke-width: 2;
+      fill: none;
+    }
+    
+    .message-user .message-action-btn svg {
+      stroke: rgba(255, 255, 255, 0.9);
+    }
+    
+    .ai-message .message-action-btn svg {
+      stroke: var(--text-secondary);
+    }
+    
+    /* 添加按钮悬停效果 */
+    @media (hover: hover) {
+      .message-action-btn:hover {
+        opacity: 1;
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+      
+      .message-user .message-action-btn:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+    }
+    
+    /* 按钮点击波纹效果 */
+    .message-action-btn:after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: rgba(0, 0, 0, 0.1);
+      opacity: 0;
+      transform: scale(0);
+      transition: all 0.3s ease;
+    }
+    
+    .message-action-btn:active:after {
+      opacity: 1;
+      transform: scale(1);
+      transition: 0s;
+    }
+    
+    /* 按钮图标动画效果 */
+    .message-action-btn svg {
+      transition: transform 0.2s ease;
+    }
+    
+    .message-action-btn:active svg {
+      transform: scale(0.9);
+    }
+
+    /* 消息容器布局 */
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .hot-question, .question-card {
+      background-color: var(--ai-color);
+      color: var(--text-main);
+      border: 1px solid rgba(136, 144, 150, 0.2);
+    }
+
+    .feature-pill .pill-icon {
+      color: var(--main-color);
+    }
+
+    .feature-pill .pill-text {
+      color: var(--text-main);
+    }
+
+    .input-field {
+      background-color: var(--ai-color);
+      border: 1px solid rgba(136, 144, 150, 0.1);
+    }
+
+    .input-text {
+      color: var(--text-main);
+    }
+
+    .input-text::placeholder {
+      color: var(--text-secondary);
+    }
+
+    .camera-btn i {
+      color: var(--text-secondary);
+    }
+
+    .send-btn {
+      color: var(--inactive-btn);
+    }
+
+    .send-btn.active {
+      color: var(--main-color);
+    }
+    
+    .expanded-input {
+      background-color: var(--ai-color);
+    }
+
+    .expanded-textarea {
+      color: var(--text-main);
+    }
+
+    .expanded-send-btn {
+      background-color: var(--main-color);
+    }
+
+    .question-card {
+      border-color: rgba(136, 144, 150, 0.2);
+    }
+    
+    /* 菜单样式 */
+    .menu-item {
+      display: flex;
+      align-items: center;
+      padding: 6px 16px;
+      border-radius: 12px;
+      margin-bottom: 2px;
+      transition: all 0.25s ease;
+      position: relative;
+      color: var(--text-main);
+      background-color: transparent;
+    }
+    
+    .menu-item svg {
+      transition: stroke 0.25s ease;
+    }
+    
+    .menu-section-title {
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #889096;
+      padding: 8px 16px 8px;
+      margin: 0;
+    }
+    
+    .menu-item:hover {
+      background-color: var(--menu-hover);
+    }
+    
+    .menu-item.active {
+      background-color: #EAF6F5;
+      font-weight: 600;
+    }
+    
+    .menu-item.active .menu-icon svg {
+      stroke: var(--main-color);
+    }
+    
+    .menu-icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      color: var(--text-secondary);
+    }
+    
+    .current-indicator {
+      position: absolute;
+      right: 16px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--main-color);
+      display: none; /* 隐藏小圆点指示器，因为我们使用背景色和图标颜色来标识 */
+    }
+    
+    #menuOverlay {
+      backdrop-filter: blur(2px);
+    }
+    
+    /* 菜单头部样式 */
+    .menu-header {
+      background: #FFFFFF;
+      color: var(--text-main);
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid #F0F0F0;
+    }
+    
+    .menu-header-content {
+      padding: 0;
+    }
+    
+    /* 菜单头部行样式 */
+    .menu-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 4px;
+    }
+    
+    .menu-close-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(136, 144, 150, 0.08);
+      transition: all 0.25s ease;
+      margin-left: 10px;
+    }
+    
+    .menu-close-btn:hover {
+      background-color: rgba(136, 144, 150, 0.15);
+      transform: rotate(90deg);
+    }
+    
+    .menu-close-btn:active {
+      transform: rotate(90deg) scale(0.92);
+      background-color: rgba(136, 144, 150, 0.2);
+    }
+    
+    /* 菜单标题样式 */
+    .menu-title {
+      font-size: 17px;
+      font-weight: 500;
+      color: var(--text-main);
+      margin: 0;
+      text-align: center;
+      flex: 1;
+      padding-right: 10px; /* 补偿左侧按钮的margin */
+    }
+    
+    /* 保留一些通用的颜色类 */
+    .text-neutral-gray {
+      color: #889096;
+    }
+    
+    /* 统一底部面板样式优化 */
+    .unified-bottom-panel {
+      background-color: rgba(255, 255, 255, 0.98);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid rgba(42, 157, 143, 0.1);
+      padding: 10px 0 0;
+      padding-bottom: calc(10px + var(--safe-area-bottom));
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+      border-top-left-radius: 24px;
+      border-top-right-radius: 24px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+
+    
+    /* 输入框样式优化 */
+    .input-container {
+      padding: 0 12px 12px;
+      margin-top: 4px;
+    }
+    
+    .input-field {
+      background-color: var(--bg-color-card);
+      border: 1px solid rgba(42, 157, 143, 0.15);
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(255, 255, 255, 0.5);
+      transition: all 0.3s ease;
+      padding: 6px 12px;
+      border-radius: 24px;
+    }
+    
+    .input-field:focus-within {
+      border-color: var(--main-color);
+      box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.1), inset 0 1px 3px rgba(0, 0, 0, 0.03);
+    }
+    
+    /* 输入框左侧图标 */
+    .input-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      color: var(--accent-color);
+      margin-left: 2px;
+      position: relative;
+    }
+    
+    .input-icon::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background-color: var(--accent-color-10);
+      z-index: -1;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.3s ease;
+    }
+    
+    .input-field:focus-within .input-icon::after {
+      opacity: 1;
+      transform: scale(1.2);
+    }
+    
+    /* 加号按钮样式优化 */
+    .add-btn {
+      transition: all 0.25s ease;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: var(--main-color-10);
+      color: var(--main-color);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .add-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at center, var(--main-color-15) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    
+    .add-btn:hover::before {
+      opacity: 1;
+    }
+    
+    .add-btn:active {
+      transform: scale(0.92);
+      background-color: var(--main-color-15);
+    }
+    
+    /* 发送按钮样式优化 */
+    .send-btn {
+      transition: all 0.3s ease;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    
+    .send-btn.active {
+      background-color: var(--main-color);
+      color: white;
+      transform: scale(1.05);
+      box-shadow: 0 2px 6px rgba(42, 157, 143, 0.2);
+    }
+    
+    .send-btn.active:active {
+      transform: scale(0.95);
+      box-shadow: 0 1px 3px rgba(42, 157, 143, 0.2);
+    }
+    
+    /* 相机按钮样式改为加号按钮样式 */
+    .camera-btn {
+      transition: all 0.2s ease;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: rgba(42, 157, 143, 0.08);
+      color: var(--main-color);
+    }
+    
+    .camera-btn:active {
+      background-color: rgba(42, 157, 143, 0.15);
+      transform: scale(0.95);
+    }
+    
+    /* 扩展输入区样式优化 */
+    .expanded-input {
+      background-color: var(--bg-color);
+      border: 1px solid rgba(42, 157, 143, 0.15);
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      padding: 12px 16px;
+    }
+    
+    .expanded-input-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    
+    .expanded-textarea {
+      padding: 8px 0;
+      line-height: 1.5;
+      resize: none;
+      font-size: 15px;
+      color: var(--text-main);
+      min-height: 80px;
+    }
+    
+    .expanded-textarea::placeholder {
+      color: var(--text-secondary);
+    }
+    
+    .expanded-send-btn {
+      background-color: var(--main-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    
+    .expanded-send-btn:active {
+      transform: scale(0.95);
+    }
+    
+    /* 欢迎消息样式优化 */
+    .welcome-message {
+      position: relative;
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+    
+    .welcome-message h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-main);
+      background: linear-gradient(135deg, var(--main-color), var(--main-color-light));
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      text-shadow: 0px 1px 1px rgba(255, 255, 255, 0.5);
+      letter-spacing: -0.01em;
+    }
+    
+    .welcome-message::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(to right, var(--main-color-10), var(--main-color), var(--main-color-10));
+      border-radius: 2px;
+    }
+    
+    /* 问题卡片样式优化 */
+    .question-card {
+      position: relative;
+      background-color: var(--bg-color-card);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      box-shadow: var(--card-shadow);
+      transition: all 0.3s ease;
+      overflow: hidden;
+      border: 1px solid rgba(136, 144, 150, 0.12);
+    }
+    
+    .question-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(to right, var(--main-color), var(--main-color-light));
+      opacity: 0.8;
+    }
+    
+    .question-card:nth-child(2n)::before {
+      background: linear-gradient(to right, var(--accent-color), var(--accent-color-light));
+    }
+    
+    .question-card:nth-child(3n)::before {
+      background: linear-gradient(to right, var(--video-color), var(--video-color-light));
+    }
+    
+    .question-card:nth-child(4n)::before {
+      background: linear-gradient(to right, var(--floorplan-color), var(--floorplan-color-light));
+    }
+    
+    .question-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--card-shadow-hover);
+    }
+    
+    .question-card:active {
+      transform: translateY(0);
+      box-shadow: var(--card-shadow);
+    }
+    
+    .question-card p {
+      color: var(--text-main);
+      font-size: 14px;
+      line-height: 1.5;
+      margin: 0;
+    }
+    
+    /* 问题滚动容器优化 */
+    .questions-scroll-container {
+      margin-top: 20px;
+      margin-bottom: 24px;
+    }
+    
+    .questions-scroll-wrapper {
+      display: flex;
+      overflow-x: auto;
+      padding: 4px 0;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      scroll-snap-type: x mandatory;
+      gap: 12px;
+    }
+    
+    .questions-scroll-wrapper::-webkit-scrollbar {
+      display: none;
+    }
+    
+    /* 问题滚动容器优化的结束 */
+
+    /* 加号按钮扩展区域样式 */
+    .add-btn-expanded {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: var(--main-color-10);
+      color: var(--main-color);
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .add-btn-expanded::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at center, var(--main-color-15) 0%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+    
+    .add-btn-expanded:hover::before {
+      opacity: 1;
+    }
+    
+    .add-btn-expanded:active {
+      transform: scale(0.92);
+      background-color: var(--main-color-15);
+    }
+
+    /* 功能Pills样式 */
+    .pills-container {
+      padding: 0 8px 8px;
+    }
+    
+    .feature-pills {
+      display: flex;
+      overflow-x: auto;
+      gap: 8px;
+      padding: 4px 0;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    
+    .feature-pills::-webkit-scrollbar {
+      display: none;
+    }
+    
+    .feature-pill {
+      display: flex;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background-color: var(--bg-color);
+      border: 1px solid rgba(42, 157, 143, 0.15);
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    
+    .feature-pill:active {
+      transform: scale(0.97);
+      background-color: rgba(42, 157, 143, 0.08);
+    }
+    
+    .pill-icon {
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin-right: 8px;
+      transition: all 0.2s ease;
+    }
+    
+    .pill-icon i {
+      font-size: 16px;
+      transition: transform 0.2s ease;
+    }
+    
+    .feature-pill:active .pill-icon i {
+      transform: scale(0.9);
+    }
+    
+    .pill-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+    
+    /* 为不同功能设置不同的颜色 */
+    .pricing-pill .pill-icon {
+      background-color: rgba(233, 196, 106, 0.15);
+      color: #e9c46a;
+    }
+    
+    .design-pill .pill-icon {
+      background-color: rgba(42, 157, 143, 0.15);
+      color: #2a9d8f;
+    }
+    
+    .video-pill .pill-icon {
+      background-color: rgba(69, 123, 157, 0.15);
+      color: #457b9d;
+    }
+    
+    .floorplan-pill .pill-icon {
+      background-color: rgba(132, 94, 194, 0.15);
+      color: #845ec2;
+    }
+    
+    /* 活动状态样式 */
+    .feature-pill.active {
+      background-color: rgba(42, 157, 143, 0.1);
+      border-color: rgba(42, 157, 143, 0.3);
+    }
+    
+    .feature-pill.active .pill-icon {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body class="h-screen flex flex-col">
+  <!-- 遮罩层 -->
+  <div class="input-overlay"></div>
+  
+  <!-- 顶部状态栏 -->
+  <header class="pt-2 px-4 pb-4">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center">
+        <button class="p-2" id="backButton">
+          <i class="fas fa-arrow-left text-xl"></i>
+        </button>
+        <button class="p-2 ml-2" id="menuButton">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <h1 class="text-xl font-medium">小麦</h1>
+      <div class="w-20"><!-- 占位以平衡布局，预留给微信原生控件 --></div>
+    </div>
+  </header>
+
+  <!-- 功能菜单 (默认隐藏) -->
+  <div id="functionMenu" class="fixed left-0 top-0 h-full bg-mintfog shadow-lg z-50 transform -translate-x-full transition-all duration-300 w-full">
+    <div class="flex flex-col h-full">
+      <!-- 菜单头部 -->
+      <div class="menu-header">
+        <div class="menu-header-content">
+          <!-- 极简设计的菜单头部 -->
+          <div class="menu-header-row flex items-center justify-between py-4">
+            <button id="closeMenuButton" class="menu-close-btn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+            </button>
+            <h2 class="menu-title">菜单</h2>
+            <div class="w-10"><!-- 右侧留白占位 --></div>
+          </div>
+        </div>
+      </div>
+              
+        <!-- 菜单内容 -->
+        <div class="flex-1 overflow-y-auto">
+          <div class="px-2 pt-1">
+            <div class="menu-section mb-2">
+              <h4 class="menu-section-title">智能助手</h4>
+              <ul>
+                <li>
+                  <a href="ai-assistant-chat.html" class="menu-item active">
+                    <div class="menu-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2a9d8f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                      </svg>
+                    </div>
+                    <span>新对话</span>
+                    <span class="current-indicator"></span>
+                  </a>
+                </li>
+                <li>
+                  <a href="ai-pricing.html" class="menu-item">
+                    <div class="menu-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                        <line x1="12" y1="4" x2="12" y2="20"></line>
+                        <path d="M18 8h.01M18 12h.01M18 16h.01"></path>
+                        <path d="M6 8h4M6 12h4M6 16h4"></path>
+                      </svg>
+                    </div>
+                    <span>AI报价</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="ai-design.html" class="menu-item">
+                    <div class="menu-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 19l7-7 3 3-7 7-3-3z"></path>
+                        <path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path>
+                        <path d="M2 2l7.586 7.586"></path>
+                        <circle cx="11" cy="11" r="2"></circle>
+                      </svg>
+                    </div>
+                    <span>AI设计</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            
+            <div class="menu-section mb-2">
+              <h4 class="menu-section-title">高级功能</h4>
+              <ul>
+                <li>
+                  <a href="ai-diagnosis.html" class="menu-item">
+                    <div class="menu-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                      </svg>
+                    </div>
+                    <span>户型诊断</span>
+                  </a>
+                </li>
+                <li>
+                  <a href="ai-video.html" class="menu-item">
+                    <div class="menu-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
+                        <line x1="7" y1="2" x2="7" y2="22"></line>
+                        <line x1="17" y1="2" x2="17" y2="22"></line>
+                        <line x1="2" y1="12" x2="22" y2="12"></line>
+                        <line x1="2" y1="7" x2="7" y2="7"></line>
+                        <line x1="2" y1="17" x2="7" y2="17"></line>
+                        <line x1="17" y1="17" x2="22" y2="17"></line>
+                        <line x1="17" y1="7" x2="22" y2="7"></line>
+                      </svg>
+                    </div>
+                    <span>图生视频</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+            
+            <!-- 分隔线 -->
+            <div class="border-t border-gray-100 my-1 mx-3"></div>
+            
+            <!-- 最近对话部分 -->
+            <div class="menu-section mb-4">
+              <h4 class="menu-section-title">最近对话</h4>
+              <ul>
+                <li>
+                  <a href="#" class="menu-item recent-chat">
+                    <div class="menu-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                      </svg>
+                    </div>
+                    <div class="flex-1 overflow-hidden">
+                      <div class="font-medium text-sm">装修设计流行趋势</div>
+                      <div class="text-xs text-gray-500 truncate">今天 15:04</div>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="menu-item recent-chat">
+                    <div class="menu-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                      </svg>
+                    </div>
+                    <div class="flex-1 overflow-hidden">
+                      <div class="font-medium text-sm">沙发价格咨询</div>
+                      <div class="text-xs text-gray-500 truncate">昨天 10:23</div>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="menu-item recent-chat">
+                    <div class="menu-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                      </svg>
+                    </div>
+                    <div class="flex-1 overflow-hidden">
+                      <div class="font-medium text-sm">法式风格客厅设计</div>
+                      <div class="text-xs text-gray-500 truncate">3天前</div>
+                    </div>
+                  </a>
+                </li>
+                <!-- 查看更多按钮 -->
+                <li>
+                  <a href="#" class="menu-item" id="viewAllChatsBtn">
+                    <div class="menu-icon">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#889096" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        <path d="M12 2v10l4 4"></path>
+                      </svg>
+                    </div>
+                    <span>查看更多</span>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        
+      
+    </div>
+  </div>
+  
+  <!-- 菜单遮罩层 -->
+  <div id="menuOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden transition-opacity duration-300 opacity-0"></div>
+
+  <!-- 主要内容区域 -->
+  <main class="flex-1 overflow-y-auto px-4 pb-24">
+    <!-- 聊天消息区域 -->
+    <div class="chat-container mb-6" id="chatContainer">
+      <!-- 示例消息 -->
+      <!-- <div class="message message-user">
+        <div class="message-content">最近装修设计有哪些流行趋势，2024年的主要家居设计风格有哪些？</div>
+        <div class="message-meta">
+          <span>15:04</span>
+          <button class="message-action-btn copy">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <rect x="8" y="8" width="12" height="12" rx="1"></rect>
+              <path d="M16 8V6a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h2"></path>
+            </svg>
+          </button>
+          <button class="message-action-btn edit">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17 3a2.85 2.85 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="message ai-message">
+        <div class="message-content">2024年流行的装修设计趋势主要包括自然材质、极简风格、多功能家具、可持续设计和智能家居集成。您想了解哪个方面的更多细节？</div>
+        <div class="message-meta">
+          <span>15:04</span>
+          <button class="message-action-btn copy">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <rect x="8" y="8" width="12" height="12" rx="1"></rect>
+              <path d="M16 8V6a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h2"></path>
+            </svg>
+          </button>
+          <button class="message-action-btn regenerate">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 12a9 9 0 0 1-9 9"></path>
+              <path d="M3 12a9 9 0 0 1 9-9"></path>
+              <path d="M12 21a9 9 0 0 0 0-18"></path>
+              <polyline points="16 16 21 12 16 8"></polyline>
+            </svg>
+          </button>
+        </div> -->
+      </div>
+    </div>
+    
+    <!-- 头像区域 -->
+    <div class="avatar-container mb-6 mt-4" id="initialContent" style="display: none;">
+      <!-- <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&q=80" alt="AI助手" class="avatar"> -->
+    </div>
+    
+    <!-- 欢迎消息 -->
+    <div class="welcome-message">
+      <h2>Hi~我是小麦，家居行业的全能助手</h2>
+    </div>
+
+    <!-- 热门问题原始展示 -->
+    <div class="mb-6 questions-container" style="display: none;">
+      <div class="hot-question">
+        <p>麦吉纳小程序的功能有哪些？</p>
+      </div>
+      
+      <!-- <div class="hot-question">
+        <p>最近装修设计有哪些流行趋势</p>
+      </div> -->
+      
+      <div class="hot-question">
+        <p>帮我核算3米长，3+妃位，一个功能位，头层牛皮沙发的价格</p>
+      </div>
+      
+      <div class="hot-question">
+        <p>帮我生图：法式风格客厅，整体以白色为主，搭配一些木质元素</p>
+      </div>
+    </div>
+
+    <!-- 热门问题水平滚动卡片式展示 -->
+    <div class="mb-6 questions-scroll-container" style="display: block;">
+      <div class="questions-scroll-wrapper">
+    
+        <div class="question-card" >
+          <p>最近装修设计有哪些流行趋势，2024年的主要家居设计风格有哪些？</p>
+        </div>
+        <div class="question-card">
+          <p>帮我核算3米长，3+妃位，一个功能位，头层牛皮沙发的价格</p>
+        </div>
+        <div class="question-card">
+          <p>麦吉纳小程序的功能有哪些？</p>
+        </div>
+        <div class="question-card">
+          <p>帮我生图：法式风格客厅，整体以白色为主，搭配一些木质元素</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 手风琴式问题展示 (默认隐藏) -->
+    <div class="mb-6 accordion-questions" style="display:none;">
+      <div class="accordion-question">
+        <div class="accordion-header">
+          <h4>麦吉纳小程序的功能有哪些？</h4>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="accordion-content">
+          您可以通过麦吉纳小程序获取家居设计、报价、3D布局等多种功能，点击了解更多。
+        </div>
+      </div>
+      
+      <div class="accordion-question">
+        <div class="accordion-header">
+          <h4>最近装修设计有哪些流行趋势？</h4>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="accordion-content">
+          2024年流行自然材质、极简主义、可持续设计等趋势，点击了解更多细节。
+        </div>
+      </div>
+      
+      <div class="accordion-question">
+        <div class="accordion-header">
+          <h4>帮我核算3米长，3+妃位，一个功能位，头层牛皮沙发的价格</h4>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="accordion-content">
+          我可以帮您计算这款沙发的价格，请点击获取详细报价。
+        </div>
+      </div>
+    </div>
+
+    <!-- 标签分组问题展示 (默认隐藏) -->
+    <div class="mb-6 question-tabs" style="display: none;">
+      <div class="tabs-header">
+        <button class="tab-btn active">常见问题</button>
+        <button class="tab-btn">设计趋势</button>
+        <button class="tab-btn">价格咨询</button>
+        <button class="tab-btn">AI生成</button>
+      </div>
+      
+      <div class="tab-content active">
+        <div class="hot-question">
+          <p>麦吉纳小程序的功能有哪些？</p>
+        </div>
+        <div class="hot-question">
+          <p>如何预约家居设计服务？</p>
+        </div>
+      </div>
+      
+      <div class="tab-content">
+        <div class="hot-question">
+          <p>最近装修设计有哪些流行趋势？</p>
+        </div>
+        <div class="hot-question">
+          <p>2024年家居配色流行什么风格？</p>
+        </div>
+      </div>
+      
+      <div class="tab-content">
+        <div class="hot-question">
+          <p>帮我核算3米长，3+妃位，一个功能位，头层牛皮沙发的价格</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 功能选择区域 -->
+  <div class="fixed bottom-0 left-0 right-0 bg-transparent">
+    <!-- 新增的统一底部面板容器 -->
+    <div class="unified-bottom-panel">
+      <!-- 功能Pills区域 -->
+      <div class="pills-container">
+        <div class="feature-pills">
+          <button class="feature-pill pricing-pill" aria-label="AI报价">
+            <div class="pill-icon">
+              <i class="fas fa-calculator"></i>
+            </div>
+            <span class="pill-text">AI报价</span>
+          </button>
+          
+          <button class="feature-pill design-pill" aria-label="AI设计">
+            <div class="pill-icon">
+              <i class="fas fa-paint-brush"></i>
+            </div>
+            <span class="pill-text">AI设计</span>
+          </button>
+          
+          <button class="feature-pill video-pill" aria-label="图生视频">
+            <div class="pill-icon">
+              <i class="fas fa-film"></i>
+            </div>
+            <span class="pill-text">图生视频</span>
+          </button>
+          
+          <button class="feature-pill floorplan-pill" aria-label="AI户型诊断">
+            <div class="pill-icon">
+              <i class="fas fa-home"></i>
+            </div>
+            <span class="pill-text">AI户型诊断</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- 输入框区域 -->
+      <div class="p-2 bottom-safe-area input-container" style="margin-bottom: 0.5rem;">
+        <div class="rounded-full flex items-center px-4 py-1 shadow-sm input-field">
+          <div class="input-icon">
+            <i class="fas fa-lightbulb"></i>
+          </div>
+          <div class="flex-1 ml-2">
+            <input type="text" placeholder="有问题尽管问我" class="bg-transparent w-full focus:outline-none input-text">
+          </div>
+          <button class="add-btn">
+            <i class="fas fa-plus"></i>
+          </button>
+          <button class="ml-1 send-btn" id="sendButton">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </div>
+        
+        <!-- 扩展输入区 (默认隐藏) -->
+        <div class="expanded-input rounded-3xl shadow-md p-2 hidden">
+          <div class="expanded-input-header">
+            <div class="input-icon">
+              <i class="fas fa-lightbulb"></i>
+            </div>
+          </div>
+          <textarea placeholder="有问题尽管问我" class="bg-transparent w-full focus:outline-none expanded-textarea" style="height: 55px;"></textarea>
+          
+          <div class="flex justify-between items-center mt-2">
+            <div class="flex space-x-3">
+              <button class="add-btn-expanded">
+                <i class="fas fa-plus text-sm"></i>
+              </button>
+            </div>
+            <button class="text-white rounded-full w-8 h-8 flex items-center justify-center expanded-send-btn">
+              <i class="fas fa-paper-plane text-xs"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 移除原有的输入框区域 -->
+  <!-- 输入框区域 -->
+  <!-- <div class="fixed bottom-0 left-0 right-0 bg-transparent p-2 bottom-safe-area input-container" style="margin-bottom: 0.5rem;">
+    <div class="rounded-full flex items-center px-4 py-1 shadow-sm input-field">
+      <div class="flex-1 ml-2">
+        <input type="text" placeholder="有问题尽管问我" class="bg-transparent w-full focus:outline-none input-text">
+      </div>
+      <button class="p-2 camera-btn">
+        <i class="fas fa-camera"></i>
+      </button>
+      <button class="p-2 ml-1 send-btn" id="sendButton">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+    
+    <!-- 扩展输入区 (默认隐藏) -->
+  <!--  <div class="expanded-input rounded-3xl shadow-md p-2 hidden">
+      <textarea placeholder="有问题尽管问我" class="bg-transparent w-full focus:outline-none expanded-textarea" style="height: 55px;"></textarea>
+      
+      <div class="flex justify-between items-center">
+        <div class="flex space-x-3">
+          <button class="p-1" style="color: var(--text-secondary);">
+            <i class="fas fa-camera text-sm"></i>
+          </button>
+        </div>
+        <button class="text-white rounded-full w-6 h-6 flex items-center justify-center expanded-send-btn">
+          <i class="fas fa-paper-plane text-xs"></i>
+        </button>
+      </div>
+    </div>
+  </div> -->
+
+  <script src="script.js"></script>
+  <script>
+    // 添加一些必要的JavaScript来处理发送按钮状态和消息生成
+    document.addEventListener('DOMContentLoaded', function() {
+      const inputField = document.querySelector('.input-text');
+      const sendButton = document.querySelector('.send-btn');
+      const addButton = document.querySelector('.add-btn');
+      const chatContainer = document.getElementById('chatContainer');
+      const questionCards = document.querySelectorAll('.question-card');
+      const hotQuestions = document.querySelectorAll('.hot-question');
+      const welcomeMessage = document.getElementById('welcomeMessage');
+      const questionsContainer = document.querySelector('.questions-scroll-container');
+      const inputContainer = document.querySelector('.input-container');
+      const unifiedPanel = document.querySelector('.unified-bottom-panel');
+      
+      // 功能Pills相关元素
+      const featurePills = document.querySelectorAll('.feature-pill');
+      
+      // 为功能Pills添加点击事件
+      featurePills.forEach(pill => {
+        pill.addEventListener('click', function() {
+          // 移除所有Pills的活动状态
+          featurePills.forEach(p => p.classList.remove('active'));
+          
+          // 添加当前Pill的活动状态
+          this.classList.add('active');
+          
+          // 根据功能类型导航到不同页面
+          if (this.classList.contains('pricing-pill')) {
+            window.location.href = 'ai-pricing.html';
+          } else if (this.classList.contains('design-pill')) {
+            window.location.href = 'ai-design.html';
+          } else if (this.classList.contains('video-pill')) {
+            window.location.href = 'ai-videonew.html';
+          } else if (this.classList.contains('floorplan-pill')) {
+            window.location.href = 'ai-diagnosis.html';
+          }
+        });
+      });
+      
+      // 菜单相关元素
+      const menuButton = document.getElementById('menuButton');
+      const closeMenuButton = document.getElementById('closeMenuButton');
+      const functionMenu = document.getElementById('functionMenu');
+      const menuOverlay = document.getElementById('menuOverlay');
+      const recentChatItems = document.querySelectorAll('.recent-chat');
+      const viewAllChatsBtn = document.getElementById('viewAllChatsBtn');
+      // 移除设置菜单项引用
+      
+      // 菜单开关功能
+      menuButton.addEventListener('click', function() {
+        functionMenu.classList.remove('-translate-x-full');
+        menuOverlay.classList.remove('hidden');
+        setTimeout(() => {
+          menuOverlay.classList.add('opacity-100');
+        }, 10);
+        document.body.style.overflow = 'hidden'; // 防止背景滚动
+        
+        // 隐藏底部统一面板
+        unifiedPanel.style.display = 'none';
+      });
+      
+      function closeMenu() {
+        menuOverlay.classList.remove('opacity-100');
+        setTimeout(() => {
+          functionMenu.classList.add('-translate-x-full');
+          menuOverlay.classList.add('hidden');
+          document.body.style.overflow = ''; // 恢复滚动
+          
+          // 恢复显示底部统一面板
+          unifiedPanel.style.display = '';
+        }, 300);
+      }
+      
+      closeMenuButton.addEventListener('click', closeMenu);
+      menuOverlay.addEventListener('click', closeMenu);
+
+      // 移除设置菜单项点击事件
+      
+      // 移除关闭设置按钮点击事件
+      
+      // 移除菜单遮罩层与设置页面的交互
+      menuOverlay.addEventListener('click', function() {
+        closeMenu();
+      });
+
+      // 移除设置项点击和开关按钮事件处理
+      
+      // 最近对话项点击事件
+      recentChatItems.forEach((item, index) => {
+        item.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          // 关闭菜单
+          closeMenu();
+          
+          // 清空当前对话
+          chatContainer.innerHTML = '';
+          
+          // 隐藏欢迎消息和问题
+          if(welcomeMessage) {
+            welcomeMessage.style.display = 'none';
+          }
+          
+          if(questionsContainer) {
+            questionsContainer.style.display = 'none';
+          }
+          
+          // 添加历史对话内容
+          setTimeout(() => {
+            // 添加用户消息
+            let userText = '';
+            let aiResponse = '';
+            
+            // 根据索引选择不同的对话内容
+            if (index === 0) {
+              userText = "最近装修设计有哪些流行趋势，2024年的主要家居设计风格有哪些？";
+              aiResponse = "2024年流行的装修设计趋势主要包括自然材质、极简风格、多功能家具、可持续设计和智能家居集成。您想了解哪个方面的更多细节？";
+            } else if (index === 1) {
+              userText = "帮我核算3米长，3+妃位，一个功能位，头层牛皮沙发的价格";
+              aiResponse = "根据您提供的信息，这款3米长，3+妃位，带一个功能位的头层牛皮沙发，市场参考价格区间在15000-25000元之间，具体价格取决于皮质等级、填充材料和品牌定位。";
+            } else {
+              userText = "帮我生图：法式风格客厅，整体以白色为主，搭配一些木质元素";
+              aiResponse = "法式风格客厅以白色为主调，搭配木质元素是非常经典的搭配。您可以选择象牙白墙面，搭配白色石膏线条，地面可用浅色大理石或实木地板，家具选择带有雕花的白色或原木色家具。";
+            }
+            
+            // 创建用户消息
+            chatUtils.createUserMessage(userText);
+            
+            // 添加AI回复
+            setTimeout(() => {
+              chatUtils.simulateResponse(aiResponse);
+            }, 500);
+          }, 300);
+        });
+      });
+      
+      // 查看更多历史对话按钮点击事件
+      viewAllChatsBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // 关闭菜单
+        closeMenu();
+        
+        // 这里可以添加查看全部历史记录的逻辑
+        // 例如跳转到历史记录页面或显示一个历史记录弹窗
+        
+        // 暂时实现为显示提示消息
+        chatUtils.showToast('查看全部历史对话');
+      });
+
+      const chatUtils = {
+        // 创建用户消息
+        createUserMessage: function(text) {
+          // 隐藏欢迎消息和问题
+          if(welcomeMessage) {
+            welcomeMessage.style.display = 'none';
+          }
+          
+          if(questionsContainer) {
+            questionsContainer.style.display = 'none';
+          }
+          
+          // 创建用户消息元素
+          const messageId = Date.now().toString();
+          const messageDiv = document.createElement('div');
+          messageDiv.className = 'message message-user';
+          messageDiv.dataset.messageId = messageId;
+          
+          const contentDiv = document.createElement('div');
+          contentDiv.className = 'message-content';
+          contentDiv.textContent = text;
+          
+          const metaDiv = document.createElement('div');
+          metaDiv.className = 'message-meta';
+          
+          // 添加时间
+          const timeSpan = document.createElement('span');
+          const now = new Date();
+          timeSpan.textContent = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+          
+          // 添加复制按钮
+          const copyBtn = document.createElement('button');
+          copyBtn.className = 'message-action-btn copy';
+          copyBtn.innerHTML = `
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <rect x="8" y="8" width="12" height="12" rx="1"></rect>
+              <path d="M16 8V6a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h2"></path>
+            </svg>
+          `;
+          
+          // 添加编辑按钮
+          const editBtn = document.createElement('button');
+          editBtn.className = 'message-action-btn edit';
+          editBtn.innerHTML = `
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17 3a2.85 2.85 0 0 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+            </svg>
+          `;
+          
+          // 组装消息
+          metaDiv.appendChild(timeSpan);
+          metaDiv.appendChild(copyBtn);
+          metaDiv.appendChild(editBtn);
+          
+          messageDiv.appendChild(contentDiv);
+          messageDiv.appendChild(metaDiv);
+          
+          chatContainer.appendChild(messageDiv);
+          
+          // 添加复制功能
+          copyBtn.addEventListener('click', function() {
+            navigator.clipboard.writeText(text).then(() => {
+              chatUtils.showToast('已复制到剪贴板');
+            }).catch(err => {
+              console.error('复制失败:', err);
+            });
+          });
+          
+          // 添加编辑功能
+          editBtn.addEventListener('click', function() {
+            // 显示扩展输入区
+            document.querySelector('.input-field').classList.add('hidden');
+            const expandedInput = document.querySelector('.expanded-input');
+            expandedInput.classList.remove('hidden');
+            const textarea = expandedInput.querySelector('textarea');
+            textarea.value = text;
+            textarea.focus();
+            
+            // 记录当前正在编辑的消息
+            expandedInput.dataset.editingMessage = messageId;
+          });
+          
+          // 滚动到底部
+          chatContainer.scrollTop = chatContainer.scrollHeight;
+          
+          return messageDiv;
+        },
+        
+        // 模拟AI回复
+        simulateResponse: function(text) {
+          // 创建AI消息元素
+          const messageDiv = document.createElement('div');
+          messageDiv.className = 'message ai-message';
+          
+          const contentDiv = document.createElement('div');
+          contentDiv.className = 'message-content';
+          contentDiv.textContent = text;
+          
+          const metaDiv = document.createElement('div');
+          metaDiv.className = 'message-meta';
+          
+          // 添加时间
+          const timeSpan = document.createElement('span');
+          const now = new Date();
+          timeSpan.textContent = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+          
+          // 添加复制按钮
+          const copyBtn = document.createElement('button');
+          copyBtn.className = 'message-action-btn copy';
+          copyBtn.innerHTML = `
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <rect x="8" y="8" width="12" height="12" rx="1"></rect>
+              <path d="M16 8V6a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h2"></path>
+            </svg>
+          `;
+          
+          // 添加重新生成按钮
+          const regenerateBtn = document.createElement('button');
+          regenerateBtn.className = 'message-action-btn regenerate';
+          regenerateBtn.innerHTML = `
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 12a9 9 0 0 1-9 9"></path>
+              <path d="M3 12a9 9 0 0 1 9-9"></path>
+              <path d="M12 21a9 9 0 0 0 0-18"></path>
+              <polyline points="16 16 21 12 16 8"></polyline>
+            </svg>
+          `;
+          
+          // 组装消息
+          metaDiv.appendChild(timeSpan);
+          metaDiv.appendChild(copyBtn);
+          metaDiv.appendChild(regenerateBtn);
+          
+          messageDiv.appendChild(contentDiv);
+          messageDiv.appendChild(metaDiv);
+          
+          chatContainer.appendChild(messageDiv);
+          
+          // 添加复制功能
+          copyBtn.addEventListener('click', function() {
+            navigator.clipboard.writeText(text).then(() => {
+              chatUtils.showToast('已复制到剪贴板');
+            }).catch(err => {
+              console.error('复制失败:', err);
+            });
+          });
+          
+          // 添加重新生成功能
+          regenerateBtn.addEventListener('click', function() {
+            chatContainer.removeChild(messageDiv);
+            
+            // 模拟重新生成回复
+            setTimeout(() => {
+              chatUtils.simulateResponse('这是重新生成的回复：2024年流行趋势包括自然材质、极简主义、可持续设计、曲线家具、柔和色调和智能家居。您对哪个方向更感兴趣？');
+            }, 500);
+          });
+          
+          // 滚动到底部
+          chatContainer.scrollTop = chatContainer.scrollHeight;
+          
+          return messageDiv;
+        },
+        
+        // 更新发送按钮状态
+        updateSendButtonState: function() {
+          if (inputField.value.trim() !== '') {
+            sendButton.classList.add('active');
+          } else {
+            sendButton.classList.remove('active');
+          }
+        },
+
+        // 处理发送消息
+        handleSendMessage: function() {
+          const expandedInput = document.querySelector('.expanded-input');
+          let message = '';
+          
+          // 检查是否在使用扩展输入区
+          if (!expandedInput.classList.contains('hidden')) {
+            message = expandedInput.querySelector('textarea').value.trim();
+            
+            // 检查是否在编辑现有消息
+            if (expandedInput.dataset.editingMessage) {
+              // 找到正在编辑的消息
+              const editingMessageId = expandedInput.dataset.editingMessage;
+              const messages = chatContainer.querySelectorAll('.message');
+              let editingMessage = null;
+              let aiResponseToRemove = null;
+              
+              // 查找要编辑的消息和它之后的AI回复
+              for (let i = 0; i < messages.length; i++) {
+                if (messages[i].dataset.messageId === editingMessageId) {
+                  editingMessage = messages[i];
+                  // 如果下一条是AI回复，也需要移除
+                  if (i + 1 < messages.length && messages[i + 1].classList.contains('ai-message')) {
+                    aiResponseToRemove = messages[i + 1];
+                  }
+                  break;
+                }
+              }
+              
+              // 更新消息内容
+              if (editingMessage) {
+                editingMessage.querySelector('.message-content').textContent = message;
+                
+                // 如果有AI回复，移除它
+                if (aiResponseToRemove) {
+                  chatContainer.removeChild(aiResponseToRemove);
+                }
+                
+                // 生成新的AI回复
+                setTimeout(() => {
+                  // 模拟AI回复
+                  const aiResponseText = '我已根据您修改后的问题重新回答：2024年流行的装修设计趋势主要包括自然材质、极简风格、多功能家具、可持续设计和智能家居集成。';
+                  chatUtils.simulateResponse(aiResponseText);
+                }, 500);
+              }
+              
+              // 清除编辑状态
+              delete expandedInput.dataset.editingMessage;
+            } else {
+              // 添加新消息
+              if (message) {
+                // 创建用户消息
+                chatUtils.createUserMessage(message);
+                
+                // 模拟AI回复
+                setTimeout(() => {
+                  const aiResponseText = '2024年流行的装修设计趋势主要包括自然材质、极简风格、多功能家具、可持续设计和智能家居集成。您想了解哪个方面的更多细节？';
+                  chatUtils.simulateResponse(aiResponseText);
+                }, 500);
+              }
+            }
+            
+            // 隐藏扩展输入区，显示普通输入框
+            expandedInput.classList.add('hidden');
+            document.querySelector('.input-field').classList.remove('hidden');
+            expandedInput.querySelector('textarea').value = '';
+          } else {
+            // 使用普通输入框
+            message = inputField.value.trim();
+            if (message) {
+              // 创建用户消息
+              chatUtils.createUserMessage(message);
+              
+              inputField.value = '';
+              chatUtils.updateSendButtonState();
+              
+              // 模拟AI回复
+              setTimeout(() => {
+                const aiResponseText = '2024年流行的装修设计趋势主要包括自然材质、极简风格、多功能家具、可持续设计和智能家居集成。您想了解哪个方面的更多细节？';
+                chatUtils.simulateResponse(aiResponseText);
+              }, 500);
+            }
+          }
+        },
+
+        // 点击问题卡片
+        handleQuestionClick: function(text) {
+          // 创建用户消息
+          chatUtils.createUserMessage(text);
+          
+          // AI回复
+          setTimeout(() => {
+            const aiResponseText = '2024年流行的装修设计趋势主要包括自然材质、极简风格、多功能家具、可持续设计和智能家居集成。您想了解哪个方面的更多细节？';
+            chatUtils.simulateResponse(aiResponseText);
+          }, 500);
+        },
+        
+        // 显示Toast提示
+        showToast: function(message) {
+          // 创建toast元素
+          const toast = document.createElement('div');
+          toast.className = 'toast';
+          toast.textContent = message;
+          toast.style.position = 'fixed';
+          toast.style.bottom = '80px';
+          toast.style.left = '50%';
+          toast.style.transform = 'translateX(-50%)';
+          toast.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+          toast.style.color = 'white';
+          toast.style.padding = '8px 16px';
+          toast.style.borderRadius = '20px';
+          toast.style.fontSize = '14px';
+          toast.style.zIndex = '1000';
+          
+          // 添加到body
+          document.body.appendChild(toast);
+          
+          // 2秒后移除
+          setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => {
+              document.body.removeChild(toast);
+            }, 500);
+          }, 2000);
+        }
+      };
+
+      // 事件监听
+      inputField.addEventListener('input', chatUtils.updateSendButtonState);
+      sendButton.addEventListener('click', chatUtils.handleSendMessage);
+      inputField.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          chatUtils.handleSendMessage();
+        }
+      });
+      
+      // 为消息添加点击事件，显示操作按钮
+      document.addEventListener('click', function(e) {
+        // 检查是否点击了消息
+        const message = e.target.closest('.message');
+        if (message && message.classList.contains('message-user')) {
+          // 移除其他消息的显示状态
+          document.querySelectorAll('.message.show-actions').forEach(msg => {
+            if (msg !== message) {
+              msg.classList.remove('show-actions');
+            }
+          });
+          
+          // 切换当前消息的显示状态
+          message.classList.toggle('show-actions');
+        } else if (!e.target.closest('.message-action-btn')) {
+          // 如果点击的不是操作按钮和消息，则隐藏所有操作按钮
+          document.querySelectorAll('.message.show-actions').forEach(msg => {
+            msg.classList.remove('show-actions');
+          });
+        }
+      });
+      
+      // 扩展输入区发送按钮
+      document.querySelector('.expanded-send-btn').addEventListener('click', chatUtils.handleSendMessage);
+      
+      // 点击输入框时显示扩展输入区
+      inputField.addEventListener('focus', function() {
+        document.querySelector('.input-field').classList.add('hidden');
+        const expandedInput = document.querySelector('.expanded-input');
+        expandedInput.classList.remove('hidden');
+        expandedInput.querySelector('textarea').focus();
+      });
+
+      // 为问题卡片添加点击事件 - 确保只绑定一次事件
+      questionCards.forEach(card => {
+        card.removeEventListener('click', card.clickHandler); // 移除可能存在的旧事件
+        card.clickHandler = function() { // 保存函数引用以便后续移除
+          const text = this.querySelector('p').textContent;
+          chatUtils.handleQuestionClick(text);
+        };
+        card.addEventListener('click', card.clickHandler);
+      });
+
+      // 为热门问题添加点击事件 - 确保只绑定一次事件
+      hotQuestions.forEach(question => {
+        question.removeEventListener('click', question.clickHandler); // 移除可能存在的旧事件
+        question.clickHandler = function() { // 保存函数引用以便后续移除
+          const text = this.querySelector('p').textContent;
+          chatUtils.handleQuestionClick(text);
+        };
+        question.addEventListener('click', question.clickHandler);
+      });
+
+      // 初始化按钮状态
+      chatUtils.updateSendButtonState();
+      
+      // 添加加号按钮点击事件
+      addButton.addEventListener('click', function() {
+        chatUtils.showToast('打开更多选项');
+        // 这里可以添加显示更多选项的逻辑，如弹出菜单等
+      });
+      
+      // 扩展输入区的加号按钮点击事件
+      document.querySelector('.add-btn-expanded').addEventListener('click', function() {
+        chatUtils.showToast('打开更多选项');
+        // 这里可以添加显示更多选项的逻辑，如弹出菜单等
+      });
+    });
+  </script>
+</body>
+</html> 

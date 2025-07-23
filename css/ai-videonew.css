@@ -1,0 +1,1245 @@
+:root {
+  --main-color: #2a9d8f; /* 活力松石绿 - 主色/用户 */
+  --accent-color: #e9c46a; /* 温暖鹅卵黄 - 辅助/强调 */
+  --ai-color: #FFFFFF; /* 纯净白 - AI/中性 */
+  --bg-color: #F7FAFA; /* 薄荷雾 - 页面背景 */
+  --text-main: #264653; /* 深海石墨 - 主要文字 */
+  --text-secondary: #889096; /* 中性灰 - 次要文字/图标 */
+  --inactive-btn: #DCE1E3; /* 非激活按钮背景色 */
+  --menu-hover: rgba(42, 157, 143, 0.08); /* 菜单悬停背景色 */
+  --menu-active: #EAF6F5; /* 菜单激活背景色 */
+}
+
+/* 确保输入框固定在底部 */
+body {
+  padding-bottom: 60px !important; /* 使用!important确保不被覆盖 */
+  min-height: 100vh;
+  background-color: #f7fafa !important;
+}
+
+/* 创作模式下的样式 */
+body.creative-mode {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+}
+
+/* 创作模式下顶部状态栏和内容区域的样式 */
+body.creative-mode header,
+body.creative-mode main {
+  filter: blur(3px);
+  pointer-events: none; /* 防止点击穿透 */
+  user-select: none; /* 防止选择文本 */
+}
+
+/* 创作面板和遮罩层在创作模式下的样式 */
+body.creative-mode .creative-panel,
+body.creative-mode .creative-panel-overlay {
+  filter: none;
+  pointer-events: auto;
+}
+
+/* 底部输入框 */
+.bottom-input {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  padding: 10px 16px;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  z-index: 10;
+}
+
+/* 隐藏所有垂直滚动条 */
+::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  -ms-overflow-style: none;  /* IE 和 Edge */
+  scrollbar-width: none;  /* Firefox */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 顶部导航栏 */
+header {
+  background-color: #fff;
+  border-bottom: none;
+  padding: 8px 16px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+header h1, header button {
+  color: var(--text-main);
+}
+
+header button i {
+  color: var(--text-secondary);
+}
+
+/* 主内容区域 - 聊天容器 */
+.chat-container {
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  flex: 1;
+  overflow-y: auto;
+  background-color: #FAFAFA;
+  position: relative;
+  align-items: stretch;
+}
+
+/* 欢迎信息 */
+.welcome-message {
+  padding: 16px 20px;
+  margin-top: 0;
+  margin-bottom: 0;
+  opacity: 0.9;
+  width: 100%;
+}
+
+/* 用户消息容器样式 */
+.message-container {
+  width: 100%;
+  position: relative;
+  margin-bottom: 0;
+}
+
+/* 用户消息样式 */
+.user-message {
+  padding: 12px 20px;
+  /* background-color: #fff;
+  border-bottom: 1px solid rgba(0,0,0,0.05); */
+}
+
+/* 消息标题 */
+.message-header {
+  display: flex;
+  justify-content: space-between;
+  /* padding: 0 0 8px 0; */
+  font-size: 14px;
+  border-bottom: none;
+  /* margin-bottom: 8px; */
+}
+
+.message-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: #889096;
+}
+
+.message-time {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.user-message .message-header {
+  border-bottom-color: transparent;
+}
+
+.ai-message .message-header {
+  border-bottom-color: rgba(38, 70, 83, 0.1);
+}
+
+/* 消息内容 */
+.message-content {
+  padding: 0;
+}
+
+/* 消息文本 */
+.message-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #333333;
+  margin-bottom: 6px;
+}
+
+/* 消息详情区域 */
+.message-details {
+  display: flex;
+  align-items: center;
+}
+
+/* 参考图片容器 */
+.reference-image-container {
+  width: 23px;
+  height: 23px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border-radius: 4px;
+}
+
+/* 参考图片 */
+.reference-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* 标签区域 */
+.message-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  flex: 1;
+  margin-left: 12px;
+}
+
+/* 标签样式 */
+.tag {
+  display: inline-block;
+  padding: 3px 8px;
+  background-color: rgba(42, 157, 143, 0.08);
+  color: #2A9D8F;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+/* 视频容器 */
+.video-container {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 9/16;
+  background-color: #000;
+  margin-bottom: 12px;
+}
+
+/* 响应视频 */
+.response-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-color: #000;
+}
+
+/* 视频操作按钮区 */
+.video-action-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  position: relative;
+  z-index: 5;
+  justify-content: flex-start; /* 左对齐 */
+  padding-left: 0;
+  flex-wrap: wrap; /* 允许在极小屏幕上换行 */
+}
+
+/* 视频操作按钮 - 移动端优化 */
+.video-action-btn {
+  width: 80px; /* 固定宽度 */
+  height: 32px; /* 减小高度 */
+  padding: 0 8px; /* 减少内边距 */
+  border-radius: 16px;
+  background-color: #f5f5f5;
+  border: 1px solid #e0e0e0;
+  font-size: 12px; /* 减小字体大小 */
+  color: #333;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  white-space: nowrap; /* 防止文字换行 */
+  overflow: hidden; /* 防止内容溢出 */
+  text-overflow: ellipsis; /* 文字溢出时显示省略号 */
+  margin-bottom: 4px; /* 在换行时提供一些间距 */
+}
+
+/* 视频操作按钮图标 */
+.video-action-btn i {
+  margin-right: 4px; /* 减少图标右侧间距 */
+  font-size: 12px; /* 减小图标大小 */
+}
+
+/* 小屏幕设备的响应式调整 */
+@media (max-width: 360px) {
+  .video-action-btn {
+    width: 80px; /* 更小的屏幕上减小按钮宽度 */
+    font-size: 11px; /* 更小的字体 */
+  }
+  
+  .video-action-btn i {
+    margin-right: 3px; /* 减少图标间距 */
+  }
+}
+
+/* 视频操作按钮悬停效果 */
+.video-action-btn:hover {
+  background-color: #f0f0f0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+/* 视频操作按钮激活效果 */
+.video-action-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* 保存按钮特殊样式 */
+.save-btn {
+  color: #2A9D8F;
+  border-color: rgba(42, 157, 143, 0.3);
+}
+
+.save-btn:hover {
+  background-color: rgba(42, 157, 143, 0.1);
+}
+
+/* 编辑按钮特殊样式 */
+.edit-btn {
+  color: #264653;
+  border-color: rgba(38, 70, 83, 0.3);
+}
+
+.edit-btn:hover {
+  background-color: rgba(38, 70, 83, 0.1);
+}
+
+/* 再次生成按钮特殊样式 */
+.regenerate-btn {
+  color: #E76F51;
+  border-color: rgba(231, 111, 81, 0.3);
+}
+
+.regenerate-btn:hover {
+  background-color: rgba(231, 111, 81, 0.1);
+}
+
+/* 全屏视频容器 */
+.fullscreen-video-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.fullscreen-video-container.active {
+  display: flex;
+}
+
+/* 全屏视频 */
+.fullscreen-video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* 顶部控制区 */
+.fullscreen-top-controls {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+  z-index: 10000;
+  transition: opacity 0.3s ease; /* 添加淡入淡出过渡效果 */
+}
+
+/* 返回按钮 */
+.back-button {
+  width: 40px;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 18px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.back-button:hover {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* 底部控制区 */
+.fullscreen-bottom-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 100%);
+  z-index: 10000;
+  transition: opacity 0.3s ease; /* 添加淡入淡出过渡效果 */
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* 全屏保存按钮 */
+.fullscreen-save-btn {
+  width: 100%;
+  padding: 14px 24px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 0;
+  color: #2A9D8F;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.fullscreen-save-btn i {
+  margin-right: 8px;
+  font-size: 18px;
+}
+
+.fullscreen-save-btn:hover {
+  background-color: rgba(255, 255, 255, 1);
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.fullscreen-save-btn:active {
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 响应式调整 */
+@media (max-width: 480px) {
+  .video-container {
+    max-width: 280px;
+    max-height: 25vh; /* 小屏幕设备高度更小 */
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .video-container {
+    max-width: 350px;
+    max-height: 38vh; /* 中等屏幕设备适中高度 */
+  }
+}
+
+/* 操作按钮 */
+.action-btn {
+  flex: 1;
+  padding: 8px 0;
+  border-radius: 18px;
+  background-color: #F0F2F5;
+  border: none;
+  font-size: 13px;
+  color: #333333;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 操作按钮图标 */
+.action-btn i {
+  margin-right: 4px;
+}
+
+/* 操作按钮悬停状态 */
+.action-btn:hover {
+  background-color: rgba(42, 157, 143, 0.08);
+}
+
+/* 编辑按钮特殊样式 */
+.edit-btn {
+  border: 1px solid rgba(42, 157, 143, 0.3);
+  color: #2A9D8F;
+}
+
+/* 底部输入栏 */
+.smart-input-bar {
+  background-color: rgba(255, 255, 255, 0.98);
+  border-top: 1px solid rgba(0,0,0,0.05);
+  /* padding: 12px 16px; */
+  padding-bottom: calc(12px + env(safe-area-inset-bottom));
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 40;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.smart-input-bar.hidden {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+/* 输入框样式 */
+.ai-composer-input {
+  flex: 1;
+  margin-left: 8px;
+  padding: 9px 16px;
+  background-color: #F0F2F5;
+  border-radius: 18px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--text-main);
+  border: none;
+  resize: none;
+  max-height: 120px;
+  overflow-y: auto;
+  transition: all 0.2s ease;
+}
+
+.ai-composer-input:hover {
+  background-color: #E4E6EB;
+}
+
+.ai-composer-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+.ai-composer-input:focus {
+  border-color: var(--main-color);
+  box-shadow: 0 0 0 3px rgba(42,157,143,0.12), 0 0 8px 0 rgba(42,157,143,0.2);
+  animation: glow-breath 1.6s infinite alternate;
+}
+
+@keyframes glow-breath {
+  0% { box-shadow: 0 0 0 3px rgba(42,157,143,0.10), 0 0 8px 0 rgba(42,157,143,0.1); }
+  100% { box-shadow: 0 0 0 6px rgba(42,157,143,0.18), 0 0 16px 0 rgba(42,157,143,0.2); }
+}
+
+/* 创作面板样式 */
+.creative-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: auto;
+  max-height: 80%;
+  background-color: #fff;
+  z-index: 999;
+  border-radius: 16px 16px 0 0;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.creative-panel.active {
+  transform: translateY(0);
+}
+
+/* 顶部关闭手柄 */
+.close-handle {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 4px;
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.15);
+}
+
+/* 面板内容区 */
+.panel-content {
+  padding: 24px 16px 16px 16px;
+  overflow-y: auto;
+  max-height: calc(100% - 20px);
+}
+
+/* 上传图片区域 */
+.upload-area {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+/* 上传按钮容器 */
+.upload-btn-container {
+  width: 84px;
+  height: 84px;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+/* 上传按钮 */
+.upload-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  background-color: #f7f9fa;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.upload-btn i {
+  font-size: 24px;
+  color: #2a9d8f;
+  margin-bottom: 4px;
+}
+
+.upload-btn span {
+  font-size: 12px;
+  color: #666;
+}
+
+/* 右侧预览区 */
+.upload-preview {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  margin-right: 10px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.upload-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  padding: 0;
+}
+
+/* 描述文本区 */
+/* .text-input-area {
+  margin-bottom: 16px;
+} */
+
+/* .prompt-textarea {
+  width: 100%;
+  height: 80px;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  resize: none;
+  color: #333;
+  background-color: #f7f9fa;
+} */
+
+/* .prompt-textarea:focus {
+  outline: none;
+  border-color: #2a9d8f;
+  background-color: #fff;
+} */
+
+/* 操作按钮行 */
+/* .action-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+} */
+
+/* .action-btn {
+  flex: 1;
+  height: 36px;
+  background-color: white;
+  border: 1px solid #2a9d8f;
+  border-radius: 4px;
+  color: #2a9d8f;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+} */
+
+/* .action-btn.active {
+  background-color: #2a9d8f;
+  border-color: #2a9d8f;
+  color: white;
+} */
+
+.generate-btn {
+  flex: 1;
+  height: 36px;
+  background-color: #2a9d8f;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(42, 157, 143, 0.2);
+}
+
+/* 参数选择区 */
+.params-area {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border-top: 1px solid rgba(0,0,0,0.05);
+  z-index: 10;
+  height: 200px;
+  transition: transform 0.3s ease;
+}
+
+/* 参数选择区 - 隐藏状态 */
+.params-area.hidden {
+  opacity: 0; /* 使用透明度而非display:none */
+  pointer-events: none; /* 防止点击 */
+  visibility: hidden; /* 隐藏但保持布局 */
+}
+
+/* 参数滚动容器 */
+.params-scroll-container {
+  height: 100%;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  padding: 12px 16px;
+}
+
+/* 隐藏滚动条但保持功能 */
+.params-scroll-container::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+/* 参数区域 */
+.param-section {
+  scroll-snap-align: start;
+  margin-bottom: 12px;
+}
+
+/* 参数区域标题 */
+.param-section-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #889096;
+  margin-bottom: 6px;
+}
+
+/* 运镜方式选项 */
+.camera-options {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  gap: 8px;
+  margin-top: 12px;
+  padding-bottom: 8px;
+  justify-content: space-between;
+}
+
+/* 调整运镜选项标签样式以适应横向排列 */
+.camera-options .option-tag {
+  flex: 1; /* 平均分配空间 */
+  min-width: 0; /* 允许收缩 */
+  text-align: center;
+  padding: 10px 0; /* 垂直内边距 */
+  font-size: 13px;
+  border-radius: 8px; /* 更圆的边角 */
+  background-color: #f5f5f5; /* 浅灰色背景 */
+  border: 1px solid #e0e0e0;
+}
+
+/* 选中状态样式 */
+.camera-options .option-tag.active {
+  background-color: #2a9d8f; /* 绿色背景 */
+  border-color: #2a9d8f;
+  color: white;
+  box-shadow: none; /* 移除阴影 */
+}
+
+/* 时长选项 */
+.duration-options {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-top: 12px;
+  padding-bottom: 8px;
+}
+
+.duration-options .option-tag {
+  flex: 1;
+  text-align: center;
+  margin: 0 4px;
+  padding: 10px 0;
+  border-radius: 8px;
+  background-color: #F0F2F5;
+  color: var(--text-main);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* 选中状态样式 */
+.duration-options .option-tag.active {
+  background-color: #2a9d8f;
+  border-color: #2a9d8f;
+  color: white;
+  box-shadow: none;
+}
+
+/* 选项标签通用样式 */
+.option-tag {
+  padding: 8px 10px; /* 进一步减少内边距 */
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px; /* 减小圆角 */
+  font-size: 13px; /* 进一步减小字体大小 */
+  color: #212529;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+  text-align: center;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* 减小阴影 */
+  user-select: none;
+}
+
+.option-tag:active {
+  background-color: #e9ecef;
+  transform: translateY(1px);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
+.option-tag.active {
+  background-color: #2a9d8f;
+  border-color: #2a9d8f;
+  color: white;
+}
+
+/* 参考图区域 */
+.section-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.reference-area {
+  margin-bottom: 20px;
+}
+
+.reference-controls {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.upload-preview-container {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.local-upload-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.03);
+  border: 1px dashed rgba(42, 157, 143, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.local-upload-btn i {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.local-upload-btn:hover {
+  background-color: rgba(42, 157, 143, 0.05);
+}
+
+.reference-preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.reference-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.remove-reference-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 参数设置区域 */
+.params-section {
+  margin-bottom: 20px;
+}
+
+.param-group {
+  margin-bottom: 16px;
+}
+
+.param-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+}
+
+/* 比例选项样式 - 优化版本 */
+.ratio-options {
+  display: flex;
+  flex-direction: column;
+  overflow-x: visible;
+  overflow-y: visible;
+  white-space: normal;
+  padding: 8px 15px; /* 进一步减少内边距 */
+  margin: 0;
+  width: 100%;
+  background-color: #f7f7f7;
+}
+
+.ratio-options::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+/* 标题文本 */
+.ratio-options-title {
+  font-size: 13px; /* 减小字体大小 */
+  color: #889096;
+  margin-bottom: 6px; /* 进一步减少标题底部间距 */
+  font-weight: 600;
+  text-align: left;
+  width: 100%;
+}
+
+/* 比例按钮容器 */
+.ratio-btn-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px; /* 进一步减少选项间距 */
+  width: 100%;
+}
+
+.ratio-btn {
+  flex: 0 0 auto;
+  min-width: 60px; /* 减小宽度 */
+  min-height: 36px; /* 进一步减小高度 */
+  margin: 0 3px 0 0; /* 减少间距 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px; /* 进一步减少内边距 */
+  background-color: #f0f0f0;
+  border-radius: 8px; /* 调整圆角 */
+  border: none;
+  color: #889096;
+  font-size: 12px;
+  font-weight: normal;
+  position: relative;
+  box-shadow: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+/* 隐藏原始复选框 */
+.ratio-checkbox {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* 选中状态 */
+.ratio-btn.active {
+  background-color: #2a9d8f; /* 选中时的绿色背景 */
+  color: white; /* 选中时的白色文字 */
+  transform: none; /* 移除上移效果 */
+  box-shadow: none; /* 移除阴影 */
+}
+
+.ratio-btn:hover {
+  background-color: #e0e0e0; /* 悬停时的背景色 */
+}
+
+.ratio-btn:active {
+  transform: scale(0.95);
+}
+
+/* 适配不同屏幕尺寸 */
+@media (max-width: 360px) {
+  .ratio-btn {
+    min-width: 45px;
+    font-size: 12px;
+    padding: 0 10px;
+  }
+}
+
+.camera-options {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.camera-btn {
+  flex: 1;
+  background: #FFFFFF;
+  border: 1px solid rgba(42, 157, 143, 0.3);
+  color: var(--text-secondary);
+  padding: 8px 0;
+  font-size: 14px;
+  border-radius: 6px;
+  min-height: 36px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-align: center;
+}
+
+.camera-btn:hover {
+  border-color: rgba(42, 157, 143, 0.6);
+}
+
+.camera-btn.active {
+  background-color: var(--main-color);
+  border-color: var(--main-color);
+  color: white;
+  font-weight: 500;
+}
+
+.param-hint {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 6px;
+}
+
+/* 描述输入区域 */
+.description-container {
+  margin-bottom: 16px;
+}
+
+/* 生成按钮容器 */
+.generate-btn-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 5px;
+}
+
+/* 进度浮层 */
+.progress-overlay {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 255, 255, 0.98);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 14px 16px;
+  box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.08);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  transition: all 0.3s ease;
+  transform: translateY(0);
+}
+
+.progress-overlay.hidden {
+  transform: translateY(100%);
+  opacity: 0;
+}
+
+.progress-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 500px;
+}
+
+.progress-ring-wrapper {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+  margin-right: 16px;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+}
+
+.progress-ring-circle-bg {
+  fill: none;
+  stroke: #E6E6EB;
+}
+
+.progress-ring-circle {
+  fill: none;
+  stroke: var(--main-color);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.1s linear;
+}
+
+.progress-percentage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--main-color);
+}
+
+.progress-text-container {
+  flex: 1;
+}
+
+.progress-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.progress-subtext {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+/* 工具类 */
+.hidden {
+  display: none !important;
+}
+
+/* 媒体查询 */
+@media (max-width: 360px) {
+  .camera-btn {
+    font-size: 13px;
+    padding: 8px 0;
+  }
+}
+
+@media (min-width: 768px) {
+  .upload-preview-container {
+    height: 240px;
+  }
+} 
+
+.composer-textarea {
+  flex: 1;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #666;
+  min-height: 44px;
+  margin-left: 8px;
+  line-height: 22px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.composer-textarea:hover {
+  background: #ffffff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+/* 功能按钮 */
+.function-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.function-btn:hover {
+  background-color: var(--menu-hover);
+  color: var(--main-color);
+}
+
+.function-btn:active {
+  background-color: var(--menu-active);
+}
+
+/* 隐藏导航指示器 */
+.nav-dots {
+  display: none;
+} 
+
+/* 用户和AI消息之间的样式 */
+.ai-message {
+  position: relative;
+  margin-top: 0;
+  padding: 0px 8px;
+  background-color: #fafafa;
+} 

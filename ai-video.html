@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图生视频 - 小麦</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      background-color: #f8f8f8;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    }
+    .upload-area {
+      border: 2px dashed #cbd5e0;
+      transition: all 0.3s ease;
+    }
+    .upload-area:hover {
+      border-color: #4299e1;
+    }
+    .video-card {
+      transition: transform 0.3s ease;
+    }
+    .video-card:hover {
+      transform: translateY(-4px);
+    }
+    .video-thumbnail {
+      position: relative;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+    .play-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 48px;
+      height: 48px;
+      background-color: rgba(0, 0, 0, 0.6);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bottom-safe-area {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .video-tag {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    .video-duration {
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    .style-chip {
+      transition: all 0.2s ease;
+    }
+    .style-chip:active {
+      transform: scale(0.95);
+    }
+  </style>
+</head>
+<body class="h-screen flex flex-col">
+  <!-- 顶部导航栏 -->
+  <header class="bg-white shadow-sm fixed top-0 left-0 right-0 z-10">
+    <div class="flex items-center justify-between px-4 py-3">
+      <button class="text-gray-600">
+        <i class="fas fa-arrow-left text-lg"></i>
+      </button>
+      <h1 class="text-lg font-medium flex items-center">
+        小麦
+        <span class="ml-1 bg-green-100 text-green-800 text-xs px-1.5 py-0.5 rounded-full">AI</span>
+      </h1>
+      <button class="text-gray-600" id="menuButton">
+        <i class="fas fa-ellipsis-h text-lg"></i>
+      </button>
+    </div>
+    
+    <!-- 功能标签栏 -->
+    <div class="flex bg-white border-b border-gray-200 overflow-x-auto whitespace-nowrap px-2">
+      <button class="px-4 py-2 text-gray-600">AI对话</button>
+      <button class="px-4 py-2 text-gray-600">AI报价</button>
+      <button class="px-4 py-2 text-gray-600">AI设计</button>
+      <button class="px-4 py-2 text-gray-600">户型诊断</button>
+      <button class="px-4 py-2 text-blue-500 border-b-2 border-blue-500 font-medium">图生视频</button>
+    </div>
+  </header>
+
+  <!-- 主要内容区域 -->
+  <main class="flex-1 overflow-y-auto pt-24 pb-16 px-4 bg-gray-50">
+    <!-- 上传区域 -->
+    <div class="mb-6">
+      <h2 class="text-lg font-medium text-gray-800 mb-3">上传图片生成视频</h2>
+      <p class="text-sm text-gray-600 mb-4">上传家居照片，AI将为您生成精美展示视频</p>
+      
+      <div class="upload-area bg-white rounded-lg p-6 flex flex-col items-center justify-center">
+        <div class="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mb-3">
+          <i class="fas fa-film text-purple-500 text-2xl"></i>
+        </div>
+        <p class="text-gray-800 font-medium mb-1">点击上传图片</p>
+        <p class="text-gray-500 text-sm mb-3">支持JPG、PNG格式，最多5张</p>
+        <button class="bg-purple-500 text-white py-2 px-4 rounded-md hover:bg-purple-600 transition">
+          选择图片
+        </button>
+        <p class="text-gray-500 text-xs mt-3">或直接拖放图片到此处</p>
+      </div>
+    </div>
+    
+    <!-- 视频风格选择 -->
+    <div class="mb-6">
+      <h2 class="text-lg font-medium text-gray-800 mb-3">选择视频风格</h2>
+      
+      <div class="flex overflow-x-auto space-x-2 pb-2">
+        <div class="style-chip flex-shrink-0 bg-white border border-gray-200 rounded-full px-4 py-2 flex items-center">
+          <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mr-2">
+            <i class="fas fa-check text-blue-500 text-xs"></i>
+          </div>
+          <span class="text-sm text-gray-800">简约现代</span>
+        </div>
+        
+        <div class="style-chip flex-shrink-0 bg-white border border-gray-200 rounded-full px-4 py-2 flex items-center">
+          <div class="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center mr-2">
+            <i class="fas fa-circle text-gray-100 text-xs"></i>
+          </div>
+          <span class="text-sm text-gray-800">优雅轻奢</span>
+        </div>
+        
+        <div class="style-chip flex-shrink-0 bg-white border border-gray-200 rounded-full px-4 py-2 flex items-center">
+          <div class="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center mr-2">
+            <i class="fas fa-circle text-gray-100 text-xs"></i>
+          </div>
+          <span class="text-sm text-gray-800">温馨自然</span>
+        </div>
+        
+        <div class="style-chip flex-shrink-0 bg-white border border-gray-200 rounded-full px-4 py-2 flex items-center">
+          <div class="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center mr-2">
+            <i class="fas fa-circle text-gray-100 text-xs"></i>
+          </div>
+          <span class="text-sm text-gray-800">工业风</span>
+        </div>
+        
+        <div class="style-chip flex-shrink-0 bg-white border border-gray-200 rounded-full px-4 py-2 flex items-center">
+          <div class="w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center mr-2">
+            <i class="fas fa-circle text-gray-100 text-xs"></i>
+          </div>
+          <span class="text-sm text-gray-800">更多风格</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 视频时长选择 -->
+    <div class="mb-6">
+      <h2 class="text-lg font-medium text-gray-800 mb-3">视频时长</h2>
+      
+      <div class="grid grid-cols-3 gap-3">
+        <div class="bg-white border-2 border-purple-500 rounded-lg p-3 flex flex-col items-center">
+          <span class="text-lg font-medium text-purple-500">15秒</span>
+          <span class="text-xs text-gray-500 mt-1">免费</span>
+        </div>
+        
+        <div class="bg-white border border-gray-200 rounded-lg p-3 flex flex-col items-center">
+          <span class="text-lg font-medium text-gray-800">30秒</span>
+          <span class="text-xs text-gray-500 mt-1">5积分</span>
+        </div>
+        
+        <div class="bg-white border border-gray-200 rounded-lg p-3 flex flex-col items-center">
+          <span class="text-lg font-medium text-gray-800">60秒</span>
+          <span class="text-xs text-gray-500 mt-1">10积分</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 生成按钮 -->
+    <div class="mb-8">
+      <button class="w-full bg-purple-500 text-white py-3 rounded-md hover:bg-purple-600 transition flex items-center justify-center">
+        <i class="fas fa-magic mr-2"></i>
+        生成视频
+      </button>
+      <p class="text-xs text-gray-500 text-center mt-2">预计生成时间：1-3分钟</p>
+    </div>
+    
+    <!-- 我的视频 -->
+    <div class="mb-6">
+      <div class="flex justify-between items-center mb-3">
+        <h2 class="text-lg font-medium text-gray-800">我的视频</h2>
+        <button class="text-sm text-purple-500">全部</button>
+      </div>
+      
+      <div class="grid grid-cols-1 gap-4">
+        <!-- 视频1 -->
+        <div class="video-card bg-white rounded-lg shadow-sm overflow-hidden">
+          <div class="video-thumbnail">
+            <img src="https://images.unsplash.com/photo-1618219740975-d40978bb7378?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="客厅视频" class="w-full h-48 object-cover">
+            <div class="play-icon">
+              <i class="fas fa-play text-white"></i>
+            </div>
+            <span class="video-tag">客厅展示</span>
+            <span class="video-duration">00:15</span>
+          </div>
+          <div class="p-3">
+            <div class="flex justify-between items-center">
+              <h3 class="font-medium text-gray-800">北欧风客厅展示</h3>
+              <span class="text-xs text-gray-500">今天</span>
+            </div>
+            <div class="flex justify-between items-center mt-2">
+              <div class="flex items-center">
+                <i class="fas fa-eye text-gray-400 text-xs mr-1"></i>
+                <span class="text-xs text-gray-500">128</span>
+                <i class="fas fa-heart text-gray-400 text-xs ml-3 mr-1"></i>
+                <span class="text-xs text-gray-500">24</span>
+              </div>
+              <div class="flex">
+                <button class="text-gray-400 p-1">
+                  <i class="fas fa-share-alt text-sm"></i>
+                </button>
+                <button class="text-gray-400 p-1 ml-1">
+                  <i class="fas fa-download text-sm"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 视频2 -->
+        <div class="video-card bg-white rounded-lg shadow-sm overflow-hidden">
+          <div class="video-thumbnail">
+            <img src="https://images.unsplash.com/photo-1616046229478-9901c5536a45?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="卧室视频" class="w-full h-48 object-cover">
+            <div class="play-icon">
+              <i class="fas fa-play text-white"></i>
+            </div>
+            <span class="video-tag">卧室展示</span>
+            <span class="video-duration">00:30</span>
+          </div>
+          <div class="p-3">
+            <div class="flex justify-between items-center">
+              <h3 class="font-medium text-gray-800">简约风卧室展示</h3>
+              <span class="text-xs text-gray-500">昨天</span>
+            </div>
+            <div class="flex justify-between items-center mt-2">
+              <div class="flex items-center">
+                <i class="fas fa-eye text-gray-400 text-xs mr-1"></i>
+                <span class="text-xs text-gray-500">256</span>
+                <i class="fas fa-heart text-gray-400 text-xs ml-3 mr-1"></i>
+                <span class="text-xs text-gray-500">42</span>
+              </div>
+              <div class="flex">
+                <button class="text-gray-400 p-1">
+                  <i class="fas fa-share-alt text-sm"></i>
+                </button>
+                <button class="text-gray-400 p-1 ml-1">
+                  <i class="fas fa-download text-sm"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 热门视频 -->
+    <div class="mb-6">
+      <div class="flex justify-between items-center mb-3">
+        <h2 class="text-lg font-medium text-gray-800">热门视频</h2>
+        <button class="text-sm text-purple-500">更多</button>
+      </div>
+      
+      <div class="grid grid-cols-2 gap-3">
+        <div class="video-card">
+          <div class="video-thumbnail">
+            <img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" alt="客厅视频" class="w-full h-32 object-cover">
+            <div class="play-icon w-8 h-8">
+              <i class="fas fa-play text-white text-xs"></i>
+            </div>
+            <span class="video-duration text-xs">00:15</span>
+          </div>
+          <p class="text-xs mt-2 text-gray-800">现代简约风格客厅</p>
+        </div>
+        
+        <div class="video-card">
+          <div class="video-thumbnail">
+            <img src="https://images.unsplash.com/photo-1600210492493-0946911123ea?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" alt="厨房视频" class="w-full h-32 object-cover">
+            <div class="play-icon w-8 h-8">
+              <i class="fas fa-play text-white text-xs"></i>
+            </div>
+            <span class="video-duration text-xs">00:30</span>
+          </div>
+          <p class="text-xs mt-2 text-gray-800">北欧风开放式厨房</p>
+        </div>
+        
+        <div class="video-card">
+          <div class="video-thumbnail">
+            <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" alt="卧室视频" class="w-full h-32 object-cover">
+            <div class="play-icon w-8 h-8">
+              <i class="fas fa-play text-white text-xs"></i>
+            </div>
+            <span class="video-duration text-xs">00:15</span>
+          </div>
+          <p class="text-xs mt-2 text-gray-800">日式风格主卧室</p>
+        </div>
+        
+        <div class="video-card">
+          <div class="video-thumbnail">
+            <img src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=80" alt="书房视频" class="w-full h-32 object-cover">
+            <div class="play-icon w-8 h-8">
+              <i class="fas fa-play text-white text-xs"></i>
+            </div>
+            <span class="video-duration text-xs">00:30</span>
+          </div>
+          <p class="text-xs mt-2 text-gray-800">工业风格书房设计</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 底部输入区域 -->
+  <footer class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 bottom-safe-area">
+    <div class="flex items-center">
+      <button class="p-2 text-gray-500 rounded-full hover:bg-gray-100">
+        <i class="fas fa-image"></i>
+      </button>
+      <div class="flex-1 mx-2 bg-gray-100 rounded-full flex items-center px-4 py-2">
+        <input type="text" placeholder="描述您想要的视频效果..." class="bg-transparent w-full focus:outline-none text-gray-700">
+        <button class="ml-2 text-gray-400">
+          <i class="fas fa-microphone"></i>
+        </button>
+      </div>
+      <button class="p-2 bg-purple-500 text-white rounded-full hover:bg-purple-600">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </footer>
+
+  <script>
+    // 功能菜单切换
+    const menuButton = document.getElementById('menuButton');
+    
+    menuButton.addEventListener('click', () => {
+      // 功能菜单切换逻辑
+    });
+    
+    // 风格选择
+    const styleChips = document.querySelectorAll('.style-chip');
+    styleChips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        // 风格选择逻辑
+        styleChips.forEach(c => {
+          const checkIcon = c.querySelector('i');
+          checkIcon.className = 'fas fa-circle text-gray-100 text-xs';
+          c.querySelector('div').className = 'w-6 h-6 rounded-full bg-gray-100 flex items-center justify-center mr-2';
+        });
+        
+        const checkIcon = chip.querySelector('i');
+        checkIcon.className = 'fas fa-check text-blue-500 text-xs';
+        chip.querySelector('div').className = 'w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center mr-2';
+      });
+    });
+    
+    // 视频时长选择
+    const durationBoxes = document.querySelectorAll('.grid.grid-cols-3 > div');
+    durationBoxes.forEach(box => {
+      box.addEventListener('click', () => {
+        // 时长选择逻辑
+        durationBoxes.forEach(b => {
+          b.className = 'bg-white border border-gray-200 rounded-lg p-3 flex flex-col items-center';
+          b.querySelector('span:first-child').className = 'text-lg font-medium text-gray-800';
+        });
+        
+        box.className = 'bg-white border-2 border-purple-500 rounded-lg p-3 flex flex-col items-center';
+        box.querySelector('span:first-child').className = 'text-lg font-medium text-purple-500';
+      });
+    });
+  </script>
+</body>
+</html> 

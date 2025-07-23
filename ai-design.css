@@ -1,0 +1,2788 @@
+:root {
+  --main-color: #2a9d8f; /* 活力松石绿 - 主色/用户 */
+  --accent-color: #e9c46a; /* 温暖鹅卵黄 - 辅助/强调 */
+  --ai-color: #FFFFFF; /* 纯净白 - AI/中性 */
+  --bg-color: #F7FAFA; /* 薄荷雾 - 页面背景 */
+  --text-main: #264653; /* 深海石墨 - 主要文字 */
+  --text-secondary: #889096; /* 中性灰 - 次要文字/图标 */
+  --inactive-btn: #DCE1E3; /* 非激活按钮背景色 */
+  --menu-hover: rgba(42, 157, 143, 0.08); /* 菜单悬停背景色 */
+  --menu-active: #EAF6F5; /* 菜单激活背景色 */
+}
+
+.bg-mintfog {
+  background-color: #F7FAFA;
+}
+
+/* 隐藏所有垂直滚动条 */
+::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  -ms-overflow-style: none;  /* IE 和 Edge */
+  scrollbar-width: none;  /* Firefox */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: "SF Pro Text", "PingFang SC", "Helvetica Neue", Arial, "Microsoft YaHei", sans-serif;
+}
+
+main {
+  background-color: var(--bg-color);
+}
+
+header {
+  background-color: var(--ai-color);
+}
+
+header h1, header button {
+  color: var(--text-main);
+}
+
+header button i {
+  color: var(--text-secondary);
+}
+
+/* 菜单样式 */
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 6px 16px;
+  border-radius: 12px;
+  margin-bottom: 2px;
+  transition: all 0.25s ease;
+  position: relative;
+  color: var(--text-main);
+  background-color: transparent;
+}
+
+.menu-item svg {
+  transition: stroke 0.25s ease;
+}
+
+.menu-section-title {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #889096;
+  padding: 8px 16px 8px;
+  margin: 0;
+}
+
+.menu-item:hover {
+  background-color: var(--menu-hover);
+}
+
+.menu-item.active {
+  background-color: #EAF6F5;
+  font-weight: 600;
+}
+
+.menu-item.active .menu-icon svg {
+  stroke: var(--main-color);
+}
+
+.menu-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  color: var(--text-secondary);
+}
+
+.current-indicator {
+  position: absolute;
+  right: 16px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--main-color);
+  display: none; /* 隐藏小圆点指示器，因为我们使用背景色和图标颜色来标识 */
+}
+
+#menuOverlay {
+  backdrop-filter: blur(2px);
+  z-index: 998; /* 确保低于创作面板(z-index: 999)但高于其他元素 */
+}
+
+/* 菜单头部样式 */
+.menu-header {
+  background: rgba(30, 35, 40, 0.95); /* 与创作面板相同的背景色 */
+  color: #FFFFFF; /* 白色文本 */
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* 更新边框颜色 */
+}
+
+.menu-header-content {
+  padding: 12px 15px;
+}
+
+/* 新的菜单头部行样式 */
+.menu-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0;
+}
+
+.menu-close-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(136, 144, 150, 0.1);
+  transition: all 0.2s ease;
+  margin-left: 10px;
+}
+
+.menu-close-btn:hover {
+  background-color: rgba(136, 144, 150, 0.2);
+  transform: rotate(90deg);
+}
+
+.menu-close-btn:active {
+  transform: rotate(90deg) scale(0.9);
+}
+
+/* 用户信息样式 */
+.user-profile {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(136, 144, 150, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.user-info {
+  flex: 1;
+}
+
+.user-name {
+  font-weight: 500;
+  font-size: 15px;
+  margin-bottom: 0;
+}
+
+.text-neutral-gray {
+  color: #889096;
+}
+
+.user-status {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #4ade80;
+  margin-right: 4px;
+}
+
+/* 设置页面样式 */
+#settingsPage {
+  overflow-y: auto;
+  z-index: 50; /* 确保在输入框之上 */
+}
+
+.settings-header {
+  background-color: var(--ai-color);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.settings-section {
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+
+.settings-section-title {
+  font-size: 11px;
+  font-weight: 500;
+  color: #889096;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 14px 0 6px;
+  padding: 0 16px;
+}
+
+.settings-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.settings-item:last-child {
+  border-bottom: none;
+}
+
+.settings-item-left {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.settings-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.settings-item-content {
+  flex: 1;
+}
+
+.settings-item-title {
+  font-weight: 500;
+  margin-bottom: 0;
+  font-size: 15px;
+}
+
+.settings-item-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 1px;
+}
+
+.settings-item-right {
+  display: flex;
+  align-items: center;
+}
+
+.settings-item-value {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-right: 8px;
+}
+
+.chevron-icon {
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+.user-avatar-small {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: rgba(59, 130, 246, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8px;
+}
+
+/* 智能输入栏样式 */
+.smart-input-bar {
+  background-color: var(--ai-color);
+  border-top: 1px solid rgba(0,0,0,0.05);
+  padding-bottom: env(safe-area-inset-bottom);
+  position: sticky;
+  bottom: 0;
+  z-index: 40;
+}
+
+.function-btn, .action-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.function-btn:active, .action-btn:active {
+  transform: scale(0.9);
+}
+
+.input-wrapper {
+  background-color: var(--bg-color);
+  border-radius: 20px;
+  padding: 8px 12px;
+  min-height: 40px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.pills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.composer-textarea {
+  border: none;
+  background: none;
+  resize: none;
+  padding: 0;
+  font-size: 16px;
+  line-height: 1.4;
+  width: 100%;
+  color: var(--text-main);
+  transition: height 0.2s ease;
+}
+
+.composer-textarea:focus {
+  outline: none;
+}
+
+.composer-textarea::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+/* 发送按钮样式 */
+.action-btn#sendBtn {
+  color: var(--inactive-btn);
+  opacity: 0;
+  transform: translateX(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
+}
+
+.action-btn#sendBtn[disabled] {
+  pointer-events: none;
+}
+
+.action-btn#sendBtn.active {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--main-color);
+}
+
+/* 上传按钮样式 */
+.action-btn#uploadBtn {
+  color: var(--text-secondary);
+  background-color: var(--bg-color);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.action-btn#uploadBtn:active {
+  background-color: rgba(42, 157, 143, 0.1);
+  color: var(--main-color);
+}
+
+/* 功能切换按钮样式 */
+.function-btn#typeToggleBtn {
+  color: var(--text-secondary);
+}
+
+.function-btn#typeToggleBtn:active {
+  color: var(--main-color);
+}
+
+/* 参数Pills样式 */
+.param-pill {
+  display: inline-flex;
+  align-items: center;
+  background-color: rgba(42, 157, 143, 0.1);
+  color: var(--main-color);
+  border-radius: 16px;
+  padding: 4px 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.param-pill:hover {
+  background-color: rgba(42, 157, 143, 0.15);
+}
+
+.remove-pill-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.1);
+  border: none;
+  font-size: 10px;
+  color: var(--main-color);
+  transition: background-color 0.2s ease;
+}
+
+.remove-pill-btn:hover {
+  background-color: rgba(0,0,0,0.2);
+}
+
+/* 底部抽屉样式 */
+.bottom-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--ai-color);
+  border-top-left-radius: 16px;
+  border-top-right-radius: 16px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+  z-index: 60;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.bottom-sheet.visible {
+  transform: translateY(0);
+}
+
+.bottom-sheet-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.sheet-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.close-sheet-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.05);
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.close-sheet-btn:active {
+  transform: scale(0.9);
+  background: rgba(0,0,0,0.1);
+}
+
+.sheet-options {
+  padding: 12px 16px;
+  max-height: 60vh;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.option-btn {
+  background-color: var(--bg-color);
+  border: none;
+  border-radius: 12px;
+  padding: 12px 8px;
+  font-size: 14px;
+  color: var(--text-main);
+  text-align: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.option-btn:active {
+  transform: scale(0.98);
+  background-color: rgba(42, 157, 143, 0.1);
+  color: var(--main-color);
+} 
+
+/* 沉浸式创作模式样式 */
+.creative-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 63%;  /* 增加面板高度，原来是50% */
+  background-color: #fff;
+  z-index: 999;
+  border-radius: 24px 24px 0 0;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.2);
+}
+
+.creative-panel.active {
+  transform: translateY(0);
+}
+
+/* 创作面板内容 */
+.creative-panel-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+/* 参考图区域 */
+.reference-area {
+  padding: 16px 16px 0px 16px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.reference-area::-webkit-scrollbar {
+  display: none;
+}
+
+/* 参考区域控制容器 - 新增样式 */
+.reference-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  /* margin-bottom: 10px; */
+  padding: 4px 0;
+}
+
+/* 上传按钮容器 - 修改样式 */
+.upload-btn-container {
+  flex-shrink: 0;
+}
+
+/* 本地上传按钮 - 修改样式 */
+.local-upload-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.03);
+  border: 1px dashed rgba(0,0,0,0.15);
+  border-radius: 12px;
+  padding: 10px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  color: var(--text-secondary);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* 示例图缩略图行 - 修改样式 */
+.example-thumbs-row {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 4px 0;
+  transition: opacity 0.3s ease, max-height 0.3s ease;
+  opacity: 1;
+  max-height: 100px;
+}
+
+/* 示例图缩略图行隐藏时的样式 */
+.example-thumbs-row.hidden {
+  opacity: 0;
+  max-height: 0;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+}
+
+/* 示例图缩略图容器 - 修改样式 */
+.example-thumb-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+}
+
+/* 示例图缩略图 - 调整样式 */
+.example-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+/* 示例图标签 - 调整位置 */
+.example-thumb-tag {
+  position: absolute;
+  bottom: 4px;
+  left: 4px;
+  right: 4px;
+  background-color: rgba(0,0,0,0.5);
+  color: white;
+  font-size: 10px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* 移除参考图按钮 */
+.remove-reference-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.remove-reference-btn:active {
+  transform: scale(0.9);
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* 隐藏元素 */
+.hidden {
+  display: none !important;
+}
+
+/* 文本编辑区域 */
+.text-edit-area {
+  flex: 0 0 auto; /* 改为固定高度，不再自动伸展 */
+  position: relative;
+  /* padding: 10px 16px 10px 16px; 减小上下内边距 */
+  display: flex;
+  flex-direction: column;
+}
+
+/* 创作文本区域 */
+.creative-textarea {
+  width: 100%;
+  height: 60px; /* 固定高度为两行 */
+  border: none;
+  background: none;
+  color: #fff; /* 白色文本，提高可读性 */
+  font-size: 16px;
+  line-height: 1.5;
+  padding: 0;
+  resize: none;
+  outline: none;
+  overflow-y: auto;
+  display: block;
+  font-family: inherit;
+  caret-color: #2a9d8f; /* 自定义光标颜色 */
+}
+
+.creative-textarea:focus {
+  outline: none;
+}
+
+.creative-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5); /* 提高占位符对比度 */
+}
+
+/* 隐藏原始textarea */
+.creative-textarea.hidden {
+  display: none;
+}
+
+/* 格式化文本区域 */
+.formatted-text-area {
+  /* background-color: rgba(30, 35, 40, 0.3); 与创作面板颜色协调的背景色 */
+  border-radius: 12px;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #FFFFFF; /* 改为白色文本以适应深色背景 */
+  overflow-y: auto;
+  min-height: 120px;
+  max-height: 240px;
+  /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); */
+  display: flex;
+  flex-direction: column;
+  /* margin: 10px 0; */
+  /* border: 1px solid rgba(255, 255, 255, 0.1); 添加微妙的边框 */
+}
+
+.formatted-text-area:focus {
+  outline: none;
+}
+
+/* 可点击关键词样式 */
+.keyword {
+  display: inline-block;
+  background-color: rgba(42, 157, 143, 0.15);
+  border-radius: 4px;
+  padding: 0 4px;
+  margin: 0 1px;
+  color: #2a9d8f;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.keyword:hover {
+  background-color: rgba(42, 157, 143, 0.25);
+}
+
+.keyword:active {
+  transform: scale(0.98);
+  background-color: rgba(42, 157, 143, 0.3);
+}
+
+/* 不同类型关键词样式 */
+.keyword.design-type {
+  background-color: #EAF6F5;
+  color: #2a9d8f;
+}
+
+.keyword.style-type {
+  background-color: #EAF6F5;
+  color: #2a9d8f;
+}
+
+.keyword.room-type {
+  background-color: #EAF6F5;
+  color: #2a9d8f;
+}
+
+/* AI参数工具栏样式 */
+.ai-tools-bar {
+  padding: 10px 16px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  margin-top: auto; /* 确保工具栏紧贴文本编辑区 */
+  background-color: #fff; /* 确保背景透明 */
+}
+
+/* 调整ai-tools-bar的z-index确保在选项面板上方 */
+.ai-tools-bar {
+  background-color: transparent; /* 移除原有的白色背景 */
+  border-top: none; /* 移除分隔线 */
+  padding: 8px 0;
+  position: relative;
+}
+
+/* 模板按钮组 */
+.template-buttons {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* 风格按钮行 */
+.template-row {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0;
+  margin-top: 8px;
+  border-top: 1px solid rgba(0,0,0,0.05);
+  order: 2; /* 确保选项行在按钮行下方 */
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+/* 显示模板行 */
+.template-row.visible {
+  max-height: 500px; /* 足够大的值以容纳内容 */
+  opacity: 1;
+}
+
+/* 选项区域样式 */
+.options-section {
+  margin-bottom: 16px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.options-title {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7); /* 更亮的标题文本颜色 */
+  margin: 0 0 8px 0;
+  padding: 0 0 0 15px;
+}
+
+.options-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 0 15px;
+  gap: 10px;
+  margin-bottom: 12px;
+  -webkit-overflow-scrolling: touch; /* 提供iOS滑动惯性 */
+  scrollbar-width: none; /* 隐藏Firefox滚动条 */
+  animation: slideRight 0.4s ease-out;
+  position: relative; /* 为滚动指示器提供定位上下文 */
+}
+
+.options-grid::-webkit-scrollbar {
+  display: none; /* 隐藏WebKit滚动条 */
+}
+
+/* 风格按钮样式 */
+.style-btn {
+  background: rgba(255, 255, 255, 0.1); /* 半透明白色背景 */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.9); /* 白色文本 */
+  padding: 8px 16px;
+  font-size: 13px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+  animation: scaleIn 0.3s ease-out forwards;
+  opacity: 0;
+  transform: scale(0.9);
+  animation-fill-mode: forwards;
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent; /* 移除移动端点击高亮 */
+}
+
+.style-btn:nth-child(1) { animation-delay: 0.05s; }
+.style-btn:nth-child(2) { animation-delay: 0.1s; }
+.style-btn:nth-child(3) { animation-delay: 0.15s; }
+.style-btn:nth-child(4) { animation-delay: 0.2s; }
+.style-btn:nth-child(5) { animation-delay: 0.25s; }
+.style-btn:nth-child(6) { animation-delay: 0.3s; }
+
+/* 选项按钮激活状态 */
+.style-btn.active {
+  background-color: var(--main-color);
+  border: 1px solid var(--main-color);
+  color: #fff;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(42, 157, 143, 0.3);
+  position: relative;
+}
+
+/* 选中效果 - 波纹动画 */
+.style-btn.active::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(42, 157, 143, 0.3);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%, -50%);
+  transform-origin: 0% 0%;
+  animation: ripple 1.5s ease-out infinite;
+}
+
+/* 选中效果 - 边框动画 */
+.style-btn.active::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid var(--main-color);
+  border-radius: 8px;
+  animation: pulse-border 2s infinite;
+}
+
+/* 选项按钮点击状态 */
+.style-btn:active {
+  transform: scale(0.95) translateY(0);
+  background-color: rgba(42, 157, 143, 0.15);
+}
+
+/* 选中动画元素 */
+.selection-anim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(42, 157, 143, 0.2);
+  border-radius: 8px;
+  transform: scale(0);
+  opacity: 1;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* 动画关键帧 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideRight {
+  from {
+    transform: translateX(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 调整按钮行的位置和布局 */
+.room-buttons {
+  display: flex;
+  gap: 10px;
+  padding: 5px 0;
+  order: 1; /* 确保按钮行在选项行上方 */
+  justify-content: flex-start; /* 左对齐按钮 */
+  align-items: center;
+  width: 100%;
+  position: relative; /* 为绝对定位的子元素提供参考 */
+}
+
+/* 房间按钮样式 */
+.room-btn {
+  background: #FFFFFF;
+  border: 1px solid rgba(42, 157, 143, 0.3);
+  color: #889096;
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 6px;
+  min-height: 36px;
+  min-width: 70px;
+  text-align: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+/* 房间按钮激活状态 */
+.room-btn.active {
+  background: #2a9d8f;
+  border-color: #2a9d8f;
+  color: #FFFFFF;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(42, 157, 143, 0.2);
+}
+
+/* 生成按钮样式 */
+.generate-btn {
+  background-color: #2a9d8f;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px; /* 稍微增大圆角 */
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 16px;
+  min-height: 36px;
+  flex: 1;
+  margin-left: 10px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+  pointer-events: auto;
+  width: auto;
+  max-width: none;
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.1), 0 2px 6px rgba(42, 157, 143, 0.2); /* 内阴影+纸面阴影 */
+}
+
+/* 生成按钮悬停态 */
+.generate-btn:hover {
+  background-color: #238579;
+  transform: translateY(-1px);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.1), 0 4px 8px rgba(42, 157, 143, 0.25); /* 悬停时增强阴影 */
+}
+
+/* 生成按钮点击态 */
+.generate-btn:active:not([disabled]) {
+  transform: scale(0.98) translateY(0);
+  background-color: #207a70;
+  box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(42, 157, 143, 0.15); /* 点击时改变阴影方向 */
+}
+
+/* 禁用态生成按钮 */
+.generate-btn[disabled] {
+  background-color: #64748B;
+  opacity: 0.7;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* 改进按钮组布局 */
+.room-buttons {
+  display: flex;
+  gap: 8px;
+  padding: 5px 0;
+  order: 1;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+/* 确保其他按钮宽度合理 */
+.room-buttons .room-btn:not([data-room="比例"]) {
+  flex: 0 1 auto;
+}
+
+/* 选项部分标题样式 */
+.options-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333333;
+  margin: 0 0 12px;
+  padding: 4px 0 4px 4px;
+}
+
+/* 选项部分间距 */
+.options-section {
+  margin-bottom: 16px;
+  position: relative;
+  padding-top: 4px;
+}
+
+.options-section:not(:last-child):after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 4px;
+  right: 4px;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* 关闭按钮样式 */
+.close-creative-btn {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 5px;
+  border-radius: 3px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-creative-btn i {
+  display: none; /* 隐藏图标，只显示横条 */
+}
+
+/* 键盘弹出时的样式调整 */
+@media (max-height: 500px) {
+  .creative-panel {
+    height: 100vh;
+  }
+  
+  .reference-area {
+    display: none; /* 键盘弹出时隐藏参考图区域 */
+  }
+  
+  .text-edit-area {
+    margin-bottom: 8px;
+    min-height: 80px;
+  }
+  
+  .creative-textarea {
+    min-height: 80px;
+  }
+  
+  .ai-tools-bar {
+    padding-top: 8px;
+  }
+  
+  .template-buttons {
+    margin-bottom: 8px;
+  }
+  
+  .template-row {
+    margin-bottom: 8px;
+  }
+  
+  .room-buttons {
+    margin-bottom: 8px;
+  }
+} 
+
+/* 键盘弹出时的样式调整 */
+.keyboard-open .template-row {
+  position: relative;
+  z-index: 10; /* 确保在输入法上方 */
+  background-color: rgba(30, 35, 40, 0.95); /* 与创作面板相同的背景色 */
+  padding-bottom: 15px; /* 增加底部间距 */
+  animation: slideUp 0.3s ease-out;
+  max-height: 60vh; /* 限制最大高度 */
+  overflow-y: auto; /* 允许滚动 */
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+} 
+
+/* 键盘弹出时的样式调整 */
+.keyboard-open .creative-panel {
+  height: 100vh;
+}
+
+.creative-panel.keyboard-mode .reference-area {
+  display: none;
+}
+
+.creative-panel.keyboard-mode .text-edit-area {
+  margin: 5px 0;
+  height: 60px; /* 保持两行文字的高度 */
+}
+
+.creative-panel.keyboard-mode .creative-textarea {
+  height: 60px; /* 保持两行文字的高度 */
+} 
+
+/* 响应式设计 */
+@media (max-width: 360px) {
+  /* 小屏幕手机 */
+  .room-btn {
+    padding: 6px 8px;
+    font-size: 13px;
+  }
+  
+  .options-title {
+    font-size: 13px;
+  }
+  
+  .style-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 768px) {
+  /* 平板和大屏幕 */
+  .options-grid {
+    gap: 15px;
+    padding: 0 20px;
+  }
+  
+  .style-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  .options-title {
+    font-size: 15px;
+    margin: 0 0 12px 0;
+    padding: 0 0 0 20px;
+  }
+}
+
+/* 深色模式支持 */
+@media (prefers-color-scheme: dark) {
+  .style-btn {
+    border-color: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .style-btn.active {
+    background-color: rgba(42, 157, 143, 0.2);
+    color: var(--main-color);
+    border-color: var(--main-color);
+  }
+  
+  .options-title {
+    color: rgba(255, 255, 255, 0.6);
+  }
+} 
+
+/* 波纹动画关键帧 */
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0) translate(-50%, -50%);
+    opacity: 1;
+  }
+  40% {
+    transform: scale(20, 20) translate(-50%, -50%);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(40, 40) translate(-50%, -50%);
+    opacity: 0;
+  }
+}
+
+/* 边框脉冲动画 */
+@keyframes pulse-border {
+  0% {
+    box-shadow: 0 0 0 0 rgba(42, 157, 143, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 5px rgba(42, 157, 143, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(42, 157, 143, 0);
+  }
+} 
+
+/* 性能优化 - 减少动画 */
+.reduce-animations .style-btn {
+  animation: none !important;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease !important;
+}
+
+.reduce-animations .style-btn.active::after,
+.reduce-animations .style-btn.active::before {
+  animation: none !important;
+  display: none !important;
+}
+
+.reduce-animations .options-section,
+.reduce-animations .options-grid {
+  animation: none !important;
+}
+
+/* 触摸反馈优化 */
+@media (hover: hover) {
+  /* 仅在支持悬停的设备上应用悬停效果 */
+  .style-btn:hover:not(.active) {
+    background-color: rgba(136, 144, 150, 0.05);
+    transform: translateY(-1px);
+  }
+  
+  .room-btn:hover:not(.active) {
+    background-color: rgba(136, 144, 150, 0.05);
+  }
+}
+
+/* 增强触摸区域 */
+.room-btn {
+  min-height: 36px; /* 确保按钮高度足够用于触摸 */
+  min-width: 60px; /* 确保按钮宽度足够用于触摸 */
+}
+
+.style-btn {
+  background: #F0F0F0;
+  min-height: 36px;
+  min-width: 60px;
+  color: #889096
+}
+
+/* 滚动优化 */
+.options-grid {
+  -webkit-overflow-scrolling: touch; /* 提供iOS滑动惯性 */
+  scroll-snap-type: x mandatory; /* 添加滚动捕捉 */
+  padding-bottom: 5px; /* 为滚动条留出空间 */
+}
+
+.style-btn {
+  scroll-snap-align: start; /* 滚动捕捉对齐 */
+} 
+
+/* 触摸设备优化 */
+.touch-device .style-btn {
+  padding: 10px 18px; /* 增大触摸区域 */
+}
+
+.touch-device .room-btn {
+  padding: 8px 14px; /* 增大触摸区域 */
+}
+
+/* 触摸激活状态 */
+.touch-active {
+  background-color: rgba(136, 144, 150, 0.1) !important;
+  transform: scale(0.98) !important;
+}
+
+/* 滚动指示器 */
+.options-grid::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  background: linear-gradient(90deg, rgba(30, 35, 40, 0) 0%, rgba(30, 35, 40, 0.95) 80%); /* 与深色背景匹配的渐变 */
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* 比例选项容器的滚动指示器 */
+#ratioOptions .options-grid::after {
+  background: linear-gradient(to right, rgba(26, 30, 35, 0), rgba(26, 30, 35, 0.7));
+}
+
+.options-grid.has-more::after {
+  opacity: 1;
+}
+
+/* 可访问性增强 */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+} 
+
+/* 比例选项容器样式 */
+#ratioOptions {
+  background-color: #1a1e23; /* 确保与创作面板背景色一致 */
+}
+
+/* 比例按钮特殊样式 */
+.style-btn[data-type="比例"] {
+  position: relative;
+  padding-left: 32px; /* 为比例图标留出空间 */
+}
+
+.style-btn[data-type="比例"]::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  opacity: 0.8;
+}
+
+/* 不同比例的图标形状 */
+.style-btn[data-style="9:16"]::before {
+  width: 9px;
+  height: 16px;
+}
+
+.style-btn[data-style="3:4"]::before {
+  width: 12px;
+  height: 16px;
+}
+
+.style-btn[data-style="2:3"]::before {
+  width: 12px;
+  height: 18px;
+}
+
+.style-btn[data-style="1:1"]::before {
+  width: 14px;
+  height: 14px;
+}
+
+.style-btn[data-style="3:2"]::before {
+  width: 18px;
+  height: 12px;
+}
+
+/* 比例按钮激活状态 */
+.style-btn[data-type="比例"].active::before {
+  border-color: var(--main-color);
+  background-color: rgba(42, 157, 143, 0.1);
+} 
+
+/* 快速示例图区域 */
+.quick-examples {
+  display: none;
+  flex-direction: row; /* 水平排列 */
+  gap: 15px; /* 增加间距防止误触 */
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.quick-examples.visible {
+  display: flex !important;
+  opacity: 1;
+}
+
+.example-thumb-container {
+  position: relative;
+  width: 88px; /* 增加至少44pt×44pt的触摸区域 */
+  height: 88px; /* 增加至少44pt×44pt的触摸区域 */
+  cursor: pointer;
+  border-radius: 12px; /* 与添加参考按钮一致 */
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  flex-shrink: 0;
+}
+
+.example-thumb-container:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.example-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block !important;
+}
+
+.example-thumb-tag {
+  position: absolute;
+  bottom: 5px; /* 改为底部显示 */
+  left: 5px;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 12px; /* 稍微增大字体 */
+  padding: 3px 8px; /* 增加内边距 */
+  border-radius: 4px;
+  pointer-events: none;
+} 
+
+/* 本地上传按钮样式 */
+.upload-btn-container {
+  flex-shrink: 0;
+  margin-right: 0; /* 移除右边距，使用gap控制间距 */
+}
+
+.local-upload-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px dashed rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px; /* 增大字体提高可读性 */
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.local-upload-btn i {
+  font-size: 22px;
+  margin-bottom: 5px;
+}
+
+.local-upload-btn span {
+  font-size: 12px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+.local-upload-btn:hover {
+  background-color: rgba(42, 157, 143, 0.08);
+  border-color: var(--main-color);
+  color: var(--main-color);
+}
+
+.local-upload-btn:active {
+  transform: scale(0.95);
+  background-color: rgba(42, 157, 143, 0.12);
+}
+
+/* 上传预览容器 */
+.upload-preview-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+}
+
+/* 本地上传按钮 - 修改样式 */
+.local-upload-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.03);
+  border: 1px dashed rgba(0,0,0,0.15);
+  border-radius: 12px;
+  padding: 10px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  color: var(--text-secondary);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* 参考图预览区域 */
+.reference-preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+
+/* 参考图预览区域内的图片 */
+.reference-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+} 
+
+/* 模板部分的样式 */
+.template-part {
+  color: var(--text-main);
+  position: relative;
+  display: inline-block;
+  background-color: rgba(42, 157, 143, 0.05);
+  padding: 0 4px;
+  margin-right: 2px;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: default;
+  user-select: none;
+}
+
+.template-part::after {
+  content: "";
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--main-color);
+  opacity: 0.6;
+}
+
+.formatted-text-area:focus .template-part {
+  background-color: rgba(42, 157, 143, 0.08);
+} 
+
+/* 键盘位置选项面板样式 */
+.keyboard-options-panel {
+  position: absolute; /* 改为absolute定位，在创作面板内部定位 */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 176px; /* 与键盘高度相近 */
+  /* background-color: rgba(30, 35, 40, 0.95); 与创作面板相同的深色背景 */
+  /* border-top: 1px solid rgba(255, 255, 255, 0.1); 更新边框颜色 */
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  z-index: 10; /* 确保在创作面板内部的层级 */
+  display: none;
+  transition: transform 0.25s ease;
+  transform: translateY(100%);
+  overflow: hidden;
+}
+
+.keyboard-options-panel.visible {
+  display: block;
+  transform: translateY(0);
+}
+
+.options-scroll-container {
+  height: 100%;
+  overflow-y: auto;
+  padding: 0px 5px 0px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 选项部分的样式 */
+.options-section {
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.options-section:not(:last-child):after {
+  /* content: ""; */
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.options-title {
+  /* font-size: 16px; */
+  font-weight: 600;
+  color: #889096;
+  /* margin: 0 0 12px; */
+}
+
+/* 水印选项样式 */
+.watermark-options {
+  padding: 4px 0;
+}
+
+.watermark-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.toggle-label {
+  font-size: 14px;
+  color: var(--text-main);
+}
+
+/* 调整选项网格样式 */
+.options-grid {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin: 0 -4px;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 开关按钮样式 */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.1);
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+}
+
+input:checked + .slider {
+  background-color: var(--main-color);
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+.slider.round {
+  border-radius: 24px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+} 
+
+/* 调整按钮激活状态 */
+.room-btn.active {
+  background-color: var(--main-color);
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(42, 157, 143, 0.25);
+} 
+
+/* 创作面板的布局容器 */
+.creative-panel-flex-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 创作面板上半部分 */
+.creative-panel-upper {
+  flex-shrink: 0;
+  padding-bottom: 0;
+}
+
+/* 创作面板下半部分 */
+.creative-panel-lower {
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  /* background-color: rgba(30, 35, 40, 0.95); 与创作面板相同的背景色 */
+}
+
+/* AI工具栏样式 */
+.ai-tools-bar {
+  padding: 5px 16px 8px 16px;
+  margin-top: 0;
+  /* background-color: transparent; 确保没有白色背景 */
+}
+
+/* 为了让面板不会过高 */
+@media (max-height: 700px) {
+  .creative-panel {
+    height: 70%;
+  }
+  
+  .formatted-text-area {
+    min-height: 80px;
+    max-height: 120px;
+  }
+} 
+
+/* 模板区域样式 */
+.template-area {
+  padding: 12px 15px 4px 15px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #264653; /* 白色文本 */
+  /* border-bottom: 1px solid rgba(255, 255, 255, 0.1); 微妙的边框 */
+}
+
+/* 用户编辑区域样式 */
+.user-edit-area {
+  padding: 8px 15px 12px 15px;
+  min-height: 60px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #264653; /* 白色文本 */
+}
+
+/* 用户编辑区域的占位符文本 */
+.user-edit-area:empty:before {
+  content: '描述一下你想象的家的画面';
+  color: #889096; /* 半透明白色 */
+}
+
+/* 当用户编辑区域有内容时 */
+.user-edit-area.has-content:before {
+  display: none;
+} 
+
+/* 这里已移除旧的浮层UI样式，改为在主内容区域显示生成进度和结果 */ 
+
+/* 用户输入内容展示区样式 */
+.message-container {
+  width: 100%;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.user-message {
+  /* background-color: #FFFFFF; */
+  /* border-radius: 12px; */
+  padding: 16px;
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); */
+}
+
+.message-content {
+  width: 100%;
+}
+
+.message-text {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "思源黑体", "Segoe UI", Roboto, sans-serif;
+  font-size: 12px;
+  line-height: 1.6;
+  margin-bottom: 0px;
+  color: #2C3E50;
+  word-break: break-word;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.content-metadata-row {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-top: 5px;
+}
+
+.reference-thumbnail {
+  margin-right: 4px;
+  margin-bottom: 8px;
+  position: relative;
+  border-radius: 0px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(230, 230, 230, 0.7);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.reference-thumbnail:hover {
+  transform: scale(1.03);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+}
+
+.reference-thumbnail img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 0px;
+  display: block;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+  gap: 4px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-right: 0px;
+  margin-bottom: 4px;
+  font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "思源黑体", "Segoe UI", Roboto, sans-serif;
+  transition: all 0.2s ease;
+}
+
+.message-meta {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.message-time {
+  font-size: 12px;
+  color: #889096;
+}
+
+/* 聊天容器 */
+.chat-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding-bottom: 80px; /* 确保底部空间足够 */
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 180px); /* 确保容器高度足够 */
+}
+
+/* 用户消息 */
+.user-message {
+  width: 100%;
+  padding-top: 0rem !important;
+  padding-bottom: 0rem;
+  margin-bottom: 0rem;
+  position: relative;
+  /* background-color: #FFFFFF; */
+  /* padding: 16px 20px; */
+}
+
+/* 用户输入文本 */
+.user-text {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "思源黑体", "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  color: #2C3E50;
+  word-break: break-word;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* 元数据行（包含参考图和标签） */
+.content-metadata-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 5px;
+}
+
+/* 参考图缩略图 */
+.reference-thumbnail {
+  margin-right: 6px;
+  margin-bottom: 8px;
+  position: relative;
+  border-radius: 0px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(230, 230, 230, 0.7);
+  transition: all 0.2s ease;
+}
+
+.reference-thumbnail:hover {
+  transform: scale(1.03);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+}
+
+.reference-thumbnail img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 0px;
+}
+
+/* 标签容器 */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex: 1;
+  gap: 2px;
+}
+
+/* 标签样式 */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  font-weight: 500;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "思源黑体", "Segoe UI", Roboto, sans-serif;
+  transition: all 0.2s ease;
+}
+
+/* 风格标签 */
+.tag.bg-green-500 {
+  background-color: #EAF6F5 !important;
+  color: #2a9d8f !important
+}
+
+.tag.bg-green-500 i {
+  color: #10846E !important;
+  font-size: 11px;
+  margin-right: 4px;
+}
+
+/* 户型标签 */
+.tag.bg-blue-500 {
+  background-color: #EAF6F5 !important;
+  color: #2a9d8f !important
+}
+
+.tag.bg-blue-500 i {
+  color: #2469D9 !important;
+  font-size: 11px;
+  margin-right: 4px;
+}
+
+/* 比例标签 */
+.tag.bg-purple-500 {
+  background-color: #F0F0F0 !important;
+  color: #889096 !important;
+}
+
+.tag.bg-purple-500 i {
+  color: #8A5AD1 !important;
+  font-size: 11px;
+  margin-right: 4px;
+}
+
+/* AI处理状态区样式 */
+.processing-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* 环形进度系统 */
+.progress-ring-container {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+/* 环形进度条 */
+.progress-ring {
+  transform: rotate(-90deg);
+  transform-origin: center;
+}
+
+/* 环形进度条背景 */
+.progress-ring-bg {
+  stroke: #E9EFF6;
+  stroke-width: 10;
+  fill: transparent;
+}
+
+/* 环形进度条前景 */
+.progress-ring-fg {
+  stroke-width: 8;
+  fill: transparent;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease, stroke 0.8s ease;
+}
+
+/* 进度百分比文本 */
+.progress-percentage {
+  position: absolute;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "思源黑体", "Segoe UI", Roboto, sans-serif;
+  font-size: 38px;
+  font-weight: 300;
+  color: #2C3E50;
+  transition: color 0.8s ease;
+}
+
+/* 粒子系统容器 */
+.particles-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* 单个粒子 */
+.particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  opacity: 0.6;
+  transition: background-color 0.8s ease;
+}
+
+/* 状态文本区 */
+.status-text-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* 主状态文本 */
+.status-text-main {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "思源黑体", "Segoe UI", Roboto, sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  color: #2C3E50;
+  margin-bottom: 4px;
+  transition: opacity 0.4s ease;
+}
+
+/* 子状态文本 */
+.status-text-sub {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "思源黑体", "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #64748B;
+  margin-bottom: 8px;
+  transition: opacity 0.4s ease;
+}
+
+/* 剩余时间文本 */
+.remaining-time {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "思源黑体", "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  color: #94A3B8;
+  opacity: 0.8;
+}
+
+/* 阶段颜色类 */
+.stage-analysis {
+  color: #4C9EEB;
+}
+
+.stage-matching {
+  color: #10846E;
+}
+
+.stage-generating {
+  color: #8A5AD1;
+}
+
+.stage-optimizing {
+  color: #10B981;
+}
+
+/* 结果区域样式 */
+.results-container {
+  width: 100%;
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 结果图片网格 */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* 结果图片卡片 */
+.results-container img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.results-container img:hover {
+  transform: scale(1.02);
+}
+
+/* 方案标签 */
+.results-container .absolute {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* 操作按钮 */
+.action-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  background-color: white;
+  border: 1px solid #E2E8F0;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #4A5568;
+  transition: all 0.2s ease;
+}
+
+.action-button:hover {
+  background-color: #F7FAFC;
+  border-color: #CBD5E0;
+}
+
+.action-button i {
+  margin-right: 4px;
+  font-size: 12px;
+}
+
+/* 操作按钮容器 */
+.space-x-4 > * + * {
+  margin-left: 1rem;
+}
+
+/* 淡入淡出动画 */
+.fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.fade-out {
+  animation: fadeOut 0.5s ease forwards;
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* 阶段过渡动画 */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.8s ease;
+}
+
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+
+/* 响应式调整 */
+@media (max-width: 640px) {
+  .user-text {
+    font-size: 15px;
+  }
+  
+  .reference-thumbnail img {
+    width: 25px;
+    height: 25px;
+  }
+  
+  .tag {
+    font-size: 12px;
+    padding: 5px 8px;
+  }
+  
+  .progress-ring-container {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .progress-percentage {
+    font-size: 32px;
+  }
+  
+  .status-text-main {
+    font-size: 16px;
+  }
+  
+  .status-text-sub {
+    font-size: 13px;
+  }
+  
+  .remaining-time {
+    font-size: 12px;
+  }
+  
+  .action-button {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+}
+
+/* 双环进度系统样式 */
+.dual-progress-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.progress-ring-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.progress-ring-wrapper.left {
+  color: #1E88E5;
+}
+
+.progress-ring-wrapper.right {
+  color: #2A9D8F;
+}
+
+.progress-ring-circle-bg {
+  stroke: rgba(224, 224, 224, 0.3);
+  transition: stroke 0.5s ease;
+}
+
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.5s ease, stroke 0.5s ease;
+}
+
+.progress-ring-wrapper.left .progress-ring-circle {
+  stroke: #1E88E5;
+}
+
+.progress-ring-wrapper.right .progress-ring-circle {
+  stroke: #2A9D8F;
+}
+
+.progress-percentage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  font-weight: 600;
+  color: inherit;
+}
+
+/* 粒子系统样式 */
+.particles-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.particles-container.left {
+  filter: hue-rotate(210deg);
+}
+
+.particles-container.right {
+  filter: hue-rotate(160deg);
+}
+
+.particle {
+  position: absolute;
+  background-color: currentColor;
+  border-radius: 50%;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* 中央状态显示区样式 */
+.central-status {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 2;
+  width: 100px;
+}
+
+.status-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-main);
+  margin-bottom: 8px;
+  opacity: 0.9;
+}
+
+.dual-progress-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* 双图结果展示样式 */
+.dual-results-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+  margin-top: 16px;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.result-image-wrapper {
+  flex: 1;
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.result-image-wrapper:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.result-image-wrapper img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+  transition: filter 0.5s ease;
+}
+
+/* 完成动效与过渡样式 */
+.fade-out-progress {
+  animation: fadeOutProgress 0.5s forwards;
+}
+
+.fade-in-results {
+  animation: fadeInResults 0.8s forwards;
+}
+
+@keyframes fadeOutProgress {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes fadeInResults {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 修改现有的处理状态区样式，支持双环系统 */
+.message-processing {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* padding: 20px 0; */
+  transition: all 0.5s ease;
+}
+
+.processing-preview-container {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+/* 结果图片容器样式更新 */
+.result-image-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+  transition: all 0.5s ease;
+}
+
+.result-image {
+  flex: 1;
+  border-radius: 12px;
+  object-fit: cover;
+  max-height: 300px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.result-image:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+/* 全屏图片查看器样式 */
+#fullImageViewer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+
+#fullImageViewer.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+#fullImage {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+#fullImageViewer.active #fullImage {
+  transform: scale(1);
+}
+
+#fullImageViewer button {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  transition: background-color 0.2s ease;
+}
+
+#fullImageViewer button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+#fullImageViewer button:active {
+  transform: scale(0.95);
+}
+
+/* AI设计底部输入框UI优化 */
+.ai-composer-input {
+  background: #fff;
+  border: 1px solid #F0F0F0;
+  border-radius: 16px;
+  padding: 12px 16px;
+  font-size: 16px;
+  color: #222;
+  outline: none;
+  width: 100%;
+  min-height: 44px;
+  max-height: 120px;
+  resize: none;
+  box-shadow: none;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.ai-composer-input::placeholder {
+  color: #889096;
+  opacity: 1;
+}
+.ai-composer-input:focus {
+  border-color: #2a9d8f;
+  box-shadow: 0 0 0 3px rgba(42,157,143,0.12), 0 0 8px 0 #2a9d8f33;
+  animation: ai-glow-breath 1.6s infinite alternate;
+}
+@keyframes ai-glow-breath {
+  0% { box-shadow: 0 0 0 3px rgba(42,157,143,0.10), 0 0 8px 0 #2a9d8f22; }
+  100% { box-shadow: 0 0 0 6px rgba(42,157,143,0.18), 0 0 16px 0 #2a9d8f44; }
+}
+
+/* 比例按钮特殊样式 */
+.room-btn[data-room="比例"] {
+  background: #FFFFFF;
+  color: #889096;
+  min-width: 50px;
+  padding: 8px 12px;
+}
+
+/* 按钮容器样式 - 浅色风格 */
+.room-buttons {
+  display: flex;
+  gap: 8px;
+  padding: 6px 8px;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background: #FFFFFF; /* 改为白色背景 */
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* 轻微阴影增加层次感 */
+}
+
+/* 普通按钮样式 - 浅色风格 */
+.room-btn {
+  background: #F5F5F7;
+  border: 1px solid #E6E6EB;
+  color: #889096;
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 6px;
+  min-height: 36px;
+  min-width: 70px;
+  text-align: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+/* 按钮激活态 */
+.room-btn.active {
+  background: rgba(42, 157, 143, 0.08);
+  border-color: #2a9d8f;
+  color: #2a9d8f;
+  font-weight: 500;
+}
+
+/* 按钮悬停状态 */
+.room-btn:hover:not(.active) {
+  background: #FFFFFF;
+  border-color: rgba(42, 157, 143, 0.6); /* 悬停时边框颜色加深 */
+}
+
+/* 比例按钮特殊样式 */
+.room-btn[data-room="比例"] {
+  background: #FFFFFF;
+  color: #889096;
+  border: 1px solid rgba(42, 157, 143, 0.3);
+  min-width: 50px;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+/* 生成按钮样式 - 主色调 */
+.generate-btn {
+  background-color: #2a9d8f;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 16px;
+  min-height: 36px;
+  flex: 1;
+  margin-left: 10px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+  pointer-events: auto;
+  width: auto;
+  max-width: none;
+}
+
+/* 生成按钮悬停态 */
+.generate-btn:hover {
+  background-color: #238579;
+}
+
+/* 生成按钮点击态 */
+.generate-btn:active:not([disabled]) {
+  transform: scale(0.98);
+  background-color: #207a70;
+}
+
+/* 禁用态生成按钮 */
+.generate-btn[disabled] {
+  background-color: #64748B;
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* 修复CSS优先级问题，增加选择器特异性 */
+.creative-panel .room-buttons .room-btn {
+  background: #FFFFFF;
+  border: 1px solid rgba(42, 157, 143, 0.3);
+  color: #889096;
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 6px;
+  min-height: 36px;
+  min-width: 70px;
+  text-align: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+/* 按钮悬停状态 */
+.creative-panel .room-buttons .room-btn:hover:not(.active) {
+  background: #FFFFFF;
+  border-color: rgba(42, 157, 143, 0.6);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* 按钮激活态 */
+.creative-panel .room-buttons .room-btn.active {
+  background: #2a9d8f;
+  border-color: #2a9d8f;
+  color: #FFFFFF;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(42, 157, 143, 0.2);
+}
+
+/* 比例按钮特殊样式 */
+.creative-panel .room-buttons .room-btn[data-room="比例"] {
+  background: #FFFFFF;
+  color: #889096;
+  border: 1px solid rgba(42, 157, 143, 0.3);
+  min-width: 50px;
+  padding: 8px 12px;
+  border-radius: 6px;
+}

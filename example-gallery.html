@@ -1,0 +1,45 @@
+<!-- 示例图选择浮层 -->
+<div id="exampleGalleryOverlay" class="example-gallery-overlay">
+  <div class="gallery-header">
+    <h3>选择参考图</h3>
+    <button id="closeGalleryBtn" class="close-gallery-btn">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  
+  <div class="option-buttons">
+    <button class="option-btn active" data-option="examples">选择示例图</button>
+    <button class="option-btn" data-option="upload">从相册选择</button>
+  </div>
+  
+  <div class="examples-container">
+    <div class="examples-scroll-view" id="examplesScrollView">
+      <!-- 示例图卡片将在这里动态生成 -->
+    </div>
+  </div>
+  
+  <!-- 首次使用引导提示 -->
+  <div class="guide-tip" id="guideTip">
+    <p>选择示例图快速体验设计效果</p>
+    <div class="tip-actions">
+      <button class="tip-btn" id="gotItBtn">知道了</button>
+      <label class="no-tip-label">
+        <input type="checkbox" id="noTipAgain"> 不再提示
+      </label>
+    </div>
+  </div>
+</div>
+
+<!-- 示例图卡片模板 -->
+<template id="exampleCardTemplate">
+  <div class="example-card">
+    <div class="card-image">
+      <span class="room-type-tag"></span>
+      <img src="" alt="" class="thumbnail">
+    </div>
+    <div class="card-info">
+      <p class="card-description"></p>
+      <button class="use-btn">使用此图</button>
+    </div>
+  </div>
+</template> 

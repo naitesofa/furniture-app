@@ -1,0 +1,116 @@
+/* 优惠券页面动画效果 */
+
+/* 淡入效果 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease;
+}
+
+/* 上浮效果 */
+@keyframes floatUp {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.float-animation {
+    animation: floatUp 2s ease-in-out infinite;
+}
+
+/* 脉冲效果 - 用于突出显示即将过期的优惠券 */
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(245, 158, 11, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(245, 158, 11, 0);
+    }
+}
+
+.pulse-animation {
+    animation: pulse 2s infinite;
+}
+
+/* 领取成功动画 */
+@keyframes success {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.success-animation {
+    animation: success 0.5s ease-in-out;
+}
+
+/* 摇晃效果 - 用于错误提示 */
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-5px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(5px);
+    }
+}
+
+.shake-animation {
+    animation: shake 0.6s ease-in-out;
+}
+
+/* 展开/收起过渡效果 */
+.transition-height {
+    transition: max-height 0.3s ease, padding 0.3s ease;
+}
+
+/* 按钮点击效果 */
+.btn-click-effect {
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.btn-click-effect:active {
+    transform: scale(0.95);
+    box-shadow: none !important;
+}
+
+/* 旋转图标过渡 */
+.rotate-transition {
+    transition: transform 0.3s ease;
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
+}
+
+/* 滑动过渡 */
+.slide-transition {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+} 

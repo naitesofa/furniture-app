@@ -1,0 +1,26 @@
+/* 商品图片展示 */
+.product-gallery {
+    height: 100vw;
+    max-height: 500px;
+    background: var(--gray-100);
+    position: relative;
+}
+
+/* 规格选择 */
+.spec-section {
+    margin: 20px 0;
+}
+
+/* 360度展示 */
+.gallery-container {
+    position: relative;
+    height: 100%;
+    user-select: none;
+}
+
+/* 价格信息 */
+.price-section {
+    background: linear-gradient(to right, var(--primary-light), white);
+    border-radius: 12px;
+    padding: 16px;
+} 

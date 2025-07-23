@@ -1,0 +1,129 @@
+/**
+ * 翻牌式AI设计进度 - 移动端适配样式
+ */
+
+/* 适配现有用户输入区样式 */
+/* 由于页面已有用户输入区，这里不再定义重复样式 */
+.chat-container {
+  padding: 0px;
+  max-height: 60vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  -ms-overflow-style: none;
+  transition: max-height 0.3s ease;
+  }
+
+/* 移动端适配的翻牌容器样式 */
+.flip-card-progress-container {
+  /* margin-top: 16px; */
+  /* margin-bottom: 16px; */
+  /* 使翻牌区域更好地融入现有UI */
+  padding: 0 5px;
+  position: relative;
+}
+
+/* 移动端翻牌卡片调整 */
+.flip-card {
+  position: relative;
+  width: 45%;
+  height: 0;
+  padding-bottom: 60%; /* 维持3:4比例 */
+  cursor: pointer;
+}
+
+/* 移动端卡片内部元素调整 */
+.progress-percentage {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* 移动端状态文本调整 */
+.progress-status {
+  margin-top: 12px;
+  font-size: 14px;
+  text-align: center;
+  color: #6E7A8A;
+  padding: 0 10px;
+  position: relative;
+  z-index: 2;
+  background-color: rgba(255,255,255,0.5);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border-radius: 20px;
+  display: inline-block;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 16px;
+  margin-bottom: 8px;
+}
+
+/* 结果操作按钮 */
+.result-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.action-btn {
+  background-color: #2a9d8f;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.action-btn i {
+  font-size: 12px;
+}
+
+.regenerate-btn {
+  background-color: #e9c46a;
+}
+
+/* 翻牌区域整体容器 - 包含卡片和状态文本 */
+.flip-progress-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 触摸设备优化 */
+@media (hover: none) {
+  .flip-card:active {
+    transform: scale(0.98);
+  }
+}
+
+/* 小屏幕设备调整 */
+@media (max-width: 360px) {
+  .progress-percentage {
+    font-size: 14px;
+  }
+  
+  .card-identifier {
+    display: none; /* 隐藏A/B标识 */
+    font-size: 8px;
+  }
+}
+
+/* 确保卡片在安全区域内 */
+@supports (padding: max(0px)) {
+  .flip-card-progress-container {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+}
+
+.action-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 0 1px rgba(0,0,0,0.1);
+} 

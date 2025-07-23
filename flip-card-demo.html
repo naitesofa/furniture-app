@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>翻牌式AI设计进度 - 演示</title>
+  <link rel="stylesheet" href="css/flip-card-progress.css">
+  <style>
+    body {
+      font-family: 'SF Pro Text', 'Source Han Sans CN', 'Noto Sans SC', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f7fa;
+      color: #333;
+    }
+    
+    h1 {
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+      color: #2a9d8f;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .user-input {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    
+    .user-input .title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #555;
+    }
+    
+    .user-input .content {
+      color: #333;
+    }
+    
+    .user-input .tag {
+      display: inline-block;
+      background: #e9ecef;
+      border-radius: 12px;
+      padding: 2px 8px;
+      margin-right: 5px;
+      font-size: 12px;
+      color: #495057;
+    }
+    
+    .progress-container {
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+    
+    .controls {
+      text-align: center;
+      margin-top: 30px;
+    }
+    
+    button {
+      background-color: #2a9d8f;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+      margin: 0 5px;
+    }
+    
+    button:hover {
+      background-color: #248277;
+    }
+    
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>翻牌式AI设计进度 - 演示</h1>
+    
+    <div class="user-input">
+      <div class="title">用户输入内容</div>
+      <div class="content">请将毛坯图生成设计图，风格简约、户型客厅，增加一些绿色植物和现代化的家具。</div>
+      <div style="margin-top: 8px;">
+        <span class="tag">简约风格</span>
+        <span class="tag">客厅</span>
+        <span class="tag">毛坯设计</span>
+      </div>
+    </div>
+    
+    <div class="progress-container" id="flip-progress"></div>
+    
+    <div class="controls">
+      <button id="start-btn">开始生成</button>
+      <button id="reset-btn" disabled>重置</button>
+    </div>
+  </div>
+  
+  <script src="js/flip-card-progress.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 示例图片URL（实际项目中应替换为真实图片）
+      const resultImages = [
+        'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=500&h=500&fit=crop',
+        'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=500&h=500&fit=crop'
+      ];
+      
+      // 初始化翻牌进度控制器
+      const flipProgress = new FlipCardProgress('flip-progress', {
+        progressDuration: 8000, // 演示用8秒完成
+        preloadImages: resultImages,
+        onComplete: function() {
+          document.getElementById('start-btn').disabled = true;
+          document.getElementById('reset-btn').disabled = false;
+          console.log('生成完成!');
+        }
+      });
+      
+      // 开始按钮点击事件
+      document.getElementById('start-btn').addEventListener('click', function() {
+        this.disabled = true;
+        flipProgress.start();
+      });
+      
+      // 重置按钮点击事件
+      document.getElementById('reset-btn').addEventListener('click', function() {
+        this.disabled = true;
+        document.getElementById('start-btn').disabled = false;
+        flipProgress.reset();
+      });
+      
+      // 移除图片放大事件监听
+    });
+  </script>
+</body>
+</html> 

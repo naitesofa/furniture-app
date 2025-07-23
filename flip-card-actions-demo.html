@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>翻牌式AI设计进度与操作区 - 演示</title>
+  <link rel="stylesheet" href="css/flip-card-progress.css">
+  <link rel="stylesheet" href="css/flip-card-actions.css">
+  <style>
+    body {
+      font-family: 'SF Pro Text', 'Source Han Sans CN', 'Noto Sans SC', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f5f7fa;
+      color: #333;
+    }
+    
+    h1 {
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+      color: #2a9d8f;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    
+    .user-input {
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    
+    .user-input .title {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #555;
+    }
+    
+    .user-input .content {
+      color: #333;
+    }
+    
+    .user-input .tag {
+      display: inline-block;
+      background: #e9ecef;
+      border-radius: 12px;
+      padding: 2px 8px;
+      margin-right: 5px;
+      font-size: 12px;
+      color: #495057;
+    }
+    
+    .progress-container {
+      margin-top: 30px;
+      margin-bottom: 30px;
+      position: relative;
+    }
+    
+    .controls {
+      text-align: center;
+      margin-top: 30px;
+    }
+    
+    button {
+      background-color: #2a9d8f;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+      margin: 0 5px;
+    }
+    
+    button:hover {
+      background-color: #248277;
+    }
+    
+    button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+
+    .event-log {
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f0f0f0;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 12px;
+      max-height: 120px;
+      overflow-y: auto;
+    }
+
+    .log-entry {
+      margin: 4px 0;
+      padding: 2px 0;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .design-description {
+      margin-top: 30px;
+      padding: 15px;
+      background-color: #f0f8ff;
+      border-radius: 8px;
+      border-left: 4px solid #2a9d8f;
+    }
+    
+    .design-description h3 {
+      margin-top: 0;
+      font-size: 16px;
+      color: #2a9d8f;
+    }
+    
+    .design-description p {
+      margin: 8px 0;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    /* 移动端适配 */
+    @media (max-width: 480px) {
+      .container {
+        padding: 15px;
+      }
+      
+      button {
+        padding: 8px 16px;
+        font-size: 13px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>翻牌式AI设计进度与操作区 - 演示</h1>
+    
+    <div class="user-input">
+      <div class="title">用户输入内容</div>
+      <div class="content">请将毛坯图生成设计图，风格简约、户型客厅，增加一些绿色植物和现代化的家具。</div>
+      <div style="margin-top: 8px;">
+        <span class="tag">简约风格</span>
+        <span class="tag">客厅</span>
+        <span class="tag">毛坯设计</span>
+      </div>
+    </div>
+    
+    <div class="progress-container" id="flip-progress"></div>
+    
+    <div class="design-description">
+      <h3>设计说明</h3>
+      <p>操作按钮现在位于双图展示区的左下方，采用图标+文字的组合形式，垂直排列。按钮使用半透明背景，确保在任何图片背景下都清晰可见。</p>
+    </div>
+    
+    <div class="controls">
+      <button id="start-btn">开始生成</button>
+      <button id="reset-btn" disabled>重置</button>
+    </div>
+
+    <div class="event-log" id="event-log">
+      <div class="log-entry">等待操作...</div>
+    </div>
+  </div>
+  
+  <script src="js/flip-card-progress.js"></script>
+  <script src="js/flip-card-actions.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 示例图片URL（实际项目中应替换为真实图片）
+      const resultImages = [
+        'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=500&h=500&fit=crop',
+        'https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?q=80&w=500&h=500&fit=crop'
+      ];
+
+      // 日志记录函数
+      const logEvent = function(message) {
+        const logContainer = document.getElementById('event-log');
+        const logEntry = document.createElement('div');
+        logEntry.className = 'log-entry';
+        logEntry.textContent = `${new Date().toLocaleTimeString()} - ${message}`;
+        logContainer.appendChild(logEntry);
+        logContainer.scrollTop = logContainer.scrollHeight;
+      };
+      
+      // 初始化翻牌进度控制器
+      const flipProgress = new FlipCardProgress('flip-progress', {
+        progressDuration: 8000, // 演示用8秒完成
+        preloadImages: resultImages,
+        showActions: true, // 启用操作按钮
+        onComplete: function() {
+          document.getElementById('start-btn').disabled = true;
+          document.getElementById('reset-btn').disabled = false;
+          logEvent('生成完成，左下方显示操作按钮');
+        },
+        onEdit: function() {
+          logEvent('点击了"重新编辑"按钮');
+          setTimeout(() => {
+            logEvent('返回编辑界面...');
+          }, 500);
+        },
+        onRegenerate: function() {
+          logEvent('点击了"再次生成"按钮');
+          setTimeout(() => {
+            logEvent('准备重新生成...');
+            document.getElementById('reset-btn').click(); // 自动点击重置
+            setTimeout(() => {
+              document.getElementById('start-btn').click(); // 自动点击开始
+            }, 500);
+          }, 500);
+        }
+      });
+      
+      // 开始按钮点击事件
+      document.getElementById('start-btn').addEventListener('click', function() {
+        this.disabled = true;
+        logEvent('开始生成，翻牌进度开始运行');
+        flipProgress.start();
+      });
+      
+      // 重置按钮点击事件
+      document.getElementById('reset-btn').addEventListener('click', function() {
+        this.disabled = true;
+        document.getElementById('start-btn').disabled = false;
+        logEvent('重置生成状态');
+        flipProgress.reset();
+      });
+      
+      // 初始日志
+      logEvent('页面加载完成，可以点击"开始生成"按钮测试');
+    });
+  </script>
+</body>
+</html> 

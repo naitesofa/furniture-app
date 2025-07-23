@@ -1,0 +1,77 @@
+/* 全屏遮罩+磨砂 */
+.design-type-overlay {
+  position: fixed; left: 0; top: 0; width: 100vw; height: 100vh;
+  background: rgba(34, 40, 49, 0.18);
+  z-index: 9999;
+  display: flex; align-items: flex-end; justify-content: center;
+  opacity: 0; transition: opacity 0.3s;
+  backdrop-filter: blur(4px);
+}
+.design-type-overlay.show { opacity: 1; }
+
+/* 底部上拉菜单 */
+.design-type-menu {
+  width: 96vw; max-width: 440px; margin-bottom: 18px;
+  background: rgba(255,255,255,0.92); border-radius: 24px 24px 18px 18px;
+  box-shadow: 0 8px 32px rgba(44,62,80,0.12);
+  padding: 0 0 12px 0;
+  transform: translateY(48px) scale(0.98); opacity: 0;
+  transition: transform 0.36s cubic-bezier(.4,1,.4,1), opacity 0.28s;
+}
+.design-type-menu.show {
+  transform: translateY(0) scale(1); opacity: 1;
+}
+
+/* 拖拽条 */
+.design-type-dragbar {
+  width: 48px; height: 5px; border-radius: 3px;
+  background: #d1dadb; margin: 12px auto 18px auto;
+  opacity: 0.7;
+}
+
+.design-type-item {
+  display: flex; align-items: center; gap: 18px;
+  min-height: 56px; padding: 0 24px; background: #fff;
+  border-radius: 14px;
+  margin: 0 10px 8px 10px;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+.design-type-item .icon svg {
+  width: 28px; height: 28px; display: block;
+  stroke: #2a9d8f;
+  fill: none;
+  transition: stroke 0.18s;
+}
+.design-type-item .label-desc {
+  display: flex; flex-direction: column; gap: 2px;
+  justify-content: center;
+}
+.design-type-item .label {
+  font-size: 16px; font-weight: 500; color: #264653;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+.design-type-item .desc {
+  font-size: 13px; color: #889096; font-weight: 400; margin-top: 2px;
+  line-height: 1.2;
+}
+.design-type-item.selected {
+  background: #2a9d8f;
+}
+.design-type-item.selected .icon svg {
+  stroke: #fff;
+}
+.design-type-item.selected .label {
+  color: #fff;
+}
+.design-type-item.selected .desc {
+  color: rgba(255,255,255,0.8);
+}
+.design-type-item:not(.selected):hover {
+  background: #e0f7f4;
+}
+@media (max-width: 600px) {
+  .design-type-menu { width: 99vw; margin-bottom: 6px; }
+  .design-type-item { font-size: 16px; padding: 0 10px; }
+} 

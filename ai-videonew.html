@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图生视频</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <!-- <link rel="stylesheet" href="styles.css"> -->
+  <link rel="stylesheet" href="css/ai-videonew.css">
+  <link rel="stylesheet" href="css/creative-panel.css">
+  <style>
+    /* 确保输入框固定在底部 */
+    body {
+      padding-bottom: 60px !important; /* 使用!important确保不被覆盖 */
+      min-height: 100vh;
+      background-color: #f7fafa !important;
+    }
+    
+    :root {
+      --main-color: #2a9d8f; /* 活力松石绿 - 主色/用户 */
+      --accent-color: #e9c46a; /* 温暖鹅卵黄 - 辅助/强调 */
+      --ai-color: #FFFFFF; /* 纯净白 - AI/中性 */
+      --bg-color: #F7FAFA; /* 薄荷雾 - 页面背景 */
+      --text-main: #264653; /* 深海石墨 - 主要文字 */
+      --text-secondary: #889096; /* 中性灰 - 次要文字/图标 */
+      --inactive-btn: #DCE1E3; /* 非激活按钮背景色 */
+      --menu-hover: rgba(42, 157, 143, 0.08); /* 菜单悬停背景色 */
+      --menu-active: #EAF6F5; /* 菜单激活背景色 */
+      --safe-area-bottom: env(safe-area-inset-bottom, 0px); /* 底部安全区域 */
+    }
+    
+    /* 预设图片样式 */
+    .preset-image {
+      transition: all 0.2s ease-in-out;
+      cursor: pointer;
+      position: relative;
+      transform-origin: center;
+    }
+    
+    .preset-image:active {
+      transform: scale(0.97);
+    }
+    
+    /* 图片点击波纹效果 */
+    .preset-image::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(255, 255, 255, 0.3);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    
+    .preset-image:active::after {
+      opacity: 1;
+    }
+    
+    /* 主标题样式优化 */
+    .main-message {
+      font-size: 16px;
+      color: #264653;
+      line-height: 1.5;
+      max-width: 280px;
+      margin: 0 auto;
+      letter-spacing: -0.2px;
+    }
+    
+    .main-message .text-emerald-600 {
+      position: relative;
+      padding: 0 1px;
+    }
+    
+    /* 副标题样式 */
+    .preset-images-section h3 {
+      color: #667781;
+      letter-spacing: 0.2px;
+    }
+    
+    /* 覆盖任何可能的容器样式 */
+    .ratio-btn-container::-webkit-scrollbar {
+      display: none !important;
+    }
+    
+    /* 比例按钮通用样式 */
+    .ratio-btn {
+      position: relative;
+      padding-left: 28px !important; /* 调整左内边距适应图标 */
+      height: 36px !important;
+      border-radius: 8px !important;
+      background-color: #f2f2f2 !important;
+      color: #333 !important;
+      font-size: 14px !important;
+      display: flex !important;
+      align-items: center !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      border: none !important;
+      box-shadow: none !important;
+    }
+    
+    .ratio-btn.active {
+      background-color: #2a9d8f !important; /* 设置活跃按钮背景色 */
+      color: white !important; /* 设置活跃按钮文字颜色 */
+    }
+    
+    /* 比例图示样式优化 */
+    .ratio-icon {
+      position: absolute;
+      left: 10px;
+      width: 16px;
+      height: 16px;
+      display: block !important;
+    }
+    
+    .ratio-icon::before {
+      content: '';
+      position: absolute;
+      border: 1px solid #aaaaaa;
+      box-sizing: border-box;
+      display: block !important;
+    }
+    
+    .ratio-btn.active .ratio-icon::before {
+      border-color: white !important;
+    }
+    
+    /* 9:16比例图示 */
+    .ratio-9-16::before {
+      width: 9px;
+      height: 16px;
+      left: 0;
+      top: 0;
+    }
+    
+    /* 3:4比例图示 */
+    .ratio-3-4::before {
+      width: 12px;
+      height: 16px;
+      left: 0;
+      top: 0;
+    }
+    
+    /* 2:3比例图示 */
+    .ratio-2-3::before {
+      width: 10px;
+      height: 15px;
+      left: 0;
+      top: 0;
+    }
+    
+    /* 1:1比例图示 */
+    .ratio-1-1::before {
+      width: 14px;
+      height: 14px;
+      left: 0;
+      top: 1px;
+    }
+    
+    /* 3:2比例图示 */
+    .ratio-3-2::before {
+      width: 15px;
+      height: 10px;
+      left: 0;
+      top: 3px;
+    }
+    
+    /* --- 操作按钮样式 (简约风格) --- */
+    .video-action-buttons {
+      display: flex;
+      gap: 9px; /* 减小按钮间距 */
+      margin-top: 12px;
+      justify-content: flex-start; /* 靠左排列 */
+    }
+
+    .video-action-btn {
+      flex: none; 
+      width: 90px; /* 减小固定宽度 */
+      padding: 8px 0;
+      border-radius: 22px; /* 与页面其他按钮保持一致的圆角 */
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background-color: transparent; /* 透明背景 */
+      border: 1px solid var(--main-color, #2a9d8f); /* 统一边框 */
+      color: var(--main-color, #2a9d8f); /* 统一颜色 */
+      transition: all 0.2s ease-in-out;
+    }
+
+    .video-action-btn i {
+      font-size: 12px;
+    }
+
+    .video-action-btn:hover {
+      background-color: rgba(42, 157, 143, 0.05); /* 微妙悬停效果 */
+    }
+
+    .video-action-btn:active {
+      transform: scale(0.97);
+      background-color: rgba(42, 157, 143, 0.1); /* 点击时背景加深 */
+    }
+
+    /* 删除不同颜色的区分样式 */
+    /* .edit-btn {
+      color: var(--main-color, #2a9d8f);
+    }
+
+    .regenerate-btn {
+      color: var(--text-secondary, #889096); 
+    } */
+    
+    /* 响应式调整 */
+    @media (max-width: 380px) {
+      .grid-cols-2 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      /* 间距调整 */
+      .preset-images-section {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+    }
+    
+    .smart-input-bar {
+      position: fixed !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: 100% !important;
+      z-index: 1000 !important; /* 更高的z-index确保显示在顶层 */
+    }
+    
+    /* 统一底部面板样式 */
+    .unified-bottom-panel {
+      background-color: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid rgba(42, 157, 143, 0.08);
+      padding: 8px 0 0;
+      padding-bottom: calc(8px + var(--safe-area-bottom)); /* 添加底部安全区域 */
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05);
+      border-top-left-radius: 20px;
+      border-top-right-radius: 20px;
+      overflow: hidden;
+    }
+    
+    /* 输入框样式优化 */
+    .input-container {
+      padding: 0 12px 12px;
+    }
+    
+    .input-field {
+      background-color: var(--bg-color);
+      border: 1px solid rgba(42, 157, 143, 0.15);
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+      padding: 8px 12px;
+    }
+    
+    .input-field:focus-within {
+      border-color: var(--main-color);
+      box-shadow: 0 0 0 2px rgba(42, 157, 143, 0.1), inset 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    
+    /* 输入框左侧图标 */
+    .input-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      color: var(--accent-color); /* 使用温暖鹅卵黄色 */
+      margin-left: 4px;
+    }
+    
+    /* 加号按钮样式 */
+    .add-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: rgba(42, 157, 143, 0.08);
+      color: var(--main-color);
+      transition: all 0.2s ease;
+    }
+    
+    .add-btn:active {
+      background-color: rgba(42, 157, 143, 0.15);
+      transform: scale(0.95);
+    }
+    
+    /* 输入文本样式 */
+    .input-text {
+      color: var(--text-main);
+      font-size: 15px;
+      cursor: pointer;
+    }
+    
+    .input-text::placeholder {
+      color: var(--text-secondary);
+    }
+    
+    /* 顶部状态栏样式 */
+    .header-button-group {
+      display: flex;
+      align-items: center;
+      gap: 8px; /* 按钮之间的间距 */
+    }
+    
+    .header-button {
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      transition: background-color 0.2s;
+    }
+    
+    .header-button:active {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+    
+    /* 右侧预留空间 */
+    .header-right-space {
+      width: 88px; /* 为微信小程序控件预留足够空间 */
+    }
+    
+    /* 中央消息样式 */
+    .main-message {
+      font-size: 16px;
+      color: #264653;
+      line-height: 1.5;
+      max-width: 280px;
+      margin: 0 auto;
+      letter-spacing: -0.2px;
+    }
+    
+    .main-message .text-emerald-600 {
+      position: relative;
+      padding: 0 1px;
+    }
+    
+    /* 副标题样式 */
+    .preset-images-section h3 {
+      color: #667781;
+      letter-spacing: 0.2px;
+    }
+  </style>
+</head>
+<body class="h-screen flex flex-col">
+  <!-- 顶部状态栏 -->
+  <header class="pt-2 px-4 pb-4">
+    <div class="flex items-center">
+      <!-- 左侧按钮组 -->
+      <div class="header-button-group">
+        <button class="header-button" id="backButton">
+          <i class="fas fa-arrow-left text-xl"></i>
+        </button>
+        <button class="header-button" id="menuButton">
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+      </div>
+      <!-- 标题居中 -->
+      <h1 class="text-xl font-medium flex-1 text-center">图生视频</h1>
+      <!-- 右侧预留空间，用于微信小程序控件 -->
+      <div class="header-right-space"></div>
+    </div>
+  </header>
+
+  <!-- 主要内容区域 - 对话流 -->
+  <main class="flex-1 flex flex-col items-center justify-start overflow-y-auto chat-container" id="chatContainer">
+    <!-- 欢迎信息 -->
+    <!-- <div class="text-center welcome-message mt-4">
+      <p class="main-message text-base font-medium">上传图片+描述，<span class="text-emerald-600 font-semibold">AI</span>帮你生成视频</p>
+    </div> -->
+    
+    <!-- 预设图片区域 -->
+    <div class="preset-images-section w-full px-3 mt-3">
+      <!-- <h3 class="text-xs text-gray-500 mb-2 font-normal text-center">选择以下图片，添加描述即可生成视频</h3> -->
+      
+      <!-- 两列9:16长图布局 -->
+      <div class="grid grid-cols-2 gap-x-2 gap-y-3">
+   
+   
+        
+    
+        
+        <!-- 图片3 - 左下 -->
+        <div class="preset-image relative rounded-lg overflow-hidden shadow-sm" data-image="images/videonewimages/06993d83a26d4f94a5e8b441458b5ae4.jpg" data-ratio="9:16" data-camera="环绕">
+          <img src="images/videonewimages/new.jpg" alt="竖屏环绕" class="w-full aspect-[9/16] object-cover">
+        </div>
+        
+        <!-- 图片4 - 右下 -->
+        <div class="preset-image relative rounded-lg overflow-hidden shadow-sm" data-image="images/videonewimages/e3ca2eea947943b1b15515e6b6282418.jpg" data-ratio="9:16" data-camera="拉近">
+          <img src="images/videonewimages/e3ca2eea947943b1b15515e6b6282418.jpg" alt="竖屏拉近" class="w-full aspect-[9/16] object-cover">
+        </div>
+        
+        <!-- 图片5 - 第三行左 -->
+        <div class="preset-image relative rounded-lg overflow-hidden shadow-sm" data-image="images/videonewimages/faa3d401960b4c5bb52f8909581a2182.jpg" data-ratio="9:16" data-camera="环绕">
+          <img src="images/videonewimages/faa3d401960b4c5bb52f8909581a2182.jpg" alt="竖屏环绕" class="w-full aspect-[9/16] object-cover">
+        </div>
+        
+        <!-- 图片6 - 第三行右 -->
+        <div class="preset-image relative rounded-lg overflow-hidden shadow-sm" data-image="images/videonewimages/c61914ec5b4643b6ae140ee27deb0090.jpg" data-ratio="9:16" data-camera="拉近">
+          <img src="images/videonewimages/c61914ec5b4643b6ae140ee27deb0090.jpg" alt="竖屏拉近" class="w-full aspect-[9/16] object-cover">
+        </div>
+        
+        <!-- 图片7 - 第四行左 -->
+        <div class="preset-image relative rounded-lg overflow-hidden shadow-sm" data-image="images/videonewimages/de5c8de445634e42b45eb5e3987f942a.jpg" data-ratio="9:16" data-camera="环绕">
+          <img src="images/videonewimages/de5c8de445634e42b45eb5e3987f942a.jpg" alt="竖屏环绕" class="w-full aspect-[9/16] object-cover">
+        </div>
+        
+        <!-- 图片8 - 第四行右 -->
+        <div class="preset-image relative rounded-lg overflow-hidden shadow-sm" data-image="images/videonewimages/85e2609f692b45bd8a7d50391490b179.jpg" data-ratio="9:16" data-camera="拉近">
+          <img src="images/videonewimages/85e2609f692b45bd8a7d50391490b179.jpg" alt="竖屏拉近" class="w-full aspect-[9/16] object-cover">
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 智能输入栏 -->
+  <footer id="smartInputBar" class="smart-input-bar">
+    <div class="unified-bottom-panel">
+      <!-- 输入框区域 -->
+      <div class="p-2 bottom-safe-area input-container">
+        <!-- 输入框 -->
+        <div class="rounded-full flex items-center px-4 py-1 shadow-sm input-field" id="inputFieldContainer">
+          <!-- 左侧图标 -->
+          <div class="input-icon">
+            <i class="fas fa-film"></i>
+          </div>
+          <!-- 中间输入区 -->
+          <div class="flex-1 ml-2">
+            <input type="text" id="composer" placeholder="上传图片+描述，生成精彩视频..." class="bg-transparent w-full focus:outline-none input-text" readonly>
+          </div>
+          
+          <!-- 右侧加号按钮 -->
+          <button class="p-2 add-btn" id="addBtn">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 创作面板遮罩层 (默认隐藏) -->
+  <div id="creativePanelOverlay" class="creative-panel-overlay">
+    <div class="creative-mode-hint">
+      <!-- <div class="hint-icon">
+        <i class="fas fa-lightbulb"></i>
+      </div>
+      <div class="hint-text">点击空白区域关闭</div> -->
+    </div>
+  </div>
+
+  <!-- 创作面板 (默认隐藏) -->
+  <div id="creativePanel" class="creative-panel">
+    <!-- 顶部关闭手柄 -->
+    <div class="close-handle"></div>
+    
+    <!-- 内容区域 -->
+    <div class="panel-content">
+      <!-- 上传图片区域 -->
+      <div class="upload-area">
+        <!-- 左侧上传按钮 -->
+        <div class="upload-btn-container">
+          <label for="localFileUpload" class="upload-btn" id="uploadImageBtn">
+            <i class="fas fa-arrow-up"></i>
+            <span>添加参考</span>
+          </label>
+          <input type="file" id="localFileUpload" accept="image/*" class="hidden">
+        </div>
+        
+        <!-- 预览区 -->
+        <div class="frames-preview-container">
+          <!-- 首帧预览 -->
+          <div class="frame-preview hidden" id="firstFramePreview">
+            <div class="frame-image-container">
+              <img src="#" alt="首帧图片" id="firstFrameImage">
+              <div class="frame-label">首帧</div>
+            </div>
+            <button class="remove-frame-btn" data-frame="first">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          
+          <!-- 尾帧预览 -->
+          <div class="frame-preview hidden" id="lastFramePreview">
+            <div class="frame-image-container">
+              <img src="#" alt="尾帧图片" id="lastFrameImage">
+              <div class="frame-label">尾帧</div>
+            </div>
+            <button class="remove-frame-btn" data-frame="last">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 描述文本区 -->
+      <div class="text-input-area">
+        <textarea id="promptTextarea" class="prompt-textarea" placeholder="描述一下你想要的视频画面"></textarea>
+      </div>
+      
+      <!-- 操作按钮行 -->
+      <div class="action-buttons">
+        <div class="action-buttons-left">
+          <!-- <button class="action-btn" id="cameraBtn">
+            <span>运镜</span>
+          </button> -->
+          <button class="action-btn" id="cameraBtn">
+            <span>9:16</span>
+          </button>
+        </div>
+        <button class="generate-btn" id="generateBtn">
+          <span>生成</span>
+        </button>
+      </div>
+      
+      <!-- 键盘占位区 - 始终占据空间，即使参数区隐藏也保持面板高度 -->
+      <div class="keyboard-placeholder"></div>
+      
+      <!-- 参数选择区 -->
+      <div class="params-area">
+        <!-- 参数滚动容器 -->
+        <div class="params-scroll-container">
+          <!-- 运镜方式选项 -->
+          <!-- <div class="param-section camera-section" id="cameraSection">
+            <div class="param-section-title">选择运镜方式</div>
+            <div class="camera-options">
+              <div class="option-tag active">环绕</div>
+              <div class="option-tag">推进</div>
+              <div class="option-tag">拉远</div>
+              <div class="option-tag">快速推拉</div>
+            </div>
+          </div> -->
+          
+          <!-- 比例选项 -->
+          <div class="param-section ratio-section" id="ratioSection">
+            <div class="ratio-options-title">选择生成比例</div>
+            <div class="ratio-btn-container" style="display: flex; flex-wrap: nowrap; overflow-x: auto; white-space: nowrap; width: 100%; -webkit-overflow-scrolling: touch; scrollbar-width: none;">
+              <label class="ratio-btn active" style="flex: 0 0 auto; min-width: 70px; margin-right: 8px;">
+                <span class="ratio-icon ratio-9-16"></span>
+                <input type="checkbox" class="ratio-checkbox" checked> 9:16
+              </label>
+              <label class="ratio-btn" style="flex: 0 0 auto; min-width: 70px; margin-right: 8px;">
+                <span class="ratio-icon ratio-3-4"></span>
+                <input type="checkbox" class="ratio-checkbox"> 3:4
+              </label>
+              <label class="ratio-btn" style="flex: 0 0 auto; min-width: 70px; margin-right: 8px;">
+                <span class="ratio-icon ratio-2-3"></span>
+                <input type="checkbox" class="ratio-checkbox"> 2:3
+              </label>
+              <label class="ratio-btn" style="flex: 0 0 auto; min-width: 70px; margin-right: 8px;">
+                <span class="ratio-icon ratio-1-1"></span>
+                <input type="checkbox" class="ratio-checkbox"> 1:1
+              </label>
+              <label class="ratio-btn" style="flex: 0 0 auto; min-width: 70px; margin-right: 8px;">
+                <span class="ratio-icon ratio-3-2"></span>
+                <input type="checkbox" class="ratio-checkbox"> 3:2
+              </label>
+            </div>
+          </div>
+          
+          <!-- 时长选项 -->
+          <div class="param-section duration-section" id="durationSection">
+            <div class="param-section-title">视频时长: 5s</div>
+            <div class="duration-options">
+              <div class="option-tag active">5s</div>
+              <div class="option-tag">10s</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- 视频生成进度浮层 (默认隐藏) -->
+  <div id="progressOverlay" class="progress-overlay hidden">
+    <div class="progress-container">
+      <div class="progress-ring-wrapper">
+        <svg class="progress-ring" width="60" height="60">
+          <circle class="progress-ring-circle-bg" cx="30" cy="30" r="27" stroke-width="4"></circle>
+          <circle class="progress-ring-circle" cx="30" cy="30" r="27" stroke-width="4" stroke-dasharray="169.65" stroke-dashoffset="169.65"></circle>
+        </svg>
+        <div class="progress-percentage">0%</div>
+      </div>
+      <div class="progress-text-container">
+        <div class="progress-text">正在生成您的视频...</div>
+        <div class="progress-subtext">预计剩余时间: <span id="remainingTime">60秒</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 全屏视频容器 (默认隐藏) -->
+  <div id="fullscreenVideoContainer" class="fullscreen-video-container">
+    <!-- 顶部控制区 -->
+    <div class="fullscreen-top-controls">
+      <button class="back-button" id="closeFullscreen">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+    </div>
+    
+    <!-- 视频 -->
+    <video class="fullscreen-video" id="fullscreenVideo" playsinline>
+      <source src="" type="video/mp4">
+      您的浏览器不支持视频播放
+    </video>
+    
+    <!-- 底部控制区 -->
+    <div class="fullscreen-bottom-controls">
+      <button class="fullscreen-save-btn" id="fullscreenSaveBtn">
+        <i class="fas fa-download"></i> 保存
+      </button>
+    </div>
+  </div>
+
+  <!-- 消息模板 (用于JavaScript动态插入) -->
+  <template id="userMessageTemplate">
+    <div class="message-container user-message">
+      <div class="message-header">
+        <span class="message-title">视频生成</span>
+        <span class="message-time"></span>
+      </div>
+      <div class="message-content">
+        <p class="message-text"></p>
+        <div class="message-details">
+          <div class="reference-image-container">
+            <img class="reference-image" src="">
+          </div>
+          <div class="message-tags">
+            <span class="tag ratio-tag"></span>
+            <span class="tag camera-tag"></span>
+            <span class="tag duration-tag"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+  
+  <template id="aiMessageTemplate">
+    <div class="message-container ai-message">
+      <div class="message-content">
+        <div class="video-container">
+          <video class="response-video" poster="" autoplay loop muted playsinline>
+            <source src="" type="video/mp4">
+            您的浏览器不支持视频播放
+          </video>
+        </div>
+        <div class="video-action-buttons">
+          <button class="video-action-btn edit-btn">
+            重新编辑
+          </button>
+          <button class="video-action-btn regenerate-btn">
+           再次生成
+          </button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script src="js/creative-panel.js"></script>
+  <script src="js/ai-videonew.js"></script>
+  
+  <!-- 预设图片选择功能 -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // 获取所有预设图片
+      const presetImages = document.querySelectorAll('.preset-image');
+      
+      // 为每个预设图片添加点击事件
+      presetImages.forEach(image => {
+        image.addEventListener('click', function(event) {
+          // 阻止事件冒泡
+          event.stopPropagation();
+          
+          // 获取图片相关数据
+          const imagePath = this.dataset.image;
+          const ratio = this.dataset.ratio;
+          const camera = this.dataset.camera;
+          
+          // 添加微小的延迟来提供视觉反馈
+          setTimeout(() => {
+            // 直接打开创作面板
+            handlePresetImageSelection(imagePath, ratio, camera);
+          }, 150);
+        });
+      });
+      
+      // 初始化比例按钮点击事件
+      const ratioButtons = document.querySelectorAll('.ratio-btn');
+      const cameraBtn = document.getElementById('cameraBtn');
+      const cameraBtnText = cameraBtn ? cameraBtn.querySelector('span') : null;
+      
+      // 设置比例按钮点击事件
+      ratioButtons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          // 移除所有按钮的active类
+          ratioButtons.forEach(b => b.classList.remove('active'));
+          
+          // 添加active类到点击的按钮
+          this.classList.add('active');
+          
+          // 获取选中的比例
+          const checkbox = this.querySelector('.ratio-checkbox');
+          if (checkbox) {
+            // 设置选中状态
+            checkbox.checked = true;
+            
+            // 更新其他复选框为未选中状态
+            document.querySelectorAll('.ratio-checkbox').forEach(cb => {
+              if (cb !== checkbox) {
+                cb.checked = false;
+              }
+            });
+            
+            // 获取比例文本
+            const ratioText = this.textContent.trim();
+            
+            // 更新底部操作按钮的文本
+            if (cameraBtnText) {
+              cameraBtnText.textContent = ratioText;
+            }
+          }
+        });
+      });
+      
+      // 处理预设图片选择
+      function handlePresetImageSelection(imagePath, ratio, camera) {
+        // 显示创作面板
+        if (typeof openCreativePanelFromButton === 'function') {
+          openCreativePanelFromButton();
+          
+          // 给创作面板一点时间初始化
+          setTimeout(() => {
+            try {
+              // 加载预设图片到创作面板
+              loadImageToCreativePanel(imagePath, ratio, camera);
+            } catch (error) {
+              console.error('加载图片到创作面板失败:', error);
+            }
+          }, 300);
+        }
+      }
+      
+      // 加载图片到创作面板
+      function loadImageToCreativePanel(imagePath, ratio, camera) {
+        // 创建图片对象
+        const image = new Image();
+        
+        image.onload = function() {
+          // 获取图片数据URL
+          const canvas = document.createElement('canvas');
+          canvas.width = this.width;
+          canvas.height = this.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(this, 0, 0);
+          const dataUrl = canvas.toDataURL('image/jpeg');
+          
+          // 设置到创作面板
+          const firstFramePreview = document.getElementById('firstFramePreview');
+          const firstFrameImage = document.getElementById('firstFrameImage');
+          
+          if (firstFramePreview && firstFrameImage) {
+            firstFrameImage.src = dataUrl;
+            firstFramePreview.classList.remove('hidden');
+            
+            // 选择对应的比例和运镜方式
+            selectRatioAndCamera(ratio, camera);
+          }
+        };
+        
+        image.onerror = function() {
+          console.error('图片加载失败:', imagePath);
+        };
+        
+        // 设置图片源
+        image.src = imagePath;
+      }
+      
+      // 选择比例和运镜方式
+      function selectRatioAndCamera(ratio, camera) {
+        // 延迟一点时间确保面板完全加载
+        setTimeout(() => {
+          try {
+            // 选择比例
+            const ratioButtons = document.querySelectorAll('.ratio-btn');
+            ratioButtons.forEach(btn => {
+              if (btn.textContent.trim() === ratio) {
+                btn.click();
+              }
+            });
+            
+            // 选择运镜方式
+            const cameraOptions = document.querySelectorAll('.camera-options .option-tag');
+            cameraOptions.forEach(option => {
+              if (option.textContent.includes(camera)) {
+                option.click();
+              }
+            });
+          } catch (error) {
+            console.error('选择比例和运镜方式失败:', error);
+          }
+        }, 500);
+      }
+    });
+  </script>
+</body>
+</html> 

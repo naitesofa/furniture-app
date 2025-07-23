@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI户型诊断 - 小麦</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      background-color: #f8f8f8;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    }
+    .upload-area {
+      border: 2px dashed #cbd5e0;
+      transition: all 0.3s ease;
+    }
+    .upload-area:hover {
+      border-color: #4299e1;
+    }
+    .step-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .step-line {
+      flex: 1;
+      height: 2px;
+    }
+    .bottom-safe-area {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .diagnosis-tag {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.6);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body class="h-screen flex flex-col">
+  <!-- 顶部导航栏 -->
+  <header class="bg-white shadow-sm fixed top-0 left-0 right-0 z-10">
+    <div class="flex items-center justify-between px-4 py-3">
+      <button class="text-gray-600">
+        <i class="fas fa-arrow-left text-lg"></i>
+      </button>
+      <h1 class="text-lg font-medium flex items-center">
+        小麦
+        <span class="ml-1 bg-green-100 text-green-800 text-xs px-1.5 py-0.5 rounded-full">AI</span>
+      </h1>
+      <button class="text-gray-600" id="menuButton">
+        <i class="fas fa-ellipsis-h text-lg"></i>
+      </button>
+    </div>
+    
+    <!-- 功能标签栏 -->
+    <div class="flex bg-white border-b border-gray-200 overflow-x-auto whitespace-nowrap px-2">
+      <button class="px-4 py-2 text-gray-600">AI对话</button>
+      <button class="px-4 py-2 text-gray-600">AI报价</button>
+      <button class="px-4 py-2 text-gray-600">AI设计</button>
+      <button class="px-4 py-2 text-blue-500 border-b-2 border-blue-500 font-medium">户型诊断</button>
+      <button class="px-4 py-2 text-gray-600">图生视频</button>
+    </div>
+  </header>
+
+  <!-- 主要内容区域 -->
+  <main class="flex-1 overflow-y-auto pt-24 pb-16 px-4 bg-gray-50">
+    <!-- 步骤指示器 -->
+    <div class="mb-6">
+      <div class="flex items-center">
+        <div class="step-circle bg-blue-500 text-white">1</div>
+        <div class="step-line bg-blue-500"></div>
+        <div class="step-circle bg-gray-200 text-gray-600">2</div>
+        <div class="step-line bg-gray-200"></div>
+        <div class="step-circle bg-gray-200 text-gray-600">3</div>
+      </div>
+      <div class="flex justify-between mt-1 text-xs">
+        <span class="text-blue-500 font-medium">上传户型图</span>
+        <span class="text-gray-500">AI诊断</span>
+        <span class="text-gray-500">优化方案</span>
+      </div>
+    </div>
+    
+    <!-- 上传区域 -->
+    <div class="mb-6">
+      <h2 class="text-lg font-medium text-gray-800 mb-3">上传户型图</h2>
+      <p class="text-sm text-gray-600 mb-4">上传您的户型图或拍照，AI将为您分析并提供优化建议</p>
+      
+      <div class="upload-area bg-white rounded-lg p-6 flex flex-col items-center justify-center">
+        <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mb-3">
+          <i class="fas fa-cloud-upload-alt text-blue-500 text-2xl"></i>
+        </div>
+        <p class="text-gray-800 font-medium mb-1">点击上传户型图</p>
+        <p class="text-gray-500 text-sm mb-3">支持JPG、PNG格式</p>
+        <button class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition">
+          选择文件
+        </button>
+        <p class="text-gray-500 text-xs mt-3">或直接拖放文件到此处</p>
+      </div>
+    </div>
+    
+    <!-- 示例户型诊断 -->
+    <div class="mb-6">
+      <div class="flex justify-between items-center mb-3">
+        <h2 class="text-lg font-medium text-gray-800">诊断案例</h2>
+        <button class="text-sm text-blue-500">查看更多</button>
+      </div>
+      
+      <div class="grid grid-cols-1 gap-4">
+        <!-- 案例1 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div class="relative">
+            <img src="https://images.unsplash.com/photo-1574691250077-03a929faece5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="户型图" class="w-full h-48 object-cover">
+            <span class="diagnosis-tag">三室两厅</span>
+          </div>
+          <div class="p-4">
+            <h3 class="font-medium text-gray-800">90㎡三室两厅户型优化</h3>
+            <div class="flex items-center mt-2">
+              <div class="flex-1">
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-check-circle text-green-500 mr-1"></i>
+                  <span class="text-gray-600">动线规划优化</span>
+                </div>
+                <div class="flex items-center text-sm mt-1">
+                  <i class="fas fa-check-circle text-green-500 mr-1"></i>
+                  <span class="text-gray-600">卧室采光改善</span>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-check-circle text-green-500 mr-1"></i>
+                  <span class="text-gray-600">厨房扩容</span>
+                </div>
+                <div class="flex items-center text-sm mt-1">
+                  <i class="fas fa-check-circle text-green-500 mr-1"></i>
+                  <span class="text-gray-600">收纳空间增加</span>
+                </div>
+              </div>
+            </div>
+            <button class="mt-3 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition">
+              查看详情
+            </button>
+          </div>
+        </div>
+        
+        <!-- 案例2 -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div class="relative">
+            <img src="https://images.unsplash.com/photo-1628744448840-55bdb2497bd4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="户型图" class="w-full h-48 object-cover">
+            <span class="diagnosis-tag">两室一厅</span>
+          </div>
+          <div class="p-4">
+            <h3 class="font-medium text-gray-800">65㎡两室一厅老房改造</h3>
+            <div class="flex items-center mt-2">
+              <div class="flex-1">
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-check-circle text-green-500 mr-1"></i>
+                  <span class="text-gray-600">墙体拆改</span>
+                </div>
+                <div class="flex items-center text-sm mt-1">
+                  <i class="fas fa-check-circle text-green-500 mr-1"></i>
+                  <span class="text-gray-600">开放式厨房</span>
+                </div>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center text-sm">
+                  <i class="fas fa-check-circle text-green-500 mr-1"></i>
+                  <span class="text-gray-600">多功能区域</span>
+                </div>
+                <div class="flex items-center text-sm mt-1">
+                  <i class="fas fa-check-circle text-green-500 mr-1"></i>
+                  <span class="text-gray-600">卫生间扩容</span>
+                </div>
+              </div>
+            </div>
+            <button class="mt-3 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition">
+              查看详情
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 诊断项目 -->
+    <div class="mb-6">
+      <h2 class="text-lg font-medium text-gray-800 mb-3">AI诊断项目</h2>
+      <div class="bg-white rounded-lg shadow-sm p-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div class="border border-gray-100 rounded-md p-3 flex items-center">
+            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3 flex-shrink-0">
+              <i class="fas fa-vector-square text-blue-500"></i>
+            </div>
+            <div>
+              <h3 class="font-medium text-gray-800 text-sm">空间布局</h3>
+              <p class="text-xs text-gray-600">分析空间利用率</p>
+            </div>
+          </div>
+          
+          <div class="border border-gray-100 rounded-md p-3 flex items-center">
+            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3 flex-shrink-0">
+              <i class="fas fa-route text-green-500"></i>
+            </div>
+            <div>
+              <h3 class="font-medium text-gray-800 text-sm">动线规划</h3>
+              <p class="text-xs text-gray-600">优化日常活动路径</p>
+            </div>
+          </div>
+          
+          <div class="border border-gray-100 rounded-md p-3 flex items-center">
+            <div class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center mr-3 flex-shrink-0">
+              <i class="fas fa-sun text-yellow-500"></i>
+            </div>
+            <div>
+              <h3 class="font-medium text-gray-800 text-sm">采光通风</h3>
+              <p class="text-xs text-gray-600">评估自然光和空气流通</p>
+            </div>
+          </div>
+          
+          <div class="border border-gray-100 rounded-md p-3 flex items-center">
+            <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center mr-3 flex-shrink-0">
+              <i class="fas fa-box text-purple-500"></i>
+            </div>
+            <div>
+              <h3 class="font-medium text-gray-800 text-sm">收纳空间</h3>
+              <p class="text-xs text-gray-600">分析储物空间合理性</p>
+            </div>
+          </div>
+          
+          <div class="border border-gray-100 rounded-md p-3 flex items-center">
+            <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3 flex-shrink-0">
+              <i class="fas fa-door-open text-red-500"></i>
+            </div>
+            <div>
+              <h3 class="font-medium text-gray-800 text-sm">门窗布置</h3>
+              <p class="text-xs text-gray-600">评估开门方向和位置</p>
+            </div>
+          </div>
+          
+          <div class="border border-gray-100 rounded-md p-3 flex items-center">
+            <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center mr-3 flex-shrink-0">
+              <i class="fas fa-ruler-combined text-indigo-500"></i>
+            </div>
+            <div>
+              <h3 class="font-medium text-gray-800 text-sm">尺寸比例</h3>
+              <p class="text-xs text-gray-600">分析各功能区尺寸</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 用户评价 -->
+    <div class="mb-6">
+      <h2 class="text-lg font-medium text-gray-800 mb-3">用户反馈</h2>
+      <div class="bg-white rounded-lg shadow-sm p-4">
+        <div class="flex items-start mb-4">
+          <div class="w-10 h-10 rounded-full overflow-hidden mr-3 flex-shrink-0">
+            <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="用户头像" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <div class="flex items-center">
+              <h3 class="font-medium text-gray-800">王女士</h3>
+              <div class="ml-2 flex">
+                <i class="fas fa-star text-yellow-400 text-xs"></i>
+                <i class="fas fa-star text-yellow-400 text-xs"></i>
+                <i class="fas fa-star text-yellow-400 text-xs"></i>
+                <i class="fas fa-star text-yellow-400 text-xs"></i>
+                <i class="fas fa-star text-yellow-400 text-xs"></i>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600 mt-1">AI诊断太厉害了！发现了我家户型的很多问题，比如主卧采光不足、厨房动线不合理等。按照优化建议改造后，空间感提升了很多！</p>
+            <p class="text-xs text-gray-500 mt-1">2023-07-10</p>
+          </div>
+        </div>
+        
+        <div class="flex items-start">
+          <div class="w-10 h-10 rounded-full overflow-hidden mr-3 flex-shrink-0">
+            <img src="https://randomuser.me/api/portraits/men/75.jpg" alt="用户头像" class="w-full h-full object-cover">
+          </div>
+          <div>
+            <div class="flex items-center">
+              <h3 class="font-medium text-gray-800">刘先生</h3>
+              <div class="ml-2 flex">
+                <i class="fas fa-star text-yellow-400 text-xs"></i>
+                <i class="fas fa-star text-yellow-400 text-xs"></i>
+                <i class="fas fa-star text-yellow-400 text-xs"></i>
+                <i class="fas fa-star text-yellow-400 text-xs"></i>
+                <i class="fas fa-star-half-alt text-yellow-400 text-xs"></i>
+              </div>
+            </div>
+            <p class="text-sm text-gray-600 mt-1">买房前用AI诊断了几个心仪的户型，帮我避开了一些潜在问题，最终选择了最适合我家的。诊断报告很专业，连设计师都表示很有参考价值。</p>
+            <p class="text-xs text-gray-500 mt-1">2023-06-22</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 底部输入区域 -->
+  <footer class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 bottom-safe-area">
+    <div class="flex items-center">
+      <button class="p-2 text-gray-500 rounded-full hover:bg-gray-100">
+        <i class="fas fa-image"></i>
+      </button>
+      <div class="flex-1 mx-2 bg-gray-100 rounded-full flex items-center px-4 py-2">
+        <input type="text" placeholder="有关户型的问题？问我..." class="bg-transparent w-full focus:outline-none text-gray-700">
+        <button class="ml-2 text-gray-400">
+          <i class="fas fa-microphone"></i>
+        </button>
+      </div>
+      <button class="p-2 bg-blue-500 text-white rounded-full hover:bg-blue-600">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </footer>
+
+  <script>
+    // 功能菜单切换
+    const menuButton = document.getElementById('menuButton');
+    
+    menuButton.addEventListener('click', () => {
+      // 功能菜单切换逻辑
+    });
+  </script>
+</body>
+</html> 

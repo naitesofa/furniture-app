@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图生视频</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="css/ai-videonew.css">
+</head>
+<body class="h-screen flex flex-col">
+  <!-- 顶部状态栏 -->
+  <header class="pt-2 px-4 pb-4">
+    <div class="flex items-center justify-between">
+      <button class="p-2" id="backButton">
+        <i class="fas fa-arrow-left text-xl"></i>
+      </button>
+      <h1 class="text-xl font-medium">图生视频</h1>
+      <button class="p-2" id="menuButton">
+        <img src="images/fenlei.svg" alt="菜单" class="w-6 h-6">
+      </button>
+    </div>
+  </header>
+
+  <!-- 主要内容区域 - 对话流 -->
+  <main class="flex-1 flex flex-col items-center justify-center overflow-y-auto chat-container" id="chatContainer">
+    <!-- 欢迎信息 -->
+    <div class="text-center welcome-message">
+      <h2 class="text-xl font-medium text-gray-700">图生视频</h2>
+      <p class="text-gray-500 mt-2">上传图片，描述你的需求，AI将为你创建精美视频</p>
+    </div>
+  </main>
+
+  <!-- 智能输入栏 -->
+  <footer id="smartInputBar" class="smart-input-bar">
+    <div class="flex items-start p-2">
+      <!-- 左侧功能切换按钮 -->
+      <button class="function-btn flex-shrink-0" id="typeToggleBtn" aria-label="切换设计类型">
+        <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M42 19H5.99998" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M30 7L42 19" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M6.79897 29H42.799" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M6.79895 29L18.799 41" stroke="#333" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <!-- 中间复合输入区 -->
+      <textarea id="composer" class="composer-textarea ai-composer-input" placeholder="描述你想要的视频..." rows="1"></textarea>
+    </div>
+  </footer>
+
+  <!-- 创作面板 (默认隐藏) -->
+  <div id="creativePanel" class="creative-panel">
+    <div class="creative-panel-content creative-panel-flex-container">
+      <!-- 上半部分（参考图+参数选择） -->
+      <div class="creative-panel-upper">
+        <!-- 参考图区域 -->
+        <div class="reference-area">
+          <h3 class="section-title">参考图片</h3>
+          <div class="reference-controls">
+            <!-- 上传图片按钮/参考图预览区域 -->
+            <div class="upload-preview-container">
+              <!-- 上传图片按钮 - 默认显示 -->
+              <label for="localFileUpload" class="local-upload-btn" id="uploadImageBtn">
+                <i class="fas fa-upload"></i>
+                <span>上传图片</span>
+              </label>
+              <input type="file" id="localFileUpload" accept="image/*" class="hidden">
+              
+              <!-- 参考图预览区域 - 默认隐藏 -->
+              <div class="reference-preview hidden" id="referencePreview">
+                <img src="#" alt="参考图片" id="referenceImage">
+                <button class="remove-reference-btn">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 视频参数设置区 -->
+        <div class="params-section">
+          <!-- 视频比例选择 -->
+          <div class="param-group">
+            <h4 class="param-title">视频比例</h4>
+            <div class="ratio-options">
+              <button class="ratio-btn" data-ratio="16:9">16:9</button>
+              <button class="ratio-btn" data-ratio="4:3">4:3</button>
+              <button class="ratio-btn active" data-ratio="1:1">1:1</button>
+              <button class="ratio-btn" data-ratio="3:4">3:4</button>
+              <button class="ratio-btn" data-ratio="9:16">9:16</button>
+            </div>
+          </div>
+          
+          <!-- 运镜方式选择 -->
+          <div class="param-group">
+            <h4 class="param-title">运镜方式</h4>
+            <div class="camera-options">
+              <button class="camera-btn active" data-camera="环绕">环绕</button>
+              <button class="camera-btn" data-camera="拉近">拉近</button>
+              <button class="camera-btn" data-camera="拉远">拉远</button>
+            </div>
+            <p class="param-hint" id="cameraDesc">环绕：镜头围绕主体进行拍摄</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 下半部分（描述输入+生成按钮） -->
+      <div class="creative-panel-lower">
+        <!-- 描述输入区 -->
+        <div class="description-area">
+          <h4 class="param-title">视频描述</h4>
+          <div class="description-container">
+            <textarea id="promptTextarea" class="prompt-textarea" placeholder="描述你想要的视频效果和内容..."></textarea>
+          </div>
+        </div>
+        
+        <!-- 生成按钮区 -->
+        <div class="generate-btn-container">
+          <button id="generateBtn" class="generate-btn">
+            <span>生成视频</span>
+          </button>
+        </div>
+      </div>
+      
+      <!-- 关闭按钮 -->
+      <button class="close-creative-btn" id="closeCreativeBtn">
+        <i class="fas fa-chevron-down"></i>
+      </button>
+    </div>
+  </div>
+  
+  <!-- 视频生成进度浮层 (默认隐藏) -->
+  <div id="progressOverlay" class="progress-overlay hidden">
+    <div class="progress-container">
+      <div class="progress-ring-wrapper">
+        <svg class="progress-ring" width="120" height="120">
+          <circle class="progress-ring-circle-bg" cx="60" cy="60" r="54" stroke-width="8"></circle>
+          <circle class="progress-ring-circle" cx="60" cy="60" r="54" stroke-width="8" stroke-dasharray="339.29" stroke-dashoffset="339.29"></circle>
+        </svg>
+        <div class="progress-percentage">0%</div>
+      </div>
+      <div class="progress-text">正在生成您的视频...</div>
+      <div class="progress-subtext">预计剩余时间: <span id="remainingTime">60秒</span></div>
+    </div>
+  </div>
+
+  <!-- 消息模板 (用于JavaScript动态插入) -->
+  <template id="userMessageTemplate">
+    <div class="message-container user-message">
+      <div class="message-header">
+        <span class="message-sender">◆ 用户</span>
+        <span class="message-time"></span>
+      </div>
+      <div class="message-content">
+        <div class="reference-image-container">
+          <img class="reference-image" src="">
+        </div>
+        <p class="message-text"></p>
+        <div class="message-tags"></div>
+      </div>
+    </div>
+  </template>
+  
+  <template id="aiMessageTemplate">
+    <div class="message-container ai-message">
+      <div class="message-header">
+        <span class="message-sender">◆ AI助手</span>
+        <span class="message-time"></span>
+      </div>
+      <div class="message-content">
+        <div class="video-container">
+          <video controls class="response-video" poster="">
+            <source src="" type="video/mp4">
+            您的浏览器不支持视频播放
+          </video>
+        </div>
+        <p class="message-text"></p>
+        <div class="action-buttons">
+          <button class="action-btn download-btn">
+            <i class="fas fa-download"></i> 下载
+          </button>
+          <button class="action-btn share-btn">
+            <i class="fas fa-share-alt"></i> 分享
+          </button>
+          <button class="action-btn regenerate-btn">
+            <i class="fas fa-redo"></i> 重新生成
+          </button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script src="js/ai-videonew.js"></script>
+</body>
+</html> 
